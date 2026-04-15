@@ -72,7 +72,6 @@ graph TD
 │  │         │   │     │   │    ┌─────┐       │     │
 │  │         │   │     │   │    │     │       │     │
 │  │         │   │     │   │    │     │       │     │
-│  │         │   │     │   │    │     │       │     │
 │  │         │   └─────┘   │    └─────┘       │     │
 │  │         │             │                   │     │
 │  │         └─────────────┘                   │     │
@@ -386,7 +385,7 @@ sigma_plot_app/
 | テストカテゴリ | テスト名 | 対象 |
 |--------------|---------|------|
 | ユニットテスト | `test_file_service.py` | file_service |
-| ユニットテスト | `test_column_service.py` | column_service |
+| �ニットテスト | `test_column_service.py` | column_service |
 | ユニットテスト | `test_plot_service.py` | plot_service |
 | ユニットテスト | `test_validation.py` | validation |
 | 結合テスト | `test_column_selection_flow.py` | カラム選択フロー |
@@ -406,6 +405,17 @@ sigma_plot_app/
 ```yaml
 # docker-compose.yml の profile 設定例
 services:
+  streamlit-app:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./e2e:/tests/e2e  # テストコードのマウント
+    environment:
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0  # 外部からアクセス可能
+    networks:
+      - app-network
+
   test_playwright:
     image: mcr.microsoft.com/playwright:v1.59.0-noble
     profiles: [test]  # 通常の起動では起動しない
