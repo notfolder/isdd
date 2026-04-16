@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # メインのアプリケーションサービス（本番環境想定）
+  app:
+    build: .
+    command: streamlit run src/streamlit_app.py
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      PYTHONUNBUFFERED: 1
+
+  # テスト用のサービス (Playwright実行環境)
+  test_playwright:
+    image: mcr.microsoft.com/playwright:v1.42.0 # Playwrightが動作するイメージを指定
+    working_dir: /app
+    volumes:
+      - .:/app
+    profiles:
+      # 設計書に基づき、このプロファイルでテストを実行可能にする
+      test: {} 
+    command: >
+      sh -c "npm install && npx playwright test --project=chromium" # テスト実行コマンド
+
+  # (必要に応じて他のサービスを追加)
