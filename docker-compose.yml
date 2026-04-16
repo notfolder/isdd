@@ -1,0 +1,65 @@
+# シグマプロット比較アプリ - Docker Compose
+
+## サービス一覧
+
+| サービス | 役割 | ポート |
+|----------|------|-------|
+| streamlit-app | Streamlit アプリケーション | 8501 |
+| test_playwright | E2E テスト（Playwright） | - |
+
+## 起動方法
+
+### 通常起動
+```bash
+docker compose up -d
+```
+
+### E2E テスト実行
+```bash
+docker compose --profile test up test_playwright
+```
+
+## サービス詳細
+
+### streamlit-app
+- **イメージ**: `streamlit/streamlit:latest`
+- **ポート**: 8501 → 8501
+- **ボリュームマウント**: 
+  - `./sigma_plot_app:/app`（ソースコード）
+  - `./e2e:/tests/e2e`（E2E テスト用）
+- **環境変数**:
+  - `STREAMLIT_SERVER_ADDRESS=0.0.0.0`（外部アクセス可能）
+  - `STREAMLIT_SERVER_PORT=8501`
+
+### test_playwright
+- **イメージ**: `mcr.microsoft.com/playwright:v1.59.0-noble`
+- **ポート**: 3000 → 3000（テスト用）
+- **ボリュームマウント**: `./e2e:/tests/e2e`（テストコード）
+- **環境変数**:
+  - `BASE_URL=http://localhost:8501`（テスト用ベース URL）
+  - `BROWSER=chromium`
+
+## ネットワーク
+
+- **ネットワーク名**: `app-network`
+- **streamlit-app**: 外部アクセス可能（ポート 8501）
+- **test_playwright**: 内部ネットワークのみ
+
+## 依存関係
+
+```yaml
+services:
+  streamlit-app:
+    depends_on:
+      - redis
+
+  test_playwright:
+    depends_on:
+      - streamlit-app
+```
+
+## 停止方法
+
+```bash
+docker compose down
+```
