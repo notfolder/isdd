@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app-service:
+    build: .
+    container_name: sigma_plot_app
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  test_playwright:
+    build: .
+    container_name: sigma_plot_e2e_test
+    depends_on:
+      - app-service
+    volumes:
+      - .:/app
+    profiles: ["test"]

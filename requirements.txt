@@ -1,0 +1,7 @@
+streamlit
+pandas
+scipy
+matplotlib
+seaborn
+testpytest
+playwright
