@@ -19,9 +19,7 @@ services:
     volumes:
       - .:/app
     profiles:
-      # 設計書に基づき、このプロファイルでテストを実行可能にする
-      test: {} 
+      # profilesは配列で指定する必要があるため、以下の形式に修正
+      - test 
     command: >
-      sh -c "npm install && npx playwright test --project=chromium" # テスト実行コマンド
-
-  # (必要に応じて他のサービスを追加)
+      sh -c "npm install && npx playwright test --project=chromium"

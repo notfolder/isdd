@@ -1,0 +1,7 @@
+pandas
+numpy
+streamlit
+scipy
+matplotlib
+# ログ管理やバリデーションで使う可能性があるが、今回は標準的なものに限定する
+typing-extensions
