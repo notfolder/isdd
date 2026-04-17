@@ -1,5 +1,12 @@
 # macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
 # Node
 node_modules/
@@ -7,19 +14,27 @@ npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.npm
+.yarn/cache
+.pnp.*
 
 # Build artifacts
 dist/
 build/
+out/
 
 # Env files
 .env
 .env.local
+.env.*.local
 backend/.env
 frontend/.env
 
 # Coverage
 coverage/
+htmlcov/
+.coverage
+.coverage.*
 
 # Logs
 logs/
@@ -30,3 +45,65 @@ logs/
 
 # TypeScript
 *.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Python 仮想環境
+.venv/
+venv/
+env/
+ENV/
+.env/
+
+# Python テスト・カバレッジ
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Docker
+.dockerignore
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
