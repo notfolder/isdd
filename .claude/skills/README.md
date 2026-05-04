@@ -32,27 +32,55 @@ isdd はこの問題を「古典的なウォーターフォール（要件定義
 
 ## 開発フロー全体像
 
+### 新規開発フロー
+
 ```mermaid
 graph TD
-    EX[isdd-external-research\n外部システム事前調査]
+    PRE[isdd-external-precheck\n外部連携リスク事前確認]
     REQ[isdd-requirements\n要件定義]
+    EX[isdd-external-research\n外部連携整合調査]
     DES[isdd-design\n詳細設計]
     COD[isdd-traceable-coding\n実装]
 
-    CREQ[isdd-change-req\n変更要件定義]
-    CDES[isdd-change-design\n変更詳細設計]
-
-    REV[isdd-reverse-engineering\n既存PJのisdd化]
-
-    EX -->|外部連携がある場合の前段| REQ
+    PRE -->|外部連携がある場合のみ・要件定義の開始前に実行| REQ
     REQ --> DES
+    REQ -->|外部連携がある場合のみ実行| EX
+    EX --> DES
     DES --> COD
+```
 
-    REQ -->|変更が発生した場合| CREQ
+### 変更フロー
+
+```mermaid
+graph TD
+    PRE[isdd-external-precheck\n外部連携リスク事前確認]
+    CREQ[isdd-change-req\n変更要件定義]
+    EX[isdd-external-research\n外部連携整合調査]
+    CDES[isdd-change-design\n変更詳細設計]
+    COD[isdd-traceable-coding\n実装]
+
+    PRE -->|外部連携がある場合のみ・変更要件定義の開始前に実行| CREQ
     CREQ --> CDES
+    CREQ -->|外部連携がある場合のみ実行| EX
+    EX --> CDES
     CDES --> COD
+```
 
-    REV -->|既存コードから逆引き| REQ
+### 既存PJ適用フロー
+
+```mermaid
+graph TD
+    A[コード解析\ncode-structure-analyzerで実行]
+    B[設計書生成\nID未採番]
+    C[要件定義書生成]
+    D[インタビューで補完・修正]
+    E[設計書へのDS-*ID採番]
+    F[RQ-DS Link Checker実行]
+    G[トレーサブルコメント追加]
+    H[Trace Comment Coverage Checker実行]
+    I[セルフレビュー・報告]
+
+    A --> B --> C --> D --> E --> F --> G --> H --> I
 ```
 
 ---
@@ -63,8 +91,9 @@ graph TD
 
 | スキル名 | 役割 | 主な成果物 |
 |---|---|---|
-| `isdd-external-research` | 要件定義前に外部連携システムを調査し、連携ライブラリ・モック実装・E2Eテスト基盤を生成する | `external/[システム名]/docs/research.md`、`src/`、`mock/`、`e2e/` |
+| `isdd-external-precheck` | 要件定義前に外部連携システムの接続可否・認証方式・主要制限のみを確認する軽量事前調査。外部連携がある場合のみ実行する | `precheck_report.md` |
 | `isdd-requirements` | インタビューを通じて MVP に絞った矛盾のない要件定義書を作成する | `docs/requirements.md` |
+| `isdd-external-research` | 要件定義書または変更要件定義書の出力後に、外部連携システムの詳細調査を行い要件との整合性を確認する。外部連携がある場合のみ実行する | `alignment_report.md`、`external/[システム名]/docs/research.md`、`src/`、`mock/`、`e2e/` |
 | `isdd-design` | 要件定義書をもとに詳細設計書を作成し、実装タスクを生成する | `docs/detail_design.md`、`docs/tasks.md` |
 | `isdd-traceable-coding` | 要件ID・設計IDをコードコメントに付与し、仕様とコードのトレーサビリティを維持する | 各ソースファイルへのIDコメント付与 |
 
@@ -79,7 +108,30 @@ graph TD
 
 | スキル名 | 役割 | 主な成果物 |
 |---|---|---|
-| `isdd-reverse-engineering` | 既存コードベースから要件定義書・設計書を逆引き生成し、トレーサブルコメントを追加する | `docs/requirements.md`、`docs/detail_design.md` |
+| `isdd-reverse-engineering` | 既存コードベースから要件定義書・設計書を逆引き生成し、トレーサブルコメントを追加する。コード解析は `code-structure-analyzer` サブエージェントに委譲する | `docs/requirements.md`、`docs/detail_design.md` |
+
+---
+
+## サブエージェント一覧
+
+各スキルが特定の処理を委譲するサブエージェント。エージェントファイルは `.claude/agents/` に格納する。
+
+| エージェント名 | 委譲元スキル | 役割 |
+|---|---|---|
+| `code-structure-analyzer` | `isdd-reverse-engineering` | 既存コードベースの構造解析（大量のコード読み込みをメイン会話から隔離） |
+| `external-research-investigator` | `isdd-external-research` | 外部連携ライブラリ候補の調査・評価（比較表・推奨理由・リスク評価を返却） |
+| `db-schema-extractor` | `isdd-external-research` | DB接続または公開リファレンスからスキーマ情報を抽出（`.env` 未作成時は停止、秘密情報は出力しない） |
+
+---
+
+## チェックスクリプト一覧
+
+`isdd-reverse-engineering` スキルが自動実行する検証スクリプト。格納場所は `.agents/skills/isdd-reverse-engineering/scripts/`。
+
+| スクリプト名 | 実行タイミング | 役割 |
+|---|---|---|
+| `rq_ds_link_checker.py` | 要件定義書・設計書の逆引き生成後 | 要件ID（`RQ-*`）と設計ID（`DS-*`）の対応欠落・重複・不整合を検出する |
+| `trace_comment_coverage_checker.py` | トレーサブルコメント付与後 | コードへのID付与状況を検査し、未付与・不足・カバレッジ率をレポートする |
 
 ---
 
@@ -104,7 +156,7 @@ graph TD
 
 ```yaml
 metadata:
-  version: "1.0.7"
+  version: "1.0.8"
 ```
 
 スキルの内容を変更した場合は、変更したスキルのバージョンをパッチバージョン（末尾の数値）で上げる。
