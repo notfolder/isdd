@@ -188,6 +188,9 @@ external/
 ### モック実装（`mock/`）の要件
 
 - モック方式は外部システムの性質で A/B/C から選定する
+> モック方式IDの正規定義は **isdd-id-definitions スキル**を参照すること。以下は参照用の抜粋。
+
+- モック方式は外部システムの性質で A/B/C から選定する
   - A: ローカルHTTPサーバー（`RQ-EX-USE-LOCAL-HTTP-MOCK`）
   - B: 固定レスポンスファイル（`RQ-EX-USE-FIXED-RESPONSE-MOCK`）
   - C: 既存モックサーバーツール（`RQ-EX-USE-MOCK-SERVER-TOOL`）
