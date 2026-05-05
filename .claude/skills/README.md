@@ -36,7 +36,7 @@ isdd はこの問題を「古典的なウォーターフォール（要件定義
 
 ```mermaid
 graph TD
-    G1[開始ゲート\n外部連携有無と既存コードベース有無を確認]
+    G1[開始ゲート\n業務課題確定・外部連携有無・既存コードベース有無を確認]
     PRE[isdd-external-precheck\n外部連携リスク事前確認]
     REV1[isdd-reverse-engineering\n既存PJを先にisdd化]
     REQ[isdd-requirements\n要件定義]
@@ -59,7 +59,7 @@ graph TD
 
 ```mermaid
 graph TD
-    G2[開始ゲート\n外部連携有無を確認]
+    G2[開始ゲート\n業務課題確定と外部連携有無を確認]
     PRE[isdd-external-precheck\n外部連携リスク事前確認]
     CREQ[isdd-change-req\n変更要件定義]
     EX[isdd-external-research\n外部連携整合調査]
@@ -101,7 +101,7 @@ graph TD
 | スキル名 | 役割 | 主な成果物 |
 |---|---|---|
 | `isdd-external-precheck` | 要件定義前に外部連携システムの接続可否・認証方式・主要制限のみを確認する軽量事前調査。外部連携がある場合のみ実行する | `precheck_report.md` |
-| `isdd-requirements` | インタビューを通じて MVP に絞った矛盾のない要件定義書を作成する | `docs/requirements.md` |
+| `isdd-requirements` | 業務課題（`RQ-BK-*`）を先に確定し、課題に紐づく要件のみで MVP に絞った矛盾のない要件定義書を作成する | `docs/requirements.md` |
 | `isdd-external-research` | 要件定義書または変更要件定義書の出力後に、外部連携システムの詳細調査を行い要件との整合性を確認する。外部連携がある場合のみ実行する | `alignment_report.md`、`external/[システム名]/docs/research.md`、`src/`、`mock/`、`e2e/` |
 | `isdd-design` | 要件定義書をもとに詳細設計書を作成し、実装タスクを生成する | `docs/detail_design.md`、`docs/tasks.md` |
 | `isdd-traceable-coding` | 要件ID・設計IDをコードコメントに付与し、仕様とコードのトレーサビリティを維持する | 各ソースファイルへのIDコメント付与 |
@@ -110,7 +110,7 @@ graph TD
 
 | スキル名 | 役割 | 主な成果物 |
 |---|---|---|
-| `isdd-change-req` | 既存要件定義書に対する変更要件定義書を作成する。変更は「[追加]」「[削除]」で表現し「変更」は使わない | `.history/[YYYYMMDD]-[タスク名]/change_requirements.md` |
+| `isdd-change-req` | 変更対象の業務課題（`RQ-BK-*`）を先に確定し、課題に紐づく変更要件のみで変更要件定義書を作成する。変更は「[追加]」「[削除]」で表現し「変更」は使わない | `.history/[YYYYMMDD]-[タスク名]/change_requirements.md` |
 | `isdd-change-design` | 変更要件定義書をもとに変更詳細設計書を作成し、差分設計の網羅性をチェックする | `.history/[YYYYMMDD]-[タスク名]/change_detail_design.md`、`docs/tasks.md` |
 
 ### 既存PJ適用フロー
