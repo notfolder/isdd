@@ -6,7 +6,7 @@ description: >
   矛盾のない変更要件定義書を .history/[YYYYMMDD]-[タスク名]/change_requirements.md に作成する。
   「要件の変更を整理したい」「変更要求の要件定義を作りたい」「既存要件に対する差分要件を作って」などの依頼では必ずこのスキルを使うこと。
 metadata:
-  version: "1.0.11"
+  version: "1.0.12"
 ---
 
 # isdd-change-req - インタビュー駆動 変更要件定義スキル
@@ -14,6 +14,11 @@ metadata:
 ## 事前確認（必須）
 
 - **外部システムとの連携が含まれる場合**: 変更要件定義を開始する前に `isdd-external-precheck` スキルを実行して接続可否・認証方式・主要制限を確認すること。
+
+## ヒアリング方式
+
+- 選択肢を伴う質問を提示する際は、エージェント環境が提供するインタラクティブな選択肢提示ツールが利用可能であれば必ず活用すること（例: VS Code Copilot では `vscode_askQuestions`、Claude Code では `AskUserQuestion`、opencode では `question`）。
+- ツールが利用できない環境では、テキスト形式で選択肢を列挙して提示すること。
 
 ## 開始ゲート（最優先・必須）
 
