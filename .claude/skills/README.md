@@ -36,13 +36,19 @@ isdd はこの問題を「古典的なウォーターフォール（要件定義
 
 ```mermaid
 graph TD
+    G1[開始ゲート\n外部連携有無と既存コードベース有無を確認]
     PRE[isdd-external-precheck\n外部連携リスク事前確認]
+    REV1[isdd-reverse-engineering\n既存PJを先にisdd化]
     REQ[isdd-requirements\n要件定義]
     EX[isdd-external-research\n外部連携整合調査]
     DES[isdd-design\n詳細設計]
     COD[isdd-traceable-coding\n実装]
 
-    PRE -->|外部連携がある場合のみ・要件定義の開始前に実行| REQ
+    G1 -->|外部連携あり| PRE
+    G1 -->|外部連携なし| REQ
+    G1 -->|既存コードベースあり| REV1
+    PRE -->|要件定義の開始前に実行| REQ
+    REV1 -->|成果物確定後に要件定義へ| REQ
     REQ --> DES
     REQ -->|外部連携がある場合のみ実行| EX
     EX --> DES
@@ -53,13 +59,16 @@ graph TD
 
 ```mermaid
 graph TD
+    G2[開始ゲート\n外部連携有無を確認]
     PRE[isdd-external-precheck\n外部連携リスク事前確認]
     CREQ[isdd-change-req\n変更要件定義]
     EX[isdd-external-research\n外部連携整合調査]
     CDES[isdd-change-design\n変更詳細設計]
     COD[isdd-traceable-coding\n実装]
 
-    PRE -->|外部連携がある場合のみ・変更要件定義の開始前に実行| CREQ
+    G2 -->|外部連携あり| PRE
+    G2 -->|外部連携なし| CREQ
+    PRE -->|変更要件定義の開始前に実行| CREQ
     CREQ --> CDES
     CREQ -->|外部連携がある場合のみ実行| EX
     EX --> CDES
