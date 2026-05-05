@@ -36,7 +36,7 @@ isdd はこの問題を「古典的なウォーターフォール（要件定義
 
 ```mermaid
 graph TD
-    G1[開始ゲート\n業務課題確定・外部連携有無・既存コードベース有無を確認]
+    G1[開始ゲート\n業務課題確定・外部連携有無・既存ソースコード有無・isdd運用有無を確認]
     PRE[isdd-external-precheck\n外部連携リスク事前確認]
     REV1[isdd-reverse-engineering\n既存PJを先にisdd化]
     REQ[isdd-requirements\n要件定義]
@@ -46,7 +46,7 @@ graph TD
 
     G1 -->|外部連携あり| PRE
     G1 -->|外部連携なし| REQ
-    G1 -->|既存コードベースあり| REV1
+    G1 -->|既存ソースコードあり かつ isdd運用なし/不明| REV1
     PRE -->|要件定義の開始前に実行| REQ
     REV1 -->|成果物確定後に要件定義へ| REQ
     REQ --> DES
@@ -117,7 +117,7 @@ graph TD
 
 | スキル名 | 役割 | 主な成果物 |
 |---|---|---|
-| `isdd-reverse-engineering` | 既存コードベースから要件定義書・設計書を逆引き生成し、トレーサブルコメントを追加する。コード解析は `code-structure-analyzer` サブエージェントに委譲する | `docs/requirements.md`、`docs/detail_design.md` |
+| `isdd-reverse-engineering` | 既存ソースコードから要件定義書・設計書を逆引き生成し、トレーサブルコメントを追加する。コード解析は `code-structure-analyzer` サブエージェントに委譲する | `docs/requirements.md`、`docs/detail_design.md` |
 
 ---
 
@@ -127,7 +127,7 @@ graph TD
 
 | エージェント名 | 委譲元スキル | 役割 |
 |---|---|---|
-| `code-structure-analyzer` | `isdd-reverse-engineering` | 既存コードベースの構造解析（大量のコード読み込みをメイン会話から隔離） |
+| `code-structure-analyzer` | `isdd-reverse-engineering` | 既存ソースコードの構造解析（大量のコード読み込みをメイン会話から隔離） |
 | `external-research-investigator` | `isdd-external-research` | 外部連携ライブラリ候補の調査・評価（比較表・推奨理由・リスク評価を返却） |
 | `db-schema-extractor` | `isdd-external-research` | DB接続または公開リファレンスからスキーマ情報を抽出（`.env` 未作成時は停止、秘密情報は出力しない） |
 
