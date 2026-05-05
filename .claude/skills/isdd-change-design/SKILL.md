@@ -6,7 +6,7 @@ description: >
   change_detail_design.md を作成し、差分設計の網羅性チェックと実装タスク化まで行う。
   「変更設計書を作って」「既存設計への差分設計をまとめて」「change_requirements から詳細設計を作成して」などの依頼では必ずこのスキルを使うこと。
 metadata:
-  version: "1.0.8"
+  version: "1.0.9"
 ---
 
 # isdd-change-design - 変更詳細設計スキル

@@ -6,7 +6,7 @@ description: >
   矛盾のない変更要件定義書を .history/[YYYYMMDD]-[タスク名]/change_requirements.md に作成する。
   「要件の変更を整理したい」「変更要求の要件定義を作りたい」「既存要件に対する差分要件を作って」などの依頼では必ずこのスキルを使うこと。
 metadata:
-  version: "1.0.13"
+  version: "1.0.9"
 ---
 
 # isdd-change-req - インタビュー駆動 変更要件定義スキル

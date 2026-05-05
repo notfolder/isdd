@@ -5,7 +5,7 @@ description: >
   「要件と外部仕様の整合を確認したい」「要件出力後に連携先を調査したい」「設計前に外部連携の差分を確定したい」などの依頼では必ずこのスキルを使うこと。
   isdd-requirements / isdd-change-req の後段として実行し、整合確認結果を設計に引き継ぐ。
 metadata:
-  version: "1.0.8"
+  version: "1.0.9"
 ---
 
 # isdd-external-research — 外部連携 要件整合調査スキル
