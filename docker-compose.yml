@@ -1,0 +1,36 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - INITIAL_ADMIN_LOGIN_ID=${INITIAL_ADMIN_LOGIN_ID}
+      - INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    volumes:
+      - db_data:/app/data
+
+  test_playwright:
+    image: mcr.microsoft.com/playwright:v1.59.0
+    profiles:
+      - test
+    volumes:
+      - ./e2e:/e2e
+    working_dir: /e2e
+    depends_on:
+      - frontend
+      - backend
+    environment:
+      - BASE_URL=http://frontend
+
+volumes:
+  db_data:
