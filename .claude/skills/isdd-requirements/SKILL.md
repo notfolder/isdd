@@ -52,6 +52,7 @@ metadata:
 
 `isdd-common/references/id-definitions.md` を参照し、全ての要件に要件ID（`RQ-*`）を付与すること。IDなしで要件を記述することは絶対に禁止する。
 
+- 業務は必ず `RQ-BZ-*` で採番すること
 - 業務課題は必ず `RQ-BK-*` で採番すること
 - 非 `RQ-BK` 要件（`RQ-FT`、`RQ-UI`、`RQ-EX`、`RQ-TS`、`RQ-NF`、`RQ-DT`、`RQ-OP`）には、対応する `RQ-BK-*` を最低1つ必ず記載すること
 - `RQ-BK-*` に紐づかない要件は定義禁止とすること
