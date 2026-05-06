@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>備品一覧 - 備品管理・貸出管理システム</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <h1>備品管理・貸出管理システム</h1>
+            <div class="navbar-items">
+                <span id="userName">{{ user.name }}</span>
+                {% if user.role == 'admin' %}
+                    <a href="/user-management" class="nav-link">ユーザー管理</a>
+                {% endif %}
+                <a href="/password-change" class="nav-link">パスワード変更</a>
+                <button id="logoutBtn" class="btn btn-secondary">ログアウト</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h2>備品一覧</h2>
+                {% if user.role == 'admin' %}
+                    <a href="/equipment/register" class="btn btn-primary">新規登録</a>
+                {% endif %}
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <table class="equipment-table">
+                <thead>
+                    <tr>
+                        <th>資産管理番号</th>
+                        <th>備品名</th>
+                        <th>状態</th>
+                        <th>借用者</th>
+                        {% if user.role == 'admin' %}
+                            <th>操作</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="equipmentList">
+                    <tr>
+                        <td colspan="{% if user.role == 'admin' %}5{% else %}4{% endif %}" style="text-align: center;">読み込み中...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <script>
+        // 要件トレーサビリティ:
+        //   要件ID: RQ-FT-004, RQ-DT-001
+        //   設計ID: DS-UI-002, DS-FLOW-002
+        
+        const userRole = '{{ user.role }}';
+        
+        // 備品一覧を読み込み
+        async function loadEquipments() {
+            try {
+                const response = await fetch('/api/equipments');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayEquipments(data.equipments);
+                } else {
+                    showError(data.error || '備品一覧の取得に失敗しました');
+                }
+            } catch (error) {
+                showError('エラーが発生しました: ' + error.message);
+            }
+        }
+        
+        function displayEquipments(equipments) {
+            const tbody = document.getElementById('equipmentList');
+            tbody.innerHTML = '';
+            
+            if (equipments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="' + (userRole === 'admin' ? '5' : '4') + '" style="text-align: center;">登録済み備品がありません</td></tr>';
+                return;
+            }
+            
+            equipments.forEach(eq => {
+                const row = document.createElement('tr');
+                const borrowerName = eq.borrowed_by_name || '-';
+                const status = eq.status === 'available' ? '利用可能' : '借出中';
+                
+                row.innerHTML = `
+                    <td>${eq.asset_number}</td>
+                    <td>${eq.name}</td>
+                    <td>${status}</td>
+                    <td>${borrowerName}</td>
+                    ${userRole === 'admin' ? `
+                        <td>
+                            ${eq.status === 'available' ? 
+                                `<button class="btn btn-small btn-primary" onclick="goToLoanProcess(${eq.equipment_id})">借出</button>` :
+                                `<button class="btn btn-small btn-warning" onclick="returnEquipment(${eq.equipment_id})">返却</button>`
+                            }
+                        </td>
+                    ` : ''}
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function goToLoanProcess(equipmentId) {
+            window.location.href = `/loan-process/${equipmentId}`;
+        }
+        
+        async function returnEquipment(equipmentId) {
+            if (!confirm('この備品を返却してもよろしいですか？')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/loans/${equipmentId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess('備品を返却しました');
+                    loadEquipments();
+                } else {
+                    showError(data.error || '返却に失敗しました');
+                }
+            } catch (error) {
+                showError('エラーが発生しました: ' + error.message);
+            }
+        }
+        
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = '/';
+            } catch (error) {
+                showError('ログアウトに失敗しました');
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        // ページロード時に備品一覧を読み込み
+        window.addEventListener('load', loadEquipments);
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>備品管理・貸出管理システム - ログイン</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h1>備品管理・貸出管理システム</h1>
+            <div class="login-box">
+                <h2>ログイン</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">ユーザー名</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">パスワード</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ログイン</button>
+                </form>
+                <div id="errorMessage" class="error-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 要件トレーサビリティ:
+        //   要件ID: RQ-AU-001, RQ-FT-005
+        //   設計ID: DS-UI-001, DS-FLOW-001
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // ログイン成功
+                    window.location.href = '/equipments';
+                } else {
+                    // ログイン失敗
+                    errorMessage.textContent = data.error || 'ログインに失敗しました';
+                }
+            } catch (error) {
+                errorMessage.textContent = 'エラーが発生しました: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

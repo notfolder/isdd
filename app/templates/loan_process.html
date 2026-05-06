@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>貸出処理 - 備品管理・貸出管理システム</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <h1>備品管理・貸出管理システム</h1>
+            <div class="navbar-items">
+                <span id="userName">{{ user.name }}</span>
+                <a href="/user-management" class="nav-link">ユーザー管理</a>
+                <a href="/password-change" class="nav-link">パスワード変更</a>
+                <button id="logoutBtn" class="btn btn-secondary">ログアウト</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h2>貸出処理</h2>
+                <a href="/equipments" class="btn btn-secondary">戻る</a>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <form id="loanForm" class="form-container">
+                <div class="form-group">
+                    <label for="userSelect">借用者を選択 <span class="required">*</span></label>
+                    <select id="userSelect" name="user_id" required>
+                        <option value="">-- 選択してください --</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">貸出を実行</button>
+                    <a href="/equipments" class="btn btn-secondary">キャンセル</a>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        // 要件トレーサビリティ:
+        //   要件ID: RQ-FT-002, RQ-DT-002
+        //   設計ID: DS-UI-004, DS-FLOW-002
+        
+        const equipmentId = {{ equipment_id }};
+        
+        // ユーザー一覧を読み込み
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const select = document.getElementById('userSelect');
+                    data.users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.user_id;
+                        option.textContent = `${user.name} (${user.username})`;
+                        select.appendChild(option);
+                    });
+                } else {
+                    showError(data.error || 'ユーザー一覧の取得に失敗しました');
+                }
+            } catch (error) {
+                showError('エラーが発生しました: ' + error.message);
+            }
+        }
+        
+        document.getElementById('loanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('userSelect').value;
+            
+            if (!userId) {
+                showError('借用者を選択してください');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/loans', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        equipment_id: equipmentId,
+                        user_id: parseInt(userId)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 貸出成功
+                    alert(data.message);
+                    window.location.href = '/equipments';
+                } else {
+                    showError(data.error || '貸出に失敗しました');
+                }
+            } catch (error) {
+                showError('エラーが発生しました: ' + error.message);
+            }
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = '/';
+            } catch (error) {
+                alert('ログアウトに失敗しました');
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        // ページロード時にユーザー一覧を読み込み
+        window.addEventListener('load', loadUsers);
+    </script>
+</body>
+</html>

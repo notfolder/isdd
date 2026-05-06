@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>備品登録 - 備品管理・貸出管理システム</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <h1>備品管理・貸出管理システム</h1>
+            <div class="navbar-items">
+                <span id="userName">{{ user.name }}</span>
+                <a href="/user-management" class="nav-link">ユーザー管理</a>
+                <a href="/password-change" class="nav-link">パスワード変更</a>
+                <button id="logoutBtn" class="btn btn-secondary">ログアウト</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h2>備品登録</h2>
+                <a href="/equipments" class="btn btn-secondary">戻る</a>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <form id="registerForm" class="form-container">
+                <div class="form-group">
+                    <label for="assetNumber">資産管理番号 <span class="required">*</span></label>
+                    <input type="text" id="assetNumber" name="asset_number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipmentName">備品名 <span class="required">*</span></label>
+                    <input type="text" id="equipmentName" name="name" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">登録</button>
+                    <a href="/equipments" class="btn btn-secondary">キャンセル</a>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        // 要件トレーサビリティ:
+        //   要件ID: RQ-FT-001, RQ-DT-001
+        //   設計ID: DS-UI-003, DS-FLOW-002
+        
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const assetNumber = document.getElementById('assetNumber').value.trim();
+            const equipmentName = document.getElementById('equipmentName').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            
+            if (!assetNumber || !equipmentName) {
+                errorDiv.textContent = '全ての項目を入力してください';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/equipments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        asset_number: assetNumber,
+                        name: equipmentName
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // 登録成功
+                    document.getElementById('successMessage').textContent = data.message;
+                    document.getElementById('successMessage').style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/equipments';
+                    }, 1500);
+                } else {
+                    // 登録失敗
+                    errorDiv.textContent = data.error || '登録に失敗しました';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'エラーが発生しました: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = '/';
+            } catch (error) {
+                alert('ログアウトに失敗しました');
+            }
+        });
+    </script>
+</body>
+</html>
