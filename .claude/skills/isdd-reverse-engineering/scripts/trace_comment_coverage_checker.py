@@ -26,6 +26,9 @@ from typing import Set, Dict, List, Tuple, Optional
 class TraceCommentChecker:
     """トレーサブルコメント付与状況チェッカー"""
 
+    # dunderメソッド（ボイラープレート）はトレーサブルコメント対象外
+    SKIP_FUNCTIONS = {'__init__', '__str__', '__repr__', '__eq__', '__hash__', '__len__'}
+
     # サポート言語の拡張子と関数/クラス定義パターン
     LANG_PATTERNS = {
         '.py': {
@@ -74,58 +77,62 @@ class TraceCommentChecker:
                 return lang
         return None
 
+    def _extract_comment(self, content: str, match_start: int, language: str) -> str:
+        """言語に応じて関数/クラスのコメント・docstringを抽出する。
+
+        Python は定義行の後ろ（本体内 docstring）を、
+        その他の言語は定義行の前（JSDoc / ブロックコメント）を探索する。
+        """
+        if language == '.py':
+            # Python: 定義行の `:` の直後にある triple-quote docstring を取得
+            window = content[match_start:match_start + 3000]
+            doc_match = re.search(
+                r':\s*\n\s*("""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\')',
+                window,
+            )
+            return doc_match.group(1) if doc_match else ""
+        else:
+            # 他言語: 定義行の前にあるブロック/行コメントを取得
+            lines_before = content[:match_start].split('\n')
+            comment = ""
+            for line in reversed(lines_before[-10:]):
+                if line.strip().startswith(('"""', "'''", '/*', '//', '#')):
+                    comment += line + "\n"
+                elif line.strip():
+                    break
+            return comment
+
     def extract_elements(self, file_path: Path, content: str, language: str) -> List[Dict]:
         """ソースコードから関数/クラス/モジュールを抽出"""
         patterns = self.LANG_PATTERNS[language]
         elements = []
 
-        # モジュールレベルのコメントをチェック
-        module_comment = ""
-        for match in re.finditer(patterns['module'], content):
-            module_comment = match.group(0)
-            break
-
         # 関数を抽出
         for match in re.finditer(patterns['function'], content, re.MULTILINE):
             func_name = match.group(1)
+            if func_name in self.SKIP_FUNCTIONS:
+                continue
             line_num = content[:match.start()].count('\n') + 1
-            
-            # 関数直前のコメント（docstring or comment）を抽出
-            lines_before = content[:match.start()].split('\n')
-            func_comment = ""
-            for line in reversed(lines_before[-10:]):  # 最大10行上を検索
-                if line.strip().startswith(('"""', "'''", '/*', '//', '#')):
-                    func_comment += line + "\n"
-                elif line.strip():
-                    break
-            
+            comment = self._extract_comment(content, match.start(), language)
             elements.append({
                 'type': 'function',
                 'name': func_name,
                 'file': str(file_path.relative_to(self.source_dir)),
                 'line': line_num,
-                'comment': func_comment,
+                'comment': comment,
             })
 
         # クラスを抽出
         for match in re.finditer(patterns['class'], content, re.MULTILINE):
             class_name = match.group(1)
             line_num = content[:match.start()].count('\n') + 1
-            
-            lines_before = content[:match.start()].split('\n')
-            class_comment = ""
-            for line in reversed(lines_before[-10:]):
-                if line.strip().startswith(('"""', "'''", '/*', '//', '#')):
-                    class_comment += line + "\n"
-                elif line.strip():
-                    break
-            
+            comment = self._extract_comment(content, match.start(), language)
             elements.append({
                 'type': 'class',
                 'name': class_name,
                 'file': str(file_path.relative_to(self.source_dir)),
                 'line': line_num,
-                'comment': class_comment,
+                'comment': comment,
             })
 
         return elements

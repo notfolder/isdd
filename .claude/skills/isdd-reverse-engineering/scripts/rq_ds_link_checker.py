@@ -36,17 +36,24 @@ class RQDSChecker:
         self.ds_to_rq: Dict[str, Set[str]] = defaultdict(set)  # DS → RQ のマッピング
         self.issues: List[str] = []
 
+    # RQ-* / DS-* の完全IDパターン（ハイフン区切りのセグメントを複数許容）
+    RQ_PATTERN = r'\bRQ(?:-[A-Z0-9][A-Z0-9_]*)+'
+    DS_PATTERN = r'\bDS(?:-[A-Z0-9][A-Z0-9_]*)+'
+
+    # マークダウン表のヘッダーラベルとして使われる疑似ID（誤検出除外）
+    HEADER_ID_SUFFIX = re.compile(r'-ID$')
+
     def extract_ids(self, text: str, pattern: str) -> Set[str]:
-        """テキストからID（RQ-* または DS-*）を抽出"""
+        """テキストからID（RQ-* または DS-*）を抽出。表ヘッダーラベルは除外する"""
         matches = re.findall(pattern, text)
-        return set(matches)
+        return {m for m in matches if not self.HEADER_ID_SUFFIX.search(m)}
 
     def parse_requirements(self) -> bool:
         """要件定義書を読み込み、RQ-* ID を抽出"""
         try:
             with open(self.rq_file, 'r', encoding='utf-8') as f:
                 content = f.read()
-            self.rq_ids = self.extract_ids(content, r'\bRQ-[A-Z0-9_]+')
+            self.rq_ids = self.extract_ids(content, self.RQ_PATTERN)
             if not self.rq_ids:
                 self.issues.append("警告: requirements.md から RQ-* ID が検出されませんでした")
                 return False
@@ -63,26 +70,39 @@ class RQDSChecker:
         try:
             with open(self.ds_file, 'r', encoding='utf-8') as f:
                 content = f.read()
-            
+
             # DS-* ID を抽出
-            self.ds_ids = self.extract_ids(content, r'\bDS-[A-Z0-9_]+')
+            self.ds_ids = self.extract_ids(content, self.DS_PATTERN)
             if not self.ds_ids:
                 self.issues.append("警告: detail_design.md から DS-* ID が検出されませんでした")
-            
-            # 設計書から DS-* ごとに対応する RQ-* を抽出
-            # 想定フォーマット: "DS-XXX: [RQ-YYY, RQ-ZZZ]" または "DS-XXX (RQ-YYY, RQ-ZZZ)"
+
+            # マークダウンテーブルの同一行に DS-* と RQ-* が共存する場合を対応関係とみなす
+            for line in content.split('\n'):
+                if '|' not in line:
+                    continue
+                ds_in_line = re.findall(self.DS_PATTERN, line)
+                rq_in_line = re.findall(self.RQ_PATTERN, line)
+                for ds in ds_in_line:
+                    for rq in rq_in_line:
+                        self.rq_to_ds[rq].add(ds)
+                        self.ds_to_rq[ds].add(rq)
+
+            # フォールバック: "DS-XXX ... RQ-YYY" 形式の非テーブル記述も抽出
             for ds_id in self.ds_ids:
-                # DS-* の行を特定
-                pattern = rf'\b{re.escape(ds_id)}\b[:\s\-\(\)]*(\bRQ-[A-Z0-9_]+(?:\s*,\s*\bRQ-[A-Z0-9_]+)*\b)'
+                if ds_id in self.ds_to_rq:
+                    continue  # テーブル行で既に検出済み
+                pattern = (
+                    rf'\b{re.escape(ds_id)}\b'
+                    rf'[:\s\-\(\)]*'
+                    rf'((?:{self.RQ_PATTERN})(?:\s*[,、]\s*(?:{self.RQ_PATTERN}))*)'
+                )
                 matches = re.findall(pattern, content)
                 if matches:
-                    rq_str = matches[0]
-                    # カンマ区切りの RQ-* を抽出
-                    rqs = re.findall(r'\bRQ-[A-Z0-9_]+', rq_str)
+                    rqs = re.findall(self.RQ_PATTERN, matches[0])
                     for rq in rqs:
                         self.rq_to_ds[rq].add(ds_id)
                         self.ds_to_rq[ds_id].add(rq)
-            
+
             return True
         except FileNotFoundError:
             self.issues.append(f"エラー: {self.ds_file} が見つかりません")
