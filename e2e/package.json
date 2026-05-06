@@ -1,0 +1,13 @@
+{
+  "name": "equipment-management-e2e",
+  "version": "1.0.0",
+  "description": "備品管理・貸出管理アプリのE2Eテスト",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.0"
+  }
+}

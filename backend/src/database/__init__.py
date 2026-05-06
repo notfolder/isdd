@@ -1,0 +1,3 @@
+# Database package
+# 要件ID: RQ-DT-DB-REQUIRED
+# 設計ID: DS-CL-DATABASE-MANAGER-DT-DB-REQUIRED

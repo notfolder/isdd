@@ -1,0 +1,71 @@
+# 備品管理・貸出管理アプリ Docker Compose設定
+# 要件ID: RQ-NF-FRAMEWORK-BASIC
+# 設計ID: DS-MD-DOCKER-COMPOSE-DT-DOCKER-COMPOSE
+# 要件概要: フロントエンド: Vue 3 + Vuetify 3、バックエンド: FastAPI、データベース: SQLiteを使用する
+# 設計概要: backend、frontend、nginx、e2eの4サービスを定義し、Nginxでリバースプロキシを構成する
+
+services:
+  # バックエンドサービス（FastAPI）
+  # 設計ID: DS-MD-BACKEND-API-FT-LOGIN
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    expose:
+      - "8000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./data:/app/data
+    environment:
+      - DATABASE_PATH=/app/data/equipment.db
+      - JWT_SECRET_KEY=your-secret-key-change-in-production
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - app-network
+
+  # フロントエンドサービス（Vue 3 + Vuetify 3 + Nginx）
+  # 設計ID: DS-MD-FRONTEND-APP-UI-LOGIN-SCREEN
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    expose:
+      - "80"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  # Nginxリバースプロキシ
+  # 設計ID: DS-MD-NGINX-REVERSE-PROXY
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+  # E2Eテストサービス（Playwright）
+  # 設計ID: DS-IF-LOGIN-SCREEN-UI-LOGIN-SCREEN
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.59.0
+    volumes:
+      - ./e2e:/app/e2e
+    working_dir: /app/e2e
+    environment:
+      - BASE_URL=http://nginx
+    depends_on:
+      - nginx
+    networks:
+      - app-network
+    profiles:
+      - test
+
+networks:
+  app-network:
+    driver: bridge
