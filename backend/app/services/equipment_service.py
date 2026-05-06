@@ -119,7 +119,7 @@ class EquipmentService:
         """
         if self.equipment_repo.find_by_id(data.equipment_id):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_409_CONFLICT,
                 detail="この備品IDは既に使用されています",
             )
         equipment = Equipment(
@@ -185,7 +185,7 @@ class EquipmentService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="備品が見つかりません")
         if equipment.status == "loaned":
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_409_CONFLICT,
                 detail="貸出中の備品は削除できません",
             )
         self.equipment_repo.delete(equipment)
@@ -219,7 +219,7 @@ class EquipmentService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="備品が見つかりません")
         if equipment.status == "loaned":
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_409_CONFLICT,
                 detail="この備品は既に貸出中です",
             )
         user = self.user_repo.find_by_login_id(data.user_login_id)
