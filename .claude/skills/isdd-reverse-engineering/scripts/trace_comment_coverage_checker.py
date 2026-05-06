@@ -22,12 +22,26 @@ from pathlib import Path
 from collections import defaultdict
 from typing import Set, Dict, List, Tuple, Optional
 
+# Pydantic/SQLAlchemy 等のフレームワーク用内部クラスはトレーサブルコメント不要
+SKIP_CLASSES = {'Config', 'Meta', 'Params', 'Arguments', 'Settings'}
+
+# ダンダーメソッドはトレーサブルコメント不要（インフラコードのため除外）
+SKIP_FUNCTIONS = {
+    '__init__', '__str__', '__repr__', '__eq__', '__hash__',
+    '__len__', '__iter__', '__next__', '__enter__', '__exit__',
+    '__getitem__', '__setitem__', '__delitem__', '__contains__',
+    '__call__', '__bool__', '__lt__', '__le__', '__gt__', '__ge__',
+    '__add__', '__sub__', '__mul__', '__truediv__', '__floordiv__',
+    '__mod__', '__pow__', '__and__', '__or__', '__xor__',
+    '__lshift__', '__rshift__', '__neg__', '__pos__', '__abs__',
+    '__invert__', '__int__', '__float__', '__complex__',
+    '__bytes__', '__format__', '__sizeof__', '__dir__',
+    '__class__', '__doc__', '__module__', '__dict__',
+}
+
 
 class TraceCommentChecker:
     """トレーサブルコメント付与状況チェッカー"""
-
-    # dunderメソッド（ボイラープレート）はトレーサブルコメント対象外
-    SKIP_FUNCTIONS = {'__init__', '__str__', '__repr__', '__eq__', '__hash__', '__len__'}
 
     # サポート言語の拡張子と関数/クラス定義パターン
     LANG_PATTERNS = {
@@ -78,21 +92,25 @@ class TraceCommentChecker:
         return None
 
     def _extract_comment(self, content: str, match_start: int, language: str) -> str:
-        """言語に応じて関数/クラスのコメント・docstringを抽出する。
+        """
+        言語に応じた位置からコメント/docstringを抽出する。
 
-        Python は定義行の後ろ（本体内 docstring）を、
-        その他の言語は定義行の前（JSDoc / ブロックコメント）を探索する。
+        Python: def/class の直後（関数本体の先頭）にある docstring を検索。
+        その他: 定義行の直前にあるブロックコメントを検索。
         """
         if language == '.py':
-            # Python: 定義行の `:` の直後にある triple-quote docstring を取得
-            window = content[match_start:match_start + 3000]
-            doc_match = re.search(
+            # Python docstring は def/class 行の直後、本体先頭にある
+            # "def foo(...):\n    \"\"\"...\"\"\""  のパターンを検索
+            search_area = content[match_start:match_start + 3000]
+            py_doc = re.search(
                 r':\s*\n\s*("""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\')',
-                window,
+                search_area,
             )
-            return doc_match.group(1) if doc_match else ""
+            if py_doc:
+                return py_doc.group(1)
+            return ""
         else:
-            # 他言語: 定義行の前にあるブロック/行コメントを取得
+            # 非Python: 定義行の直前のブロックコメントを検索
             lines_before = content[:match_start].split('\n')
             comment = ""
             for line in reversed(lines_before[-10:]):
@@ -110,29 +128,39 @@ class TraceCommentChecker:
         # 関数を抽出
         for match in re.finditer(patterns['function'], content, re.MULTILINE):
             func_name = match.group(1)
-            if func_name in self.SKIP_FUNCTIONS:
+
+            # ダンダーメソッドをスキップ
+            if func_name in SKIP_FUNCTIONS:
                 continue
+
             line_num = content[:match.start()].count('\n') + 1
-            comment = self._extract_comment(content, match.start(), language)
+            func_comment = self._extract_comment(content, match.start(), language)
+
             elements.append({
                 'type': 'function',
                 'name': func_name,
                 'file': str(file_path.relative_to(self.source_dir)),
                 'line': line_num,
-                'comment': comment,
+                'comment': func_comment,
             })
 
         # クラスを抽出
         for match in re.finditer(patterns['class'], content, re.MULTILINE):
             class_name = match.group(1)
+
+            # フレームワーク用内部クラスをスキップ
+            if class_name in SKIP_CLASSES:
+                continue
+
             line_num = content[:match.start()].count('\n') + 1
-            comment = self._extract_comment(content, match.start(), language)
+            class_comment = self._extract_comment(content, match.start(), language)
+
             elements.append({
                 'type': 'class',
                 'name': class_name,
                 'file': str(file_path.relative_to(self.source_dir)),
                 'line': line_num,
-                'comment': comment,
+                'comment': class_comment,
             })
 
         return elements
@@ -154,7 +182,7 @@ class TraceCommentChecker:
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
+
                 elements = self.extract_elements(file_path, content, language)
                 self.elements.extend(elements)
 
