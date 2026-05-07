@@ -16,13 +16,19 @@ services:
       - INITIAL_ADMIN_LOGIN_ID=${INITIAL_ADMIN_LOGIN_ID}
       - INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - EXTERNAL_DB_URL=${EXTERNAL_DB_URL:-}
+      - MOCK_EXTERNAL_DB=${MOCK_EXTERNAL_DB:-true}
+      - PYTHONPATH=/app/external/neon-department-db
     volumes:
       - db_data:/app/data
+      - ./external/neon-department-db:/app/external/neon-department-db
 
   test_playwright:
     image: mcr.microsoft.com/playwright:v1.59.0
     profiles:
       - test
+      - mock
+      - real
     volumes:
       - ./e2e:/e2e
     working_dir: /e2e

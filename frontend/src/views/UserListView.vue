@@ -1,10 +1,10 @@
 <!--
   利用者管理一覧画面コンポーネント。
-  要件ID: RQ-FT-MANAGE-BORROWER
-  設計ID: DS-VC-USER-LIST-FT-MANAGE-BORROWER
-  要件概要: 管理者が全利用者を一覧確認し、登録・編集・削除操作を開始できる。
-  設計概要: UserStore から利用者一覧を取得してテーブル表示し、各行に編集・削除ボタンを表示する。
-  呼び出し先: DS-SC-USER-STORE-FT-MANAGE-BORROWER, DS-SC-AUTH-STORE-FT-LOGIN
+  要件ID: RQ-FT-MANAGE-BORROWER, RQ-FT-FETCH-DEPT-BY-LOGIN-ID
+  設計ID: DS-CL-USER-LIST-VIEW-UI-BORROWER-LIST-SCREEN
+  要件概要: 管理者が全利用者を一覧確認し、登録・編集・削除操作を開始できる。部署列を表示する。
+  設計概要: UserStore から利用者一覧を取得してテーブル表示し、DeptStore で部署名を非同期取得して各行に表示する。
+  呼び出し先: DS-SC-USER-STORE-FT-MANAGE-BORROWER, DS-SC-AUTH-STORE-FT-LOGIN, DS-CL-DEPT-STORE-FT-FETCH-DEPT-BY-LOGIN-ID
   呼び出し元: DS-SC-ROUTER-NF-ROLE-ACCESS
 -->
 <template>
@@ -29,6 +29,7 @@
         <tr>
           <th>ログインID</th>
           <th>利用者名</th>
+          <th>部署</th>
           <th>権限</th>
           <th>操作</th>
         </tr>
@@ -37,6 +38,7 @@
         <tr v-for="user in userStore.userList" :key="user.login_id" :data-testid="`user-row-${user.login_id}`">
           <td>{{ user.login_id }}</td>
           <td>{{ user.display_name }}</td>
+          <td :data-testid="`dept-name-${user.login_id}`">{{ deptStore.deptNames[user.login_id] || '取得中...' }}</td>
           <td>{{ user.role === 'admin' ? '管理者' : '一般利用者' }}</td>
           <td>
             <v-btn
@@ -66,30 +68,34 @@
 <script setup>
 /**
  * 利用者管理一覧画面のロジック。
- * 要件ID: RQ-FT-MANAGE-BORROWER
- * 設計ID: DS-VC-USER-LIST-FT-MANAGE-BORROWER
- * 呼び出し先: DS-SC-USER-STORE-FT-MANAGE-BORROWER
+ * 要件ID: RQ-FT-MANAGE-BORROWER, RQ-FT-FETCH-DEPT-BY-LOGIN-ID
+ * 設計ID: DS-CL-USER-LIST-VIEW-UI-BORROWER-LIST-SCREEN
+ * 呼び出し先: DS-SC-USER-STORE-FT-MANAGE-BORROWER, DS-CL-DEPT-STORE-FT-FETCH-DEPT-BY-LOGIN-ID
  * 呼び出し元: DS-SC-ROUTER-NF-ROLE-ACCESS
  */
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth.js'
 import { useUserStore } from '../stores/user.js'
+import { useDeptStore } from '../stores/dept.js'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const userStore = useUserStore()
+const deptStore = useDeptStore()
 const errorMessage = ref('')
 
 onMounted(async () => {
   await userStore.fetchUsers()
   errorMessage.value = userStore.errorMessage
+  const loginIds = userStore.userList.map((u) => u.login_id)
+  await deptStore.fetchDeptNames(loginIds)
 })
 
 /**
  * ログアウト処理。AuthStore のセッションをクリアしてログイン画面へ遷移する。
  * 要件ID: RQ-FT-LOGIN
- * 設計ID: DS-VC-USER-LIST-FT-MANAGE-BORROWER
+ * 設計ID: DS-CL-USER-LIST-VIEW-UI-BORROWER-LIST-SCREEN
  */
 async function handleLogout() {
   await authStore.logout()

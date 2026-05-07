@@ -12,8 +12,10 @@ FastAPI アプリケーションエントリーポイント。
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.core.database import engine, Base, SessionLocal
-from app.models import equipment, user, loan_state
+from app.models import equipment, user, loan_state, reservation
 from app.api import auth, users, equipment as equipment_router
+from app.api import department as department_router
+from app.api import reservations as reservations_router
 from app.services.user_service import UserService
 
 
@@ -44,3 +46,5 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(equipment_router.router)
+app.include_router(department_router.router)
+app.include_router(reservations_router.router)

@@ -18,6 +18,7 @@ from app.models.user import User
 from app.repositories.equipment import EquipmentRepository
 from app.repositories.loan_state import LoanStateRepository
 from app.repositories.user import UserRepository
+from app.repositories.reservation import ReservationRepository
 from app.schemas.equipment import EquipmentCreate, EquipmentUpdate, EquipmentResponse, LoanInfo
 from app.schemas.loan import LoanCreate
 
@@ -43,6 +44,7 @@ class EquipmentService:
         self.equipment_repo = EquipmentRepository(db)
         self.loan_repo = LoanStateRepository(db)
         self.user_repo = UserRepository(db)
+        self.reservation_repo = ReservationRepository(db)
 
     def _to_response(self, equipment: Equipment) -> EquipmentResponse:
         """
@@ -207,17 +209,17 @@ class EquipmentService:
             HTTPException: 400 - 既に貸出中の備品を貸出しようとした場合。
 
         要件トレーサビリティ:
-          要件ID: RQ-FT-LOAN-EQUIPMENT
-          設計ID: DS-CL-EQUIPMENT-SERVICE-FT-MANAGE-EQUIPMENT
-          要件概要: 管理者が備品を指定利用者に貸出できる。貸出中備品の二重貸出は禁止する。
-          設計概要: 備品と利用者の存在確認・貸出状態確認後、Equipment.status='loaned' と LoanState を同時更新する。
+          要件ID: RQ-FT-LOAN-EQUIPMENT, RQ-DT-EQUIPMENT-RESERVED-STATUS
+          設計ID: DS-FN-VALIDATE-LOAN-AVAILABLE-RESERVED-FT-LOAN-EQUIPMENT
+          要件概要: 管理者が備品を指定利用者に貸出できる。status が available または reserved の場合のみ許可する。
+          設計概要: status が available/reserved の場合のみ貸出を許可。Equipment.status='loaned' と LoanState を同時更新する。
           呼び出し先: DS-CL-EQUIPMENT-REPO-DT-EQUIPMENT-ENTITY, DS-CL-LOAN-STATE-REPO-DT-LOAN-STATE-ENTITY
           呼び出し元: DS-CL-EQUIPMENT-ROUTER-FT-MANAGE-EQUIPMENT
         """
         equipment = self.equipment_repo.find_by_id(equipment_id)
         if equipment is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="備品が見つかりません")
-        if equipment.status == "loaned":
+        if equipment.status not in ("available", "reserved"):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="この備品は既に貸出中です",
@@ -251,11 +253,11 @@ class EquipmentService:
             HTTPException: 400 - 貸出中でない備品を返却しようとした場合。
 
         要件トレーサビリティ:
-          要件ID: RQ-FT-RETURN-EQUIPMENT
-          設計ID: DS-CL-EQUIPMENT-SERVICE-FT-MANAGE-EQUIPMENT
-          要件概要: 管理者が貸出中の備品を返却処理できる。貸出中でない備品の返却は禁止する。
-          設計概要: status == 'loaned' の確認後、Equipment.status='available' に戻し LoanState を削除する。
-          呼び出し先: DS-CL-EQUIPMENT-REPO-DT-EQUIPMENT-ENTITY, DS-CL-LOAN-STATE-REPO-DT-LOAN-STATE-ENTITY
+          要件ID: RQ-FT-RETURN-EQUIPMENT, RQ-DT-RESERVATION-RETENTION, RQ-DT-EQUIPMENT-RESERVED-STATUS
+          設計ID: DS-FN-PROCESS-RETURN-UPDATE-STATUS-FT-RETURN-EQUIPMENT, DS-FN-TRANSACTION-RETURN-UPDATE-FT-RETURN-EQUIPMENT
+          要件概要: 管理者が貸出中の備品を返却処理できる。返却時に期間終了済み予約を自動削除し、残予約数でステータスを決定する。
+          設計概要: loan_state 削除→end_date < 返却日の予約削除→残予約確認→status 更新を1トランザクションで実行する。
+          呼び出し先: DS-CL-EQUIPMENT-REPO-DT-EQUIPMENT-ENTITY, DS-CL-LOAN-STATE-REPO-DT-LOAN-STATE-ENTITY, DS-CL-RESERVATION-REPO-DT-RESERVATION-ENTITY
           呼び出し元: DS-CL-EQUIPMENT-ROUTER-FT-MANAGE-EQUIPMENT
         """
         equipment = self.equipment_repo.find_by_id(equipment_id)
@@ -266,8 +268,18 @@ class EquipmentService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="この備品は貸出中ではありません",
             )
-        equipment.status = "available"
-        self.equipment_repo.update(equipment)
+
+        import datetime
+        return_date = datetime.date.today().isoformat()
+
         self.loan_repo.delete_by_equipment_id(equipment_id)
+        self.reservation_repo.delete_expired_by_equipment(equipment_id, return_date)
+
+        remaining = self.reservation_repo.count_by_equipment_id(equipment_id)
+        if remaining > 0:
+            equipment.status = "reserved"
+        else:
+            equipment.status = "available"
+        self.equipment_repo.update(equipment)
         self.db.commit()
         return self._to_response(equipment)

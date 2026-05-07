@@ -1,10 +1,10 @@
 /**
  * Vue Router設定モジュール。
  * 全ルート定義とロールベース認可ガードを提供する。
- * 要件ID: RQ-NF-ROLE-ACCESS, RQ-FT-LOGIN
+ * 要件ID: RQ-NF-ROLE-ACCESS, RQ-FT-LOGIN, RQ-FT-VIEW-RESERVATION-CALENDAR, RQ-FT-MAKE-RESERVATION
  * 設計ID: DS-SC-ROUTER-NF-ROLE-ACCESS
- * 要件概要: 管理者と一般利用者で異なる画面へのアクセスを制御する。未認証アクセスはログインページへリダイレクトする。
- * 設計概要: createWebHistory で SPA ルーティングを構成し、beforeEach ガードで isLoggedIn と role を確認して遷移先を制御する。
+ * 要件概要: 管理者と一般利用者で異なる画面へのアクセスを制御する。未認証アクセスはログインページへリダイレクトする。予約カレンダー・予約登録画面は全ロールがアクセス可能。
+ * 設計概要: createWebHistory で SPA ルーティングを構成し、beforeEach ガードで isLoggedIn と role を確認して遷移先を制御する。/equipment/:id/reservations はロール制限なし・要ログイン。
  * 呼び出し先: DS-SC-AUTH-STORE-FT-LOGIN
  * 呼び出し元: DS-MD-FRONTEND-FT-MANAGE-EQUIPMENT
  */
@@ -68,6 +68,16 @@ const routes = [
     path: '/general/equipment',
     component: () => import('../views/GeneralEquipmentListView.vue'),
     meta: { requiresAuth: true, role: 'general' },
+  },
+  {
+    path: '/equipment/:id/reservations',
+    component: () => import('../views/ReservationCalendarView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/equipment/:id/reservations/new',
+    component: () => import('../views/ReservationFormView.vue'),
+    meta: { requiresAuth: true },
   },
 ]
 
