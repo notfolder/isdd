@@ -76,6 +76,52 @@ print_skill_fingerprint() {
   return 1
 }
 
+# Check that task files: entries are complete and exist in context-dir.
+# ERROR: SKILL.md of the target skill is not listed
+# ERROR: listed file does not exist in context-dir
+# WARN:  other skill or isdd-common file is not listed
+check_task_files() {
+  local skill_name="$1"
+  local eval_dir="$2"
+  local context_dir="$3"
+  local has_error=0
+
+  echo "[files-check] $skill_name"
+
+  # Collect path: values only from files: sections.
+  # files: entries use 4-space indent ("    - path:").
+  # content_patterns entries use 8-space indent and must be excluded.
+  local listed_paths
+  listed_paths=$(grep -h "^    - path:" "$eval_dir/tasks/"*.yaml 2>/dev/null \
+    | sed 's/^    - path:[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '"'"'")
+
+  # 1. All listed files must exist in context-dir
+  while IFS= read -r rel_path; do
+    [[ -z "$rel_path" ]] && continue
+    if [[ ! -f "$context_dir/$rel_path" ]]; then
+      echo "  [ERROR] listed but not found in context-dir: $rel_path" >&2
+      has_error=1
+    fi
+  done <<< "$listed_paths"
+
+  # 2. All files under .agents/skills/{skill} and isdd-common must be listed
+  #    __pycache__ and .pyc files are excluded from the check
+  for check_subdir in ".agents/skills/$skill_name" ".agents/skills/isdd-common"; do
+    local full_dir="$repo_root/$check_subdir"
+    [[ -d "$full_dir" ]] || continue
+    while IFS= read -r full_path; do
+      local rel_path="${full_path#$repo_root/}"
+      if ! printf '%s\n' "$listed_paths" | grep -qxF "$rel_path"; then
+        echo "  [ERROR] not listed: $rel_path" >&2
+        has_error=1
+      fi
+    done < <(find "$full_dir" -type f -not -path "*/__pycache__/*" -not -name "*.pyc" | sort)
+  done
+
+  [[ $has_error -eq 0 ]] && echo "  [OK]"
+  return $has_error
+}
+
 skill_is_selected() {
   local skill_name="$1"
 
@@ -117,7 +163,15 @@ for eval_file in "${files[@]}"; do
     cp -R "$fixtures_dir"/. "$temp_context_dir"/
 
     if [[ -d "$repo_root/.agents" ]]; then
-      ln -s "$repo_root/.agents" "$temp_context_dir/.agents"
+      cp -R "$repo_root/.agents" "$temp_context_dir/.agents"
+    fi
+
+    if ! check_task_files "$skill_name" "$eval_dir" "$temp_context_dir"; then
+      echo "==> [files-check] fix files: entries above before running eval" >&2
+      rm -rf "$temp_context_dir"
+      failures=$((failures + 1))
+      ran=$((ran + 1))
+      continue
     fi
 
     waza run "$eval_file" --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v

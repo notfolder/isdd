@@ -18,11 +18,18 @@ inputs:
     task_type: design-minimum
   files:
     - path: docs/requirements.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-design/SKILL.md
+    - path: .agents/skills/isdd-common/SKILL.md
     - path: .agents/skills/isdd-common/references/design-chapters.md
     - path: .agents/skills/isdd-common/references/design-completeness.md
+    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
     - path: .agents/skills/isdd-common/references/document-rules.md
+    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
+    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
 
 expected:
   outcomes:
