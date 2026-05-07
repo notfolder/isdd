@@ -187,16 +187,25 @@ class TraceCommentChecker:
 
                 # 各要素のトレーサブルコメントをチェック
                 for elem in elements:
-                    has_rq = 'RQ-' in elem['comment']
-                    has_ds = 'DS-' in elem['comment']
                     has_comment = bool(elem['comment'].strip())
+                    comment = elem['comment']
+
+                    required_labels = [
+                        '要件ID:',
+                        '設計ID:',
+                        '要件概要:',
+                        '設計概要:',
+                        '呼び出し先設計ID:',
+                        '呼び出し元設計ID:',
+                    ]
+                    missing_labels = [lbl for lbl in required_labels if lbl not in comment]
 
                     if not has_comment:
                         self.without_trace.append(elem)
-                    elif not (has_rq and has_ds):
+                    elif missing_labels:
                         self.incomplete_trace.append({
                             **elem,
-                            'missing': ('RQ' if not has_rq else '') + ('DS' if not has_ds else ''),
+                            'missing': ', '.join(missing_labels),
                         })
                     else:
                         self.valid_trace.append(elem)
@@ -239,10 +248,11 @@ class TraceCommentChecker:
             print()
 
         if self.incomplete_trace:
-            print("⚠ 記載不足（RQ-* または DS-* が不足）の要素")
+            print("⚠ 記載不足（必須ラベルが不足）の要素")
             print("-" * 50)
             for elem in sorted(self.incomplete_trace, key=lambda x: (x['file'], x['line']))[:20]:
-                print(f"  {elem['file']}:{elem['line']} - {elem['type']} '{elem['name']}' (不足: {elem['missing']})")
+                print(f"  {elem['file']}:{elem['line']} - {elem['type']} '{elem['name']}'")
+                print(f"    不足ラベル: {elem['missing']}")
             if len(self.incomplete_trace) > 20:
                 print(f"  ... 他 {len(self.incomplete_trace) - 20} 件")
             print()

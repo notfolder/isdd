@@ -11,9 +11,7 @@ tags:
 
 inputs:
   prompt: |
-    docs/requirements.md と docs/detail_design.md を読み、
-    src/hello.py に isdd-traceable-coding の規則に沿ったコメントを追加してください。
-    既存のクラス構成は維持してください。
+    isdd-traceable-codingを実行してください。
 
   context:
     task_type: traceable-coding-minimum
