@@ -1,0 +1,17 @@
+name: isdd-reverse-engineering-minimum
+skill: isdd-reverse-engineering
+version: "1.0"
+description: |
+  isdd-reverse-engineering 向けの最小評価。
+  Hello World の既存コードから要件定義書・設計書を逆引き生成し、
+  トレーサブルコメントを付与できるかを検証する。
+
+config:
+  executor: copilot-sdk
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 600
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

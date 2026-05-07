@@ -1,0 +1,89 @@
+id: isdd-reverse-engineering-hello-001
+name: Hello World リバースエンジニアリング
+description: |
+  src/hello.py から要件定義書・設計書を逆引き生成し、
+  トレーサブルコメントを付与できるかを検証する。
+
+tags:
+  - isdd
+  - reverse-engineering
+  - minimum
+
+inputs:
+  prompt: |
+    isdd-reverse-engineeringを実行してください。
+
+    ヒアリングへの回答は以下の通りです。
+    インタビューが必要になった場合はこの回答を使用してください。
+
+    - システムの目的: 「Hello, World!」を標準出力に表示する最小構成の動作検証
+    - 想定利用者: 開発者・CIパイプライン
+    - エラーハンドリング方針: 例外は伝播させて実行失敗として終了する
+    - 非機能要件: 特になし（最小構成）
+    - 表示文字列の変更可否: 固定値とし、外部から変更しない
+
+  context:
+    task_type: reverse-engineering-minimum
+  files:
+    - path: src/hello.py
+    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-common/references/document-rules.md
+    - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/design-chapters.md
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: docs_generated
+    type: file
+    config:
+      must_exist:
+        - "docs/requirements.md"
+        - "docs/detail_design.md"
+
+  - name: rq_ids_format
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-[A-Z]"
+            - "\\|.*RQ-[A-Z0-9-]+"
+
+  - name: ds_ids_format
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/detail_design.md"
+          must_match:
+            - "DS-MD-[A-Z]"
+            - "DS-FN-[A-Z]"
+
+  - name: rq_ds_checker_executed
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴を確認し、bash ツールで
+        `rq_ds_link_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
+
+        実行されていれば "pass"、実行されていなければ "fail" とだけ答えてください。
+
+  - name: logic_preserved
+    type: file
+    config:
+      content_patterns:
+        - path: "src/hello.py"
+          must_match:
+            - "class\\s+HelloWorldPrinter"
+            - "def\\s+get_hello_message\\(self\\)\\s*->\\s*str"
+            - "return\\s+\\\"Hello, World!\\\""
+            - "def\\s+print_hello_world\\(self\\)\\s*->\\s*None"
+            - "message\\s*=\\s*self\\.get_hello_message\\(\\)"
+            - "print\\(message\\)"
+            - "printer\\s*=\\s*HelloWorldPrinter\\(\\)"
+            - "printer\\.print_hello_world\\(\\)"
