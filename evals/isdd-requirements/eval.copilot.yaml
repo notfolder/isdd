@@ -1,0 +1,17 @@
+name: isdd-requirements-minimum
+skill: isdd-requirements
+version: "1.0"
+description: |
+  isdd-requirements 向けの最小評価。
+  Hello World システムの要件定義書を新規作成し、
+  RQ-* ID体系・RQ-BK双方向マッピング・整合性チェッカーの実行を検証する。
+
+config:
+  executor: copilot-sdk
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 600
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

@@ -147,6 +147,29 @@ metadata:
 
 ---
 
+## 整合性チェック（必須実行）
+
+変更要件定義書が完成したら、以下のスクリプトを **bash で必ず実行する**：
+
+```bash
+python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py \
+  .history/[YYYYMMDD]-[タスク名]/change_requirements.md
+```
+
+`[YYYYMMDD]-[タスク名]` は実際のディレクトリ名に置き換えること。
+
+**出力**:
+- フォーマット違反一覧：不正なカテゴリのRQ-* ID
+- BKマッピング欠落一覧：対応するRQ-BK-*がない要件
+- 孤立BK一覧：対応要件が1件もないRQ-BK-*
+- 検証サマリ：総数、違反数、欠落数
+
+**完了ゲート（レビューへ進む前に全て満たすこと）**：
+
+- [ ] `rq_integrity_checker.py` を bash で実行し、実行ログをレスポンスに記載した
+- [ ] 問題が検出された場合は変更要件定義書を修正して再実行し、問題が0件になった
+- [ ] 問題なしを確認してからレビューへ進む
+
 ## ドキュメント作成ルール
 
 `isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。

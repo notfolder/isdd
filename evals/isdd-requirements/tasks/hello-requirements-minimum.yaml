@@ -1,0 +1,96 @@
+id: isdd-requirements-hello-001
+name: Hello World 要件定義
+description: |
+  Hello World システムの要件定義書を新規作成し、
+  RQ-* ID体系・RQ-BK双方向マッピング・整合性チェッカー実行を検証する。
+
+tags:
+  - isdd
+  - requirements
+  - minimum
+
+inputs:
+  prompt: |
+    isdd-requirementsを実行してください。
+    対象システム: Hello World出力システム
+
+    ヒアリングへの回答は以下の通りです。
+    質問された場合はこの回答を使用してください。
+
+    # 開始ゲート回答
+    - 外部システム連携: なし（選択肢B）
+    - 既存ソースコード: なし（選択肢A）
+
+    # システム情報
+    - システムの目的: "Hello, World!" を標準出力に表示する最小構成の動作検証
+    - 想定利用者: 開発者・CIパイプライン
+    - 業務課題: テキスト出力の動作を確認できる共通手段がなく、実行環境の検証が属人化している
+    - 機能: print()で固定文字列 "Hello, World!" を出力する1機能のみ
+    - 画面/UI: CLIのみ、対話なし
+    - 外部連携: なし
+    - 非機能要件: 特になし（最小構成）
+    - データ: 外部DB不要・内部状態なし・データ保持不要
+    - エラーハンドリング: 例外は伝播させて実行失敗として終了する
+    - 表示文字列の変更可否: 固定値とし、外部から変更しない
+
+  context:
+    task_type: requirements-minimum
+  files:
+    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-common/references/document-rules.md
+    - path: .agents/skills/isdd-common/references/requirements-chapters.md
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: docs_generated
+    type: file
+    config:
+      must_exist:
+        - "docs/requirements.md"
+
+  - name: rq_bz_ids
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-BZ-[A-Z]"
+
+  - name: rq_bk_ids
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-BK-[A-Z]"
+
+  - name: rq_ft_ids
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-FT-[A-Z]"
+
+  - name: rq_bk_mapping_table
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "\\|.*RQ-BK-[A-Z0-9-]+.*\\|"
+
+  - name: rq_integrity_checker_executed
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴を確認し、bash ツールで
+        `rq_integrity_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
+
+        実行されていた場合は set_waza_grade_pass を呼び出してください。
+        実行されていなかった場合は set_waza_grade_fail を呼び出してください。
