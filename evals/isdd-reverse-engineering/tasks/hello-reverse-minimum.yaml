@@ -71,7 +71,8 @@ graders:
         セッションのツール呼び出し履歴を確認し、bash ツールで
         `rq_ds_link_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
 
-        実行されていれば "pass"、実行されていなければ "fail" とだけ答えてください。
+        実行されていた場合は set_waza_grade_pass を呼び出してください。
+        実行されていなかった場合は set_waza_grade_fail を呼び出してください。
 
   - name: logic_preserved
     type: file
