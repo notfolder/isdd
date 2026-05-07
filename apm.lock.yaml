@@ -1,0 +1,22 @@
+lockfile_version: '1'
+generated_at: '2026-05-07T01:58:45.978042+00:00'
+dependencies: []
+local_deployed_files:
+- .agents/skills/isdd-change-design
+- .agents/skills/isdd-change-req
+- .agents/skills/isdd-common
+- .agents/skills/isdd-design
+- .agents/skills/isdd-external-precheck
+- .agents/skills/isdd-external-research
+- .agents/skills/isdd-requirements
+- .agents/skills/isdd-reverse-engineering
+- .agents/skills/isdd-traceable-coding
+- .claude/skills/isdd-change-design
+- .claude/skills/isdd-change-req
+- .claude/skills/isdd-common
+- .claude/skills/isdd-design
+- .claude/skills/isdd-external-precheck
+- .claude/skills/isdd-external-research
+- .claude/skills/isdd-requirements
+- .claude/skills/isdd-reverse-engineering
+- .claude/skills/isdd-traceable-coding

@@ -107,3 +107,7 @@ ENV/
 *.sqlite
 *.sqlite3
 *.db
+
+
+# APM dependencies
+apm_modules/
