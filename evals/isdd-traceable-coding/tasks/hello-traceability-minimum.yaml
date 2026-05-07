@@ -1,0 +1,71 @@
+id: isdd-traceability-hello-001
+name: Hello World トレースコメント付与
+description: |
+  docs/requirements.md と docs/detail_design.md を参照し、
+  src/hello.py にトレーサブルコメントを付与できるかを検証する。
+
+tags:
+  - isdd
+  - traceability
+  - minimum
+
+inputs:
+  prompt: |
+    docs/requirements.md と docs/detail_design.md を読み、
+    src/hello.py に isdd-traceable-coding の規則に沿ったコメントを追加してください。
+    既存のクラス構成は維持してください。
+
+  context:
+    task_type: traceable-coding-minimum
+  files:
+    - path: docs/requirements.md
+    - path: docs/detail_design.md
+    - path: src/hello.py
+    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: traceability_comment_presence
+    type: file
+    config:
+      must_exist:
+        - "src/hello.py"
+      content_patterns:
+        - path: "src/hello.py"
+          must_match:
+            - "要件ID\\s*:\\s*RQ-FT-GET-HELLO-MESSAGE"
+            - "要件ID\\s*:\\s*RQ-FT-PRINT-HELLO-WORLD"
+            - "設計ID\\s*:\\s*DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD"
+            - "設計ID\\s*:\\s*DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE"
+            - "設計ID\\s*:\\s*DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD"
+            - "設計ID\\s*:\\s*DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD"
+            - "要件概要"
+            - "設計概要"
+            - "呼び出し先(設計ID)?\\s*:"
+            - "呼び出し元(設計ID)?\\s*:"
+            - "呼び出し先(設計ID)?\\s*:\\s*DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE"
+            - "呼び出し元(設計ID)?\\s*:\\s*DS-IF-CLI-ENTRY-UI-CLI-EXECUTION"
+          must_not_match:
+            - "TODO|FIXME|TBD"
+            - "DS-ID\\s*:|RQ-ID\\s*:"
+            - "\\[DS-[A-Z0-9-]+\\](\\[RQ-[A-Z0-9-]+\\])+"
+            - "Traceable\\s*:|Trace\\s*:"
+
+  - name: logic_preserved
+    type: file
+    config:
+      content_patterns:
+        - path: "src/hello.py"
+          must_match:
+            - "class\\s+HelloWorldPrinter"
+            - "def\\s+get_hello_message\\(self\\)\\s*->\\s*str"
+            - "return\\s+\\\"Hello, World!\\\""
+            - "def\\s+print_hello_world\\(self\\)\\s*->\\s*None"
+            - "message\\s*=\\s*self\\.get_hello_message\\(\\)"
+            - "print\\(message\\)"
+            - "printer\\s*=\\s*HelloWorldPrinter\\(\\)"
+            - "printer\\.print_hello_world\\(\\)"

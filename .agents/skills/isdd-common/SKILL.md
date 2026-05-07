@@ -18,3 +18,5 @@ isdd スキル群の共通参照ファイルを提供するリソースパッケ
 - `references/design-chapters.md` — 詳細設計書の章構成
 - `references/design-completeness.md` — 設計網羅性チェックリスト
 - `references/design-tasks-rules.md` — 実装タスク化のルール
+- `scripts/rq_ds_link_checker.py` — 要件ID（RQ-*）と設計ID（DS-*）の対応欠落・重複・不整合を検証
+- `scripts/trace_comment_coverage_checker.py` — ソースコードのトレーサブルコメント付与率と記載不足を検証

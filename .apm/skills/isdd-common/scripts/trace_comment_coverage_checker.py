@@ -19,8 +19,7 @@ import re
 import sys
 import json
 from pathlib import Path
-from collections import defaultdict
-from typing import Set, Dict, List, Tuple, Optional
+from typing import Dict, List, Optional
 
 # Pydantic/SQLAlchemy 等のフレームワーク用内部クラスはトレーサブルコメント不要
 SKIP_CLASSES = {'Config', 'Meta', 'Params', 'Arguments', 'Settings'}

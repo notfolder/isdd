@@ -1,0 +1,16 @@
+name: isdd-traceable-coding-minimum
+skill: isdd-traceable-coding
+version: "1.0"
+description: |
+  isdd-traceable-coding 向けの最小評価。
+  Hello World の既存コードにトレーサブルコメントを付与できるかを検証する。
+
+config:
+  executor: mock
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 180
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

@@ -114,3 +114,8 @@ apm_modules/
 
 # APM generated integrations
 .claude/
+
+# Waza / eval artifacts
+evals/**/artifacts/transcripts/
+last-real-results.json
+last-real-reslts.json
