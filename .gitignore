@@ -111,3 +111,6 @@ ENV/
 
 # APM dependencies
 apm_modules/
+
+# APM generated integrations
+.claude/
