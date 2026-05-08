@@ -56,7 +56,7 @@ graders:
             - "呼び出し先(設計ID)?\\s*:"
             - "呼び出し元(設計ID)?\\s*:"
             - "呼び出し先(設計ID)?\\s*:\\s*DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE"
-            - "呼び出し元(設計ID)?\\s*:\\s*DS-IF-CLI-ENTRY-UI-CLI-EXECUTION"
+            - "呼び出し元(設計ID)?\\s*:\\s*DS-IF-CLI-ENTRY-FT-PRINT-HELLO-WORLD"
           must_not_match:
             - "TODO|FIXME|TBD"
             - "DS-ID\\s*:|RQ-ID\\s*:"
