@@ -77,9 +77,9 @@ print_skill_fingerprint() {
 }
 
 # Check that task files: entries are complete and exist in context-dir.
-# ERROR: SKILL.md of the target skill is not listed
+# ERROR: skill: field is missing in eval yaml
+# ERROR: any file under .agents/skills/{skill} or isdd-common is not listed
 # ERROR: listed file does not exist in context-dir
-# WARN:  other skill or isdd-common file is not listed
 check_task_files() {
   local skill_name="$1"
   local eval_dir="$2"
@@ -88,21 +88,20 @@ check_task_files() {
 
   echo "[files-check] $skill_name"
 
+  # 1. skill: field must exist in eval yaml
+  local eval_yaml
+  eval_yaml="$(ls "$eval_dir"/eval.*.yaml 2>/dev/null | head -1)"
+  if [[ -z "$eval_yaml" ]] || ! grep -q "^skill:" "$eval_yaml"; then
+    echo "  [ERROR] skill: field missing in $(basename "${eval_yaml:-eval.yaml}")" >&2
+    has_error=1
+  fi
+
   # Collect path: values only from files: sections.
   # files: entries use 4-space indent ("    - path:").
   # content_patterns entries use 8-space indent and must be excluded.
   local listed_paths
   listed_paths=$(grep -h "^    - path:" "$eval_dir/tasks/"*.yaml 2>/dev/null \
     | sed 's/^    - path:[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '"'"'")
-
-  # 1. All listed files must exist in context-dir
-  while IFS= read -r rel_path; do
-    [[ -z "$rel_path" ]] && continue
-    if [[ ! -f "$context_dir/$rel_path" ]]; then
-      echo "  [ERROR] listed but not found in context-dir: $rel_path" >&2
-      has_error=1
-    fi
-  done <<< "$listed_paths"
 
   # 2. All files under .agents/skills/{skill} and isdd-common must be listed
   #    __pycache__ and .pyc files are excluded from the check
@@ -117,6 +116,15 @@ check_task_files() {
       fi
     done < <(find "$full_dir" -type f -not -path "*/__pycache__/*" -not -name "*.pyc" | sort)
   done
+
+  # 3. All listed files must exist in context-dir
+  while IFS= read -r rel_path; do
+    [[ -z "$rel_path" ]] && continue
+    if [[ ! -f "$context_dir/$rel_path" ]]; then
+      echo "  [ERROR] listed but not found in context-dir: $rel_path" >&2
+      has_error=1
+    fi
+  done <<< "$listed_paths"
 
   [[ $has_error -eq 0 ]] && echo "  [OK]"
   return $has_error

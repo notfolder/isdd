@@ -16,10 +16,10 @@ inputs:
   context:
     task_type: traceable-coding-minimum
   files:
-    - path: .agents/skills/isdd-traceable-coding/SKILL.md
     - path: docs/requirements.md
     - path: docs/detail_design.md
     - path: src/hello.py
+    - path: .agents/skills/isdd-traceable-coding/SKILL.md
     - path: .agents/skills/isdd-common/SKILL.md
     - path: .agents/skills/isdd-common/references/design-chapters.md
     - path: .agents/skills/isdd-common/references/design-completeness.md

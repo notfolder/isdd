@@ -25,8 +25,8 @@ inputs:
   context:
     task_type: reverse-engineering-minimum
   files:
-    - path: .agents/skills/isdd-reverse-engineering/SKILL.md
     - path: src/hello.py
+    - path: .agents/skills/isdd-reverse-engineering/SKILL.md
     - path: .agents/skills/isdd-common/SKILL.md
     - path: .agents/skills/isdd-common/references/design-chapters.md
     - path: .agents/skills/isdd-common/references/design-completeness.md
