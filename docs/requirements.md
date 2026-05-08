@@ -80,31 +80,48 @@ flowchart TD
 ### 3.4 画面仕様と画面遷移図
 - 画面一覧
   - ログイン画面
-  - 備品一覧画面（一般利用者向け）
-  - 管理者ダッシュボード
+  - 備品一覧画面
+  - 備品登録画面
   - 備品編集画面
-  - 利用者管理画面
+  - 備品削除確認画面
+  - 利用者一覧画面
+  - 利用者登録画面
+  - 利用者編集画面
+  - 利用者削除確認画面
 
 ```mermaid
 flowchart LR
     L[ログイン画面] --> U[備品一覧画面]
-    L --> A[管理者ダッシュボード]
-    A --> E[備品編集画面]
-    A --> M[利用者管理画面]
-    E --> A
-    M --> A
+  U --> AC[備品登録画面]
+  U --> AE[備品編集画面]
+  U --> AD[備品削除確認画面]
+  U --> UL[利用者一覧画面]
+    UL --> UC[利用者登録画面]
+    UL --> UE[利用者編集画面]
+    UL --> UD[利用者削除確認画面]
+    AC --> U
+    AE --> U
+    AD --> U
+    UC --> UL
+    UE --> UL
+    UD --> UL
 ```
 
 ### 3.5 全機能のユーザー利用フロー
 ```mermaid
 flowchart TD
     A[ユーザーがログイン] --> B{ロール判定}
-    B -->|一般利用者| C[備品一覧で貸出可能を確認]
-    B -->|管理者| D[管理者ダッシュボード表示]
-    D --> E[備品を登録/更新/削除]
-    D --> F[貸出登録: 現在利用者IDを設定]
-    D --> G[返却登録: 現在利用者IDを解除]
-    D --> H[利用者を登録/更新/削除]
+  B --> C[備品一覧を表示]
+  C --> D{管理者か}
+  D -->|いいえ| E[貸出可能状態を確認]
+  D -->|はい| F[登録/編集/削除ボタンを表示]
+  F --> G[備品登録画面を開く]
+  F --> H[備品編集画面を開く]
+  F --> I[備品削除確認画面を開く]
+  F --> J[貸出登録: 現在利用者IDを設定]
+  F --> K[返却登録: 現在利用者IDを解除]
+  F --> L[利用者一覧画面を開く]
+  L --> M[利用者登録/編集/削除確認画面を開く]
 ```
 
 ### 3.6 業務フローとの対応関係
@@ -130,7 +147,6 @@ flowchart TD
 | RQ-FT-MANAGE-USERS | マスタ管理 | 利用者管理（登録・更新・削除・一覧） | RQ-BK-UNKNOWN-CURRENT-BORROWER | 現在利用者を正しく紐づけできない |
 | RQ-UI-ROLE-BASED-SCREENS | 画面 | ロール別画面表示制御 | RQ-BK-UNKNOWN-CURRENT-BORROWER | 一般利用者が管理操作できてしまう |
 | RQ-NF-AUTHORIZATION-BY-ROLE | 共通（認証・認可） | 管理者/一般利用者の権限制御 | RQ-BK-UNKNOWN-CURRENT-BORROWER | 役割分離ができず誤操作リスクが上がる |
-| RQ-OP-BACKUP-DAILY | 運用 | 日次バックアップ実施 | RQ-BK-INCONSISTENT-ASSET-LEDGER | 障害時に台帳復旧できない |
 | RQ-EX-NO-EXTERNAL-INTEGRATION | 外部連携 | 外部連携なしでの単独運用 | RQ-BK-INCONSISTENT-ASSET-LEDGER | MVP範囲が膨らみ導入が遅れる |
 
 ## 4. データ
@@ -200,11 +216,11 @@ flowchart TD
 ### 5.2 機能と画面・ユーザーフローの対応
 | 機能ID | 対応画面 | 対応ユーザーフロー |
 |---|---|---|
-| RQ-FT-MANAGE-ASSET-MASTER | 管理者ダッシュボード、備品編集画面 | 管理者が備品を登録/更新/削除 |
-| RQ-FT-REGISTER-LENDING | 管理者ダッシュボード | 管理者が現在利用者IDを設定 |
-| RQ-FT-REGISTER-RETURN | 管理者ダッシュボード | 管理者が現在利用者IDを解除 |
+| RQ-FT-MANAGE-ASSET-MASTER | 備品一覧画面、備品登録画面、備品編集画面、備品削除確認画面 | 管理者が備品を登録/更新/削除 |
+| RQ-FT-REGISTER-LENDING | 備品一覧画面 | 管理者が現在利用者IDを設定 |
+| RQ-FT-REGISTER-RETURN | 備品一覧画面 | 管理者が現在利用者IDを解除 |
 | RQ-FT-VIEW-ASSET-AVAILABILITY | 備品一覧画面 | 一般利用者が貸出可能状態を確認 |
-| RQ-FT-MANAGE-USERS | 利用者管理画面 | 管理者が利用者を登録/更新/削除 |
+| RQ-FT-MANAGE-USERS | 利用者一覧画面、利用者登録画面、利用者編集画面、利用者削除確認画面 | 管理者が利用者を登録/更新/削除 |
 
 ## 6. テスト用利用シナリオ
 
@@ -220,7 +236,7 @@ flowchart TD
 ### 7.1 業務課題 -> 要件
 | 業務課題ID | 対応要件ID |
 |---|---|
-| RQ-BK-INCONSISTENT-ASSET-LEDGER | RQ-BZ-ASSET-LENDING-MANAGEMENT, RQ-FT-UNIFY-ASSET-LEDGER, RQ-FT-MANAGE-ASSET-MASTER, RQ-EX-NO-EXTERNAL-INTEGRATION, RQ-DT-INTERNAL-DATA-SCOPE, RQ-DT-EXTERNAL-DATA-SCOPE, RQ-DT-DATA-RETENTION-UNLIMITED, RQ-DT-NO-EXTERNAL-DB-CONNECTION, RQ-DT-USE-INTERNAL-DB, RQ-DT-ASSET-ENTITY, RQ-NF-RESPONSE-TIME-3S, RQ-NF-CONCURRENT-USERS-20, RQ-OP-SOFT-SAVING-SEARCH-TIME, RQ-OP-BACKUP-DAILY, RQ-TS-VERIFY-ASSET-MASTER-CRUD |
+| RQ-BK-INCONSISTENT-ASSET-LEDGER | RQ-BZ-ASSET-LENDING-MANAGEMENT, RQ-FT-UNIFY-ASSET-LEDGER, RQ-FT-MANAGE-ASSET-MASTER, RQ-EX-NO-EXTERNAL-INTEGRATION, RQ-DT-INTERNAL-DATA-SCOPE, RQ-DT-EXTERNAL-DATA-SCOPE, RQ-DT-DATA-RETENTION-UNLIMITED, RQ-DT-NO-EXTERNAL-DB-CONNECTION, RQ-DT-USE-INTERNAL-DB, RQ-DT-ASSET-ENTITY, RQ-NF-RESPONSE-TIME-3S, RQ-NF-CONCURRENT-USERS-20, RQ-OP-SOFT-SAVING-SEARCH-TIME, RQ-TS-VERIFY-ASSET-MASTER-CRUD |
 | RQ-BK-UNKNOWN-CURRENT-BORROWER | RQ-FT-SHOW-CURRENT-BORROWER, RQ-FT-REGISTER-LENDING, RQ-FT-REGISTER-RETURN, RQ-FT-VIEW-ASSET-AVAILABILITY, RQ-FT-MANAGE-USERS, RQ-UI-ROLE-BASED-SCREENS, RQ-UI-APPLICATION-TYPE-GUI, RQ-NF-KPI-RECORD-LEAKAGE-RATE, RQ-NF-KPI-NO-UNKNOWN-ITEM, RQ-NF-AUTHENTICATION-ID-PASSWORD, RQ-NF-AUTHORIZATION-BY-ROLE, RQ-DT-USER-ENTITY, RQ-DT-ASSET-ATTRIBUTES, RQ-DT-USER-ATTRIBUTES, RQ-DT-ASSET-STATE-TRANSITION, RQ-OP-APPLICATION-LOG-RETENTION, RQ-TS-VERIFY-LOGIN-ROLE-ROUTING, RQ-TS-VERIFY-LENDING-RETURN-CURRENT-USER, RQ-TS-VERIFY-USER-VIEW-AVAILABILITY |
 
 ### 7.2 要件 -> 業務課題
