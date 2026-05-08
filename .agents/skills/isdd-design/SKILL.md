@@ -5,7 +5,7 @@ description: >
   「詳細設計して」「設計書を作りたい」「要件から設計に落として」「内部設計まで詰めたい」などの依頼では必ずこのスキルを使うこと。
   docs/requirements.md から docs/detail_design.md を作る作業、設計の網羅性確認、冗長設計の排除、実装タスク化までを行う場面で必ず起動すること。
 metadata:
-  version: "1.0.9"
+  version: "1.0.10"
 ---
 
 # isdd-design - インタビュー駆動 詳細設計スキル

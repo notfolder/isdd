@@ -4,7 +4,7 @@ description: >
   isdd スキル群が共有する参照ファイル群。他のスキルから references/ 配下のファイルを読み込むための共通リソース。
   単独で起動されることはなく、isdd-requirements / isdd-design などのスキルから参照される。
 metadata:
-  version: "1.0.9"
+  version: "1.0.10"
 ---
 
 # isdd-common
