@@ -20,6 +20,29 @@ from .api.routers.auth_router import router as auth_router
 from .api.routers.health_router import router as health_router
 from .api.routers.users_router import router as users_router
 from .config.logging import setup_logging
+from .services.user_service import UserService
+
+
+def _seed_default_users_if_empty(gateway) -> None:
+    """
+    users テーブルが空の場合のみ初期ユーザーを投入する。
+
+    要件トレーサビリティ:
+      要件ID: RQ-TS-VERIFY-LOGIN-ROLE-ROUTING
+      設計ID: DS-FN-SAVE-USER-FT-MANAGE-USERS
+      要件概要: 管理者と一般利用者のアカウントが存在する前提でログイン検証を行う。
+      設計概要: users 件数が 0 のときだけ admin/viewer を登録する。
+      呼び出し先設計ID: DS-CL-USER-SERVICE-FT-MANAGE-USERS
+      呼び出し元設計ID: DS-MD-FASTAPI-BACKEND-FT-UNIFY-ASSET-LEDGER
+    """
+    user_service = UserService(gateway)
+    admin_row = gateway.fetch_one("SELECT login_id FROM users WHERE login_id = ?", ("admin",))
+    if admin_row is None:
+      user_service.save_user("admin", "管理者", "admin123", "admin")
+
+    viewer_row = gateway.fetch_one("SELECT login_id FROM users WHERE login_id = ?", ("viewer",))
+    if viewer_row is None:
+      user_service.save_user("viewer", "一般利用者", "viewer123", "viewer")
 
 
 def create_app() -> FastAPI:
@@ -37,6 +60,7 @@ def create_app() -> FastAPI:
     setup_logging()
     gateway = get_gateway()
     gateway.initialize_schema()
+    _seed_default_users_if_empty(gateway)
 
     app = FastAPI(title="Asset Lending Management API")
     app.include_router(health_router)

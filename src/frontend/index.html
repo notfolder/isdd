@@ -5,13 +5,296 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>備品管理・貸出管理アプリ</title>
     <style>
-      body { font-family: sans-serif; margin: 2rem; }
-      table { border-collapse: collapse; width: 100%; }
-      th, td { border: 1px solid #ccc; padding: 0.4rem; }
+      :root {
+        --bg: #f7f8fb;
+        --card: #ffffff;
+        --text: #1b2430;
+        --subtle: #5a6b80;
+        --border: #d8e0ea;
+        --accent: #0f766e;
+        --accent-weak: #dff7f4;
+        --danger: #b91c1c;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: radial-gradient(circle at top right, #e6f6ff 0%, var(--bg) 45%);
+        color: var(--text);
+        font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      }
+
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        font-size: 1.6rem;
+      }
+
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: end;
+        flex-wrap: wrap;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 220px;
+      }
+
+      .field label {
+        font-size: 0.9rem;
+        color: var(--subtle);
+      }
+
+      input {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 1rem;
+      }
+
+      button {
+        border: none;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #fff;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+
+      .mt-16 { margin-top: 16px; }
+      .mt-24 { margin-top: 24px; }
+
+      .note {
+        background: var(--accent-weak);
+        border: 1px solid #b9ece7;
+        color: #0b5f59;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+
+      .error {
+        color: var(--danger);
+        font-size: 0.92rem;
+        margin-top: 8px;
+      }
+
+      .user-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        display: inline-block;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        padding: 4px 10px;
+        font-size: 0.85rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        padding: 10px 8px;
+        vertical-align: top;
+      }
+
+      th { font-size: 0.9rem; color: var(--subtle); }
+
+      .admin-controls {
+        display: none;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .hidden { display: none !important; }
+
+      @media (max-width: 640px) {
+        .container { padding: 14px; }
+      }
     </style>
   </head>
   <body>
-    <h1>備品管理・貸出管理アプリ</h1>
-    <p>フロントエンド雛形です。API は /api/ 配下を参照します。</p>
+    <div class="container">
+      <div id="loginPanel" class="panel">
+        <h1>備品管理・貸出管理アプリ</h1>
+        <div class="row">
+          <div class="field">
+            <label for="loginId">ログインID</label>
+            <input id="loginId" autocomplete="username" />
+          </div>
+          <div class="field">
+            <label for="password">パスワード</label>
+            <input id="password" type="password" autocomplete="current-password" />
+          </div>
+          <button id="loginButton">ログイン</button>
+        </div>
+        <p class="note mt-16">初期アカウント: admin / admin123、viewer / viewer123</p>
+        <p id="loginError" class="error"></p>
+      </div>
+
+      <div id="assetPanel" class="panel hidden mt-24">
+        <div class="user-info">
+          <div>
+            <strong id="welcome"></strong>
+            <span id="roleBadge" class="badge"></span>
+          </div>
+          <button id="logoutButton" type="button">ログアウト</button>
+        </div>
+
+        <div id="adminControls" class="admin-controls mt-16">
+          <button type="button" disabled>備品登録</button>
+          <button type="button" disabled>備品編集</button>
+          <button type="button" disabled>備品削除</button>
+          <button type="button" disabled>貸出登録</button>
+          <button type="button" disabled>返却登録</button>
+          <button type="button" disabled>利用者一覧</button>
+        </div>
+
+        <div class="mt-16">
+          <table>
+            <thead>
+              <tr>
+                <th>資産管理番号</th>
+                <th>備品名</th>
+                <th>状態</th>
+                <th>現在利用者</th>
+              </tr>
+            </thead>
+            <tbody id="assetRows"></tbody>
+          </table>
+        </div>
+        <p id="assetError" class="error"></p>
+      </div>
+    </div>
+
+    <script>
+      const loginPanel = document.getElementById("loginPanel");
+      const assetPanel = document.getElementById("assetPanel");
+      const loginIdInput = document.getElementById("loginId");
+      const passwordInput = document.getElementById("password");
+      const loginButton = document.getElementById("loginButton");
+      const loginError = document.getElementById("loginError");
+      const welcome = document.getElementById("welcome");
+      const roleBadge = document.getElementById("roleBadge");
+      const logoutButton = document.getElementById("logoutButton");
+      const adminControls = document.getElementById("adminControls");
+      const assetRows = document.getElementById("assetRows");
+      const assetError = document.getElementById("assetError");
+
+      let currentUser = null;
+
+      async function loadAssets() {
+        assetError.textContent = "";
+        const response = await fetch("/api/assets/availability");
+        if (!response.ok) {
+          throw new Error("備品一覧の取得に失敗しました");
+        }
+
+        const assets = await response.json();
+        assetRows.innerHTML = "";
+        for (const asset of assets) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${asset.asset_id}</td>
+            <td>${asset.asset_name}</td>
+            <td>${asset.status}</td>
+            <td>${asset.current_user_name || ""}</td>
+          `;
+          assetRows.appendChild(tr);
+        }
+      }
+
+      function showAssetPanel() {
+        loginPanel.classList.add("hidden");
+        assetPanel.classList.remove("hidden");
+        welcome.textContent = `${currentUser.user_name} さん`;
+        roleBadge.textContent = currentUser.role === "admin" ? "管理者" : "一般利用者";
+        adminControls.style.display = currentUser.can_manage ? "flex" : "none";
+      }
+
+      function showLoginPanel() {
+        assetPanel.classList.add("hidden");
+        loginPanel.classList.remove("hidden");
+        loginError.textContent = "";
+        passwordInput.value = "";
+      }
+
+      async function login() {
+        const loginId = loginIdInput.value.trim();
+        const password = passwordInput.value;
+        if (!loginId || !password) {
+          loginError.textContent = "ログインIDとパスワードを入力してください。";
+          return;
+        }
+
+        loginError.textContent = "";
+        loginButton.disabled = true;
+        try {
+          const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ login_id: loginId, password: password }),
+          });
+
+          if (!response.ok) {
+            const errorBody = await response.json().catch(() => ({}));
+            const detail = errorBody.detail || "ログインに失敗しました。";
+            throw new Error(detail);
+          }
+
+          currentUser = await response.json();
+          showAssetPanel();
+          await loadAssets();
+        } catch (error) {
+          loginError.textContent = error.message;
+        } finally {
+          loginButton.disabled = false;
+        }
+      }
+
+      loginButton.addEventListener("click", login);
+      passwordInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          login();
+        }
+      });
+      logoutButton.addEventListener("click", () => {
+        currentUser = null;
+        showLoginPanel();
+      });
+    </script>
   </body>
 </html>
