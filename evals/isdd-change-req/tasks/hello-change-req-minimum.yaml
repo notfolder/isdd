@@ -1,0 +1,118 @@
+id: isdd-change-req-hello-001
+name: Hello World 時刻表示追加 変更要件定義
+description: |
+  既存の Hello World 要件定義書に対して、出力に現在時刻を追加する変更要件を定義し、
+  change_requirements.md の生成・RQ-* ID付与・整合性チェッカー実行を検証する。
+
+tags:
+  - isdd
+  - change-req
+  - minimum
+
+inputs:
+  prompt: |
+    isdd-change-reqを実行してください。
+
+    ヒアリングへの回答は以下の通りです。
+    インタビューが必要になった場合はこの回答を使用してください。
+
+    # 開始ゲート
+    - 外部システム連携: なし（選択肢B）
+
+    # 変更要件
+    - 変更ビジョン: Hello Worldの出力に現在時刻を追加したい
+    - 変更業務課題: 出力内容に実行時刻が含まれないため、ログやCIパイプラインで実行タイミングを特定できない
+    - 時刻フォーマット: HH:MM:SS形式（ローカル時刻、Pythonのdatetime.now()を使用）
+    - 出力形式: "Hello, World! (HH:MM:SS)" の1行
+    - 外部ライブラリ: 使用しない（Python標準ライブラリのみ）
+    - エラーハンドリング: 例外は伝播させて実行失敗として終了する（既存方針を踏襲）
+    - 時刻の精度: 秒単位（ミリ秒は不要）
+    - タイムゾーン: ローカル時刻（タイムゾーン変換は不要）
+
+  context:
+    task_type: change-req-minimum
+  files:
+    - path: docs/requirements.md
+    - path: docs/detail_design.md
+    - path: src/hello.py
+    - path: .agents/skills/isdd-change-req/SKILL.md
+    - path: .agents/skills/isdd-common/SKILL.md
+    - path: .agents/skills/isdd-common/references/design-chapters.md
+    - path: .agents/skills/isdd-common/references/design-completeness.md
+    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-common/references/document-rules.md
+    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
+    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: change_req_generated
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        bash ツールで `find .history -name change_requirements.md` を実行し、
+        ファイルが存在するか確認してください。
+
+        存在する場合は set_waza_grade_pass を呼び出してください。
+        存在しない場合は set_waza_grade_fail を呼び出してください。
+
+  - name: rq_ids_present
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        bash ツールで `find .history -name change_requirements.md` を実行し、
+        見つかったファイルの内容を確認してください。
+
+        以下の条件を全て満たす場合は set_waza_grade_pass を呼び出してください。
+        1つでも満たさない場合は set_waza_grade_fail を呼び出してください。
+
+        確認条件:
+        - RQ-BK-* ID が1件以上存在する（時刻表示に関連する新しい業務課題）
+        - RQ-FT-* ID が1件以上存在する（時刻取得または時刻付き出力に関連する機能）
+
+  - name: add_delete_markers
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        bash ツールで `find .history -name change_requirements.md` を実行し、
+        見つかったファイルの内容を確認してください。
+
+        以下の条件を全て満たす場合は set_waza_grade_pass を呼び出してください。
+        1つでも満たさない場合は set_waza_grade_fail を呼び出してください。
+
+        確認条件:
+        - ファイル内に「[追加]」という文字列が存在する
+        - ファイル内に「[削除]」という文字列が存在する
+
+  - name: docs_unchanged
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-BK-ENV-VERIFICATION-UNGOVERNED"
+            - "RQ-FT-PRINT-HELLO-WORLD"
+          must_not_match:
+            - "\\[追加\\]"
+            - "\\[削除\\]"
+
+  - name: rq_integrity_checker_executed
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴を確認し、bash ツールで
+        `rq_integrity_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
+
+        実行されていた場合は set_waza_grade_pass を呼び出してください。
+        実行されていなかった場合は set_waza_grade_fail を呼び出してください。

@@ -1,0 +1,17 @@
+name: isdd-change-req-minimum
+skill: isdd-change-req
+version: "1.0"
+description: |
+  isdd-change-req 向けの最小評価。
+  Hello World への時刻表示追加という変更要件を定義し、
+  change_requirements.md の生成・RQ-* ID付与・整合性チェッカー実行を検証する。
+
+config:
+  executor: copilot-sdk
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 600
+  parallel: false
+
+tasks:
+  - tasks/*.yaml
