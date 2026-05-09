@@ -21,7 +21,7 @@ isdd は、AI 実装で起こりやすい次の問題を抑制することを目
 最初の導入は対話モードで実行し、スキル選択画面で `(all skills)` を選ぶ。
 
 ```bash
-gh skill install notfolder/req-spec-driven
+gh skill install notfolder/req-spec-driven --allow-hidden-dirs
 ```
 
 `@vX.Y.Z` を付けずにインストールすると、公開されている最新リリースが導入される。
