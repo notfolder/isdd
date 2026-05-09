@@ -14,6 +14,32 @@ isdd は、AI 実装で起こりやすい次の問題を抑制することを目
 
 そのため、isdd では要件と設計を先に確定し、実装では要件 ID と設計 ID を基準にトレーサビリティを維持します。
 
+### かんたんな使い方
+
+使い方はかんたん。スキル化してあるので、下記リポジトリから導入して、お好みのコーディングエージェントで `/isdd-requirements` から開始すればよい。
+
+```
+/isdd-requirements [XXXアプリを作りたい]
+```
+
+### 全スキルの最新版を導入する
+
+最初の導入は対話モードで実行し、スキル選択画面で `(all skills)` を選ぶ。
+
+```bash
+gh skill install notfolder/req-spec-driven
+```
+
+`@vX.Y.Z` を付けずにインストールすると、公開されている最新リリースが導入される。
+
+### 要件定義の起動方法
+
+導入後は、エージェントの入力で次のように開始する。
+
+```text
+/isdd-requirements [XXXアプリを作りたい]
+```
+
 ---
 
 ## 開発フロー全体像
@@ -160,6 +186,55 @@ flowchart TD
     C --> E[apm audit で整合確認]
     D --> E
 ```
+
+---
+
+## GitHub Skill 公開手順
+
+このリポジトリでは、公開時は .apm/skills を直接指定して検証・公開する。
+
+### 事前確認
+
+1. .apm/skills 配下の各 SKILL.md の frontmatter に license を含める。
+2. 公開前に dry-run を実行し、エラーがないことを確認する。
+
+### dry-run（検証のみ）
+
+```bash
+gh skill publish ./.apm/skills --dry-run
+```
+
+### 本番公開
+
+```bash
+gh skill publish ./.apm/skills --tag v1.0.11
+```
+
+---
+
+## スキル導入手順（gh skill install）
+
+公開済みスキルは gh skill install で導入する。
+
+### 1つのスキルを導入
+
+```bash
+gh skill install notfolder/req-spec-driven isdd-requirements
+```
+
+### バージョンを固定して導入
+
+```bash
+gh skill install notfolder/req-spec-driven isdd-requirements@v1.0.11
+```
+
+### ユーザースコープへ導入
+
+```bash
+gh skill install notfolder/req-spec-driven isdd-requirements --scope user
+```
+
+必要に応じて skill 名を isdd-design など他のスキル名に置き換えて導入する。
 
 ---
 

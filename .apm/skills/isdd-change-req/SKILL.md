@@ -5,8 +5,9 @@ description: >
   docs/requirements.md を読んだ上で、今回の変更要望に必要な追加情報を一問一答で引き出し、
   矛盾のない変更要件定義書を .history/[YYYYMMDD]-[タスク名]/change_requirements.md に作成する。
   「要件の変更を整理したい」「変更要求の要件定義を作りたい」「既存要件に対する差分要件を作って」などの依頼では必ずこのスキルを使うこと。
+license: CC-BY-4.0
 metadata:
-  version: "1.0.10"
+  version: "v1.0.11"
 ---
 
 # isdd-change-req - インタビュー駆動 変更要件定義スキル

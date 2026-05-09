@@ -3,8 +3,9 @@ name: isdd-common
 description: >
   isdd スキル群が共有する参照ファイル群。他のスキルから references/ 配下のファイルを読み込むための共通リソース。
   単独で起動されることはなく、isdd-requirements / isdd-design などのスキルから参照される。
+license: CC-BY-4.0
 metadata:
-  version: "1.0.10"
+  version: "v1.0.11"
 ---
 
 # isdd-common

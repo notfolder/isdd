@@ -5,8 +5,9 @@ description: >
   docs/requirements.md と docs/detail_design.md を理解したうえで、指定された .history 配下の change_requirements.md から
   change_detail_design.md を作成し、差分設計の網羅性チェックと実装タスク化まで行う。
   「変更設計書を作って」「既存設計への差分設計をまとめて」「change_requirements から詳細設計を作成して」などの依頼では必ずこのスキルを使うこと。
+license: CC-BY-4.0
 metadata:
-  version: "1.0.10"
+  version: "v1.0.11"
 ---
 
 # isdd-change-design - 変更詳細設計スキル

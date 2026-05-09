@@ -4,8 +4,9 @@ description: >
   要件定義書をもとに、MVPに絞った矛盾のない詳細設計書を作成する isdd 第2ステップのスキル。
   「詳細設計して」「設計書を作りたい」「要件から設計に落として」「内部設計まで詰めたい」などの依頼では必ずこのスキルを使うこと。
   docs/requirements.md から docs/detail_design.md を作る作業、設計の網羅性確認、冗長設計の排除、実装タスク化までを行う場面で必ず起動すること。
+license: CC-BY-4.0
 metadata:
-  version: "1.0.10"
+  version: "v1.0.11"
 ---
 
 # isdd-design - インタビュー駆動 詳細設計スキル
