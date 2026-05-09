@@ -20,18 +20,18 @@ inputs:
     - path: docs/requirements.md
     - path: docs/detail_design.md
     - path: .history/20260508-add-timestamp-to-hello-world/change_requirements.md
-    - path: .agents/skills/isdd-change-design/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: skills/isdd-change-design/SKILL.md
+    - path: skills/isdd-common/SKILL.md
+    - path: skills/isdd-common/references/design-chapters.md
+    - path: skills/isdd-common/references/design-completeness.md
+    - path: skills/isdd-common/references/design-tasks-rules.md
+    - path: skills/isdd-common/references/document-rules.md
+    - path: skills/isdd-common/references/hearing-complexity-rules.md
+    - path: skills/isdd-common/references/id-definitions.md
+    - path: skills/isdd-common/references/requirements-chapters.md
+    - path: skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: skills/isdd-common/scripts/trace_comment_coverage_checker.py
 
 expected:
   outcomes:
@@ -119,7 +119,7 @@ graders:
         1. `find .history -name change_detail_design.md` を実行してファイルのパスを取得する
         2. 同じディレクトリにある change_requirements.md のパスを構築する
         3. 以下のコマンドを実行する:
-           python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py [change_requirements.mdのパス] [change_detail_design.mdのパス]
+           python3 skills/isdd-common/scripts/rq_ds_link_checker.py [change_requirements.mdのパス] [change_detail_design.mdのパス]
 
         実行結果に「全てのチェックに合格しました」が含まれる場合は set_waza_grade_pass を呼び出してください。
         ファイルが存在しない場合やチェックに失敗した場合は set_waza_grade_fail を呼び出してください。

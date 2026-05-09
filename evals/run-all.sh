@@ -9,14 +9,8 @@ usage() {
     echo "example: $0 real isdd-traceable-coding isdd-design" >&2
 }
 
-if ! command -v apm >/dev/null 2>&1; then
-  echo "apm command not found" >&2
-  exit 1
-fi
-
-echo "==> syncing skills with apm install"
-if ! (cd "$repo_root" && apm install); then
-  echo "apm install failed" >&2
+if [[ ! -d "$repo_root/skills" ]]; then
+  echo "skills directory not found: $repo_root/skills" >&2
   exit 1
 fi
 
@@ -50,7 +44,7 @@ ran=0
 
 print_skill_fingerprint() {
   local skill_name="$1"
-  local skill_file="$repo_root/.agents/skills/$skill_name/SKILL.md"
+  local skill_file="$repo_root/skills/$skill_name/SKILL.md"
 
   if [[ ! -f "$skill_file" ]]; then
     echo "[skill-fingerprint] skill file not found: $skill_file" >&2
@@ -78,7 +72,7 @@ print_skill_fingerprint() {
 
 # Check that task files: entries are complete and exist in context-dir.
 # ERROR: skill: field is missing in eval yaml
-# ERROR: any file under .agents/skills/{skill} or isdd-common is not listed
+# ERROR: any file under skills/{skill} or isdd-common is not listed
 # ERROR: listed file does not exist in context-dir
 check_task_files() {
   local skill_name="$1"
@@ -103,9 +97,9 @@ check_task_files() {
   listed_paths=$(grep -h "^    - path:" "$eval_dir/tasks/"*.yaml 2>/dev/null \
     | sed 's/^    - path:[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '"'"'")
 
-  # 2. All files under .agents/skills/{skill} and isdd-common must be listed
-  #    __pycache__ and .pyc files are excluded from the check
-  for check_subdir in ".agents/skills/$skill_name" ".agents/skills/isdd-common"; do
+  # 2. All files under skills/{skill} and isdd-common must be listed
+  #    __pycache__, .pyc, .DS_Store files are excluded from the check
+  for check_subdir in "skills/$skill_name" "skills/isdd-common"; do
     local full_dir="$repo_root/$check_subdir"
     [[ -d "$full_dir" ]] || continue
     while IFS= read -r full_path; do
@@ -114,7 +108,7 @@ check_task_files() {
         echo "  [ERROR] not listed: $rel_path" >&2
         has_error=1
       fi
-    done < <(find "$full_dir" -type f -not -path "*/__pycache__/*" -not -name "*.pyc" | sort)
+    done < <(find "$full_dir" -type f -not -path "*/__pycache__/*" -not -name "*.pyc" -not -name ".DS_Store" | sort)
   done
 
   # 3. All listed files must exist in context-dir
@@ -170,8 +164,8 @@ for eval_file in "${files[@]}"; do
     temp_context_dir="$(mktemp -d "${TMPDIR:-/tmp}/waza-context-${skill_name}-XXXXXX")"
     cp -R "$fixtures_dir"/. "$temp_context_dir"/
 
-    if [[ -d "$repo_root/.agents" ]]; then
-      cp -R "$repo_root/.agents" "$temp_context_dir/.agents"
+    if [[ -d "$repo_root/skills" ]]; then
+      cp -R "$repo_root/skills" "$temp_context_dir/skills"
     fi
 
     if ! check_task_files "$skill_name" "$eval_dir" "$temp_context_dir"; then
