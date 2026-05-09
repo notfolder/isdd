@@ -15,10 +15,18 @@
             :items-per-page="200"
           >
             <template #item.actions="{ item }">
-              <v-btn size="small" class="mx-1" @click="goEdit(item.asset_number)">編集</v-btn>
-              <v-btn size="small" class="mx-1" color="error" @click="removeAsset(item.asset_number)">削除</v-btn>
-              <v-btn size="small" class="mx-1" color="primary" @click="openLoanDialog(item)">貸出登録</v-btn>
-              <v-btn size="small" class="mx-1" color="secondary" @click="registerReturn(item.asset_number)">返却登録</v-btn>
+              <v-btn v-if="isAdmin" size="small" class="mx-1" @click="goEdit(item.asset_number)">編集</v-btn>
+              <v-btn v-if="isAdmin" size="small" class="mx-1" color="error" @click="removeAsset(item.asset_number)">削除</v-btn>
+              <v-btn v-if="isAdmin" size="small" class="mx-1" color="primary" @click="openLoanDialog(item)">貸出登録</v-btn>
+              <v-btn
+                v-if="isAdmin"
+                size="small"
+                class="mx-1"
+                color="secondary"
+                @click="registerReturn(item.asset_number)"
+              >
+                返却登録
+              </v-btn>
             </template>
           </v-data-table>
         </v-card>
@@ -76,15 +84,30 @@ const loanTargetAssetNumber = ref("");
 const loanBorrowerLoginId = ref("");
 const loanDate = ref("");
 
-const headers = [
-  { title: "資産番号", key: "asset_number" },
-  { title: "備品名", key: "asset_name" },
-  { title: "状態", key: "loan_status" },
-  { title: "借用者名", key: "borrower_name" },
-  { title: "操作", key: "actions", sortable: false },
-];
-
 const isAdmin = computed(() => localStorage.getItem("role") === "管理者");
+
+const headers = computed(() => {
+  /**
+   * ロールに応じて一覧ヘッダーを生成する。
+   * 要件ID: RQ-FT-AUTHORIZE-BY-ROLE
+   * 設計ID: DS-FN-AUTHORIZE-BY-ROLE-FT-AUTHORIZE-BY-ROLE
+   * 要件概要: 管理者と一般ユーザーで操作権限を分離する。
+   * 設計概要: 一般ユーザーには操作列を表示せず閲覧専用にする。
+   * 呼び出し先設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+   */
+
+  const baseHeaders = [
+    { title: "資産番号", key: "asset_number" },
+    { title: "備品名", key: "asset_name" },
+    { title: "状態", key: "loan_status" },
+    { title: "借用者名", key: "borrower_name" },
+  ];
+  if (isAdmin.value) {
+    return [...baseHeaders, { title: "操作", key: "actions", sortable: false }];
+  }
+  return baseHeaders;
+});
 
 const borrowerOptions = computed(() =>
   users.value.map((user) => ({

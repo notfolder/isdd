@@ -265,7 +265,7 @@ test("一般ユーザーの更新系操作が拒否される", async ({ page }) 
    * 要件ID: RQ-TS-REJECT-PRIVILEGE-VIOLATION
    * 設計ID: DS-FN-AUTHORIZE-BY-ROLE-FT-AUTHORIZE-BY-ROLE
    * 要件概要: 一般ユーザーは更新系操作が拒否されること。
-   * 設計概要: 一般ユーザーで行末操作を試行し拒否メッセージを確認する。
+   * 設計概要: 一般ユーザーでは更新系ボタンが表示されず、操作できないことを確認する。
    * 呼び出し先設計ID: DS-MD-REJECT-PRIVILEGE-VIOLATION-TS-REJECT-PRIVILEGE-VIOLATION
    * 呼び出し元設計ID: DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE
    */
@@ -284,8 +284,11 @@ test("一般ユーザーの更新系操作が拒否される", async ({ page }) 
 
   await login(page, generalLoginId, generalPassword);
   const row = page.locator("tr", { hasText: assetNumber });
-  await row.getByRole("button", { name: "削除" }).click();
-  await expect(page.getByText("管理者のみ操作可能です")).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "操作" })).toHaveCount(0);
+  await expect(row.getByRole("button", { name: "編集" })).toHaveCount(0);
+  await expect(row.getByRole("button", { name: "削除" })).toHaveCount(0);
+  await expect(row.getByRole("button", { name: "貸出登録" })).toHaveCount(0);
+  await expect(row.getByRole("button", { name: "返却登録" })).toHaveCount(0);
 });
 
 test("貸出中データの削除が拒否される", async ({ page }) => {

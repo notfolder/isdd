@@ -78,6 +78,13 @@ flowchart TB
     end
 ```
 
+### 2-5. ネットワーク境界制御
+
+| DS-ID | 制御項目 | 設計内容 |
+|---|---|---|
+| `DS-MD-LAN-ONLY-HTTP-ACCESS-NF-LAN-ONLY-HTTP-ACCESS` | 公開境界 | 画面公開先は社内ネットワーク内に限定し、インターネットからの直接到達を許可しない |
+| `DS-MD-LAN-ONLY-HTTP-ACCESS-NF-LAN-ONLY-HTTP-ACCESS` | プロトコル | アプリ公開プロトコルはHTTPとし、社内ネットワーク境界で通信元を制御する |
+
 ---
 
 ## 3. データベース設計
@@ -316,7 +323,7 @@ APIはすべて `/api/` 配下で定義する。
 | `DS-FN-REGISTER-ASSET-FT-REGISTER-ASSET` | `POST /api/assets` | asset_number, asset_name | 登録結果 | 資産番号重複禁止 | 409 重複 |
 | `DS-FN-UPDATE-ASSET-FT-UPDATE-ASSET` | `PUT /api/assets/{asset_number}` | asset_name | 更新結果 | 対象存在確認 | 404 未存在 |
 | `DS-FN-DELETE-ASSET-WITH-LOAN-CHECK-FT-DELETE-ASSET-WITH-LOAN-CHECK` | `DELETE /api/assets/{asset_number}` | なし | 削除結果 | 貸出中削除禁止 | 409 削除不可 |
-| `DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN` | `POST /api/assets/{asset_number}/loan` | borrower_login_id, loan_date | 更新結果 | 状態=貸出可能、借用者存在 | 409 条件不一致 |
+| `DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN` | `POST /api/assets/{asset_number}/loan` | borrower_login_id, loan_date | 更新結果 | 状態=貸出可能、借用者存在 | 404 未存在（備品/借用者）, 409 条件不一致 |
 | `DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN` | `POST /api/assets/{asset_number}/return` | なし | 更新結果 | 状態=貸出中 | 409 条件不一致 |
 | `DS-FN-REGISTER-USER-FT-REGISTER-USER` | `POST /api/users` | login_id, display_name, role, initial_password | 登録結果 | ログインID重複禁止 | 409 重複 |
 | `DS-FN-UPDATE-USER-FT-UPDATE-USER` | `PUT /api/users/{login_id}` | display_name, role | 更新結果 | 対象存在確認 | 404 未存在 |
@@ -487,34 +494,39 @@ sequenceDiagram
 
 ```text
 /
+├─ docs/
+│  ├─ requirements.md
+│  └─ detail_design.md
+├─ backend/
+│  ├─ app/
+│  │  └─ main.py
+│  └─ batch/
+│     └─ purge_error_logs.py
 ├─ frontend/
 │  ├─ src/
 │  │  ├─ views/
 │  │  ├─ components/
 │  │  ├─ router/
-│  │  └─ services/
-│  └─ public/
-├─ backend/
-│  ├─ app/
-│  │  ├─ api/
 │  │  ├─ services/
-│  │  ├─ repositories/
-│  │  ├─ models/
-│  │  └─ core/
-│  └─ batch/
-├─ nginx/
-├─ docker/
-├─ tests/
-│  ├─ unit/
-│  ├─ integration/
-│  └─ system/
+│  │  ├─ App.vue
+│  │  └─ main.js
+│  ├─ nginx.conf
+│  └─ Dockerfile
 └─ e2e/
+   ├─ tests/
+   │  └─ asset-lending.spec.js
+   └─ playwright.config.js
 ```
 
 ### 7-2. ファイル一覧・役割・クラス
 
 | ディレクトリ | ファイル名 | 役割 | 含まれるクラス/機能 | 関係DS-ID |
 |---|---|---|---|---|
+| `frontend/src` | `main.js` | フロントエンドエントリポイント | Vue/Vuetify初期化、ルーター組込 | `DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE` |
+| `frontend/src` | `App.vue` | ルーター描画ホスト | 画面ルーティング表示 | `DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE` |
+| `frontend/src/router` | `index.js` | 画面ルート定義 | ログイン・備品・ユーザー・PW変更画面ルーティング | `DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE` |
+| `frontend/src/services` | `api.js` | API呼び出し共通化 | 認証ヘッダー付与、JSON送受信、エラー処理 | `DS-FN-AUTHENTICATE-USER-FT-AUTHENTICATE-USER`, `DS-FN-AUTHORIZE-BY-ROLE-FT-AUTHORIZE-BY-ROLE` |
+| `frontend/src/components` | `MainNavigationBar.vue` | 画面上部共通ナビゲーション | 画面遷移ボタン表示制御、ログアウト | `DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN`, `DS-IF-USER-MANAGEMENT-SCREEN-UI-USER-MANAGEMENT-SCREEN`, `DS-FN-AUTHORIZE-BY-ROLE-FT-AUTHORIZE-BY-ROLE` |
 | `frontend/src/views` | `LoginView.vue` | ログイン画面 | ログインフォーム | `DS-IF-LOGIN-SCREEN-UI-LOGIN-SCREEN` |
 | `frontend/src/views` | `AssetListView.vue` | 備品一覧画面 | 一覧表示、行末操作ボタン | `DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN` |
 | `frontend/src/views` | `AssetCreateView.vue` | 備品登録画面 | 登録フォーム | `DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN` |
@@ -523,10 +535,12 @@ sequenceDiagram
 | `frontend/src/views` | `UserCreateView.vue` | ユーザー登録画面 | 登録フォーム | `DS-IF-USER-MANAGEMENT-SCREEN-UI-USER-MANAGEMENT-SCREEN` |
 | `frontend/src/views` | `UserEditView.vue` | ユーザー編集画面 | 編集フォーム | `DS-IF-USER-MANAGEMENT-SCREEN-UI-USER-MANAGEMENT-SCREEN` |
 | `frontend/src/views` | `PasswordChangeView.vue` | パスワード変更画面 | PW変更フォーム | `DS-IF-CHANGE-OWN-PASSWORD-SCREEN-FT-CHANGE-OWN-PASSWORD` |
-| `backend/app/api` | `auth.py` | 認証API | ログインAPI | `DS-FN-AUTHENTICATE-USER-FT-AUTHENTICATE-USER` |
-| `backend/app/api` | `assets.py` | 備品API | 一覧/登録/更新/削除/貸出/返却 | `DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST`, `DS-FN-REGISTER-ASSET-FT-REGISTER-ASSET`, `DS-FN-UPDATE-ASSET-FT-UPDATE-ASSET`, `DS-FN-DELETE-ASSET-WITH-LOAN-CHECK-FT-DELETE-ASSET-WITH-LOAN-CHECK`, `DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN`, `DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN` |
-| `backend/app/api` | `users.py` | ユーザーAPI | 登録/更新/削除/自己PW変更/初期PW再設定 | `DS-FN-REGISTER-USER-FT-REGISTER-USER`, `DS-FN-UPDATE-USER-FT-UPDATE-USER`, `DS-FN-DELETE-USER-WITH-LOAN-CHECK-FT-DELETE-USER-WITH-LOAN-CHECK`, `DS-FN-CHANGE-OWN-PASSWORD-FT-CHANGE-OWN-PASSWORD`, `DS-FN-RESET-USER-PASSWORD-FT-RESET-USER-PASSWORD` |
+| `backend/app` | `main.py` | FastAPI本体（API集約） | 認証/認可、備品CRUD、貸出返却、ユーザーCRUD、PW変更/再設定、DB初期化、エラーログ記録 | `DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE`, `DS-FN-AUTHENTICATE-USER-FT-AUTHENTICATE-USER`, `DS-FN-AUTHORIZE-BY-ROLE-FT-AUTHORIZE-BY-ROLE`, `DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST`, `DS-FN-REGISTER-ASSET-FT-REGISTER-ASSET`, `DS-FN-UPDATE-ASSET-FT-UPDATE-ASSET`, `DS-FN-DELETE-ASSET-WITH-LOAN-CHECK-FT-DELETE-ASSET-WITH-LOAN-CHECK`, `DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN`, `DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN`, `DS-FN-REGISTER-USER-FT-REGISTER-USER`, `DS-FN-UPDATE-USER-FT-UPDATE-USER`, `DS-FN-DELETE-USER-WITH-LOAN-CHECK-FT-DELETE-USER-WITH-LOAN-CHECK`, `DS-FN-CHANGE-OWN-PASSWORD-FT-CHANGE-OWN-PASSWORD`, `DS-FN-RESET-USER-PASSWORD-FT-RESET-USER-PASSWORD`, `DS-MD-ERROR-LOG-CAPTURE-OP-ERROR-LOG-CAPTURE` |
 | `backend/batch` | `purge_error_logs.py` | ログ削除バッチ | 90日超ログ削除 | `DS-BT-ERROR-LOG-RETENTION-90D-OP-ERROR-LOG-RETENTION-90D` |
+| `frontend` | `nginx.conf` | フロント配信/逆プロキシ設定 | 静的配信、`/api/` をバックエンドへ中継 | `DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE`, `DS-MD-LAN-ONLY-HTTP-ACCESS-NF-LAN-ONLY-HTTP-ACCESS` |
+| `e2e/tests` | `asset-lending.spec.js` | E2Eシナリオ実装 | 管理者正常系、一般ユーザー閲覧、PW変更/再設定、権限拒否、削除禁止 | `DS-MD-VERIFY-ADMIN-REGISTER-LOAN-RETURN-TS-VERIFY-ADMIN-REGISTER-LOAN-RETURN`, `DS-MD-VERIFY-GENERAL-USER-VIEW-BORROWER-TS-VERIFY-GENERAL-USER-VIEW-BORROWER`, `DS-MD-VERIFY-PASSWORD-CHANGE-AND-RESET-TS-VERIFY-PASSWORD-CHANGE-AND-RESET`, `DS-MD-REJECT-PRIVILEGE-VIOLATION-TS-REJECT-PRIVILEGE-VIOLATION`, `DS-MD-REJECT-DELETE-WHEN-LOAN-EXISTS-TS-REJECT-DELETE-WHEN-LOAN-EXISTS` |
+| `e2e` | `playwright.config.js` | E2E実行設定 | ベースURL、タイムアウト、トレース設定 | `DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE` |
+| `/` | `docker-compose.yml` | コンテナ起動定義 | backend/frontend/test_playwright の構成定義 | `DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE` |
 
 ### 7-3. コーディング規約
 
@@ -546,46 +560,27 @@ sequenceDiagram
 
 | DS-ID | テスト種別 | 目的 | 方法 |
 |---|---|---|---|
-| `DS-FN-AUTHENTICATE-USER-FT-AUTHENTICATE-USER` | 単体 | 認証ロジック検証 | pytest |
-| `DS-FN-AUTHORIZE-BY-ROLE-FT-AUTHORIZE-BY-ROLE` | 単体 | 認可ロジック検証 | pytest |
-| `DS-FN-REGISTER-ASSET-FT-REGISTER-ASSET` | 結合 | 備品登録連携検証 | API結合試験 |
-| `DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN` | 結合 | 貸出状態遷移検証 | API結合試験 |
-| `DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN` | 結合 | 返却クリア検証 | API結合試験 |
-| `DS-FN-REGISTER-USER-FT-REGISTER-USER` | 結合 | ユーザー登録連携検証 | API結合試験 |
-| `DS-FN-DELETE-USER-WITH-LOAN-CHECK-FT-DELETE-USER-WITH-LOAN-CHECK` | 結合 | 削除禁止制約検証 | API結合試験 |
-| `DS-MD-ASSET-LIST-RESPONSE-UNDER-2S-NF-ASSET-LIST-RESPONSE-UNDER-2S` | 総合 | 一覧応答2秒以内検証 | 実測 |
-| `DS-MD-CONCURRENT-USERS-10-NF-CONCURRENT-USERS-10` | 総合 | 同時10人利用検証 | 負荷試験 |
 | `DS-MD-VERIFY-ADMIN-REGISTER-LOAN-RETURN-TS-VERIFY-ADMIN-REGISTER-LOAN-RETURN` | E2E | 管理者正常系検証 | Playwright |
 | `DS-MD-VERIFY-GENERAL-USER-VIEW-BORROWER-TS-VERIFY-GENERAL-USER-VIEW-BORROWER` | E2E | 一般ユーザー閲覧検証 | Playwright |
 | `DS-MD-VERIFY-PASSWORD-CHANGE-AND-RESET-TS-VERIFY-PASSWORD-CHANGE-AND-RESET` | E2E | PW変更/再設定検証 | Playwright |
 | `DS-MD-REJECT-PRIVILEGE-VIOLATION-TS-REJECT-PRIVILEGE-VIOLATION` | E2E | 権限拒否検証 | Playwright |
 | `DS-MD-REJECT-DELETE-WHEN-LOAN-EXISTS-TS-REJECT-DELETE-WHEN-LOAN-EXISTS` | E2E | 削除禁止検証 | Playwright |
+| `DS-MD-ASSET-LIST-RESPONSE-UNDER-2S-NF-ASSET-LIST-RESPONSE-UNDER-2S` | 非機能確認 | 一覧応答2秒以内確認 | 画面操作による手動実測 |
+| `DS-MD-CONCURRENT-USERS-10-NF-CONCURRENT-USERS-10` | 非機能確認 | 同時10人利用確認 | 同時アクセスによる手動確認 |
 
-### 8-2. 全モジュール単体テスト対象
+### 8-2. 自動テスト資産
 
-- 認証サービス
-- 認可サービス
-- 備品サービス
-- 貸出サービス
-- ユーザーサービス
-- パスワードサービス
-- 備品リポジトリ
-- ユーザーリポジトリ
-- エラーログリポジトリ
+- `e2e/tests/asset-lending.spec.js`
+  - 管理者の備品登録・貸出・返却が成立する
+  - 一般ユーザーが借用者表示を確認できる
+  - 自己PW変更と管理者初期PW再設定が成立する
+  - 一般ユーザーの更新系操作が拒否される
+  - 貸出中データの削除が拒否される
 
-### 8-3. 全機能要件の結合テスト対象
+### 8-3. テスト実行方法
 
-- 備品一覧表示
-- 備品登録
-- 備品更新
-- 備品削除（貸出中拒否含む）
-- 貸出登録
-- 返却登録
-- ユーザー登録
-- ユーザー更新
-- ユーザー削除（貸出保有拒否含む）
-- 自己PW変更
-- 初期PW再設定
+- E2E実行コマンドは以下とする。
+- `docker compose run --rm test_playwright sh -c "cd e2e && npm install && npx playwright test"`
 
 ---
 
