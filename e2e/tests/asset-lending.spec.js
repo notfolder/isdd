@@ -12,6 +12,7 @@ import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 
 const runId = randomUUID().slice(0, 8);
+const UI_WAIT_TIMEOUT_MS = 15000;
 
 async function login(page, loginId, password) {
   /**
@@ -116,10 +117,10 @@ async function registerLoanFromRow(page, assetNumber, borrowerDisplay, loanDate,
     await toAssetListButton.click();
   }
   const row = page.locator("tr", { hasText: assetNumber });
-  await expect(row).toBeVisible();
+  await expect(row).toBeVisible({ timeout: UI_WAIT_TIMEOUT_MS });
   await row.getByRole("button", { name: "貸出登録" }).click();
   const loanDialog = page.getByRole("dialog");
-  await expect(loanDialog).toBeVisible();
+  await expect(loanDialog).toBeVisible({ timeout: UI_WAIT_TIMEOUT_MS });
   const borrowerCombobox = loanDialog.getByRole("combobox", { name: "借用者", exact: true });
   await borrowerCombobox.focus();
   await borrowerCombobox.press("ArrowDown");
@@ -127,7 +128,7 @@ async function registerLoanFromRow(page, assetNumber, borrowerDisplay, loanDate,
   await loanDialog.getByLabel("貸出日 (YYYY-MM-DD)").fill(loanDate);
   await loanDialog.getByLabel("返却予定日 (YYYY-MM-DD)").fill(returnDueDate);
   await loanDialog.getByRole("button", { name: "登録" }).click();
-  await expect(row).toContainText("貸出中");
+  await expect(row).toContainText("貸出中", { timeout: UI_WAIT_TIMEOUT_MS });
 }
 
 async function registerReturnFromRow(page, assetNumber) {
@@ -143,7 +144,7 @@ async function registerReturnFromRow(page, assetNumber) {
 
   const row = page.locator("tr", { hasText: assetNumber });
   await row.getByRole("button", { name: "返却登録" }).click();
-  await expect(row).toContainText("貸出可能");
+  await expect(row).toContainText("貸出可能", { timeout: UI_WAIT_TIMEOUT_MS });
 }
 
 async function openReservationCalendarFromRow(page, assetNumber) {
@@ -158,9 +159,11 @@ async function openReservationCalendarFromRow(page, assetNumber) {
    */
 
   const row = page.locator("tr", { hasText: assetNumber });
-  await expect(row).toBeVisible();
+  await expect(row).toBeVisible({ timeout: UI_WAIT_TIMEOUT_MS });
   await row.getByRole("button", { name: "予約" }).click();
-  await expect(page.getByText("備品予約カレンダー")).toBeVisible();
+  await expect(page.getByText("備品予約カレンダー")).toBeVisible({
+    timeout: UI_WAIT_TIMEOUT_MS,
+  });
 }
 
 async function registerReservationFromCalendar(page, startDate, endDate) {
@@ -257,7 +260,13 @@ test("一般ユーザーが借用者表示を確認できる", async ({ page }) 
 
   await page.getByRole("button", { name: "ログアウト" }).click();
   await login(page, viewerLoginId, viewerPassword);
-  await expect(page.locator("tr", { hasText: assetNumber })).toContainText(viewerDisplayName);
+  const targetRow = page.locator("tr", { hasText: assetNumber });
+  await expect(targetRow).toContainText(viewerDisplayName, {
+    timeout: UI_WAIT_TIMEOUT_MS,
+  });
+  await expect(targetRow).toContainText(/取得しています\.\.\.|部署名不明|営業部|開発部/, {
+    timeout: UI_WAIT_TIMEOUT_MS,
+  });
 });
 
 test("自己PW変更と管理者初期PW再設定が成立する", async ({ page }) => {
@@ -335,7 +344,10 @@ test("一般ユーザーの更新系操作が拒否される", async ({ page }) 
 
   await login(page, generalLoginId, generalPassword);
   const row = page.locator("tr", { hasText: assetNumber });
-  await expect(page.getByRole("columnheader", { name: "操作" })).toHaveCount(1);
+  await expect(row).toBeVisible({ timeout: UI_WAIT_TIMEOUT_MS });
+  await expect(page.getByRole("columnheader", { name: "操作" })).toHaveCount(1, {
+    timeout: UI_WAIT_TIMEOUT_MS,
+  });
   await expect(row.getByRole("button", { name: "編集" })).toHaveCount(0);
   await expect(row.getByRole("button", { name: "削除" })).toHaveCount(0);
   await expect(row.getByRole("button", { name: "貸出登録" })).toHaveCount(0);

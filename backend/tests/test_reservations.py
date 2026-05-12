@@ -358,8 +358,22 @@ def test_department_name_visible_in_asset_and_reservation_views() -> None:
     target_item = next(
         item for item in assets_response.json()["items"] if item["asset_number"] == "A-RES-004"
     )
-    assert target_item["borrower_department_display_status"] == "部署名"
-    assert target_item["borrower_department_name"] == "営業部"
+    assert target_item["borrower_department_display_status"] == "取得しています..."
+    assert target_item["borrower_department_name"] == ""
+
+    resolve_assets_response = client.post(
+        "/api/departments/resolve",
+        headers=admin_headers,
+        json={"login_ids": ["U001", "NOT-FOUND"]},
+    )
+    assert resolve_assets_response.status_code == 200
+    resolved_assets = {
+        item["login_id"]: item for item in resolve_assets_response.json()["items"]
+    }
+    assert resolved_assets["U001"]["department_display_status"] == "部署名"
+    assert resolved_assets["U001"]["department_name"] == "営業部"
+    assert resolved_assets["NOT-FOUND"]["department_display_status"] == "部署名不明"
+    assert resolved_assets["NOT-FOUND"]["department_name"] == ""
 
     return_response = client.post("/api/assets/A-RES-004/return", headers=admin_headers)
     assert return_response.status_code == 200
@@ -383,5 +397,15 @@ def test_department_name_visible_in_asset_and_reservation_views() -> None:
     assert reservations_response.status_code == 200
     reservations = reservations_response.json()["items"]
     assert len(reservations) == 1
-    assert reservations[0]["reserver_department_display_status"] == "部署名"
-    assert reservations[0]["reserver_department_name"] == "営業部"
+    assert reservations[0]["reserver_department_display_status"] == "取得しています..."
+    assert reservations[0]["reserver_department_name"] == ""
+
+    resolve_reservations_response = client.post(
+        "/api/departments/resolve",
+        headers=admin_headers,
+        json={"login_ids": [reservations[0]["reserver_login_id"]]},
+    )
+    assert resolve_reservations_response.status_code == 200
+    resolved_reservation = resolve_reservations_response.json()["items"][0]
+    assert resolved_reservation["department_display_status"] == "部署名"
+    assert resolved_reservation["department_name"] == "営業部"

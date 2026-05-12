@@ -88,6 +88,7 @@ const loanTargetAssetNumber = ref("");
 const loanBorrowerLoginId = ref("");
 const loanDate = ref("");
 const returnDueDate = ref("");
+let latestAssetLoadToken = 0;
 
 const isAdmin = computed(() => localStorage.getItem("role") === "管理者");
 
@@ -120,6 +121,98 @@ const borrowerOptions = computed(() =>
   }))
 );
 
+function composeDepartmentDisplay(departmentName, displayStatus, hasBorrower) {
+  /**
+   * 部署名表示文字列を決定する。
+   * 要件ID: RQ-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 要件概要: 取得中・成功・不明の表示状態を切り替える。
+   * 設計概要: 借用者なし/部署名あり/状態表示の優先順位で描画文字列を返す。
+   * 呼び出し先設計ID: なし
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
+   */
+
+  if (!hasBorrower) {
+    return "-";
+  }
+  if (displayStatus === "部署名") {
+    return departmentName || "部署名不明";
+  }
+  return displayStatus || "取得しています...";
+}
+
+async function resolveBorrowerDepartments(loadToken) {
+  /**
+   * 借用者部署名を非同期で解決して一覧へ反映する。
+   * 要件ID: RQ-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 要件概要: 備品一覧は先に表示し、部署名は後から非同期反映する。
+   * 設計概要: login_id配列を部署解決APIへ送信し、レスポンスで表示状態を上書きする。
+   * 呼び出し先設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 呼び出し元設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT
+   */
+
+  const loginIds = [
+    ...new Set(assets.value.map((item) => item.borrower_login_id).filter((loginId) => Boolean(loginId))),
+  ];
+  if (!loginIds.length) {
+    return;
+  }
+
+  try {
+    const response = await apiSend("/api/departments/resolve", "POST", {
+      login_ids: loginIds,
+    });
+    if (loadToken !== latestAssetLoadToken) {
+      return;
+    }
+
+    const resolvedMap = new Map(
+      (response.items || [])
+        .map((item) => [String(item.login_id || "").trim(), item])
+        .filter(([loginId]) => Boolean(loginId))
+    );
+
+    assets.value = assets.value.map((item) => {
+      const borrowerLoginId = item.borrower_login_id || "";
+      if (!borrowerLoginId) {
+        return item;
+      }
+
+      const resolved = resolvedMap.get(borrowerLoginId);
+      const departmentName = String(resolved?.department_name || "");
+      const displayStatus = String(resolved?.department_display_status || "部署名不明");
+      return {
+        ...item,
+        borrower_department_name: departmentName,
+        borrower_department_display_status: displayStatus,
+        borrower_department_display: composeDepartmentDisplay(
+          departmentName,
+          displayStatus,
+          true
+        ),
+      };
+    });
+  } catch (_error) {
+    if (loadToken !== latestAssetLoadToken) {
+      return;
+    }
+
+    assets.value = assets.value.map((item) => {
+      const borrowerLoginId = item.borrower_login_id || "";
+      if (!borrowerLoginId) {
+        return item;
+      }
+      return {
+        ...item,
+        borrower_department_name: "",
+        borrower_department_display_status: "部署名不明",
+        borrower_department_display: "部署名不明",
+      };
+    });
+  }
+}
+
 function ensureAuthenticated() {
   /**
    * 認証トークンの存在を検証する。
@@ -148,15 +241,24 @@ async function loadAssets() {
    */
 
   const response = await apiGet("/api/assets");
-  assets.value = (response.items || []).map((item) => ({
-    ...item,
-    borrower_department_display:
-      !item.borrower_login_id
-        ? "-"
-        : item.borrower_department_display_status === "部署名"
-        ? item.borrower_department_name
-        : (item.borrower_department_display_status || "取得しています..."),
-  }));
+  latestAssetLoadToken += 1;
+  const currentLoadToken = latestAssetLoadToken;
+  assets.value = (response.items || []).map((item) => {
+    const borrowerLoginId = item.borrower_login_id || "";
+    const departmentName = item.borrower_department_name || "";
+    const displayStatus = item.borrower_department_display_status || "";
+    return {
+      ...item,
+      borrower_department_name: departmentName,
+      borrower_department_display_status: displayStatus,
+      borrower_department_display: composeDepartmentDisplay(
+        departmentName,
+        displayStatus,
+        Boolean(borrowerLoginId)
+      ),
+    };
+  });
+  void resolveBorrowerDepartments(currentLoadToken);
 }
 
 async function loadUsersForLoan() {

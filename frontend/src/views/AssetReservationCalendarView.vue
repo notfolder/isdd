@@ -80,6 +80,7 @@ const reservations = ref([]);
 const startDate = ref(new Date().toISOString().slice(0, 10));
 const endDate = ref(new Date().toISOString().slice(0, 10));
 const errorMessage = ref("");
+let latestReservationLoadToken = 0;
 
 const reservationHeaders = [
   { title: "予約ID", key: "reservation_id" },
@@ -92,6 +93,88 @@ const reservationHeaders = [
 
 const currentLoginId = computed(() => localStorage.getItem("login_id") || "");
 const isAdmin = computed(() => localStorage.getItem("role") === "管理者");
+
+function composeReservationDepartmentDisplay(departmentName, displayStatus) {
+  /**
+   * 予約者部署名の表示文字列を決定する。
+   * 要件ID: RQ-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 要件概要: 取得中・成功・不明の表示を予約一覧でも切り替える。
+   * 設計概要: 部署名取得状態に応じて表示文字列を返す。
+   * 呼び出し先設計ID: なし
+   * 呼び出し元設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+   */
+
+  if (displayStatus === "部署名") {
+    return departmentName || "部署名不明";
+  }
+  return displayStatus || "取得しています...";
+}
+
+async function resolveReservationDepartments(loadToken) {
+  /**
+   * 予約一覧の部署名を非同期解決して反映する。
+   * 要件ID: RQ-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 要件概要: 予約一覧を先に表示し、部署名は非同期で更新する。
+   * 設計概要: 予約者login_idをまとめて部署解決APIへ送信し、表示状態を上書きする。
+   * 呼び出し先設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 呼び出し元設計ID: DS-FN-VIEW-ASSET-RESERVATION-CALENDAR-FT-VIEW-ASSET-RESERVATION-CALENDAR
+   */
+
+  const loginIds = [
+    ...new Set(
+      reservations.value
+        .map((item) => item.reserver_login_id)
+        .filter((loginId) => Boolean(loginId))
+    ),
+  ];
+  if (!loginIds.length) {
+    return;
+  }
+
+  try {
+    const response = await apiSend("/api/departments/resolve", "POST", {
+      login_ids: loginIds,
+    });
+    if (loadToken !== latestReservationLoadToken) {
+      return;
+    }
+
+    const resolvedMap = new Map(
+      (response.items || [])
+        .map((item) => [String(item.login_id || "").trim(), item])
+        .filter(([loginId]) => Boolean(loginId))
+    );
+
+    reservations.value = reservations.value.map((item) => {
+      const reserverLoginId = item.reserver_login_id || "";
+      const resolved = resolvedMap.get(reserverLoginId);
+      const departmentName = String(resolved?.department_name || "");
+      const displayStatus = String(resolved?.department_display_status || "部署名不明");
+      return {
+        ...item,
+        reserver_department_name: departmentName,
+        reserver_department_display_status: displayStatus,
+        reserver_department_display: composeReservationDepartmentDisplay(
+          departmentName,
+          displayStatus
+        ),
+      };
+    });
+  } catch (_error) {
+    if (loadToken !== latestReservationLoadToken) {
+      return;
+    }
+
+    reservations.value = reservations.value.map((item) => ({
+      ...item,
+      reserver_department_name: "",
+      reserver_department_display_status: "部署名不明",
+      reserver_department_display: "部署名不明",
+    }));
+  }
+}
 
 function goBack() {
   /**
@@ -137,14 +220,23 @@ async function loadReservations() {
   const response = await apiGet(
     `/api/assets/${assetNumber.value}/reservations?year_month=${targetYearMonth.value}`
   );
-  reservations.value = (response.items || []).map((item) => ({
-    ...item,
-    period: `${item.start_date}〜${item.end_date}`,
-    reserver_department_display:
-      item.reserver_department_display_status === "部署名"
-        ? item.reserver_department_name
-        : (item.reserver_department_display_status || "取得しています..."),
-  }));
+  latestReservationLoadToken += 1;
+  const currentLoadToken = latestReservationLoadToken;
+  reservations.value = (response.items || []).map((item) => {
+    const departmentName = item.reserver_department_name || "";
+    const displayStatus = item.reserver_department_display_status || "";
+    return {
+      ...item,
+      period: `${item.start_date}〜${item.end_date}`,
+      reserver_department_name: departmentName,
+      reserver_department_display_status: displayStatus,
+      reserver_department_display: composeReservationDepartmentDisplay(
+        departmentName,
+        displayStatus
+      ),
+    };
+  });
+  void resolveReservationDepartments(currentLoadToken);
 }
 
 function moveMonth(diff) {

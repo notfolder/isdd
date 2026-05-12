@@ -12,6 +12,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import secrets
 import sqlite3
@@ -519,6 +520,85 @@ def resolve_department_name(login_id: str) -> tuple[str, str]:
     return "", "部署名不明"
 
 
+@app.post("/api/departments/resolve")
+async def resolve_departments(
+    request: Request,
+    _: dict[str, str] = Depends(get_current_user),
+) -> dict[str, list[dict[str, str]]]:
+    """
+    複数ログインIDの部署名表示状態を取得する。
+
+    Args:
+      request: FastAPIリクエスト。
+      _: 認証済みユーザー情報。
+
+    Returns:
+      login_idごとの部署名と表示状態一覧。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+      設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+      要件概要: 一覧表示後に部署名を非同期解決し、取得中/成功/不明をクライアントで遷移表示できること。
+      設計概要: login_id配列を受け取り、各IDの部署名表示状態をまとめて返却する。
+      呼び出し先設計ID: DS-IF-CONNECT-EXTERNAL-DEPARTMENT-DB-EX-CONNECT-EXTERNAL-DEPARTMENT-DB, DS-MD-READ-ONLY-EXTERNAL-DEPARTMENT-DB-EX-READ-ONLY-EXTERNAL-DEPARTMENT-DB
+      呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN, DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+    """
+
+    try:
+        body = await parse_json_body(request)
+        raw_login_ids = body.get("login_ids")
+        if not isinstance(raw_login_ids, list):
+            raise HTTPException(status_code=400, detail="login_idsは配列で指定してください")
+
+        login_ids = []
+        seen_ids: set[str] = set()
+        for value in raw_login_ids:
+            login_id = str(value).strip()
+            if not login_id or login_id in seen_ids:
+                continue
+            seen_ids.add(login_id)
+            login_ids.append(login_id)
+
+        async def _resolve_single_department(login_id: str) -> dict[str, str]:
+            """
+            単一ログインIDの部署名をスレッドで解決する。
+
+            Args:
+              login_id: ログインID。
+
+            Returns:
+              部署名解決結果。
+
+            要件トレーサビリティ:
+              要件ID: RQ-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+              設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+              要件概要: UI応答を阻害せず部署名解決を継続できること。
+              設計概要: 外部DB参照をスレッドへ退避し、イベントループをブロックしない。
+              呼び出し先設計ID: DS-IF-CONNECT-EXTERNAL-DEPARTMENT-DB-EX-CONNECT-EXTERNAL-DEPARTMENT-DB
+              呼び出し元設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+            """
+
+            department_name, department_display_status = await asyncio.to_thread(
+                resolve_department_name,
+                login_id,
+            )
+            return {
+                "login_id": login_id,
+                "department_name": department_name,
+                "department_display_status": department_display_status,
+            }
+
+        items = await asyncio.gather(
+            *[_resolve_single_department(login_id) for login_id in login_ids]
+        )
+        return {"items": items}
+    except HTTPException:
+        raise
+    except Exception as exc:  # pragma: no cover
+        log_application_error("備品一覧画面", str(exc))
+        raise HTTPException(status_code=500, detail="部署名取得に失敗しました")
+
+
 @app.on_event("startup")
 def on_startup() -> None:
     """
@@ -647,7 +727,6 @@ def list_assets(_: dict[str, str] = Depends(get_current_user)) -> dict[str, list
         assets = []
         for row in rows:
             borrower_login_id = row["borrower_login_id"] or ""
-            department_name, department_display_status = resolve_department_name(borrower_login_id)
             assets.append(
                 {
                     "asset_number": row["asset_number"],
@@ -657,8 +736,10 @@ def list_assets(_: dict[str, str] = Depends(get_current_user)) -> dict[str, list
                     "borrower_name": row["borrower_name"] or "",
                     "loan_date": row["loan_date"] or "",
                     "return_due_date": row["return_due_date"] or "",
-                    "borrower_department_name": department_name,
-                    "borrower_department_display_status": department_display_status,
+                    "borrower_department_name": "",
+                    "borrower_department_display_status": (
+                        "取得しています..." if borrower_login_id else ""
+                    ),
                 }
             )
         return {"items": assets}
@@ -1028,17 +1109,14 @@ def list_reservations(
 
         items = []
         for row in rows:
-            department_name, department_display_status = resolve_department_name(
-                row["reserver_login_id"]
-            )
             items.append(
                 {
                     "reservation_id": row["reservation_id"],
                     "asset_number": row["asset_number"],
                     "reserver_login_id": row["reserver_login_id"],
                     "reserver_name": row["reserver_name"] or "",
-                    "reserver_department_name": department_name,
-                    "reserver_department_display_status": department_display_status,
+                    "reserver_department_name": "",
+                    "reserver_department_display_status": "取得しています...",
                     "start_date": row["start_date"],
                     "end_date": row["end_date"],
                     "reservation_status": row["reservation_status"],
