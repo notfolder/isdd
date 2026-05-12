@@ -17,12 +17,19 @@ import UserListView from "../views/UserListView.vue";
 import UserCreateView from "../views/UserCreateView.vue";
 import UserEditView from "../views/UserEditView.vue";
 import PasswordChangeView from "../views/PasswordChangeView.vue";
+import AssetReservationCalendarView from "../views/AssetReservationCalendarView.vue";
 
 const routes = [
   { path: "/", name: "login", component: LoginView },
   { path: "/assets", name: "assets", component: AssetListView },
   { path: "/assets/new", name: "asset-create", component: AssetCreateView },
   { path: "/assets/:assetNumber/edit", name: "asset-edit", component: AssetEditView, props: true },
+  {
+    path: "/assets/:assetNumber/reservations",
+    name: "asset-reservations",
+    component: AssetReservationCalendarView,
+    props: true,
+  },
   { path: "/users", name: "users", component: UserListView },
   { path: "/users/new", name: "user-create", component: UserCreateView },
   { path: "/users/:loginId/edit", name: "user-edit", component: UserEditView, props: true },

@@ -1,10 +1,10 @@
 /**
  * E2Eテストシナリオ群。
- * 要件ID: RQ-TS-VERIFY-ADMIN-REGISTER-LOAN-RETURN
- * 設計ID: DS-FN-REGISTER-ASSET-FT-REGISTER-ASSET
- * 要件概要: 管理者操作・一般ユーザー閲覧・PW変更/再設定・権限拒否・削除禁止を検証する。
- * 設計概要: Playwrightで全テストシナリオを1画面操作単位で実行し、期待結果を確認する。
- * 呼び出し先設計ID: DS-MD-VERIFY-ADMIN-REGISTER-LOAN-RETURN-TS-VERIFY-ADMIN-REGISTER-LOAN-RETURN, DS-MD-VERIFY-GENERAL-USER-VIEW-BORROWER-TS-VERIFY-GENERAL-USER-VIEW-BORROWER, DS-MD-VERIFY-PASSWORD-CHANGE-AND-RESET-TS-VERIFY-PASSWORD-CHANGE-AND-RESET, DS-MD-REJECT-PRIVILEGE-VIOLATION-TS-REJECT-PRIVILEGE-VIOLATION, DS-MD-REJECT-DELETE-WHEN-LOAN-EXISTS-TS-REJECT-DELETE-WHEN-LOAN-EXISTS
+ * 要件ID: RQ-TS-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION
+ * 設計ID: DS-MD-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION-TS-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION
+ * 要件概要: 返却予定日付き貸出、予約、部署表示、重複拒否を含むシナリオを検証する。
+ * 設計概要: Playwrightで予約追加後の画面操作シナリオを実行し、変更要件の成立を確認する。
+ * 呼び出し先設計ID: DS-MD-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION-TS-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION, DS-MD-VERIFY-DEPARTMENT-NAME-ASYNC-DISPLAY-TS-VERIFY-DEPARTMENT-NAME-ASYNC-DISPLAY, DS-MD-REJECT-RESERVATION-WITH-OVERLAP-TS-REJECT-RESERVATION-WITH-OVERLAP, DS-MD-VERIFY-RESERVATION-CALENDAR-WITH-DEPARTMENT-TS-VERIFY-RESERVATION-CALENDAR-WITH-DEPARTMENT, DS-MD-REJECT-RESERVATION-WHEN-RETURN-DUE-DATE-MISSING-TS-REJECT-RESERVATION-WHEN-RETURN-DUE-DATE-MISSING
  * 呼び出し元設計ID: DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE
  */
 
@@ -100,15 +100,15 @@ async function createUser(page, loginId, displayName, role, initialPassword) {
   await expect(page).toHaveURL(/\/users$/);
 }
 
-async function registerLoanFromRow(page, assetNumber, borrowerDisplay, loanDate) {
+async function registerLoanFromRow(page, assetNumber, borrowerDisplay, loanDate, returnDueDate) {
   /**
    * 備品一覧行から貸出登録を実行する。
-   * 要件ID: RQ-FT-REGISTER-LOAN
-   * 設計ID: DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN
-   * 要件概要: 行末ボタンで貸出登録できること。
-   * 設計概要: 対象行の貸出登録ボタンからダイアログを開き、借用者と貸出日を登録する。
-   * 呼び出し先設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN, DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN
-   * 呼び出し元設計ID: DS-MD-VERIFY-ADMIN-REGISTER-LOAN-RETURN-TS-VERIFY-ADMIN-REGISTER-LOAN-RETURN, DS-MD-REJECT-DELETE-WHEN-LOAN-EXISTS-TS-REJECT-DELETE-WHEN-LOAN-EXISTS
+   * 要件ID: RQ-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 設計ID: DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 要件概要: 行末ボタンで返却予定日付き貸出登録ができること。
+   * 設計概要: 対象行の貸出登録ダイアログで借用者・貸出日・返却予定日を登録する。
+   * 呼び出し先設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN, DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 呼び出し元設計ID: DS-MD-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION-TS-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION
    */
 
   const toAssetListButton = page.getByRole("button", { name: "備品一覧へ" });
@@ -125,6 +125,7 @@ async function registerLoanFromRow(page, assetNumber, borrowerDisplay, loanDate)
   await borrowerCombobox.press("ArrowDown");
   await page.getByRole("option", { name: borrowerDisplay }).click();
   await loanDialog.getByLabel("貸出日 (YYYY-MM-DD)").fill(loanDate);
+  await loanDialog.getByLabel("返却予定日 (YYYY-MM-DD)").fill(returnDueDate);
   await loanDialog.getByRole("button", { name: "登録" }).click();
   await expect(row).toContainText("貸出中");
 }
@@ -143,6 +144,54 @@ async function registerReturnFromRow(page, assetNumber) {
   const row = page.locator("tr", { hasText: assetNumber });
   await row.getByRole("button", { name: "返却登録" }).click();
   await expect(row).toContainText("貸出可能");
+}
+
+async function openReservationCalendarFromRow(page, assetNumber) {
+  /**
+   * 一覧行から予約カレンダー画面へ遷移する。
+   * 要件ID: RQ-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+   * 設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+   * 要件概要: 一覧行末の予約ボタンから予約カレンダーへ遷移できること。
+   * 設計概要: 対象備品行の予約ボタン押下で予約カレンダー画面を開く。
+   * 呼び出し先設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+   * 呼び出し元設計ID: DS-MD-VERIFY-RESERVATION-CALENDAR-WITH-DEPARTMENT-TS-VERIFY-RESERVATION-CALENDAR-WITH-DEPARTMENT
+   */
+
+  const row = page.locator("tr", { hasText: assetNumber });
+  await expect(row).toBeVisible();
+  await row.getByRole("button", { name: "予約" }).click();
+  await expect(page.getByText("備品予約カレンダー")).toBeVisible();
+}
+
+async function registerReservationFromCalendar(page, startDate, endDate) {
+  /**
+   * 予約カレンダー画面から予約登録を実行する。
+   * 要件ID: RQ-FT-REGISTER-RESERVATION
+   * 設計ID: DS-FN-REGISTER-RESERVATION-FT-REGISTER-RESERVATION
+   * 要件概要: 開始日/終了日で予約登録できること。
+   * 設計概要: 入力フォームを送信し、予約一覧へ結果を反映する。
+   * 呼び出し先設計ID: DS-FN-REGISTER-RESERVATION-FT-REGISTER-RESERVATION
+   * 呼び出し元設計ID: DS-MD-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION-TS-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION
+   */
+
+  await page.getByLabel("予約開始日 (YYYY-MM-DD)").fill(startDate);
+  await page.getByLabel("予約終了日 (YYYY-MM-DD)").fill(endDate);
+  await page.getByRole("button", { name: "予約登録" }).click();
+}
+
+async function cancelFirstReservationFromCalendar(page) {
+  /**
+   * 予約カレンダーで先頭予約を取消する。
+   * 要件ID: RQ-FT-CANCEL-RESERVATION
+   * 設計ID: DS-FN-CANCEL-RESERVATION-FT-CANCEL-RESERVATION
+   * 要件概要: 予約者本人または管理者が予約取消できること。
+   * 設計概要: 予約一覧の先頭行に対して取消ボタンを押下する。
+   * 呼び出し先設計ID: DS-FN-CANCEL-RESERVATION-FT-CANCEL-RESERVATION
+   * 呼び出し元設計ID: DS-MD-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION-TS-VERIFY-LOAN-WITH-RETURN-DUE-DATE-AND-RESERVATION
+   */
+
+  const row = page.locator("tr").filter({ hasText: "予約中" }).first();
+  await row.getByRole("button", { name: "取消" }).click();
 }
 
 test("管理者の備品登録・貸出・返却が成立する", async ({ page }) => {
@@ -170,7 +219,8 @@ test("管理者の備品登録・貸出・返却が成立する", async ({ page 
     page,
     assetNumber,
     `${borrowerDisplayName} (${borrowerLoginId})`,
-    "2026-05-10"
+    "2026-05-10",
+    "2026-05-12"
   );
   await registerReturnFromRow(page, assetNumber);
 });
@@ -201,7 +251,8 @@ test("一般ユーザーが借用者表示を確認できる", async ({ page }) 
     page,
     assetNumber,
     `${viewerDisplayName} (${viewerLoginId})`,
-    "2026-05-11"
+    "2026-05-11",
+    "2026-05-13"
   );
 
   await page.getByRole("button", { name: "ログアウト" }).click();
@@ -284,11 +335,12 @@ test("一般ユーザーの更新系操作が拒否される", async ({ page }) 
 
   await login(page, generalLoginId, generalPassword);
   const row = page.locator("tr", { hasText: assetNumber });
-  await expect(page.getByRole("columnheader", { name: "操作" })).toHaveCount(0);
+  await expect(page.getByRole("columnheader", { name: "操作" })).toHaveCount(1);
   await expect(row.getByRole("button", { name: "編集" })).toHaveCount(0);
   await expect(row.getByRole("button", { name: "削除" })).toHaveCount(0);
   await expect(row.getByRole("button", { name: "貸出登録" })).toHaveCount(0);
   await expect(row.getByRole("button", { name: "返却登録" })).toHaveCount(0);
+  await expect(row.getByRole("button", { name: "予約" })).toHaveCount(1);
 });
 
 test("貸出中データの削除が拒否される", async ({ page }) => {
@@ -317,7 +369,8 @@ test("貸出中データの削除が拒否される", async ({ page }) => {
     page,
     assetNumber,
     `${borrowerDisplayName} (${borrowerLoginId})`,
-    "2026-05-12"
+    "2026-05-12",
+    "2026-05-14"
   );
 
   const assetRow = page.locator("tr", { hasText: assetNumber });

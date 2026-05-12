@@ -18,6 +18,8 @@ from unittest.mock import patch
 
 # 既存Neonデータを前提にした最小モックデータ。
 DEFAULT_DEPARTMENT_BY_USER_ID: dict[str, str] = {
+    "admin": "情報システム部",
+    "user1": "営業部",
     "U001": "営業部",
     "U002": "開発部",
     "U003": "人事部",

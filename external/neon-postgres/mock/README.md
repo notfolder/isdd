@@ -26,3 +26,10 @@
 - mockモードのE2Eでは `patch_psycopg_connect` を利用して外部接続を置き換える。
 - realモードではpatchを適用せず実DBを参照する。
 - モックデータの主キーは `user_id` とし、既存Neonサンプル（`U001` 〜 `U010`）と整合させる。
+
+## 5. 実行モード切替
+
+- バックエンドから `department_reader.py` を利用する場合は以下の環境変数で切り替える。
+  - mockモード: `EXTERNAL_DEPARTMENT_DB_USE_MOCK=1`
+  - realモード: `EXTERNAL_DEPARTMENT_DB_URL=<Neon接続文字列>`
+- mockモードでは `external/neon-postgres/mock/psycopg_mock.py` の `connect` を直接利用する。

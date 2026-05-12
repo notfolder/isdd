@@ -1,7 +1,11 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      EXTERNAL_DEPARTMENT_DB_URL: ${EXTERNAL_DEPARTMENT_DB_URL:-}
+      EXTERNAL_DEPARTMENT_DB_USE_MOCK: ${EXTERNAL_DEPARTMENT_DB_USE_MOCK:-0}
     volumes:
       - backend_data:/app/data
     networks:

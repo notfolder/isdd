@@ -27,6 +27,9 @@
               >
                 返却登録
               </v-btn>
+              <v-btn size="small" class="mx-1" color="info" @click="goReservation(item.asset_number)">
+                予約
+              </v-btn>
             </template>
           </v-data-table>
         </v-card>
@@ -47,6 +50,7 @@
           label="借用者"
         />
         <v-text-field v-model="loanDate" label="貸出日 (YYYY-MM-DD)" />
+        <v-text-field v-model="returnDueDate" label="返却予定日 (YYYY-MM-DD)" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -60,11 +64,11 @@
 <script setup>
 /**
  * 備品一覧/備品管理画面。
- * 要件ID: RQ-UI-ASSET-LIST-MANAGEMENT-SCREEN
- * 設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
- * 要件概要: 備品一覧閲覧と管理者向け行操作（編集/削除/貸出/返却）を提供する。
- * 設計概要: 一覧行末ボタンで各操作を実行し、管理者のみ更新系操作を利用できる。
- * 呼び出し先設計ID: DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST, DS-FN-DELETE-ASSET-WITH-LOAN-CHECK-FT-DELETE-ASSET-WITH-LOAN-CHECK, DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN, DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN, DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+ * 要件ID: RQ-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
+ * 設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
+ * 要件概要: 備品一覧で部署表示と予約導線を提供し、管理者は貸出返却も実行できる。
+ * 設計概要: 一覧行末で予約遷移と管理者操作を提供し、部署表示状態を描画する。
+ * 呼び出し先設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT, DS-FN-DELETE-ASSET-WITH-LOAN-CHECK-FT-DELETE-ASSET-WITH-LOAN-CHECK, DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE, DS-FN-DELETE-LOANED-RESERVATION-ON-RETURN-FT-DELETE-LOANED-RESERVATION-ON-RETURN, DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
  * 呼び出し元設計ID: DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE
  */
 
@@ -83,6 +87,7 @@ const loanDialog = ref(false);
 const loanTargetAssetNumber = ref("");
 const loanBorrowerLoginId = ref("");
 const loanDate = ref("");
+const returnDueDate = ref("");
 
 const isAdmin = computed(() => localStorage.getItem("role") === "管理者");
 
@@ -102,10 +107,9 @@ const headers = computed(() => {
     { title: "備品名", key: "asset_name" },
     { title: "状態", key: "loan_status" },
     { title: "借用者名", key: "borrower_name" },
+    { title: "借用者部署名", key: "borrower_department_display" },
+    { title: "操作", key: "actions", sortable: false },
   ];
-  if (isAdmin.value) {
-    return [...baseHeaders, { title: "操作", key: "actions", sortable: false }];
-  }
   return baseHeaders;
 });
 
@@ -135,16 +139,24 @@ function ensureAuthenticated() {
 async function loadAssets() {
   /**
    * 備品一覧を取得する。
-   * 要件ID: RQ-FT-VIEW-ASSET-LIST
-   * 設計ID: DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST
-   * 要件概要: 備品一覧に貸出状態と借用者を表示する。
-   * 設計概要: `/api/assets` から一覧取得し画面表へ反映する。
-   * 呼び出し先設計ID: DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST
-   * 呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+   * 要件ID: RQ-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT
+   * 設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT
+   * 要件概要: 備品一覧に借用者部署名と表示状態を含めて表示する。
+   * 設計概要: `/api/assets` 取得結果を部署表示用項目へ整形して画面へ反映する。
+   * 呼び出し先設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT, DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
    */
 
   const response = await apiGet("/api/assets");
-  assets.value = response.items;
+  assets.value = (response.items || []).map((item) => ({
+    ...item,
+    borrower_department_display:
+      !item.borrower_login_id
+        ? "-"
+        : item.borrower_department_display_status === "部署名"
+        ? item.borrower_department_name
+        : (item.borrower_department_display_status || "取得しています..."),
+  }));
 }
 
 async function loadUsersForLoan() {
@@ -210,12 +222,12 @@ async function removeAsset(assetNumber) {
 function openLoanDialog(item) {
   /**
    * 貸出登録ダイアログを開く。
-   * 要件ID: RQ-FT-REGISTER-LOAN
-   * 設計ID: DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN
-   * 要件概要: 管理者が貸出登録を実行できる。
-   * 設計概要: 対象資産番号と初期貸出日を設定してダイアログを表示する。
-   * 呼び出し先設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
-   * 呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+   * 要件ID: RQ-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 設計ID: DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 要件概要: 管理者が返却予定日付きで貸出登録を実行できる。
+   * 設計概要: 対象資産と日付初期値を設定して貸出ダイアログを表示する。
+   * 呼び出し先設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
    */
 
   if (!isAdmin.value) {
@@ -225,24 +237,40 @@ function openLoanDialog(item) {
   loanTargetAssetNumber.value = item.asset_number;
   loanBorrowerLoginId.value = item.borrower_login_id || "";
   loanDate.value = item.loan_date || new Date().toISOString().slice(0, 10);
+  returnDueDate.value = item.return_due_date || new Date().toISOString().slice(0, 10);
   loanDialog.value = true;
+}
+
+function goReservation(assetNumber) {
+  /**
+   * 予約カレンダー画面へ遷移する。
+   * 要件ID: RQ-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+   * 設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+   * 要件概要: 一覧行末の予約ボタンから対象備品の予約画面へ遷移できる。
+   * 設計概要: 資産管理番号をルート引数として予約カレンダー画面へ遷移する。
+   * 呼び出し先設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
+   */
+
+  router.push(`/assets/${assetNumber}/reservations`);
 }
 
 async function registerLoan() {
   /**
    * 貸出登録を実行する。
-   * 要件ID: RQ-FT-REGISTER-LOAN
-   * 設計ID: DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN
-   * 要件概要: 借用者と貸出日を記録して状態を貸出中へ変更する。
-   * 設計概要: ダイアログ入力値を貸出APIへ送信する。
-   * 呼び出し先設計ID: DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN
-   * 呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+   * 要件ID: RQ-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 設計ID: DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 要件概要: 借用者・貸出日・返却予定日を記録して貸出登録する。
+   * 設計概要: ダイアログ入力値を貸出APIへ送信し、成功後に一覧を再取得する。
+   * 呼び出し先設計ID: DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
    */
 
   try {
     await apiSend(`/api/assets/${loanTargetAssetNumber.value}/loan`, "POST", {
       borrower_login_id: loanBorrowerLoginId.value,
       loan_date: loanDate.value,
+      return_due_date: returnDueDate.value,
     });
     loanDialog.value = false;
     await loadAssets();
@@ -254,12 +282,12 @@ async function registerLoan() {
 async function registerReturn(assetNumber) {
   /**
    * 返却登録を実行する。
-   * 要件ID: RQ-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN
-   * 設計ID: DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN
-   * 要件概要: 返却時に借用者と貸出日をクリアする。
+   * 要件ID: RQ-FT-DELETE-LOANED-RESERVATION-ON-RETURN
+   * 設計ID: DS-FN-DELETE-LOANED-RESERVATION-ON-RETURN-FT-DELETE-LOANED-RESERVATION-ON-RETURN
+   * 要件概要: 返却時に貸出済み予約を削除し、状態を貸出可能へ戻す。
    * 設計概要: 行末返却ボタン押下で返却APIを実行する。
-   * 呼び出し先設計ID: DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN
-   * 呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+   * 呼び出し先設計ID: DS-FN-DELETE-LOANED-RESERVATION-ON-RETURN-FT-DELETE-LOANED-RESERVATION-ON-RETURN
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
    */
 
   if (!isAdmin.value) {
@@ -277,12 +305,12 @@ async function registerReturn(assetNumber) {
 onMounted(async () => {
   /**
    * 画面初期表示時のデータ読み込みを行う。
-   * 要件ID: RQ-FT-VIEW-ASSET-LIST
-   * 設計ID: DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST
-   * 要件概要: 画面表示時に備品一覧を参照できること。
+   * 要件ID: RQ-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT
+   * 設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT
+   * 要件概要: 画面初期表示時に部署表示付きの備品一覧を参照できること。
    * 設計概要: 認証確認後に備品一覧と貸出候補ユーザーを読み込む。
-   * 呼び出し先設計ID: DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST, DS-FN-REGISTER-USER-FT-REGISTER-USER
-   * 呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+   * 呼び出し先設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT, DS-FN-REGISTER-USER-FT-REGISTER-USER
+   * 呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
    */
 
   ensureAuthenticated();

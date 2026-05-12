@@ -15,17 +15,34 @@ from __future__ import annotations
 import hashlib
 import secrets
 import sqlite3
-from datetime import datetime, timedelta
+import sys
+import uuid
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR.parent / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = DATA_DIR / "app.db"
+EXTERNAL_SRC_DIR_CANDIDATES = [
+    APP_DIR.parent / "external" / "neon-postgres" / "src",
+    APP_DIR.parent.parent / "external" / "neon-postgres" / "src",
+    Path("/workspace/external/neon-postgres/src"),
+]
+for _external_src_dir in EXTERNAL_SRC_DIR_CANDIDATES:
+    if _external_src_dir.exists():
+        sys.path.insert(0, str(_external_src_dir))
+        break
+
+try:
+    from department_reader import get_department_name_by_login_id
+except Exception:  # pragma: no cover - 外部連携未設定時は未取得扱いで継続
+    def get_department_name_by_login_id(_: str) -> str | None:
+        return None
 
 SESSIONS: dict[str, dict[str, str]] = {}
 
@@ -144,7 +161,30 @@ def initialize_database() -> None:
                 loan_status TEXT NOT NULL CHECK (loan_status IN ('貸出可能', '貸出中')),
                 borrower_login_id TEXT,
                 loan_date TEXT,
+                return_due_date TEXT,
                 FOREIGN KEY (borrower_login_id) REFERENCES user_master(login_id)
+            )
+            """
+        )
+        asset_columns = {
+            row["name"]
+            for row in connection.execute("PRAGMA table_info(asset_master)").fetchall()
+        }
+        if "return_due_date" not in asset_columns:
+            connection.execute("ALTER TABLE asset_master ADD COLUMN return_due_date TEXT")
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reservation (
+                reservation_id TEXT PRIMARY KEY,
+                asset_number TEXT NOT NULL,
+                reserver_login_id TEXT NOT NULL,
+                start_date TEXT NOT NULL,
+                end_date TEXT NOT NULL,
+                reservation_status TEXT NOT NULL CHECK (reservation_status IN ('予約中', '貸出済み')),
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (asset_number) REFERENCES asset_master(asset_number),
+                FOREIGN KEY (reserver_login_id) REFERENCES user_master(login_id),
+                CHECK (date(start_date) <= date(end_date))
             )
             """
         )
@@ -344,6 +384,141 @@ def fetch_user_row(connection: sqlite3.Connection, login_id: str) -> sqlite3.Row
     ).fetchone()
 
 
+def parse_iso_date(value: str, field_name: str) -> date:
+    """
+    YYYY-MM-DD 形式の日付文字列を検証して date へ変換する。
+
+    Args:
+      value: 日付文字列。
+      field_name: 入力項目名。
+
+    Returns:
+      変換済みの日付。
+
+    Raises:
+      HTTPException: 日付形式が不正な場合。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+      設計ID: DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+      要件概要: 貸出時に貸出日と返却予定日を正しい日付で受け付ける。
+      設計概要: 日付入力の共通検証を行い、形式不正を一律で拒否する。
+      呼び出し先設計ID: なし
+      呼び出し元設計ID: DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE, DS-FN-REGISTER-RESERVATION-FT-REGISTER-RESERVATION, DS-FN-VIEW-ASSET-RESERVATION-CALENDAR-FT-VIEW-ASSET-RESERVATION-CALENDAR
+    """
+
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=f"{field_name}はYYYY-MM-DD形式で入力してください",
+        ) from exc
+
+
+def is_period_overlapped(
+    left_start: date,
+    left_end: date,
+    right_start: date,
+    right_end: date,
+) -> bool:
+    """
+    2つの期間が両端含みで重複するかを判定する。
+
+    Args:
+      left_start: 期間1開始日。
+      left_end: 期間1終了日。
+      right_start: 期間2開始日。
+      right_end: 期間2終了日。
+
+    Returns:
+      重複する場合はTrue。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-VALIDATE-RESERVATION-PERIOD-OVERLAP
+      設計ID: DS-FN-VALIDATE-RESERVATION-PERIOD-OVERLAP-FT-VALIDATE-RESERVATION-PERIOD-OVERLAP
+      要件概要: 予約期間の重複を両端含みで判定して拒否する。
+      設計概要: 同一判定ロジックを共通化し、予約登録と貸出判定で再利用する。
+      呼び出し先設計ID: なし
+      呼び出し元設計ID: DS-FN-REGISTER-RESERVATION-FT-REGISTER-RESERVATION, DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+    """
+
+    return left_start <= right_end and right_start <= left_end
+
+
+def find_overlapping_active_reservations(
+    connection: sqlite3.Connection,
+    asset_number: str,
+    start_date_value: date,
+    end_date_value: date,
+) -> list[sqlite3.Row]:
+    """
+    指定期間に重複する予約中レコードを取得する。
+
+    Args:
+      connection: SQLite接続。
+      asset_number: 資産管理番号。
+      start_date_value: 判定開始日。
+      end_date_value: 判定終了日。
+
+    Returns:
+      重複する予約中レコード一覧。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-VALIDATE-RESERVATION-PERIOD-OVERLAP
+      設計ID: DS-FN-VALIDATE-RESERVATION-PERIOD-OVERLAP-FT-VALIDATE-RESERVATION-PERIOD-OVERLAP
+      要件概要: 同一備品で期間重複する予約を受け付けない。
+      設計概要: 予約中レコードを対象に両端含み条件で重複を抽出する。
+      呼び出し先設計ID: DS-SC-RESERVATION-NO-OVERLAP-INCLUSIVE-DT-RESERVATION-NO-OVERLAP-INCLUSIVE
+      呼び出し元設計ID: DS-FN-REGISTER-RESERVATION-FT-REGISTER-RESERVATION, DS-FN-ENFORCE-RESERVATION-OWNER-LOAN-FT-ENFORCE-RESERVATION-OWNER-LOAN
+    """
+
+    return connection.execute(
+        """
+        SELECT reservation_id, reserver_login_id, start_date, end_date
+        FROM reservation
+        WHERE asset_number = ?
+          AND reservation_status = '予約中'
+          AND date(start_date) <= date(?)
+          AND date(end_date) >= date(?)
+        ORDER BY start_date ASC, reservation_id ASC
+        """,
+        (asset_number, end_date_value.isoformat(), start_date_value.isoformat()),
+    ).fetchall()
+
+
+def resolve_department_name(login_id: str) -> tuple[str, str]:
+    """
+    ログインIDから部署名と表示状態を解決する。
+
+    Args:
+      login_id: ログインID。
+
+    Returns:
+      (部署名, 表示状態) のタプル。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+      設計ID: DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+      要件概要: 部署名の取得結果を表示状態付きで扱えるようにする。
+      設計概要: 取得成功時は部署名、失敗時は部署名不明として返す。
+      呼び出し先設計ID: DS-IF-CONNECT-EXTERNAL-DEPARTMENT-DB-EX-CONNECT-EXTERNAL-DEPARTMENT-DB
+      呼び出し元設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT, DS-FN-VIEW-ASSET-RESERVATION-CALENDAR-FT-VIEW-ASSET-RESERVATION-CALENDAR
+    """
+
+    if not login_id:
+        return "", ""
+
+    try:
+        department_name = get_department_name_by_login_id(login_id)
+    except Exception:
+        department_name = None
+
+    if department_name:
+        return department_name, "部署名"
+    return "", "部署名不明"
+
+
 @app.on_event("startup")
 def on_startup() -> None:
     """
@@ -443,12 +618,12 @@ def list_assets(_: dict[str, str] = Depends(get_current_user)) -> dict[str, list
       備品一覧。
 
     要件トレーサビリティ:
-      要件ID: RQ-FT-VIEW-ASSET-LIST
-      設計ID: DS-FN-VIEW-ASSET-LIST-FT-VIEW-ASSET-LIST
-      要件概要: 備品一覧で貸出可否と借用者を確認できるようにする。
-      設計概要: 備品とユーザーを結合して4列を返却し、資産番号昇順で表示する。
-      呼び出し先設計ID: DS-SC-ASSET-MASTER-INTERNAL-DATA-DT-ASSET-MASTER-INTERNAL-DATA, DS-SC-USER-MASTER-INTERNAL-DATA-DT-USER-MASTER-INTERNAL-DATA
-      呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+      要件ID: RQ-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT
+      設計ID: DS-FN-VIEW-ASSET-LIST-WITH-DEPARTMENT-FT-VIEW-ASSET-LIST-WITH-DEPARTMENT
+      要件概要: 備品一覧に借用者部署名と予約導線を表示できるようにする。
+      設計概要: 備品一覧へ返却予定日と借用者部署名の表示状態を付与して返却する。
+      呼び出し先設計ID: DS-SC-ASSET-MASTER-INTERNAL-DATA-WITH-RETURN-DUE-DATE-DT-ASSET-MASTER-INTERNAL-DATA-WITH-RETURN-DUE-DATE, DS-SC-USER-MASTER-INTERNAL-DATA-DT-USER-MASTER-INTERNAL-DATA, DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+      呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
     """
 
     try:
@@ -461,6 +636,7 @@ def list_assets(_: dict[str, str] = Depends(get_current_user)) -> dict[str, list
                     a.loan_status,
                     a.borrower_login_id,
                     a.loan_date,
+                    a.return_due_date,
                     COALESCE(u.display_name, '') AS borrower_name
                 FROM asset_master a
                 LEFT JOIN user_master u ON a.borrower_login_id = u.login_id
@@ -470,14 +646,19 @@ def list_assets(_: dict[str, str] = Depends(get_current_user)) -> dict[str, list
 
         assets = []
         for row in rows:
+            borrower_login_id = row["borrower_login_id"] or ""
+            department_name, department_display_status = resolve_department_name(borrower_login_id)
             assets.append(
                 {
                     "asset_number": row["asset_number"],
                     "asset_name": row["asset_name"],
                     "loan_status": row["loan_status"],
-                    "borrower_login_id": row["borrower_login_id"] or "",
+                    "borrower_login_id": borrower_login_id,
                     "borrower_name": row["borrower_name"] or "",
                     "loan_date": row["loan_date"] or "",
+                    "return_due_date": row["return_due_date"] or "",
+                    "borrower_department_name": department_name,
+                    "borrower_department_display_status": department_display_status,
                 }
             )
         return {"items": assets}
@@ -524,8 +705,8 @@ async def create_asset(
 
             connection.execute(
                 """
-                INSERT INTO asset_master (asset_number, asset_name, loan_status, borrower_login_id, loan_date)
-                VALUES (?, ?, '貸出可能', NULL, NULL)
+                INSERT INTO asset_master (asset_number, asset_name, loan_status, borrower_login_id, loan_date, return_due_date)
+                VALUES (?, ?, '貸出可能', NULL, NULL, NULL)
                 """,
                 (asset_number, asset_name),
             )
@@ -651,20 +832,26 @@ async def register_loan(
       貸出登録結果。
 
     要件トレーサビリティ:
-      要件ID: RQ-FT-REGISTER-LOAN
-      設計ID: DS-FN-REGISTER-LOAN-FT-REGISTER-LOAN
-      要件概要: 貸出時に借用者と貸出日を記録する。
-      設計概要: 備品状態と借用者存在を検証した上で貸出中へ更新する。
-      呼び出し先設計ID: DS-SC-CURRENT-LOAN-STATE-INTERNAL-DATA-DT-CURRENT-LOAN-STATE-INTERNAL-DATA, DS-SC-BORROWER-MUST-BE-REGISTERED-USER-DT-BORROWER-MUST-BE-REGISTERED-USER
-      呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+      要件ID: RQ-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+      設計ID: DS-FN-REGISTER-LOAN-WITH-RETURN-DUE-DATE-FT-REGISTER-LOAN-WITH-RETURN-DUE-DATE
+      要件概要: 貸出登録時に返却予定日を必須化し、予約ルールと整合させる。
+      設計概要: 貸出条件と予約者優先制御を検証し、貸出更新と予約状態遷移を同一処理で実行する。
+      呼び出し先設計ID: DS-SC-RETURN-DUE-DATE-REQUIRED-WHEN-LOANED-DT-RETURN-DUE-DATE-REQUIRED-WHEN-LOANED, DS-SC-BORROWER-MUST-BE-REGISTERED-USER-DT-BORROWER-MUST-BE-REGISTERED-USER, DS-FN-ENFORCE-RESERVATION-OWNER-LOAN-FT-ENFORCE-RESERVATION-OWNER-LOAN, DS-FN-TRANSITION-RESERVATION-TO-LOANED-FT-TRANSITION-RESERVATION-TO-LOANED
+      呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
     """
 
     try:
         body = await parse_json_body(request)
         borrower_login_id = str(body.get("borrower_login_id", "")).strip()
         loan_date = str(body.get("loan_date", "")).strip()
-        if not borrower_login_id or not loan_date:
-            raise HTTPException(status_code=400, detail="借用者と貸出日は必須です")
+        return_due_date = str(body.get("return_due_date", "")).strip()
+        if not borrower_login_id or not loan_date or not return_due_date:
+            raise HTTPException(status_code=400, detail="借用者・貸出日・返却予定日は必須です")
+
+        loan_date_value = parse_iso_date(loan_date, "貸出日")
+        return_due_date_value = parse_iso_date(return_due_date, "返却予定日")
+        if return_due_date_value < loan_date_value:
+            raise HTTPException(status_code=400, detail="返却予定日は貸出日以降で入力してください")
 
         with open_connection() as connection:
             target = fetch_asset_row(connection, asset_number)
@@ -677,13 +864,43 @@ async def register_loan(
             if borrower is None:
                 raise HTTPException(status_code=404, detail="借用者ユーザーが見つかりません")
 
+            overlapping_reservations = find_overlapping_active_reservations(
+                connection,
+                asset_number,
+                loan_date_value,
+                return_due_date_value,
+            )
+            for reservation in overlapping_reservations:
+                if reservation["reserver_login_id"] != borrower_login_id:
+                    raise HTTPException(
+                        status_code=409,
+                        detail="重複予約があるため予約者本人のみ貸出できます",
+                    )
+
             connection.execute(
                 """
                 UPDATE asset_master
-                SET loan_status = '貸出中', borrower_login_id = ?, loan_date = ?
+                SET loan_status = '貸出中', borrower_login_id = ?, loan_date = ?, return_due_date = ?
                 WHERE asset_number = ?
                 """,
-                (borrower_login_id, loan_date, asset_number),
+                (borrower_login_id, loan_date, return_due_date, asset_number),
+            )
+            connection.execute(
+                """
+                UPDATE reservation
+                SET reservation_status = '貸出済み'
+                WHERE asset_number = ?
+                  AND reserver_login_id = ?
+                  AND reservation_status = '予約中'
+                  AND date(start_date) <= date(?)
+                  AND date(end_date) >= date(?)
+                """,
+                (
+                    asset_number,
+                    borrower_login_id,
+                    return_due_date_value.isoformat(),
+                    loan_date_value.isoformat(),
+                ),
             )
             connection.commit()
         return {"result": "loan_registered"}
@@ -710,12 +927,12 @@ def register_return(
       返却登録結果。
 
     要件トレーサビリティ:
-      要件ID: RQ-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN
-      設計ID: DS-FN-REGISTER-RETURN-CLEAR-CURRENT-LOAN-FT-REGISTER-RETURN-CLEAR-CURRENT-LOAN
-      要件概要: 返却時に借用者と貸出日をクリアする。
-      設計概要: 貸出中確認後に状態を貸出可能へ戻し、借用者と貸出日をNULL化する。
-      呼び出し先設計ID: DS-SC-CURRENT-LOAN-NO-HISTORY-RETENTION-DT-CURRENT-LOAN-NO-HISTORY-RETENTION
-      呼び出し元設計ID: DS-IF-ASSET-LIST-MANAGEMENT-SCREEN-UI-ASSET-LIST-MANAGEMENT-SCREEN
+      要件ID: RQ-FT-DELETE-LOANED-RESERVATION-ON-RETURN
+      設計ID: DS-FN-DELETE-LOANED-RESERVATION-ON-RETURN-FT-DELETE-LOANED-RESERVATION-ON-RETURN
+      要件概要: 返却時に同一備品の貸出済み予約のみ削除する。
+      設計概要: 返却更新と同時に貸出済み予約を物理削除し、他予約は保持する。
+      呼び出し先設計ID: DS-SC-DELETE-LOANED-RESERVATION-ON-RETURN-DT-DELETE-LOANED-RESERVATION-ON-RETURN, DS-SC-CURRENT-LOAN-NO-HISTORY-RETENTION-DT-CURRENT-LOAN-NO-HISTORY-RETENTION
+      呼び出し元設計ID: DS-IF-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN-UI-ASSET-LIST-WITH-RESERVATION-BUTTON-SCREEN
     """
 
     try:
@@ -729,8 +946,16 @@ def register_return(
             connection.execute(
                 """
                 UPDATE asset_master
-                SET loan_status = '貸出可能', borrower_login_id = NULL, loan_date = NULL
+                SET loan_status = '貸出可能', borrower_login_id = NULL, loan_date = NULL, return_due_date = NULL
                 WHERE asset_number = ?
+                """,
+                (asset_number,),
+            )
+            connection.execute(
+                """
+                DELETE FROM reservation
+                WHERE asset_number = ?
+                  AND reservation_status = '貸出済み'
                 """,
                 (asset_number,),
             )
@@ -741,6 +966,259 @@ def register_return(
     except Exception as exc:  # pragma: no cover
         log_application_error("備品一覧画面", str(exc))
         raise HTTPException(status_code=500, detail="返却登録に失敗しました")
+
+
+@app.get("/api/assets/{asset_number}/reservations")
+def list_reservations(
+    asset_number: str,
+    year_month: str = Query(default="", pattern=r"^$|^\d{4}-\d{2}$"),
+    _: dict[str, str] = Depends(get_current_user),
+) -> dict[str, Any]:
+    """
+    指定備品の予約カレンダー情報を月次で取得する。
+
+    Args:
+      asset_number: 資産管理番号。
+      year_month: 取得対象月（YYYY-MM）。空の場合は当月。
+      _: 認証済みユーザー情報。
+
+    Returns:
+      対象月と予約一覧。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-VIEW-ASSET-RESERVATION-CALENDAR
+      設計ID: DS-FN-VIEW-ASSET-RESERVATION-CALENDAR-FT-VIEW-ASSET-RESERVATION-CALENDAR
+      要件概要: 備品ごとの予約期間・予約者・部署名・状態を月次で参照できる。
+      設計概要: 対象月と重なる予約を取得し、部署名表示状態を付与して返却する。
+      呼び出し先設計ID: DS-SC-RESERVATION-INTERNAL-DATA-DT-RESERVATION-INTERNAL-DATA, DS-FN-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE-FT-DISPLAY-DEPARTMENT-NAME-ASYNC-STATE
+      呼び出し元設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+    """
+
+    try:
+        if year_month:
+            month_start = datetime.strptime(f"{year_month}-01", "%Y-%m-%d").date()
+        else:
+            today = date.today()
+            month_start = date(today.year, today.month, 1)
+
+        if month_start.month == 12:
+            next_month_start = date(month_start.year + 1, 1, 1)
+        else:
+            next_month_start = date(month_start.year, month_start.month + 1, 1)
+        month_end = next_month_start - timedelta(days=1)
+
+        with open_connection() as connection:
+            asset_row = fetch_asset_row(connection, asset_number)
+            if asset_row is None:
+                raise HTTPException(status_code=404, detail="備品が見つかりません")
+
+            rows = connection.execute(
+                """
+                SELECT r.reservation_id, r.asset_number, r.reserver_login_id, r.start_date, r.end_date,
+                       r.reservation_status, COALESCE(u.display_name, '') AS reserver_name
+                FROM reservation r
+                LEFT JOIN user_master u ON r.reserver_login_id = u.login_id
+                WHERE r.asset_number = ?
+                  AND date(r.start_date) <= date(?)
+                  AND date(r.end_date) >= date(?)
+                ORDER BY r.start_date ASC, r.reservation_id ASC
+                """,
+                (asset_number, month_end.isoformat(), month_start.isoformat()),
+            ).fetchall()
+
+        items = []
+        for row in rows:
+            department_name, department_display_status = resolve_department_name(
+                row["reserver_login_id"]
+            )
+            items.append(
+                {
+                    "reservation_id": row["reservation_id"],
+                    "asset_number": row["asset_number"],
+                    "reserver_login_id": row["reserver_login_id"],
+                    "reserver_name": row["reserver_name"] or "",
+                    "reserver_department_name": department_name,
+                    "reserver_department_display_status": department_display_status,
+                    "start_date": row["start_date"],
+                    "end_date": row["end_date"],
+                    "reservation_status": row["reservation_status"],
+                }
+            )
+
+        return {
+            "asset_number": asset_number,
+            "year_month": month_start.strftime("%Y-%m"),
+            "items": items,
+        }
+    except HTTPException:
+        raise
+    except ValueError:
+        raise HTTPException(status_code=400, detail="year_monthはYYYY-MM形式で入力してください")
+    except Exception as exc:  # pragma: no cover
+        log_application_error("備品予約カレンダー画面", str(exc))
+        raise HTTPException(status_code=500, detail="予約カレンダー取得に失敗しました")
+
+
+@app.post("/api/assets/{asset_number}/reservations")
+async def register_reservation(
+    asset_number: str,
+    request: Request,
+    user_context: dict[str, str] = Depends(get_current_user),
+) -> dict[str, str]:
+    """
+    指定備品に期間指定の予約を登録する。
+
+    Args:
+      asset_number: 資産管理番号。
+      request: FastAPIリクエスト。
+      user_context: 認証済みユーザー情報。
+
+    Returns:
+      予約登録結果。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-REGISTER-RESERVATION
+      設計ID: DS-FN-REGISTER-RESERVATION-FT-REGISTER-RESERVATION
+      要件概要: 管理者と一般ユーザーが本人予約を期間指定で登録できる。
+      設計概要: 本人予約・日付整合・重複判定・返却予定日欠落判定を通過した場合のみ登録する。
+      呼び出し先設計ID: DS-FN-VALIDATE-RESERVATION-PERIOD-OVERLAP-FT-VALIDATE-RESERVATION-PERIOD-OVERLAP, DS-FN-REJECT-RESERVATION-WHEN-RETURN-DUE-DATE-MISSING-FT-REJECT-RESERVATION-WHEN-RETURN-DUE-DATE-MISSING, DS-SC-RESERVATION-INTERNAL-DATA-DT-RESERVATION-INTERNAL-DATA
+      呼び出し元設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+    """
+
+    try:
+        body = await parse_json_body(request)
+        reserver_login_id = str(body.get("reserver_login_id", "")).strip()
+        start_date = str(body.get("start_date", "")).strip()
+        end_date = str(body.get("end_date", "")).strip()
+        if not reserver_login_id or not start_date or not end_date:
+            raise HTTPException(status_code=400, detail="予約者・開始日・終了日は必須です")
+
+        if reserver_login_id != user_context["login_id"]:
+            raise HTTPException(status_code=403, detail="予約者本人のみ登録できます")
+
+        start_date_value = parse_iso_date(start_date, "予約開始日")
+        end_date_value = parse_iso_date(end_date, "予約終了日")
+        if end_date_value < start_date_value:
+            raise HTTPException(status_code=400, detail="予約終了日は予約開始日以降で入力してください")
+        if start_date_value < date.today():
+            raise HTTPException(status_code=400, detail="予約開始日は当日以降で入力してください")
+
+        with open_connection() as connection:
+            asset_row = fetch_asset_row(connection, asset_number)
+            if asset_row is None:
+                raise HTTPException(status_code=404, detail="備品が見つかりません")
+
+            if asset_row["loan_status"] == "貸出中" and not (asset_row["return_due_date"] or ""):
+                raise HTTPException(
+                    status_code=409,
+                    detail="貸出中で返却予定日未設定のため予約できません",
+                )
+
+            overlapping_reservations = find_overlapping_active_reservations(
+                connection,
+                asset_number,
+                start_date_value,
+                end_date_value,
+            )
+            if overlapping_reservations:
+                raise HTTPException(status_code=409, detail="期間が重複しています")
+
+            if asset_row["loan_status"] == "貸出中":
+                loan_start_date = parse_iso_date(asset_row["loan_date"], "貸出日")
+                loan_end_date = parse_iso_date(asset_row["return_due_date"], "返却予定日")
+                if is_period_overlapped(
+                    start_date_value,
+                    end_date_value,
+                    loan_start_date,
+                    loan_end_date,
+                ):
+                    raise HTTPException(status_code=409, detail="期間が重複しています")
+
+            reservation_id = f"R{uuid.uuid4().hex[:12].upper()}"
+            connection.execute(
+                """
+                INSERT INTO reservation (
+                    reservation_id,
+                    asset_number,
+                    reserver_login_id,
+                    start_date,
+                    end_date,
+                    reservation_status,
+                    created_at
+                )
+                VALUES (?, ?, ?, ?, ?, '予約中', ?)
+                """,
+                (
+                    reservation_id,
+                    asset_number,
+                    reserver_login_id,
+                    start_date_value.isoformat(),
+                    end_date_value.isoformat(),
+                    datetime.utcnow().isoformat(),
+                ),
+            )
+            connection.commit()
+        return {"result": "reservation_registered"}
+    except HTTPException:
+        raise
+    except Exception as exc:  # pragma: no cover
+        log_application_error("備品予約カレンダー画面", str(exc))
+        raise HTTPException(status_code=500, detail="予約登録に失敗しました")
+
+
+@app.delete("/api/reservations/{reservation_id}")
+def cancel_reservation(
+    reservation_id: str,
+    user_context: dict[str, str] = Depends(get_current_user),
+) -> dict[str, str]:
+    """
+    予約IDを指定して予約を取り消す。
+
+    Args:
+      reservation_id: 予約ID。
+      user_context: 認証済みユーザー情報。
+
+    Returns:
+      予約取消結果。
+
+    要件トレーサビリティ:
+      要件ID: RQ-FT-CANCEL-RESERVATION
+      設計ID: DS-FN-CANCEL-RESERVATION-FT-CANCEL-RESERVATION
+      要件概要: 予約者本人または管理者が予約を取り消せる。
+      設計概要: 権限判定後に対象予約を物理削除する。
+      呼び出し先設計ID: DS-SC-RESERVATION-DATA-RETENTION-UNTIL-RETURN-OR-CANCEL-DT-RESERVATION-DATA-RETENTION-UNTIL-RETURN-OR-CANCEL
+      呼び出し元設計ID: DS-IF-ASSET-RESERVATION-CALENDAR-SCREEN-UI-ASSET-RESERVATION-CALENDAR-SCREEN
+    """
+
+    try:
+        with open_connection() as connection:
+            target = connection.execute(
+                """
+                SELECT reservation_id, reserver_login_id
+                FROM reservation
+                WHERE reservation_id = ?
+                """,
+                (reservation_id,),
+            ).fetchone()
+            if target is None:
+                raise HTTPException(status_code=404, detail="予約が見つかりません")
+
+            is_admin = user_context.get("role") == "管理者"
+            is_owner = target["reserver_login_id"] == user_context.get("login_id")
+            if not is_admin and not is_owner:
+                raise HTTPException(status_code=403, detail="予約取消の権限がありません")
+
+            connection.execute(
+                "DELETE FROM reservation WHERE reservation_id = ?",
+                (reservation_id,),
+            )
+            connection.commit()
+        return {"result": "reservation_cancelled"}
+    except HTTPException:
+        raise
+    except Exception as exc:  # pragma: no cover
+        log_application_error("備品予約カレンダー画面", str(exc))
+        raise HTTPException(status_code=500, detail="予約取消に失敗しました")
 
 
 @app.get("/api/users")
@@ -1043,4 +1521,3 @@ async def reset_user_password(
     except Exception as exc:  # pragma: no cover
         log_application_error("ユーザー一覧画面", str(exc))
         raise HTTPException(status_code=500, detail="初期PW再設定に失敗しました")
-
