@@ -123,8 +123,29 @@ async function registerLoanFromRow(page, assetNumber, borrowerDisplay, loanDate,
   await expect(loanDialog).toBeVisible({ timeout: UI_WAIT_TIMEOUT_MS });
   const borrowerCombobox = loanDialog.getByRole("combobox", { name: "借用者", exact: true });
   await borrowerCombobox.focus();
+  await borrowerCombobox.press("Home");
   await borrowerCombobox.press("ArrowDown");
-  await page.getByRole("option", { name: borrowerDisplay }).click();
+  let isBorrowerSelected = false;
+  for (let index = 0; index < 50; index += 1) {
+    const borrowerOption = page.getByRole("option", { name: borrowerDisplay, exact: true });
+    const optionCount = await borrowerOption.count();
+    for (let optionIndex = 0; optionIndex < optionCount; optionIndex += 1) {
+      const candidateOption = borrowerOption.nth(optionIndex);
+      if (!(await candidateOption.isVisible())) {
+        continue;
+      }
+      await candidateOption.click();
+      isBorrowerSelected = true;
+      break;
+    }
+    if (isBorrowerSelected) {
+      break;
+    }
+    await page.keyboard.press("PageDown");
+  }
+  if (!isBorrowerSelected) {
+    throw new Error(`借用者候補が見つかりません: ${borrowerDisplay}`);
+  }
   await loanDialog.getByLabel("貸出日 (YYYY-MM-DD)").fill(loanDate);
   await loanDialog.getByLabel("返却予定日 (YYYY-MM-DD)").fill(returnDueDate);
   await loanDialog.getByRole("button", { name: "登録" }).click();
@@ -269,6 +290,60 @@ test("一般ユーザーが借用者表示を確認できる", async ({ page }) 
   });
 });
 
+test("予約カレンダーで月次表示と日付入力が動作する", async ({ page }) => {
+  /**
+   * 予約カレンダー画面の表示と登録操作を検証する。
+   * 要件ID: RQ-TS-VERIFY-RESERVATION-CALENDAR-WITH-DEPARTMENT
+   * 設計ID: DS-FN-VIEW-ASSET-RESERVATION-CALENDAR-FT-VIEW-ASSET-RESERVATION-CALENDAR
+   * 要件概要: 予約カレンダー上で予約表示と日付指定登録ができること。
+   * 設計概要: 一般ユーザーで予約画面を開き、日付入力と月次表示への反映を確認する。
+   * 呼び出し先設計ID: DS-MD-VERIFY-RESERVATION-CALENDAR-WITH-DEPARTMENT-TS-VERIFY-RESERVATION-CALENDAR-WITH-DEPARTMENT
+   * 呼び出し元設計ID: DS-MD-WEB-GUI-USE-UI-WEB-GUI-USE
+   */
+
+  const assetNumber = `A-104-${runId}`;
+  const reservationLoginId = `reserveuser-${runId}`;
+  const reservationDisplayName = `予約表示ユーザー-${runId}`;
+  const reservationPassword = `reserveuser-${runId}`;
+  const today = new Date().toISOString().slice(0, 10);
+
+  await login(page, "admin", "admin");
+  await gotoUserCreate(page);
+  await createUser(
+    page,
+    reservationLoginId,
+    reservationDisplayName,
+    "一般ユーザー",
+    reservationPassword
+  );
+  await page.getByRole("button", { name: "備品一覧へ" }).click();
+  await gotoAssetCreate(page);
+  await createAsset(page, assetNumber, "予約表示テスト機");
+  await page.getByRole("button", { name: "ログアウト" }).click();
+
+  await login(page, reservationLoginId, reservationPassword);
+  await openReservationCalendarFromRow(page, assetNumber);
+
+  const calendarTable = page.locator(".reservation-month-calendar");
+  await expect(calendarTable).toBeVisible({ timeout: UI_WAIT_TIMEOUT_MS });
+  await expect(calendarTable.locator("thead th")).toHaveCount(7);
+
+  const startDateInput = page.getByLabel("予約開始日 (YYYY-MM-DD)");
+  const endDateInput = page.getByLabel("予約終了日 (YYYY-MM-DD)");
+  await expect(startDateInput).toHaveAttribute("type", "date");
+  await expect(endDateInput).toHaveAttribute("type", "date");
+
+  await registerReservationFromCalendar(page, today, today);
+
+  const reservationRow = page.locator("tr", { hasText: `${today}〜${today}` }).first();
+  await expect(reservationRow).toContainText(reservationDisplayName, {
+    timeout: UI_WAIT_TIMEOUT_MS,
+  });
+  await expect(
+    page.locator(".reservation-month-calendar-chip", { hasText: reservationDisplayName }).first()
+  ).toBeVisible({ timeout: UI_WAIT_TIMEOUT_MS });
+});
+
 test("自己PW変更と管理者初期PW再設定が成立する", async ({ page }) => {
   /**
    * パスワード運用シナリオを検証する。
@@ -309,8 +384,32 @@ test("自己PW変更と管理者初期PW再設定が成立する", async ({ page
   await expect(resetDialog).toBeVisible();
   const resetTargetCombobox = resetDialog.getByRole("combobox", { name: "対象ユーザー", exact: true });
   await resetTargetCombobox.focus();
+  await resetTargetCombobox.press("Home");
   await resetTargetCombobox.press("ArrowDown");
-  await page.getByRole("option", { name: targetDisplayName }).click();
+  let isResetTargetSelected = false;
+  for (let index = 0; index < 50; index += 1) {
+    const resetTargetOption = page.getByRole("option", {
+      name: targetDisplayName,
+      exact: true,
+    });
+    const optionCount = await resetTargetOption.count();
+    for (let optionIndex = 0; optionIndex < optionCount; optionIndex += 1) {
+      const candidateOption = resetTargetOption.nth(optionIndex);
+      if (!(await candidateOption.isVisible())) {
+        continue;
+      }
+      await candidateOption.click();
+      isResetTargetSelected = true;
+      break;
+    }
+    if (isResetTargetSelected) {
+      break;
+    }
+    await page.keyboard.press("PageDown");
+  }
+  if (!isResetTargetSelected) {
+    throw new Error(`初期PW再設定対象が見つかりません: ${targetDisplayName}`);
+  }
   await resetDialog.getByLabel("初期PW", { exact: true }).fill(resetPassword);
   await resetDialog.getByRole("button", { name: "再設定" }).click();
   await page.getByRole("button", { name: "ログアウト" }).click();
