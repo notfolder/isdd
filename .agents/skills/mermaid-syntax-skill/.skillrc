@@ -1,0 +1,10 @@
+{
+  "name": "mermaid-syntax-skill",
+  "version": "1.5.0",
+  "triggers": ["mermaid", "流程图", "flowchart", "sequence diagram", "时序图", "class diagram", "类图", "state diagram", "状态图", "ER diagram", "gantt chart", "fix mermaid error", "diagram not rendering"],
+  "category": "visualization",
+  "description": "Comprehensive syntax reference for generating error-free Mermaid diagrams. Prevents common mistakes and supports Mermaid v11 features.",
+  "dependencies": [],
+  "languages": ["mermaid"],
+  "author": "awesome-skills"
+}

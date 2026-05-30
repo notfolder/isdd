@@ -174,11 +174,11 @@ def create_order(user_id: str, items: list) -> dict:
 
 ### `docs/` への反映ルール
 
-実装が終わったら、変更設計だった場合、`docs/requirements.md` と `docs/detail_design.md` を必ず更新する。
+本スキルはコードコメントのトレーサビリティ整備と検証に責務を限定する。
 
-- `deprecated` となった要件・設計は `docs/` 反映時に**削除する**
-- `docs/requirements.md` と `docs/detail_design.md` は**常に現在有効な要件・設計のみを記載**した最新状態を保つ
-- 変更部分を追加するのではなく、変更後の完全な状態に更新する。isdd-requirements と isdd-design を参照して、変更後の要件・設計を正確に反映すること
+- `docs/requirements.md` と `docs/detail_design.md` の正本更新は本スキルの責務に含めない
+- 実装中に要件・設計の不足や矛盾を発見した場合は、`docs/proposals.md` に提案を追記する
+- 正本更新は `isdd-post-implementation-review` が実施し、完了時に `docs/proposals.md` を削除する
 
 ### コードコメントの更新ルール
 
