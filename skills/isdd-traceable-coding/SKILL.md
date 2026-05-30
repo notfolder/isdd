@@ -221,6 +221,16 @@ def create_order(user_id: str, items: list) -> dict:
   - 呼び出し先設計ID:
   - 呼び出し元設計ID:
 9. コメント付与後、要件・設計との対応漏れがないかをセルフレビューしてユーザーに報告する
+10. 以下を**必ず bash で実行**して実装完了条件（docker-compose / E2E / README）を機械的に確認する
+    ```bash
+    python3 .agents/skills/isdd-common/scripts/implementation_completeness_checker.py .
+    ```
+    - 実行結果（OK/FAIL件数）を最終報告に必ず記載する
+    - FAIL が1件でもある場合は**完了を報告してはならない**。FAIL項目を対処してから再実行する
+    - 対処内容の例:
+      - `docker-compose.yml が見つかりません` → docker-compose.yml を作成する
+      - `e2e/ ディレクトリが存在しません` → E2Eテストを実装し `e2e/` に配置する
+      - `README.md に不足があります` → 起動方法・初期ユーザー情報を README.md に追記する
 
 ### 完了判定ルール（報告前に必ず自己確認）
 
@@ -228,6 +238,10 @@ def create_order(user_id: str, items: list) -> dict:
 
 - [ ] `trace_comment_coverage_checker.py` の実行ログをレスポンスに貼り付けた
 - [ ] `rq_ds_link_checker.py` の実行ログをレスポンスに貼り付けた
+- [ ] `implementation_completeness_checker.py` の実行ログをレスポンスに貼り付けた（全項目 OK であること）
+- [ ] `docker-compose.yml` が存在し起動確認済みである
+- [ ] E2E テストが `e2e/` 配下に存在し mock モードで全件通過している
+- [ ] `README.md` に「起動方法」と「初期ユーザー」が記載されている
 - [ ] 全対象要素に6ラベル（`要件ID:` / `設計ID:` / `要件概要:` / `設計概要:` / `呼び出し先設計ID:` / `呼び出し元設計ID:`）が揃っている
 - [ ] `# [DS-...]` などの角括弧形式が1件もない
 - [ ] `Design ID:` `Requirement ID:` などの英語ラベルが1件もない
