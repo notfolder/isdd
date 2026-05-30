@@ -18,6 +18,24 @@ isdd は、AI 実装で起こりやすい次の問題を抑制することを目
 
 ## かんたんな使い方
 
+## docker-composeでの起動とE2E実行
+
+### アプリ起動
+
+```bash
+docker compose up --build app
+```
+
+起動後、ブラウザで `http://localhost:8501` にアクセスする。
+
+### E2E実行（docker-compose）
+
+```bash
+docker compose --profile test run --rm test_playwright
+```
+
+`test_playwright` サービスは `app` サービスに依存しており、compose経由でPlaywrightテストを実行する。
+
 ### 全スキルの最新版を導入する
 
 最初の導入は対話モードで実行し、スキル選択画面で `(all skills)` を選ぶ。

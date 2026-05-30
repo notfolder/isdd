@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONPATH=/workspace
+    volumes:
+      - .:/workspace
+    command: >-
+      streamlit run app/main.py
+      --server.headless true
+      --server.port 8501
+      --server.address 0.0.0.0
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health', timeout=5)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+    networks:
+      default:
+        aliases:
+          - sut
+
+  test_playwright:
+    image: mcr.microsoft.com/playwright:v1.60.0-noble
+    profiles:
+      - test
+    working_dir: /workspace/e2e
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      - PLAYWRIGHT_BASE_URL=http://sut:8501
+    volumes:
+      - .:/workspace
+    command: >-
+      sh -c "npm install && npx playwright test"
