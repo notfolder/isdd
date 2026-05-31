@@ -39,10 +39,10 @@ GUI-2が該当するため、ゲート条件により Vue（Vuetify）+ FastAPI 
 | バックエンド | Python + FastAPI | Python 3.11 / FastAPI 0.100+ |
 | ORM | SQLAlchemy | 2.x |
 | バリデーション | Pydantic | v2 |
-| 認証 | JWT (python-jose) + bcrypt (passlib) | - |
+| 認証 | JWT (python-jose) + bcrypt (passlib) | python-jose 3.3.0 / passlib 1.7.4 / bcrypt 4.0.1 |
 | DBドライバー | SQLite3（標準ライブラリ） | - |
 | Webサーバー | Nginx + Uvicorn | - |
-| E2Eテスト | Playwright | v1.59.0 |
+| E2Eテスト | Playwright | v1.60.0 |
 | コンテナ | Docker Compose | - |
 
 ---
@@ -730,7 +730,7 @@ README.md に以下のセクションを必ず記載する:
 
 ```
 サービス名: test_playwright
-イメージ: mcr.microsoft.com/playwright:v1.59.0
+イメージ: mcr.microsoft.com/playwright:v1.60.0
 プロファイル: test
 マウント: ./e2e:/e2e
 テスト対象URL: http://nginx（docker compose内サービス名）

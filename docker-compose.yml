@@ -1,0 +1,46 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - frontend_build:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+      - frontend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - frontend_build:/app/dist
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=sqlite:////data/app.db
+      - SECRET_KEY=${SECRET_KEY:-changeme-in-production}
+      - INITIAL_ADMIN_PASSWORD=${INITIAL_ADMIN_PASSWORD:-admin1234}
+    volumes:
+      - db_data:/data
+
+  test_playwright:
+    image: mcr.microsoft.com/playwright:v1.60.0
+    profiles:
+      - test
+    working_dir: /e2e
+    volumes:
+      - ./e2e:/e2e
+    environment:
+      - BASE_URL=http://nginx
+    depends_on:
+      - nginx
+    command: sh -c "npm install && npx playwright test"
+
+volumes:
+  db_data:
+  frontend_build:

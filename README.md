@@ -1,5 +1,26 @@
 # 対話駆動仕様開発 - 要件・設計・ソースをIDで一貫追跡する
 
+---
+
+## 備品管理アプリ 起動方法
+
+```bash
+# 環境変数を設定してdocker compose で起動
+SECRET_KEY=your-secret-key INITIAL_ADMIN_PASSWORD=your-password docker compose up
+```
+
+ブラウザで `http://localhost` にアクセスしてください。
+
+## 初期ユーザー
+
+| 役割 | メールアドレス | パスワード |
+|---|---|---|
+| 管理者 | admin@example.com | `INITIAL_ADMIN_PASSWORD` 環境変数の値（未設定時: `admin1234`） |
+
+初回ログイン後、ユーザー管理画面からパスワードを変更し、社員アカウントを追加してください。
+
+---
+
 isdd（Interview-driven Spec-driven Development）はインタビュー駆動で仕様を確定して、要件・設計・ソースをIDで一貫追跡しながら、開発を進める手法です。
 
 スキル群は `skills/` に格納し、`gh skill publish` で GitHub に公開・`gh skill install` で導入する形式で管理します。
