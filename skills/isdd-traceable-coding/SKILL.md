@@ -248,4 +248,8 @@ def create_order(user_id: str, items: list) -> dict:
 
 ## 実装スキルのゴール
 
-- チェッカースクリプトでトレーサブルコメントのカバレッジが100%であることをこの実装スキル（isdd-traceable-coding）の完了条件とする
+以下の**全て**を満たすことをこの実装スキル（isdd-traceable-coding）の完了条件とする。1つでも未達の場合は完了を報告してはならない。
+
+- `trace_comment_coverage_checker.py` でトレーサブルコメントのカバレッジが100%である
+- `implementation_completeness_checker.py` の全項目（docker-compose / E2E / README）が OK である
+- E2E テストを mock モードで実際に実行し、全件通過している
