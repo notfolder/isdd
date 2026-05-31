@@ -1,0 +1,24 @@
+{
+  "skill_name": "isdd-reverse-engineering",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-reverse-engineeringを実行してください。\n\nヒアリングへの回答は以下の通りです。\nインタビューが必要になった場合はこの回答を使用してください。\n\n- システムの目的: 「Hello, World!」を標準出力に表示する最小構成の動作検証\n- 想定利用者: 開発者・CIパイプライン\n- エラーハンドリング方針: 例外は伝播させて実行失敗として終了する\n- 非機能要件: 特になし（最小構成）\n- 表示文字列の変更可否: 固定値とし、外部から変更しない",
+      "expected_output": "src/hello.pyからdocs/requirements.mdとdocs/detail_design.mdが逆引き生成され、RQ-*/DS-* ID体系・rq_ds_link_checker実行・ロジック保持",
+      "files": [
+        "evals/isdd-reverse-engineering/fixtures/src/hello.py"
+      ],
+      "expectations": [
+        "docs/requirements.md が生成されること",
+        "docs/detail_design.md が生成されること",
+        "docs/requirements.md に RQ-* 形式のIDが含まれること",
+        "docs/requirements.md に RQ-* IDを含むテーブル形式の対応表が存在すること",
+        "docs/detail_design.md に DS-MD-* 形式のモジュール設計IDが含まれること",
+        "docs/detail_design.md に DS-FN-* 形式の関数設計IDが含まれること",
+        "rq_ds_link_checker.py が bash ツールで実行されること",
+        "src/hello.py のロジックが保持されていること（class HelloWorldPrinter が存在すること）"
+      ],
+      "eval_name": "hello-world-reverse-engineering"
+    }
+  ]
+}

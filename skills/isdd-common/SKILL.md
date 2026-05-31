@@ -5,7 +5,7 @@ description: >
   単独で起動されることはなく、isdd-requirements / isdd-design などのスキルから参照される。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-common
@@ -21,3 +21,4 @@ isdd スキル群の共通参照ファイルを提供するリソースパッケ
 - `references/design-tasks-rules.md` — 実装タスク化のルール
 - `scripts/rq_ds_link_checker.py` — 要件ID（RQ-*）と設計ID（DS-*）の対応欠落・重複・不整合を検証
 - `scripts/trace_comment_coverage_checker.py` — ソースコードのトレーサブルコメント付与率と記載不足を検証
+- `scripts/implementation_completeness_checker.py` — docker-compose.yml の存在・e2e/ 配下のテストファイル存在・README.md の起動方法/初期ユーザー記載を機械確認

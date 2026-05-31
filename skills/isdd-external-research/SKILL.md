@@ -6,7 +6,7 @@ description: >
   isdd-requirements / isdd-change-req の後段として実行し、整合確認結果を設計に引き継ぐ。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-external-research — 外部連携 要件整合調査スキル
@@ -33,8 +33,8 @@ metadata:
 
 - 質問は一度に一つだけ行う
 - 選択肢を提示する際は、具体的な選択肢ごとにメリット・デメリットを明示する
-- `isdd-common/references/hearing-complexity-rules.md` を適用し、各選択肢に複雑さ（1-5）と根拠を記載した上で、最小複雑さ案を推奨する
-- 推奨より高複雑な案が選択された場合は、`isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを実施する
+- `.agents/skills/isdd-common/references/hearing-complexity-rules.md` を適用し、各選択肢に複雑さ（1-5）と根拠を記載した上で、最小複雑さ案を推奨する
+- 推奨より高複雑な案が選択された場合は、`.agents/skills/isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを実施する
 - エージェント実行環境でインタラクティブ選択肢提示ツールが利用可能な場合は、それを利用して回答を確定する
 
 ---
@@ -240,7 +240,7 @@ external/
 **非DB系（REST API / GraphQL / SDK など）の場合**
 
 - エンティティ一覧：連携先が扱う全業務エンティティを列挙する
-- CRUDテーブル：`isdd-common/references/requirements-chapters.md` のセクション4-1の形式に従い、全エンティティ分を記載する（省略不可）
+- CRUDテーブル：`.agents/skills/isdd-common/references/requirements-chapters.md` のセクション4-1の形式に従い、全エンティティ分を記載する（省略不可）
 
 #### 5. 制限事項
 
@@ -291,7 +291,7 @@ external/
 ### モック実装（`mock/`）の要件
 
 - モック方式は外部システムの性質で A/B/C から選定する
-> モック方式IDの正規定義は **`isdd-common/references/id-definitions.md`** を参照すること。以下は参照用の抜粋。
+> モック方式IDの正規定義は **`.agents/skills/isdd-common/references/id-definitions.md`** を参照すること。以下は参照用の抜粋。
 
 - モック方式は外部システムの性質で A/B/C から選定する
   - A: ローカルHTTPサーバー（`RQ-EX-USE-LOCAL-HTTP-MOCK`）

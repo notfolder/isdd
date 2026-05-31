@@ -6,7 +6,7 @@ description: >
   docs/requirements.md から docs/detail_design.md を作る作業、設計の網羅性確認、冗長設計の排除、実装タスク化までを行う場面で必ず起動すること。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-design - インタビュー駆動 詳細設計スキル
@@ -49,7 +49,7 @@ requirements.md の全ての RQ-*（RQ-BK・RQ-BZ 除く）は、ユーザーの
 
 ## ID付与ルール（必須）
 
-`isdd-common/references/id-definitions.md` を参照し、全ての設計要素に設計ID（`DS-*`）を付与すること。設計IDは対応する要件ID（`RQ-*`）と紐付けて採番する。IDなしで設計要素を記述することは絶対に禁止する。
+`.agents/skills/isdd-common/references/id-definitions.md` を参照し、全ての設計要素に設計ID（`DS-*`）を付与すること。設計IDは対応する要件ID（`RQ-*`）と紐付けて採番する。IDなしで設計要素を記述することは絶対に禁止する。
 
 ## 基本方針
 
@@ -62,17 +62,27 @@ requirements.md の全ての RQ-*（RQ-BK・RQ-BZ 除く）は、ユーザーの
 - 冗長な設計要素は列挙し、要件を満たす範囲で削除する
 - 完全性確認とレビューが完了するまで終了しない
 
+## 設計から要件へのフィードバック方式（必須）
+
+- 設計工程で `RQ-*` と `DS-*` の未マッピングが出た場合は、未マッピング一覧を作成すること。
+- 未マッピング一覧は要件単位で管理し、1件ずつユーザーへ再ヒアリングして要件を再定義すること。
+- 再定義方針は「削除」「修正」「分割」「統合」「追加」のいずれかを必ず明示すること。
+- 反映先は起点となる `docs/requirements.md` とし、差分を別の変更要件へ積み増して逃がしてはならない。
+- 本スキルは実装スキルではないため、`isdd-post-implementation-review` は利用せず、要件更新は本スキル内で直接実施すること。
+- 要件更新後は要件ID体系を再整理し、更新IDを `docs/detail_design.md` へ必ず伝播すること。
+- 未マッピングがゼロになるまで、要件更新と再設計を繰り返すこと。
+
 ---
 
 ## 詳細設計書に必須の内容
 
-`isdd-common/references/design-chapters.md` を参照し、全項目を漏れなく作成すること。
+`.agents/skills/isdd-common/references/design-chapters.md` を参照し、全項目を漏れなく作成すること。
 
 ---
 
 ## 完全性制約（必須）
 
-`isdd-common/references/design-completeness.md` を参照し、全項目をチェックし必ず遵守すること。
+`.agents/skills/isdd-common/references/design-completeness.md` を参照し、全項目をチェックし必ず遵守すること。
 
 ---
 
@@ -88,7 +98,7 @@ requirements.md の全ての RQ-*（RQ-BK・RQ-BZ 除く）は、ユーザーの
 
 ## tasks.md 作成ルール
 
-`isdd-common/references/design-tasks-rules.md` を参照し、全て遵守すること。
+`.agents/skills/isdd-common/references/design-tasks-rules.md` を参照し、全て遵守すること。
 **注記**：isdd-design は「isdd-change-design 固有の記載」セクションは不要。
 
 ---
@@ -113,11 +123,13 @@ python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py \
 
 - [ ] `rq_ds_link_checker.py` を bash で実行し、実行ログをレスポンスに記載した
 - [ ] 問題が検出された場合は設計書を修正して再実行し、欠落・重複・不整合が0件になった
+- [ ] 未マッピング要件が検出された場合、要件一覧を作成し、1件ずつユーザーヒアリングして `docs/requirements.md` を更新した
+- [ ] 要件更新に伴うID再整理を `docs/detail_design.md` へ伝播した
 - [ ] 問題なしを確認してからレビューへ進む
 
 ## ドキュメント作成ルール
 
-`isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
+`.agents/skills/isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
 なお、設計固有ルールとして「冗長コード・処理の再実装禁止」は「基本方针」に定める通り適用すること。
 
 ---

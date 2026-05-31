@@ -6,7 +6,7 @@ description: >
   「実装して」「トレーサブルコメントをつけて」「コードにID体系を適用して」「isddのコメントルールを適用して」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-traceable-coding — トレーサブルコーディングスキル
@@ -174,11 +174,11 @@ def create_order(user_id: str, items: list) -> dict:
 
 ### `docs/` への反映ルール
 
-実装が終わったら、変更設計だった場合、`docs/requirements.md` と `docs/detail_design.md` を必ず更新する。
+本スキルはコードコメントのトレーサビリティ整備と検証に責務を限定する。
 
-- `deprecated` となった要件・設計は `docs/` 反映時に**削除する**
-- `docs/requirements.md` と `docs/detail_design.md` は**常に現在有効な要件・設計のみを記載**した最新状態を保つ
-- 変更部分を追加するのではなく、変更後の完全な状態に更新する。isdd-requirements と isdd-design を参照して、変更後の要件・設計を正確に反映すること
+- `docs/requirements.md` と `docs/detail_design.md` の正本更新は本スキルの責務に含めない
+- 実装中に要件・設計の不足や矛盾を発見した場合は、`docs/proposals.md` に提案を追記する
+- 正本更新は `isdd-post-implementation-review` が実施し、完了時に `docs/proposals.md` を削除する
 
 ### コードコメントの更新ルール
 
@@ -221,6 +221,16 @@ def create_order(user_id: str, items: list) -> dict:
   - 呼び出し先設計ID:
   - 呼び出し元設計ID:
 9. コメント付与後、要件・設計との対応漏れがないかをセルフレビューしてユーザーに報告する
+10. 以下を**必ず bash で実行**して実装完了条件（docker-compose / E2E / README）を機械的に確認する
+    ```bash
+    python3 .agents/skills/isdd-common/scripts/implementation_completeness_checker.py .
+    ```
+    - 実行結果（OK/FAIL件数）を最終報告に必ず記載する
+    - FAIL が1件でもある場合は**完了を報告してはならない**。FAIL項目を対処してから再実行する
+    - 対処内容の例:
+      - `docker-compose.yml が見つかりません` → docker-compose.yml を作成する
+      - `e2e/ ディレクトリが存在しません` → E2Eテストを実装し `e2e/` に配置する
+      - `README.md に不足があります` → 起動方法・初期ユーザー情報を README.md に追記する
 
 ### 完了判定ルール（報告前に必ず自己確認）
 
@@ -228,10 +238,18 @@ def create_order(user_id: str, items: list) -> dict:
 
 - [ ] `trace_comment_coverage_checker.py` の実行ログをレスポンスに貼り付けた
 - [ ] `rq_ds_link_checker.py` の実行ログをレスポンスに貼り付けた
+- [ ] `implementation_completeness_checker.py` の実行ログをレスポンスに貼り付けた（全項目 OK であること）
+- [ ] `docker-compose.yml` が存在し起動確認済みである
+- [ ] E2E テストが `e2e/` 配下に存在し mock モードで全件通過している
+- [ ] `README.md` に「起動方法」と「初期ユーザー」が記載されている
 - [ ] 全対象要素に6ラベル（`要件ID:` / `設計ID:` / `要件概要:` / `設計概要:` / `呼び出し先設計ID:` / `呼び出し元設計ID:`）が揃っている
 - [ ] `# [DS-...]` などの角括弧形式が1件もない
 - [ ] `Design ID:` `Requirement ID:` などの英語ラベルが1件もない
 
 ## 実装スキルのゴール
 
-- チェッカースクリプトでトレーサブルコメントのカバレッジが100%であることをこの実装スキル（isdd-traceable-coding）の完了条件とする
+以下の**全て**を満たすことをこの実装スキル（isdd-traceable-coding）の完了条件とする。1つでも未達の場合は完了を報告してはならない。
+
+- `trace_comment_coverage_checker.py` でトレーサブルコメントのカバレッジが100%である
+- `implementation_completeness_checker.py` の全項目（docker-compose / E2E / README）が OK である
+- E2E テストを mock モードで実際に実行し、全件通過している

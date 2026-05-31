@@ -1,0 +1,20 @@
+{
+  "skill_name": "isdd-requirements",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-requirementsを実行してください。\n対象システム: Hello World出力システム\n\nヒアリングへの回答は以下の通りです。\n質問された場合はこの回答を使用してください。\n\n# 開始ゲート回答\n- 外部システム連携: なし（選択肢B）\n- 既存ソースコード: なし（選択肢A）\n\n# システム情報\n- システムの目的: \"Hello, World!\" を標準出力に表示する最小構成の動作検証\n- 想定利用者: 開発者・CIパイプライン\n- 業務課題: テキスト出力の動作を確認できる共通手段がなく、実行環境の検証が属人化している\n- 機能: print()で固定文字列 \"Hello, World!\" を出力する1機能のみ\n- 画面/UI: CLIのみ、対話なし\n- 外部連携: なし\n- 非機能要件: 特になし（最小構成）\n- データ: 外部DB不要・内部状態なし・データ保持不要\n- エラーハンドリング: 例外は伝播させて実行失敗として終了する\n- 表示文字列の変更可否: 固定値とし、外部から変更しない",
+      "expected_output": "docs/requirements.md が生成され、RQ-BZ-*/RQ-BK-*/RQ-FT-* IDの体系・双方向マッピング表・整合性チェッカー実行が含まれる",
+      "files": [],
+      "expectations": [
+        "docs/requirements.md が生成されること",
+        "docs/requirements.md に RQ-BZ-* 形式の業務背景IDが1件以上含まれること",
+        "docs/requirements.md に RQ-BK-* 形式の業務課題IDが1件以上含まれること",
+        "docs/requirements.md に RQ-FT-* 形式の機能要件IDが1件以上含まれること",
+        "docs/requirements.md に RQ-BK-* IDを含むテーブル形式の対応表（双方向マッピング）が存在すること",
+        "rq_integrity_checker.py が bash ツールで実行されること"
+      ],
+      "eval_name": "hello-world-requirements"
+    }
+  ]
+}

@@ -99,7 +99,7 @@ check_task_files() {
 
   # 2. All files under skills/{skill} and isdd-common must be listed
   #    __pycache__, .pyc, .DS_Store files are excluded from the check
-  for check_subdir in "skills/$skill_name" "skills/isdd-common"; do
+  for check_subdir in ".agents/skills/$skill_name" ".agents/skills/isdd-common"; do
     local full_dir="$repo_root/$check_subdir"
     [[ -d "$full_dir" ]] || continue
     while IFS= read -r full_path; do
@@ -165,7 +165,8 @@ for eval_file in "${files[@]}"; do
     cp -R "$fixtures_dir"/. "$temp_context_dir"/
 
     if [[ -d "$repo_root/skills" ]]; then
-      cp -R "$repo_root/skills" "$temp_context_dir/skills"
+      mkdir -p "$temp_context_dir/.agents"
+      cp -R "$repo_root/skills" "$temp_context_dir/.agents/skills"
     fi
 
     if ! check_task_files "$skill_name" "$eval_dir" "$temp_context_dir"; then

@@ -1,0 +1,21 @@
+{
+  "skill_name": "isdd-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-designを実行してください。\n対象: docs/requirements.md",
+      "expected_output": "docs/detail_design.md が生成され、DS-MD-*/DS-FN-* ID体系・RQ-DS対応表・rq_ds_link_checker.py の実行が含まれる",
+      "files": [
+        "evals/isdd-design/fixtures/docs/requirements.md"
+      ],
+      "expectations": [
+        "docs/detail_design.md が生成されること",
+        "docs/detail_design.md に DS-MD-* 形式のモジュール設計IDが1件以上含まれること",
+        "docs/detail_design.md に DS-FN-* 形式の関数設計IDが1件以上含まれること",
+        "docs/detail_design.md に DS-* IDと RQ-* IDを対応づけるテーブル形式のマッピング表が存在すること",
+        "rq_ds_link_checker.py が bash ツールで実行されること"
+      ],
+      "eval_name": "hello-world-design"
+    }
+  ]
+}

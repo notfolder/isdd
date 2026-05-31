@@ -7,7 +7,7 @@ description: >
   「要件の変更を整理したい」「変更要求の要件定義を作りたい」「既存要件に対する差分要件を作って」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-change-req - インタビュー駆動 変更要件定義スキル
@@ -20,8 +20,13 @@ metadata:
 
 - 選択肢を伴う質問を提示する際は、エージェント環境が提供するインタラクティブな選択肢提示ツールが利用可能であれば必ず活用すること（例: VS Code Copilot では `vscode_askQuestions`、Claude Code では `AskUserQuestion`、opencode では `question`）。
 - ツールが利用できない環境では、テキスト形式で選択肢を列挙して提示すること。
-- 選択肢を提示する際は、`isdd-common/references/hearing-complexity-rules.md` を必ず適用し、各選択肢に複雑さ（1-5）と根拠を表示した上で、最小複雑さの案を推奨すること。
-- 推奨より高複雑な案が選択された場合は、`isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを必ず実施すること。
+- 選択肢を提示する際は、`.agents/skills/isdd-common/references/hearing-complexity-rules.md` を必ず適用し、各選択肢に複雑さ（1-5）と根拠を表示した上で、最小複雑さの案を推奨すること。
+- 推奨より高複雑な案が選択された場合は、`.agents/skills/isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを必ず実施すること。
+- ヒアリングは専門用語を避け、業務文脈の平易な言葉で質問すること。
+- ユーザーが業務語を使った場合、その意味を推定で確定してはならない。次の質問へ進む前に必ず意味を確認すること。
+- 新しいドメイン用語が出た場合は、用語集に反映して意味が確定するまで次の要件質問へ進んではならない。
+- GUI の要件ヒアリングでは、各画面について「画面の目的」「主要要素」「入力項目」「表示項目」「エラー時の見え方」の5項目を必ず確認すること。
+- GUI の要件ヒアリングで上記5項目が未確定の画面が1つでもある場合、変更要件定義の完了判定を行ってはならない。
 
 ## 開始ゲート（最優先・必須）
 
@@ -47,7 +52,7 @@ metadata:
 
 ## ID付与ルール（必須）
 
-`isdd-common/references/id-definitions.md` を参照し、全ての要件に要件ID（`RQ-*`）を付与すること。IDなしで要件を記述することは絶対に禁止する。
+`.agents/skills/isdd-common/references/id-definitions.md` を参照し、全ての要件に要件ID（`RQ-*`）を付与すること。IDなしで要件を記述することは絶対に禁止する。
 
 - 業務は必ず `RQ-BZ-*` で採番すること
 - 変更対象の業務課題は `RQ-BK-*` で明示すること
@@ -64,6 +69,7 @@ metadata:
 - 作業開始時に docs/requirements.md を読み、既存要件を理解する
 - 不明点がある限り質問を続け、完成するまで終了しない
 - 質問は一度に一つだけ行い、具体的な選択肢を複数提示し、各選択肢のメリットとデメリットを必ず示しながら答えを引き出す
+- ユーザーへの質問は業務語で平易に行い、専門用語を必要以上に持ち込まないこと
 - 変更要件は業務課題を解決するために必要な最小単位に限定する
 - 既存要件と同じ目的の要件は追加しない
 - 将来拡張、一般論、ベストプラクティスは記述しない
@@ -101,7 +107,7 @@ metadata:
 
 ## 変更要件定義書に必須の内容
 
-`isdd-common/references/requirements-chapters.md` を参照し、全セクションの内容が確定するまで、各セクションに必要なヒアリングを一問一答で実施してから記述に移ること。
+`.agents/skills/isdd-common/references/requirements-chapters.md` を参照し、全セクションの内容が確定するまで、各セクションに必要なヒアリングを一問一答で実施してから記述に移ること。
 以下の変更固有ルールを適用すること。
 
 ### 変更固有ルール
@@ -177,7 +183,7 @@ python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py \
 
 ## ドキュメント作成ルール
 
-`isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
+`.agents/skills/isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
 
 ---
 

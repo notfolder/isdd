@@ -1,0 +1,65 @@
+id: isdd-post-implementation-review-hello-proposals-001
+name: Hello World 実装後整合確認（proposals.md あり）
+description: |
+  docs/proposals.md が存在する状態で isdd-post-implementation-review スキルを実行し、
+  提案内容の処理（正本反映または追記不要の確定）と proposals.md の削除が行えるかを検証する。
+
+tags:
+  - isdd
+  - post-implementation-review
+  - proposals
+
+inputs:
+  prompt: |
+    isdd-post-implementation-reviewを実行してください。
+    実装差分は case2-proposals/src/hello.py の内容を確認してください。
+    要件定義書は case2-proposals/docs/requirements.md、詳細設計書は case2-proposals/docs/detail_design.md を参照してください。
+    proposals は case2-proposals/docs/proposals.md にあります。
+
+    ヒアリングへの回答は以下の通りです。
+    インタビューが必要になった場合はこの回答を使用してください。
+
+    - PROP-001 について: 要件定義書への追記は不要です。詳細設計書の記述で十分と判断してください。
+
+  context:
+    task_type: post-implementation-review-proposals
+  files:
+    - path: case2-proposals/docs/requirements.md
+    - path: case2-proposals/docs/detail_design.md
+    - path: case2-proposals/docs/proposals.md
+    - path: case2-proposals/src/hello.py
+    - path: .agents/skills/isdd-post-implementation-review/SKILL.md
+    - path: .agents/skills/isdd-common/SKILL.md
+    - path: .agents/skills/isdd-common/references/design-chapters.md
+    - path: .agents/skills/isdd-common/references/design-completeness.md
+    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-common/references/document-rules.md
+    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
+    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: proposals_deleted
+    type: file
+    config:
+      must_not_exist:
+        - "case2-proposals/docs/proposals.md"
+
+  - name: proposals_processed
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴を確認し、エージェントが case2-proposals/docs/proposals.md の内容を
+        読み込んで処理（正本への反映または「追記不要」の確定）を実施したかどうかを評価してください。
+
+        処理が確認できる場合は set_waza_grade_pass を呼び出してください。
+        確認できない場合は set_waza_grade_fail を呼び出してください。

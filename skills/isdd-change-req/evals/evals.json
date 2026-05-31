@@ -1,0 +1,25 @@
+{
+  "skill_name": "isdd-change-req",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-change-reqを実行してください。\n\nヒアリングへの回答は以下の通りです。\nインタビューが必要になった場合はこの回答を使用してください。\n\n# 開始ゲート\n- 外部システム連携: なし（選択肢B）\n\n# 変更要件\n- 変更ビジョン: Hello Worldの出力に現在時刻を追加したい\n- 変更業務課題: 出力内容に実行時刻が含まれないため、ログやCIパイプラインで実行タイミングを特定できない\n- 時刻フォーマット: HH:MM:SS形式（ローカル時刻、Pythonのdatetime.now()を使用）\n- 出力形式: \"Hello, World! (HH:MM:SS)\" の1行\n- 外部ライブラリ: 使用しない（Python標準ライブラリのみ）\n- エラーハンドリング: 例外は伝播させて実行失敗として終了する（既存方針を踏襲）\n- 時刻の精度: 秒単位（ミリ秒は不要）\n- タイムゾーン: ローカル時刻（タイムゾーン変換は不要）",
+      "expected_output": ".history 配下に change_requirements.md が生成され、RQ-*/[追加][削除]マーカー付き、既存docs/requirements.mdは変更なし、整合性チェッカー実行",
+      "files": [
+        "evals/isdd-change-req/fixtures/docs/requirements.md",
+        "evals/isdd-change-req/fixtures/docs/detail_design.md",
+        "evals/isdd-change-req/fixtures/src/hello.py"
+      ],
+      "expectations": [
+        ".history ディレクトリ配下に change_requirements.md が生成されること",
+        "change_requirements.md に RQ-BK-* 形式の業務課題IDが1件以上含まれること（時刻表示に関連する新しい業務課題）",
+        "change_requirements.md に RQ-FT-* 形式の機能要件IDが1件以上含まれること（時刻取得または時刻付き出力に関連する機能）",
+        "change_requirements.md に「[追加]」マーカーが含まれること",
+        "change_requirements.md に「[削除]」マーカーが含まれること",
+        "docs/requirements.md が変更されていないこと（[追加][削除]マーカーが含まれないこと）",
+        "rq_integrity_checker.py が bash ツールで実行されること"
+      ],
+      "eval_name": "hello-world-change-req"
+    }
+  ]
+}
