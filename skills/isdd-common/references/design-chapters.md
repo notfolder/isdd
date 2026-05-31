@@ -1,7 +1,7 @@
 # 詳細設計書の必須章立て
 
 以下の全項目を必ず含める。
-各セクションに登場する全ての設計要素（クラス・API・関数・データモデル等）には、必ず `isdd-common/references/id-definitions.md` に従った `DS-*` IDを付与すること。IDのない設計要素は記述しない。
+各セクションに登場する全ての設計要素（クラス・API・関数・データモデル等）には、必ず `.agents/skills/isdd-common/references/id-definitions.md` に従った `DS-*` IDを付与すること。IDのない設計要素は記述しない。
 
 ### 1. 言語・フレームワーク
 

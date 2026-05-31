@@ -29,8 +29,8 @@ metadata:
 
 - 質問は一度に一つだけ行う
 - 選択肢を提示する際は、具体的な選択肢ごとにメリット・デメリットを明示する
-- `isdd-common/references/hearing-complexity-rules.md` を適用し、各選択肢に複雑さ（1-5）と根拠を記載した上で、最小複雑さ案を推奨する
-- 推奨より高複雑な案が選択された場合は、`isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを実施する
+- `.agents/skills/isdd-common/references/hearing-complexity-rules.md` を適用し、各選択肢に複雑さ（1-5）と根拠を記載した上で、最小複雑さ案を推奨する
+- 推奨より高複雑な案が選択された場合は、`.agents/skills/isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを実施する
 - エージェント実行環境でインタラクティブ選択肢提示ツールが利用可能な場合は、それを利用して回答を確定する
 
 ---

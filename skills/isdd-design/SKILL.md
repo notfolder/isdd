@@ -49,7 +49,7 @@ requirements.md の全ての RQ-*（RQ-BK・RQ-BZ 除く）は、ユーザーの
 
 ## ID付与ルール（必須）
 
-`isdd-common/references/id-definitions.md` を参照し、全ての設計要素に設計ID（`DS-*`）を付与すること。設計IDは対応する要件ID（`RQ-*`）と紐付けて採番する。IDなしで設計要素を記述することは絶対に禁止する。
+`.agents/skills/isdd-common/references/id-definitions.md` を参照し、全ての設計要素に設計ID（`DS-*`）を付与すること。設計IDは対応する要件ID（`RQ-*`）と紐付けて採番する。IDなしで設計要素を記述することは絶対に禁止する。
 
 ## 基本方針
 
@@ -76,13 +76,13 @@ requirements.md の全ての RQ-*（RQ-BK・RQ-BZ 除く）は、ユーザーの
 
 ## 詳細設計書に必須の内容
 
-`isdd-common/references/design-chapters.md` を参照し、全項目を漏れなく作成すること。
+`.agents/skills/isdd-common/references/design-chapters.md` を参照し、全項目を漏れなく作成すること。
 
 ---
 
 ## 完全性制約（必須）
 
-`isdd-common/references/design-completeness.md` を参照し、全項目をチェックし必ず遵守すること。
+`.agents/skills/isdd-common/references/design-completeness.md` を参照し、全項目をチェックし必ず遵守すること。
 
 ---
 
@@ -98,7 +98,7 @@ requirements.md の全ての RQ-*（RQ-BK・RQ-BZ 除く）は、ユーザーの
 
 ## tasks.md 作成ルール
 
-`isdd-common/references/design-tasks-rules.md` を参照し、全て遵守すること。
+`.agents/skills/isdd-common/references/design-tasks-rules.md` を参照し、全て遵守すること。
 **注記**：isdd-design は「isdd-change-design 固有の記載」セクションは不要。
 
 ---
@@ -129,7 +129,7 @@ python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py \
 
 ## ドキュメント作成ルール
 
-`isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
+`.agents/skills/isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
 なお、設計固有ルールとして「冗長コード・処理の再実装禁止」は「基本方针」に定める通り適用すること。
 
 ---

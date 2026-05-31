@@ -21,8 +21,8 @@ metadata:
 
 - 選択肢を伴う質問を提示する際は、エージェント環境が提供するインタラクティブな選択肢提示ツールが利用可能であれば必ず活用すること（例: VS Code Copilot では `vscode_askQuestions`、Claude Code では `AskUserQuestion`、opencode では `question`）。
 - ツールが利用できない環境では、テキスト形式で選択肢を列挙して提示すること。
-- 選択肢を提示する際は、`isdd-common/references/hearing-complexity-rules.md` を必ず適用し、各選択肢に複雑さ（1-5）と根拠を表示した上で、最小複雑さの案を推奨すること。
-- 推奨より高複雑な案が選択された場合は、`isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを必ず実施すること。
+- 選択肢を提示する際は、`.agents/skills/isdd-common/references/hearing-complexity-rules.md` を必ず適用し、各選択肢に複雑さ（1-5）と根拠を表示した上で、最小複雑さの案を推奨すること。
+- 推奨より高複雑な案が選択された場合は、`.agents/skills/isdd-common/references/hearing-complexity-rules.md` の再確認ゲートを必ず実施すること。
 - ヒアリングは専門用語を避け、業務文脈の平易な言葉で質問すること。
 - ユーザーが業務語を使った場合、その意味を推定で確定してはならない。次の質問へ進む前に必ず意味を確認すること。
 - 新しいドメイン用語が出た場合は、用語集に反映して意味が確定するまで次の要件質問へ進んではならない。
@@ -58,7 +58,7 @@ metadata:
 
 ## ID付与ルール（必須）
 
-`isdd-common/references/id-definitions.md` を参照し、全ての要件に要件ID（`RQ-*`）を付与すること。IDなしで要件を記述することは絶対に禁止する。
+`.agents/skills/isdd-common/references/id-definitions.md` を参照し、全ての要件に要件ID（`RQ-*`）を付与すること。IDなしで要件を記述することは絶対に禁止する。
 
 - 業務は必ず `RQ-BZ-*` で採番すること
 - 業務課題は必ず `RQ-BK-*` で採番すること
@@ -99,7 +99,7 @@ metadata:
 
 ## 要件定義書の構成
 
-`isdd-common/references/requirements-chapters.md` を参照し、全セクションを漏れなく作成すること。
+`.agents/skills/isdd-common/references/requirements-chapters.md` を参照し、全セクションを漏れなく作成すること。
 全セクションの内容が確定するまで、各セクションに必要なヒアリングを一問一答で実施してから記述に移ること。
 
 ---
@@ -155,7 +155,7 @@ python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py \
 
 ## ドキュメント作成ルール
 
-`isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
+`.agents/skills/isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
 
 ---
 

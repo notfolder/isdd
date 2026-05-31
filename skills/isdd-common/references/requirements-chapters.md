@@ -1,7 +1,7 @@
 # 要件定義書の必須章立て
 
 以下の全セクションを漏れなく作成すること。
-各セクションに登場する全ての要件項目には、必ず `isdd-common/references/id-definitions.md` に従った `RQ-*` IDを付与すること。IDのない要件は記述しない。
+各セクションに登場する全ての要件項目には、必ず `.agents/skills/isdd-common/references/id-definitions.md` に従った `RQ-*` IDを付与すること。IDのない要件は記述しない。
 
 ### 1. 目的・前提
 

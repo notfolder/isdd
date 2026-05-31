@@ -13,7 +13,8 @@ tags:
 inputs:
   prompt: |
     isdd-post-implementation-reviewを実行してください。
-    実装差分は src/hello.py の内容を確認してください。
+    実装差分は case4-unmapped/src/hello.py の内容を確認してください。
+    要件定義書は case4-unmapped/docs/requirements.md、詳細設計書は case4-unmapped/docs/detail_design.md を参照してください。
 
     ヒアリングへの回答は以下の通りです。
     インタビューが必要になった場合はこの回答を使用してください。
@@ -26,21 +27,22 @@ inputs:
   context:
     task_type: post-implementation-review-unmapped
   files:
-    - path: docs/requirements.md
-    - path: docs/detail_design.md
-    - path: src/hello.py
-    - path: skills/isdd-post-implementation-review/SKILL.md
-    - path: skills/isdd-common/SKILL.md
-    - path: skills/isdd-common/references/design-chapters.md
-    - path: skills/isdd-common/references/design-completeness.md
-    - path: skills/isdd-common/references/design-tasks-rules.md
-    - path: skills/isdd-common/references/document-rules.md
-    - path: skills/isdd-common/references/hearing-complexity-rules.md
-    - path: skills/isdd-common/references/id-definitions.md
-    - path: skills/isdd-common/references/requirements-chapters.md
-    - path: skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: case4-unmapped/docs/requirements.md
+    - path: case4-unmapped/docs/detail_design.md
+    - path: case4-unmapped/src/hello.py
+    - path: .agents/skills/isdd-post-implementation-review/SKILL.md
+    - path: .agents/skills/isdd-common/SKILL.md
+    - path: .agents/skills/isdd-common/references/design-chapters.md
+    - path: .agents/skills/isdd-common/references/design-completeness.md
+    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-common/references/document-rules.md
+    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
+    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:
   outcomes:
@@ -51,7 +53,7 @@ graders:
     type: file
     config:
       content_patterns:
-        - path: "docs/requirements.md"
+        - path: "case4-unmapped/docs/requirements.md"
           must_match:
             - "RQ-FT-GET-HELLO-MESSAGE"
 
