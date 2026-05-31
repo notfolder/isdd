@@ -1,0 +1,27 @@
+{
+  "skill_name": "isdd-traceable-coding",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-traceable-codingを実行してください。",
+      "expected_output": "src/hello.py に要件ID・設計IDのトレーサブルコメントが付与され、ロジックが保持されること",
+      "files": [
+        "evals/isdd-traceable-coding/fixtures/docs/requirements.md",
+        "evals/isdd-traceable-coding/fixtures/docs/detail_design.md",
+        "evals/isdd-traceable-coding/fixtures/src/hello.py"
+      ],
+      "expectations": [
+        "src/hello.py が存在すること（ファイルが削除されていないこと）",
+        "src/hello.py に「要件ID」フィールドのコメントが含まれること",
+        "src/hello.py に「設計ID」フィールドのコメントが含まれること",
+        "src/hello.py に「要件概要」フィールドのコメントが含まれること",
+        "src/hello.py に「設計概要」フィールドのコメントが含まれること",
+        "src/hello.py に「呼び出し先」フィールドのコメントが含まれること",
+        "src/hello.py に「呼び出し元」フィールドのコメントが含まれること",
+        "src/hello.py に TODO・FIXME・TBD が含まれないこと",
+        "src/hello.py のロジックが保持されていること（class HelloWorldPrinter、get_hello_message、print_hello_world、return 'Hello, World!' が存在すること）"
+      ],
+      "eval_name": "hello-world-traceable-coding"
+    }
+  ]
+}

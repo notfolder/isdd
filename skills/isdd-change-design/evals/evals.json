@@ -1,0 +1,26 @@
+{
+  "skill_name": "isdd-change-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-change-designを実行してください。\n変更要件定義書は .history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。",
+      "expected_output": ".history配下にchange_detail_design.mdとtasks.mdが生成され、DS-*IDマッピング・[追加][削除]マーカー付き、既存docs/detail_design.mdは変更なし",
+      "files": [
+        "evals/isdd-change-design/fixtures/docs/requirements.md",
+        "evals/isdd-change-design/fixtures/docs/detail_design.md",
+        "evals/isdd-change-design/fixtures/.history/20260508-add-timestamp-to-hello-world/change_requirements.md"
+      ],
+      "expectations": [
+        ".history ディレクトリ配下に change_detail_design.md が生成されること",
+        ".history ディレクトリ配下に tasks.md が生成されること",
+        "tasks.md に docs/requirements.md への反映タスクが記載されていること",
+        "tasks.md に docs/detail_design.md への反映タスクが記載されていること",
+        "change_detail_design.md に RQ-FT-GET-CURRENT-TIME に対応する DS-* IDが1件以上含まれること",
+        "change_detail_design.md に「[追加]」マーカーが含まれること",
+        "change_detail_design.md に「[削除]」マーカーが含まれること",
+        "docs/detail_design.md が変更されていないこと（[追加][削除]マーカーが含まれないこと）"
+      ],
+      "eval_name": "hello-world-change-design"
+    }
+  ]
+}

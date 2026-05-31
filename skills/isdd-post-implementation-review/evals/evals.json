@@ -1,0 +1,68 @@
+{
+  "skill_name": "isdd-post-implementation-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-post-implementation-reviewを実行してください。\n実装差分は case1-minimum/src/hello.py の内容を確認してください。\n要件定義書は case1-minimum/docs/requirements.md、詳細設計書は case1-minimum/docs/detail_design.md を参照してください。",
+      "expected_output": "整合性チェッカー実行・未整合ゼロの完了報告",
+      "files": [
+        "evals/isdd-post-implementation-review/fixtures/case1-minimum/docs/requirements.md",
+        "evals/isdd-post-implementation-review/fixtures/case1-minimum/docs/detail_design.md",
+        "evals/isdd-post-implementation-review/fixtures/case1-minimum/src/hello.py"
+      ],
+      "expectations": [
+        "整合性チェッカースクリプト（rq_ds_link_checker.py または rq_integrity_checker.py）が bash ツールで実行されること",
+        "最終報告に「未整合ゼロ」または「不整合なし」または「整合性に問題なし」という趣旨の完了報告が含まれること"
+      ],
+      "eval_name": "pir-minimum"
+    },
+    {
+      "id": 2,
+      "prompt": "isdd-post-implementation-reviewを実行してください。\n実装差分は case2-proposals/src/hello.py の内容を確認してください。\n要件定義書は case2-proposals/docs/requirements.md、詳細設計書は case2-proposals/docs/detail_design.md を参照してください。\nproposals は case2-proposals/docs/proposals.md にあります。\n\nヒアリングへの回答は以下の通りです。\nインタビューが必要になった場合はこの回答を使用してください。\n\n- PROP-001 について: 要件定義書への追記は不要です。詳細設計書の記述で十分と判断してください。",
+      "expected_output": "proposals.mdを処理（「追記不要」確定）しファイルを削除",
+      "files": [
+        "evals/isdd-post-implementation-review/fixtures/case2-proposals/docs/requirements.md",
+        "evals/isdd-post-implementation-review/fixtures/case2-proposals/docs/detail_design.md",
+        "evals/isdd-post-implementation-review/fixtures/case2-proposals/docs/proposals.md",
+        "evals/isdd-post-implementation-review/fixtures/case2-proposals/src/hello.py"
+      ],
+      "expectations": [
+        "case2-proposals/docs/proposals.md が削除されること（処理完了後に存在しないこと）",
+        "エージェントが proposals.md の内容を読み込んで処理（正本への反映または「追記不要」の確定）を実施したこと"
+      ],
+      "eval_name": "pir-proposals"
+    },
+    {
+      "id": 3,
+      "prompt": "isdd-post-implementation-reviewを実行してください。\n変更要件定義書は case3-change-req/.history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。\n実装差分は case3-change-req/src/hello.py の内容を確認してください。\n要件定義書は case3-change-req/docs/requirements.md、詳細設計書は case3-change-req/docs/detail_design.md を参照してください。",
+      "expected_output": "変更要件と整合するようrequirements.md・detail_design.mdが正本更新される",
+      "files": [
+        "evals/isdd-post-implementation-review/fixtures/case3-change-req/docs/requirements.md",
+        "evals/isdd-post-implementation-review/fixtures/case3-change-req/docs/detail_design.md",
+        "evals/isdd-post-implementation-review/fixtures/case3-change-req/.history/20260508-add-timestamp-to-hello-world/change_requirements.md",
+        "evals/isdd-post-implementation-review/fixtures/case3-change-req/src/hello.py"
+      ],
+      "expectations": [
+        "case3-change-req/docs/requirements.md に時刻表示関連のID（RQ-FT-GET-CURRENT-TIME または RQ-FT-BUILD-TIMESTAMPED-MESSAGE または RQ-FT-PRINT-TIMESTAMPED-OUTPUT）が追記されること",
+        "case3-change-req/docs/detail_design.md に時刻表示関連のDS-* IDが追記されること",
+        "change_requirements.md の要求意図（時刻表示追加）と正本更新結果が矛盾していないこと"
+      ],
+      "eval_name": "pir-change-req"
+    },
+    {
+      "id": 4,
+      "prompt": "isdd-post-implementation-reviewを実行してください。\n実装差分は case4-unmapped/src/hello.py の内容を確認してください。\n要件定義書は case4-unmapped/docs/requirements.md、詳細設計書は case4-unmapped/docs/detail_design.md を参照してください。\n\nヒアリングへの回答は以下の通りです。\nインタビューが必要になった場合はこの回答を使用してください。\n\n- get_hello_message は仕様として必要なメソッドです。要件定義書に追加してください。\n- 機能名: 表示文字列取得\n- 対応業務課題ID: RQ-BK-ENV-VERIFICATION-UNGOVERNED\n- この機能が無いと何が困るか: 出力する文字列を生成できず検証が行えない",
+      "expected_output": "未マッピング検出→ヒアリング実施→RQ-FT-GET-HELLO-MESSAGEがrequirements.mdに追加",
+      "files": [
+        "evals/isdd-post-implementation-review/fixtures/case4-unmapped/docs/requirements.md",
+        "evals/isdd-post-implementation-review/fixtures/case4-unmapped/docs/detail_design.md",
+        "evals/isdd-post-implementation-review/fixtures/case4-unmapped/src/hello.py"
+      ],
+      "expectations": [
+        "case4-unmapped/docs/requirements.md に RQ-FT-GET-HELLO-MESSAGE が追加されること",
+        "エージェントが未マッピング一覧を提示してユーザーへのヒアリングを実施したこと"
+      ],
+      "eval_name": "pir-unmapped"
+    }
+  ]
+}
