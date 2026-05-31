@@ -210,7 +210,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v1.0.12
+gh skill publish ./skills --tag v1.0.13
 ```
 
 ---
@@ -234,7 +234,7 @@ gh skill install notfolder/req-spec-driven isdd-requirements
 ### バージョンを固定して導入
 
 ```bash
-gh skill install notfolder/req-spec-driven isdd-requirements@v1.0.12
+gh skill install notfolder/req-spec-driven isdd-requirements@v1.0.13
 ```
 
 ### ユーザースコープへ導入
@@ -279,3 +279,32 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 ```
 
 ---
+
+## 変更履歴
+
+### v1.0.13（開発中）
+
+#### 新規追加
+
+- `isdd-post-implementation-review` スキルを新規追加。実装後に要件・設計・実装コードの逆引き整合を検証し、未マッピング要件のヒアリング更新と正本確定を実施する。
+- `isdd-post-implementation-review` の waza 評価を4テストケースで追加（最小・proposals.mdあり・変更要件フロー後・未マッピング検出）。
+- `isdd-common/scripts/implementation_completeness_checker.py` を追加。実装コードの完全性を検証するスクリプト。
+- `isdd-common/references/design-tasks-rules.md` を追加。実装タスク化のルールを共通リファレンスとして分離。
+- `install.sh` を追加。スキル群のインストールを自動化するスクリプト。
+- 各スキルに `evals/evals.json` を追加（anthropic skill-creator 対応）。
+
+#### 変更
+
+- 既存スキル（isdd-change-design・isdd-change-req・isdd-design・isdd-requirements・isdd-reverse-engineering・isdd-traceable-coding）に完了判定・終了条件を追加。
+- 既存スキルの eval タスクファイルの入力ファイルリストを `.agents/skills` パス形式に統一。
+- `isdd-common/references/design-chapters.md`・`requirements-chapters.md`・`hearing-complexity-rules.md` を更新。
+- `evals/run-all.sh` を修正。
+- 【論点1 ヒアリング平易化】`isdd-requirements`・`isdd-change-req`・`isdd-reverse-engineering` のヒアリング方針を更新。専門用語を避け業務文脈の平易な言葉で質問すること、業務語の意味を推定で確定しないこと、GUI 要件では画面ごとに5項目（目的・主要要素・入力項目・表示項目・エラー時の見え方）を必ず確認することを義務化。`hearing-complexity-rules.md` に同方針と禁止ルールを追加。
+- 【論点2 用語確認ゲート】`isdd-requirements`・`isdd-change-req`・`isdd-reverse-engineering` に用語確認ゲートを追加。新出ドメイン用語が出た場合は用語集へ反映して意味確定後でなければ次の要件質問へ進めないルールを追加。`requirements-chapters.md` の用語集フォーマットを業務上の意味・使用範囲・同義語/類義語の3列に固定。
+- 【論点3 設計→要件フィードバック方式】`isdd-design`・`isdd-change-design` に変更運用方針を追加。変更要件定義・変更設計は新たな要求追加時のみ使用し、設計・実装中の差分は起点要件定義を直接更新する方式を明記。
+- 【論点4 実装後逆引き整合】`isdd-traceable-coding` に `isdd-post-implementation-review` との連携を追記。`isdd-design`・`isdd-change-design` に `isdd-post-implementation-review` との責務分離（設計スキルは正本更新を直接実施し PIR は呼び出さない）を明記。
+
+### v1.0.12
+
+- gh skills での配布方法に変更。
+- README.md のインストールコマンドに `--allow-hidden-dirs` オプションを追加。
