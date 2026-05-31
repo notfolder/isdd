@@ -1,0 +1,17 @@
+name: isdd-post-implementation-review-unmapped
+skill: isdd-post-implementation-review
+version: "1.0"
+description: |
+  isdd-post-implementation-review 向けの評価（案4: 未マッピング検出・ヒアリングルート）。
+  要件定義書に RQ-FT-GET-HELLO-MESSAGE が存在しないが詳細設計書と実装には存在する状態で、
+  未マッピング検出とヒアリングによる要件追加が行えるかを検証する。
+
+config:
+  executor: copilot-sdk
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 1200
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

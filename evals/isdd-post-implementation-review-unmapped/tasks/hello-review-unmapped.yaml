@@ -1,0 +1,67 @@
+id: isdd-post-implementation-review-hello-unmapped-001
+name: Hello World 未マッピング要件検出・ヒアリング確認
+description: |
+  要件定義書に RQ-FT-GET-HELLO-MESSAGE が存在しないが、詳細設計書と実装には
+  対応するコンポーネントが存在する状態で isdd-post-implementation-review を実行し、
+  未マッピング検出とヒアリングによる要件追加が行えるかを検証する。
+
+tags:
+  - isdd
+  - post-implementation-review
+  - unmapped
+
+inputs:
+  prompt: |
+    isdd-post-implementation-reviewを実行してください。
+    実装差分は src/hello.py の内容を確認してください。
+
+    ヒアリングへの回答は以下の通りです。
+    インタビューが必要になった場合はこの回答を使用してください。
+
+    - get_hello_message は仕様として必要なメソッドです。要件定義書に追加してください。
+    - 機能名: 表示文字列取得
+    - 対応業務課題ID: RQ-BK-ENV-VERIFICATION-UNGOVERNED
+    - この機能が無いと何が困るか: 出力する文字列を生成できず検証が行えない
+
+  context:
+    task_type: post-implementation-review-unmapped
+  files:
+    - path: docs/requirements.md
+    - path: docs/detail_design.md
+    - path: src/hello.py
+    - path: skills/isdd-post-implementation-review/SKILL.md
+    - path: skills/isdd-common/SKILL.md
+    - path: skills/isdd-common/references/design-chapters.md
+    - path: skills/isdd-common/references/design-completeness.md
+    - path: skills/isdd-common/references/design-tasks-rules.md
+    - path: skills/isdd-common/references/document-rules.md
+    - path: skills/isdd-common/references/hearing-complexity-rules.md
+    - path: skills/isdd-common/references/id-definitions.md
+    - path: skills/isdd-common/references/requirements-chapters.md
+    - path: skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: skills/isdd-common/scripts/trace_comment_coverage_checker.py
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: get_hello_message_added_to_requirements
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-FT-GET-HELLO-MESSAGE"
+
+  - name: unmapped_list_and_hearing_executed
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴とエージェントの応答を確認し、
+        未マッピング一覧を提示してユーザーへのヒアリングを実施したかどうかを評価してください。
+
+        ヒアリングを実施した証跡が確認できる場合は set_waza_grade_pass を呼び出してください。
+        確認できない場合は set_waza_grade_fail を呼び出してください。

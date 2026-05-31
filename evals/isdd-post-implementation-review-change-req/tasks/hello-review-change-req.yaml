@@ -1,0 +1,70 @@
+id: isdd-post-implementation-review-hello-change-req-001
+name: Hello World 変更要件フロー後 実装後整合確認
+description: |
+  時刻表示を追加した hello.py の実装後に、変更前の要件定義書・詳細設計書と
+  change_requirements.md を入力として isdd-post-implementation-review を実行し、
+  三者突合・正本更新ができるかを検証する。
+
+tags:
+  - isdd
+  - post-implementation-review
+  - change-req
+
+inputs:
+  prompt: |
+    isdd-post-implementation-reviewを実行してください。
+    変更要件定義書は .history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。
+    実装差分は src/hello.py の内容を確認してください。
+
+  context:
+    task_type: post-implementation-review-change-req
+  files:
+    - path: docs/requirements.md
+    - path: docs/detail_design.md
+    - path: .history/20260508-add-timestamp-to-hello-world/change_requirements.md
+    - path: src/hello.py
+    - path: skills/isdd-post-implementation-review/SKILL.md
+    - path: skills/isdd-common/SKILL.md
+    - path: skills/isdd-common/references/design-chapters.md
+    - path: skills/isdd-common/references/design-completeness.md
+    - path: skills/isdd-common/references/design-tasks-rules.md
+    - path: skills/isdd-common/references/document-rules.md
+    - path: skills/isdd-common/references/hearing-complexity-rules.md
+    - path: skills/isdd-common/references/id-definitions.md
+    - path: skills/isdd-common/references/requirements-chapters.md
+    - path: skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: skills/isdd-common/scripts/trace_comment_coverage_checker.py
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: requirements_updated_with_timestamp
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-FT-GET-CURRENT-TIME|RQ-FT-BUILD-TIMESTAMPED-MESSAGE|RQ-FT-PRINT-TIMESTAMPED-OUTPUT"
+
+  - name: design_updated_with_timestamp
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/detail_design.md"
+          must_match:
+            - "DS-FN-GET-CURRENT-TIME|DS-FN-BUILD-TIMESTAMPED-MESSAGE|DS-FN-PRINT-TIMESTAMPED-OUTPUT"
+
+  - name: change_req_intent_consistent
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        エージェントの最終報告と docs/requirements.md の更新内容を確認し、
+        change_requirements.md の要求意図（時刻表示追加）と正本更新結果が
+        矛盾していないかを評価してください。
+
+        矛盾がなく整合している場合は set_waza_grade_pass を呼び出してください。
+        矛盾がある場合は set_waza_grade_fail を呼び出してください。

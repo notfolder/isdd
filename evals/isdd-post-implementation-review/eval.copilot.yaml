@@ -1,0 +1,17 @@
+name: isdd-post-implementation-review-minimum
+skill: isdd-post-implementation-review
+version: "1.0"
+description: |
+  isdd-post-implementation-review 向けの最小評価（案1: 整合確認ルート）。
+  Hello World のコメント付き実装コードに対して整合チェックを実行し、
+  未整合ゼロを確認できるかを検証する。
+
+config:
+  executor: copilot-sdk
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+
+tasks:
+  - tasks/*.yaml
