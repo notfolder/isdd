@@ -6,7 +6,7 @@ description: >
   docs/requirements.md から docs/detail_design.md を作る作業、設計の網羅性確認、冗長設計の排除、実装タスク化までを行う場面で必ず起動すること。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-design - インタビュー駆動 詳細設計スキル

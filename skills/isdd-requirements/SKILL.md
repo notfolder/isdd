@@ -7,7 +7,7 @@ description: >
   要件定義・要件整理・業務要件・機能要件・非機能要件に関する作業では必ず本スキルを起動すること。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-requirements — インタビュー駆動 要件定義スキル

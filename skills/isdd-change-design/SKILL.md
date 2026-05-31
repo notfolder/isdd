@@ -7,7 +7,7 @@ description: >
   「変更設計書を作って」「既存設計への差分設計をまとめて」「change_requirements から詳細設計を作成して」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-change-design - 変更詳細設計スキル

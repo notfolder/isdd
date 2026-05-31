@@ -5,7 +5,7 @@ description: >
   単独で起動されることはなく、isdd-requirements / isdd-design などのスキルから参照される。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-common

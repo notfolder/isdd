@@ -7,7 +7,7 @@ description: >
   「要件の変更を整理したい」「変更要求の要件定義を作りたい」「既存要件に対する差分要件を作って」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-change-req - インタビュー駆動 変更要件定義スキル

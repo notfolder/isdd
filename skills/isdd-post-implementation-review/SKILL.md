@@ -6,7 +6,7 @@ description: >
   「実装後に仕様整合を確認したい」「実装差分を要件と設計に反映したい」「実装後の逆引きレビューをしたい」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-post-implementation-review - 実装後逆引き整合スキル

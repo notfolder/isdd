@@ -282,7 +282,7 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 
 ## 変更履歴
 
-### v1.0.13（開発中）
+### v1.0.13
 
 #### 新規追加
 

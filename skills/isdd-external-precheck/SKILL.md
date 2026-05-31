@@ -6,7 +6,7 @@ description: >
   「外部連携の事前確認をしたい」「要件前に連携リスクだけ見たい」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-external-precheck — 外部連携 軽量事前確認スキル

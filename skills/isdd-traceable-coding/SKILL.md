@@ -6,7 +6,7 @@ description: >
   「実装して」「トレーサブルコメントをつけて」「コードにID体系を適用して」「isddのコメントルールを適用して」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-traceable-coding — トレーサブルコーディングスキル

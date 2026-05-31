@@ -6,7 +6,7 @@ description: >
   コードベースがすでに存在するプロジェクトに対して isdd の仕様駆動開発を適用する場面で必ず起動すること。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-reverse-engineering — 既存プロジェクト仕様駆動化スキル

@@ -6,7 +6,7 @@ description: >
   isdd-requirements / isdd-change-req の後段として実行し、整合確認結果を設計に引き継ぐ。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.12"
+  version: "v1.0.13"
 ---
 
 # isdd-external-research — 外部連携 要件整合調査スキル
