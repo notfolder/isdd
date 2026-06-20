@@ -55,6 +55,9 @@ selected_skills=("$@")
 lm_studio_url="${WAZA_LOCAL_LM_STUDIO_URL:-http://127.0.0.1:1234/v1}"
 local_model="${WAZA_LOCAL_MODEL:-gemma-4-e4b-it-mlx}"
 
+waza_run_env=()
+waza_model_flag=()
+
 if [[ "$local_mode" == "true" ]]; then
     echo "[local-mode] LM Studio endpoint: $lm_studio_url (model: $local_model)"
     waza_run_env=(env
@@ -64,9 +67,6 @@ if [[ "$local_mode" == "true" ]]; then
         COPILOT_MODEL="$local_model"
     )
     waza_model_flag=(--model "$local_model")
-else
-    waza_run_env=()
-    waza_model_flag=()
 fi
 
 shopt -s nullglob
@@ -216,9 +216,9 @@ for eval_file in "${files[@]}"; do
       continue
     fi
 
-    "${waza_run_env[@]}" waza run "$eval_file" "${waza_model_flag[@]}" --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
+    ${waza_run_env[@]+"${waza_run_env[@]}"} waza run "$eval_file" ${waza_model_flag[@]+"${waza_model_flag[@]}"} --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
     else
-    "${waza_run_env[@]}" waza run "$eval_file" "${waza_model_flag[@]}" --transcript-dir "$transcript_dir" --keep-workspace -v
+    ${waza_run_env[@]+"${waza_run_env[@]}"} waza run "$eval_file" ${waza_model_flag[@]+"${waza_model_flag[@]}"} --transcript-dir "$transcript_dir" --keep-workspace -v
     fi
 
     exit_code=$?
