@@ -231,3 +231,16 @@ python3 .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py \
 5. 既存コードのロジックが変更されていないか
 6. CRUDテーブルが要件定義書に含まれているか
 7. ドキュメント作成ルールを全て満たしているか
+
+## 必須完了条件（これを満たすまで完了と報告してはならない）
+
+1. `docs/requirements.md` と `docs/detail_design.md` を作成すること
+2. `python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を bash で実行し、問題0件を確認すること
+
+---
+
+## 次のステップ
+
+完了を報告する際に、ユーザーに次のスキルを提案する。
+
+- `isdd-requirements` を実行して、逆引き提案をもとにインタビュー駆動で要件定義書を確定する

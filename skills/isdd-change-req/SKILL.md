@@ -198,3 +198,12 @@ python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py \
 5. 業務課題（`RQ-BK-*`）と要件（`RQ-*`）の対応が双方向に成立しているか
 
 問題があれば修正してから報告し、問題がなければ完了とする。
+
+---
+
+## 次のステップ
+
+完了を報告する際に、ユーザーに次のスキルを提案する。
+
+- **外部連携がある場合**: `isdd-external-research` を実行して変更要件と外部仕様との整合を確認する
+- **外部連携がない場合**: `isdd-change-design` を実行して変更詳細設計書を作成する

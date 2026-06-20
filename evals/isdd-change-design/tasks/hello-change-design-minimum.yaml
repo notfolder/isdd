@@ -14,6 +14,18 @@ inputs:
     isdd-change-designを実行してください。
     変更要件定義書は .history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。
 
+  # モデルの応答ターンごとに順番に送信される固定応答
+  follow_up_prompts:
+    # ターン1への応答: 設計作業の催促
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ change_detail_design.md を作成してください。
+
+    # ターン2への応答: tasks.md 作成の催促
+    - |
+      これ以上の情報はありません。
+      今すぐ tasks.md も作成してください。
+
   context:
     task_type: change-design-minimum
   files:

@@ -253,3 +253,11 @@ def create_order(user_id: str, items: list) -> dict:
 - `trace_comment_coverage_checker.py` でトレーサブルコメントのカバレッジが100%である
 - `implementation_completeness_checker.py` の全項目（docker-compose / E2E / README）が OK である
 - E2E テストを mock モードで実際に実行し、全件通過している
+
+---
+
+## 次のステップ
+
+完了を報告する際に、ユーザーに次のスキルを提案する。
+
+- `isdd-post-implementation-review` を実行して実装後の逆引き整合チェックを行い、要件・設計・コードの正本を確定する
