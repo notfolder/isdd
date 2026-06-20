@@ -16,13 +16,20 @@ inputs:
     実装差分は case4-unmapped/src/hello.py の内容を確認してください。
     要件定義書は case4-unmapped/docs/requirements.md、詳細設計書は case4-unmapped/docs/detail_design.md を参照してください。
 
-    ヒアリングへの回答は以下の通りです。
-    インタビューが必要になった場合はこの回答を使用してください。
+  # モデルの応答ターンごとに順番に送信される固定応答
+  follow_up_prompts:
+    # ターン1への応答: 未マッピング機能のヒアリング（get_hello_message）
+    - |
+      以下の情報を使用してください：
+      - get_hello_message は仕様として必要なメソッドです。要件定義書に追加してください。
+      - 機能名: 表示文字列取得
+      - 対応業務課題ID: RQ-BK-ENV-VERIFICATION-UNGOVERNED
+      - この機能が無いと何が困るか: 出力する文字列を生成できず検証が行えない
 
-    - get_hello_message は仕様として必要なメソッドです。要件定義書に追加してください。
-    - 機能名: 表示文字列取得
-    - 対応業務課題ID: RQ-BK-ENV-VERIFICATION-UNGOVERNED
-    - この機能が無いと何が困るか: 出力する文字列を生成できず検証が行えない
+    # ターン2への応答: 追加質問があった場合の催促
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ docs/requirements.md を更新してください。
 
   context:
     task_type: post-implementation-review-unmapped
