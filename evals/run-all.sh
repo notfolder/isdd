@@ -4,9 +4,22 @@ set -u
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 mode="${1:-mock}"
 
+# .env ファイルが存在する場合は読み込む（既存の環境変数は上書きしない）
+env_file="$repo_root/.env"
+if [[ -f "$env_file" ]]; then
+    set -o allexport
+    # shellcheck source=/dev/null
+    source "$env_file"
+    set +o allexport
+    echo "[env] loaded: $env_file"
+fi
+
 usage() {
-    echo "usage: $0 [mock|real] [skill-name ...]" >&2
+    echo "usage: $0 [mock|real|local] [skill-name ...]" >&2
     echo "example: $0 real isdd-traceable-coding isdd-design" >&2
+    echo "         $0 local isdd-requirements  # LM Studio (http://127.0.0.1:1234) を使用" >&2
+    echo "  環境変数: WAZA_LOCAL_LM_STUDIO_URL (デフォルト: http://127.0.0.1:1234/v1)" >&2
+    echo "            WAZA_LOCAL_MODEL        (デフォルト: local-model)" >&2
 }
 
 if [[ ! -d "$repo_root/skills" ]]; then
@@ -17,9 +30,16 @@ fi
 case "$mode" in
   mock)
     pattern="evals/*/eval.mock.yaml"
+    local_mode=false
     ;;
   real)
     pattern="evals/*/eval.copilot.yaml"
+    local_mode=false
+    ;;
+  local)
+    # eval.copilot.yaml を使用し、LM Studio へのカスタムプロバイダー設定を注入する
+    pattern="evals/*/eval.copilot.yaml"
+    local_mode=true
     ;;
   *)
     usage
@@ -29,6 +49,25 @@ esac
 
 shift
 selected_skills=("$@")
+
+# localモード: LM Studio へ向けるカスタムプロバイダー環境変数を構築する
+# COPILOT_BASE_URL はOpenAI互換エンドポイントとして Copilot SDK の BYOK 機能に渡される
+lm_studio_url="${WAZA_LOCAL_LM_STUDIO_URL:-http://127.0.0.1:1234/v1}"
+local_model="${WAZA_LOCAL_MODEL:-gemma-4-e4b-it-mlx}"
+
+if [[ "$local_mode" == "true" ]]; then
+    echo "[local-mode] LM Studio endpoint: $lm_studio_url (model: $local_model)"
+    waza_run_env=(env
+        COPILOT_PROVIDER_BASE_URL="$lm_studio_url"
+        COPILOT_PROVIDER_TYPE=openai
+        COPILOT_PROVIDER_WIRE_API=completions
+        COPILOT_MODEL="$local_model"
+    )
+    waza_model_flag=(--model "$local_model")
+else
+    waza_run_env=()
+    waza_model_flag=()
+fi
 
 shopt -s nullglob
 files=( $pattern )
@@ -177,9 +216,9 @@ for eval_file in "${files[@]}"; do
       continue
     fi
 
-    waza run "$eval_file" --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
+    "${waza_run_env[@]}" waza run "$eval_file" "${waza_model_flag[@]}" --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
     else
-    waza run "$eval_file" --transcript-dir "$transcript_dir" --keep-workspace -v
+    "${waza_run_env[@]}" waza run "$eval_file" "${waza_model_flag[@]}" --transcript-dir "$transcript_dir" --keep-workspace -v
     fi
 
     exit_code=$?
