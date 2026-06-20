@@ -120,7 +120,7 @@ graders:
         1. `find .history -name change_detail_design.md` を実行してファイルのパスを取得する
         2. 同じディレクトリにある change_requirements.md のパスを構築する
         3. 以下のコマンドを実行する:
-           python3 skills/isdd-common/scripts/rq_ds_link_checker.py [change_requirements.mdのパス] [change_detail_design.mdのパス]
+           python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py [change_requirements.mdのパス] [change_detail_design.mdのパス]
 
         実行結果に「全てのチェックに合格しました」が含まれる場合は set_waza_grade_pass を呼び出してください。
         ファイルが存在しない場合やチェックに失敗した場合は set_waza_grade_fail を呼び出してください。
