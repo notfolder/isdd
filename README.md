@@ -282,6 +282,17 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 
 ## 変更履歴
 
+### v1.0.14
+
+#### 変更
+
+- 全スキルの SKILL.md に「次のステップ」セクションを追加。完了報告時に次に使うべきスキルを提案するよう統一。外部連携の有無によって分岐する提案（`isdd-external-research` 経由）も明記。
+- `isdd-post-implementation-review` の「次のステップ」を拡張。未整合がゼロになった場合に確定成果物（`docs/requirements.md`・`docs/detail_design.md`・実装ソース・`e2e/`）の利用方法と次の開発サイクルの開始方法をユーザーへ案内する。
+- `isdd-reverse-engineering` に必須完了条件ブロックを追加。`rq_ds_link_checker.py` の実行と問題0件確認を完了条件として義務化。
+- `isdd-common/scripts/rq_ds_link_checker.py` の重複チェック（`check_duplicates`）を無効化。共通化方針テーブルなど1行に複数の RQ-ID が記載される変更設計書形式で発生していた誤検知を解消。
+- 全 eval の `timeout_seconds` を10倍に増加。ローカルモデルでの実行時間超過に対応。
+- `isdd-change-req`・`isdd-reverse-engineering`・`isdd-post-implementation-review` の eval タスクに `follow_up_prompts` を導入。モデルのヒアリング応答をターン単位で固定入力することで、LLM の応答内容に依存しない再現性の高い評価を実現。**waza v0.28.0 以上が必要。**
+
 ### v1.0.13
 
 #### 新規追加
