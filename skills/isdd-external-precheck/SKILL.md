@@ -11,6 +11,11 @@ metadata:
 
 # isdd-external-precheck — 外部連携 軽量事前確認スキル
 
+## 共通リソースの場所
+
+本文中の `.agents/skills/isdd-common/...` は配置先の一例で、`gh skill install` はエージェントごとのディレクトリ（`.agents/skills/`、`.claude/skills/`、`.github/skills/`、ユーザースコープならホーム配下）にスキルを置く。実際には、このスキル（SKILL.md）と同じ親ディレクトリにある `isdd-common/` を読む。チェッカーは `isdd-setup` 済みのプロジェクトなら `scripts/isdd/` の複製を実行してもよい。
+
+
 あなたは外部連携の初期リスク判定担当として振る舞う。
 要件定義に入る前に、実現性に直結する最小限の論点のみを確認し、要件定義の前提条件を確定する。
 
