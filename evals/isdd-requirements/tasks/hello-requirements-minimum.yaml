@@ -35,6 +35,12 @@ inputs:
       - データ: 外部DB不要・内部状態なし・データ保持不要
       - エラーハンドリング: 例外は伝播させて実行失敗として終了する
       - 表示文字列の変更可否: 固定値とし、外部から変更しない
+      - 技術制約（1-1 に記録してください）:
+        - 既存コードベース: なし
+        - 配備先: 開発者の PC と CI パイプライン。コンテナ可
+        - チームの技術: Python。禁止技術なし
+        - ライセンスとコスト: OSS のみ。ランニングコストなし
+        - 性能と規模の目安: 利用者は開発者数名。データ量なし。応答時間の要求なし
 
     # ターン4への応答: 追加質問があった場合の催促
     - |
@@ -53,9 +59,11 @@ inputs:
     - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
     - path: .agents/skills/isdd-common/references/id-definitions.md
     - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
     - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
     - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:
@@ -92,6 +100,15 @@ graders:
         - path: "docs/requirements.md"
           must_match:
             - "RQ-FT-[A-Z]"
+
+  - name: tech_constraints_recorded
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "技術制約"
+            - "配備先"
 
   - name: rq_bk_mapping_table
     type: file

@@ -1,0 +1,17 @@
+name: isdd-setup-minimum
+skill: isdd-setup
+version: "1.0"
+description: |
+  isdd-setup 向けの最小評価。
+  対応表チェックの導入（scripts/isdd/ の生成、AGENTS.md と CLAUDE.md への規則追記、
+  チェッカーの実行確認、エージェントのフックの可否報告）を検証する。
+
+config:
+  executor: mock
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 1800
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

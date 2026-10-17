@@ -1,0 +1,105 @@
+id: isdd-setup-hello-001
+name: Hello World 対応表チェック導入
+description: |
+  要件定義書・詳細設計書・対応表・実装コードが揃ったプロジェクトに isdd-setup を実行し、
+  scripts/isdd/ の生成、AGENTS.md と CLAUDE.md への規則追記、チェッカーの実行確認、
+  エージェントのフックの可否報告ができるかを検証する。
+
+tags:
+  - isdd
+  - setup
+  - minimum
+
+inputs:
+  prompt: |
+    isdd-setupを実行してください。
+    ソースディレクトリは src です。
+
+  # モデルの応答ターンごとに順番に送信される固定応答
+  follow_up_prompts:
+    # ターン1への応答: フックの設定や承認に関する確認があった場合
+    - |
+      この環境ではエージェントのフックは作らなくて構いません。作れない旨を報告して完了してください。
+
+    # ターン2への応答: 追加質問があった場合の催促
+    - |
+      これ以上の情報はありません。今すぐ完了報告をしてください。
+
+  context:
+    task_type: setup-minimum
+  files:
+    - path: docs/requirements.md
+    - path: docs/detail_design.md
+    - path: docs/trace_map.md
+    - path: src/hello.py
+    - path: .agents/skills/isdd-setup/SKILL.md
+    - path: .agents/skills/isdd-common/SKILL.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
+    - path: .agents/skills/isdd-common/references/id-definitions.md
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
+    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: scripts_installed
+    type: file
+    config:
+      must_exist:
+        - "scripts/isdd/check.sh"
+        - "scripts/isdd/pre-commit"
+        - "scripts/isdd/trace_map_checker.py"
+        - "scripts/isdd/rq_ds_link_checker.py"
+        - "scripts/isdd/implementation_completeness_checker.py"
+
+  - name: rules_appended
+    type: file
+    config:
+      content_patterns:
+        - path: "AGENTS.md"
+          must_match:
+            - "isdd-setup:begin"
+            - "docs/trace_map.md"
+            - "scripts/isdd/check.sh"
+        - path: "CLAUDE.md"
+          must_match:
+            - "isdd-setup:begin"
+
+  - name: code_untouched
+    type: file
+    config:
+      content_patterns:
+        - path: "src/hello.py"
+          must_match:
+            - "class\\s+HelloWorldPrinter"
+          must_not_match:
+            - "要件ID|設計ID|RQ-[A-Z]{2}-|DS-[A-Z]{2}-"
+
+  - name: setup_script_executed
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴を確認し、bash ツールで
+        `isdd_setup.py` を実行するコマンドと、`scripts/isdd/check.sh`（または `trace_map_checker.py`）を
+        実行するコマンドの両方が呼ばれたかどうかを評価してください。
+
+        両方実行されていた場合は set_waza_grade_pass を呼び出してください。
+        どちらかでも実行されていなかった場合は set_waza_grade_fail を呼び出してください。
+
+  - name: hook_status_reported
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        エージェントの最終報告を確認し、エージェント自身のフックについて
+        「作った（場所とコマンド）」または「この環境では作れない（理由）」のどちらかが
+        明記されているかを評価してください。
+
+        明記されている場合は set_waza_grade_pass を呼び出してください。
+        明記されていない場合は set_waza_grade_fail を呼び出してください。

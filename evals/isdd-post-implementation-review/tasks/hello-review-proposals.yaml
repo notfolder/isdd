@@ -14,6 +14,7 @@ inputs:
     isdd-post-implementation-reviewを実行してください。
     実装差分は case2-proposals/src/hello.py の内容を確認してください。
     要件定義書は case2-proposals/docs/requirements.md、詳細設計書は case2-proposals/docs/detail_design.md を参照してください。
+    対応表は case2-proposals/docs/trace_map.md にあります。
     proposals は case2-proposals/docs/proposals.md にあります。
 
   # モデルの応答ターンごとに順番に送信される固定応答
@@ -28,6 +29,7 @@ inputs:
     - path: case2-proposals/docs/detail_design.md
     - path: case2-proposals/docs/proposals.md
     - path: case2-proposals/src/hello.py
+    - path: case2-proposals/docs/trace_map.md
     - path: .agents/skills/isdd-post-implementation-review/SKILL.md
     - path: .agents/skills/isdd-common/SKILL.md
     - path: .agents/skills/isdd-common/references/design-chapters.md
@@ -37,9 +39,11 @@ inputs:
     - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
     - path: .agents/skills/isdd-common/references/id-definitions.md
     - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
     - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
     - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:

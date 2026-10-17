@@ -3,7 +3,7 @@ skill: isdd-traceable-coding
 version: "1.0"
 description: |
   isdd-traceable-coding 向けの最小評価。
-  Hello World の既存コードにトレーサブルコメントを付与できるかを検証する。
+  Hello World の既存コードに対して対応表（docs/trace_map.md）を作成し、コードに ID を書かずにチェッカーを通せるかを検証する。
 
 config:
   executor: copilot-sdk

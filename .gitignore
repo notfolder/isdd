@@ -123,3 +123,6 @@ last-real-reslts.json
 # skill-creator workspace (eval run artifacts)
 # eval_metadata.json は skills/gen_eval_metadata.py で evals.json から再生成できる
 skills/*-workspace/
+
+# claude モード用の Copilot CLI（evals/install-copilot-cli.sh が入れる）
+evals/.copilot-cli/

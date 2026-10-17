@@ -29,9 +29,21 @@ isdd 詳細設計スキル（isdd-design、isdd-change-design）で生成する 
 
 - 最終的に全変更点を実装済みか確認するタスクを **必ず含める**
 
+### 実装開始前の必須固定タスク
+
+以下の 1 タスクを**全 tasks.md の先頭に必ず含める**。
+
+0. **isdd-setup 導入確認タスク**
+   - `scripts/isdd/check.sh` が存在しなければ `isdd-setup` スキルを実行して対応表チェックを導入する
+   - 完了条件: `bash scripts/isdd/check.sh` が実行できること
+
 ### 実装完了確認の必須固定タスク
 
-以下の3タスクを**全 tasks.md の末尾（isdd-change-design 固有タスクより前）に必ず含める**。
+以下の4タスクを**全 tasks.md の末尾（isdd-change-design 固有タスクより前）に必ず含める**。
+
+0. **対応表（docs/trace_map.md）更新タスク**
+   - 実装したファイル・クラス・公開関数を `docs/trace_map.md` に登録する（`.agents/skills/isdd-common/references/trace-map-rules.md`）
+   - 完了条件: `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件で通ること
 
 1. **docker compose 起動確認タスク**
    - `docker-compose.yml` が存在し、`docker compose up` で全サービスが起動することを確認する

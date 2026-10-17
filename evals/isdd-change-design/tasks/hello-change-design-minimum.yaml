@@ -31,6 +31,7 @@ inputs:
   files:
     - path: docs/requirements.md
     - path: docs/detail_design.md
+    - path: docs/trace_map.md
     - path: .history/20260508-add-timestamp-to-hello-world/change_requirements.md
     - path: .agents/skills/isdd-change-design/SKILL.md
     - path: .agents/skills/isdd-common/SKILL.md
@@ -41,9 +42,11 @@ inputs:
     - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
     - path: .agents/skills/isdd-common/references/id-definitions.md
     - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
     - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
     - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:

@@ -22,7 +22,6 @@ RQ-[カテゴリ]-[内容略称]
 | 業務 | `RQ-BZ` | 対象業務（業務一覧の業務単位） |
 | 業務課題 | `RQ-BK` | 解決すべき業務課題 |
 | 機能 | `RQ-FT` | 業務機能・ユースケース |
-| 業務課題 | `RQ-BK` | 解決すべき業務課題 |
 | 画面 | `RQ-UI` | 画面・UI要件 |
 | 外部連携 | `RQ-EX` | 外部システム連携 |
 | テストシナリオ | `RQ-TS` | テスト要件 |
@@ -78,6 +77,15 @@ DS-[DSカテゴリ]-[DS内容略称]-[RQカテゴリ]-[RQ内容略称]
 | `RQ-FT-CREATE-ORDER` | `DS-FN-CREATE-ORDER-FT-CREATE-ORDER` | 注文作成機能の関数 |
 | `RQ-FT-CREATE-ORDER` | `DS-CL-ORDER-SERVICE-FT-CREATE-ORDER` | 注文作成機能のサービスクラス |
 | `RQ-EX-SYNC-CUSTOMER-MASTER` | `DS-IF-SYNC-CUSTOMER-MASTER-EX-SYNC-CUSTOMER-MASTER` | 顧客マスタ同期 API インターフェース |
+
+---
+
+## コードとの対応（対応表）
+
+- ソースコードには要件 ID も設計 ID も書かない。コメントは通常のドキュメントコメント（処理の説明、引数、戻り値）だけにする。
+- 設計 ID とコードの対応は `docs/trace_map.md`（対応表）で管理する。書式と粒度は `.agents/skills/isdd-common/references/trace-map-rules.md` に従う。
+- 要件 ID とコードの対応は、対応表の設計 ID の末尾略称から辿る。対応表に要件 ID は書かない。
+- 対応表の整合は `trace_map_checker.py` で検証する。
 
 ---
 

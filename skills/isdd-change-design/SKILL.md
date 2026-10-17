@@ -7,7 +7,7 @@ description: >
   「変更設計書を作って」「既存設計への差分設計をまとめて」「change_requirements から詳細設計を作成して」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.14"
+  version: "v1.0.15"
 ---
 
 # isdd-change-design - 変更詳細設計スキル
@@ -56,6 +56,12 @@ change_requirements.md の全ての [追加] RQ-*（RQ-BK・RQ-BZ 除く）は�
 ## ID付与ルール（必須）
 
 `.agents/skills/isdd-common/references/id-definitions.md` を参照し、全ての設計要素に設計ID（`DS-*`）を付与すること。設計IDは対応する要件ID（`RQ-*`）と紐付けて採番する。IDなしで設計要素を記述することは絶対に禁止する。
+ID は表の専用列に書き、本文の文章や図の中には書かない（`.agents/skills/isdd-common/references/document-rules.md`）。
+
+## 技術選定（変更時）
+
+- 既存設計 `docs/detail_design.md` の言語・フレームワーク・DB を踏襲する。変更要件の技術制約がそれと矛盾する場合だけ、`.agents/skills/isdd-common/references/design-chapters.md` 第 1 章の手順（インターネット調査、比較表、ユーザー承認）で再選定する。
+- 検索・取得ツールが使えない環境で再選定が必要になった場合は、推測で選ばず「インターネット調査ができないため技術選定を確定できない」と報告して止まる。
 
 ## 基本方針
 
@@ -142,4 +148,5 @@ change_requirements.md の全ての [追加] RQ-*（RQ-BK・RQ-BZ 除く）は�
 
 完了を報告する際に、ユーザーに次のスキルを提案する。
 
-- `isdd-traceable-coding` を実行して変更詳細設計書にもとづく実装を行う
+- `scripts/isdd/check.sh` が無いプロジェクトでは、先に `isdd-setup` を実行して対応表チェックを導入する
+- `isdd-traceable-coding` を実行して変更詳細設計書にもとづく実装と対応表の更新を行う

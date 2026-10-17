@@ -34,6 +34,7 @@ inputs:
   files:
     - path: src/hello.py
     - path: .agents/skills/isdd-reverse-engineering/SKILL.md
+    - path: .agents/skills/isdd-setup/SKILL.md
     - path: .agents/skills/isdd-common/SKILL.md
     - path: .agents/skills/isdd-common/references/design-chapters.md
     - path: .agents/skills/isdd-common/references/design-completeness.md
@@ -42,9 +43,11 @@ inputs:
     - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
     - path: .agents/skills/isdd-common/references/id-definitions.md
     - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
     - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
     - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:
@@ -87,6 +90,26 @@ graders:
 
         実行されていた場合は set_waza_grade_pass を呼び出してください。
         実行されていなかった場合は set_waza_grade_fail を呼び出してください。
+
+  - name: trace_map_created
+    type: file
+    config:
+      must_exist:
+        - "docs/trace_map.md"
+      content_patterns:
+        - path: "docs/trace_map.md"
+          must_match:
+            - "\\|\\s*DS-ID\\s*\\|\\s*修飾名\\s*\\|"
+            - "DS-MD-[A-Z0-9-]+[^\\n]*src/hello\\.py"
+            - "DS-FN-[A-Z0-9-]+[^\\n]*src/hello\\.py::HelloWorldPrinter\\.get_hello_message"
+
+  - name: code_untouched
+    type: file
+    config:
+      content_patterns:
+        - path: "src/hello.py"
+          must_not_match:
+            - "要件ID|設計ID|RQ-[A-Z]{2}-|DS-[A-Z]{2}-"
 
   - name: logic_preserved
     type: file

@@ -14,6 +14,19 @@ inputs:
     isdd-designを実行してください。
     対象: docs/requirements.md
 
+  # モデルの応答ターンごとに順番に送信される固定応答
+  follow_up_prompts:
+    # ターン1への応答: 技術選定の確認（インターネット調査ができない報告、または候補比較の承認依頼）
+    - |
+      インターネット調査ができない場合は、未調査のまま進めることを承認します（承認日: 2026-10-17）。
+      技術選定は、要件定義書の技術制約どおり Python（フレームワークなし、DB なし、実行形態は CLI スクリプト）で承認します。
+      比較表の出典列には「未調査（ユーザー承認: 2026-10-17）」と書いてください。
+
+    # ターン2への応答: 追加質問があった場合の催促
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ docs/detail_design.md と tasks.md を作成し、チェッカーを実行してください。
+
   context:
     task_type: design-minimum
   files:
@@ -27,9 +40,11 @@ inputs:
     - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
     - path: .agents/skills/isdd-common/references/id-definitions.md
     - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
     - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
     - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:
@@ -58,6 +73,18 @@ graders:
         - path: "docs/detail_design.md"
           must_match:
             - "DS-FN-[A-Z]"
+
+  - name: tech_selection_recorded
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/detail_design.md"
+          must_match:
+            - "技術制約|判断軸"
+            - "出典|未調査"
+            - "承認"
+          must_not_match:
+            - "特段の理由がなければ"
 
   - name: rq_ds_mapping
     type: file

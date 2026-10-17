@@ -1,7 +1,7 @@
 id: isdd-post-implementation-review-hello-minimum-001
 name: Hello World 実装後整合確認（最小）
 description: |
-  コメント付き hello.py と要件定義書・詳細設計書を入力として、
+  hello.py と対応表 と要件定義書・詳細設計書を入力として、
   isdd-post-implementation-review スキルが整合チェックを実行し、
   未整合ゼロで完了報告できるかを検証する。
 
@@ -15,6 +15,7 @@ inputs:
     isdd-post-implementation-reviewを実行してください。
     実装差分は case1-minimum/src/hello.py の内容を確認してください。
     要件定義書は case1-minimum/docs/requirements.md、詳細設計書は case1-minimum/docs/detail_design.md を参照してください。
+    対応表は case1-minimum/docs/trace_map.md にあります。
 
   context:
     task_type: post-implementation-review-minimum
@@ -22,6 +23,7 @@ inputs:
     - path: case1-minimum/docs/requirements.md
     - path: case1-minimum/docs/detail_design.md
     - path: case1-minimum/src/hello.py
+    - path: case1-minimum/docs/trace_map.md
     - path: .agents/skills/isdd-post-implementation-review/SKILL.md
     - path: .agents/skills/isdd-common/SKILL.md
     - path: .agents/skills/isdd-common/references/design-chapters.md
@@ -31,9 +33,11 @@ inputs:
     - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
     - path: .agents/skills/isdd-common/references/id-definitions.md
     - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
     - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
     - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:

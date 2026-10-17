@@ -1,10 +1,11 @@
 """
 implementation_completeness_checker.py
 
-実装完了チェッカー。以下の3項目を機械的に確認する。
+実装完了チェッカー。以下の4項目を機械的に確認する。
   1. docker-compose.yml が存在するか
   2. e2e/ 配下にテストファイルが1件以上存在するか
   3. README.md に「起動方法」「初期ユーザー」のセクションが存在するか
+  4. docs/trace_map.md（設計IDとコードの対応表）が存在し、1行以上の対応があるか
 
 使用方法:
   python3 implementation_completeness_checker.py [プロジェクトルート]
@@ -145,6 +146,40 @@ def check_readme(root: Path) -> dict:
     )
 
 
+def check_trace_map(root: Path) -> dict:
+    """
+    docs/trace_map.md が存在し、DS-ID の行が1件以上あるかを確認する。
+
+    Args:
+        root (Path): プロジェクトルートのパス
+    Returns:
+        dict: チェック結果
+    """
+    map_path = root / "docs" / "trace_map.md"
+    if not map_path.exists():
+        return _make_result(
+            "docs/trace_map.md の存在確認",
+            False,
+            "docs/trace_map.md が見つかりません。設計IDとクラス・公開関数の対応表を作成してください。",
+        )
+    content = map_path.read_text(encoding="utf-8")
+    rows = [
+        line for line in content.splitlines()
+        if line.strip().startswith("|") and "DS-" in line and "::" in line or (line.strip().startswith("|") and "DS-MD-" in line)
+    ]
+    if rows:
+        return _make_result(
+            "docs/trace_map.md の存在確認",
+            True,
+            f"対応表の行 {len(rows)} 件確認OK",
+        )
+    return _make_result(
+        "docs/trace_map.md の存在確認",
+        False,
+        "docs/trace_map.md は存在しますが対応の行が0件です。設計IDと修飾名の行を追加してください。",
+    )
+
+
 def run_checks(root: Path) -> list[dict]:
     """
     全チェックを実行して結果リストを返す。
@@ -158,6 +193,7 @@ def run_checks(root: Path) -> list[dict]:
         check_docker_compose(root),
         check_e2e_tests(root),
         check_readme(root),
+        check_trace_map(root),
     ]
 
 
