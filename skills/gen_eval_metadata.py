@@ -2,9 +2,9 @@
 """
 evals.json から eval_metadata.json を生成するスクリプト。
 
-テスト実行前の最初のステップとして実行する。
-aggregate_benchmark.py が各 eval ディレクトリに配置された
-eval_metadata.json を読むため、このスクリプトで事前生成する。
+anthropic の skill-creator スキルで eval を回すときの最初のステップとして実行する。
+skill-creator 側の aggregate_benchmark.py（このリポジトリには無い）が各 eval ディレクトリの
+eval_metadata.json を読むため、このスクリプトで事前生成する。waza の eval（evals/run-all.sh）には不要。
 
 Usage:
     python3 skills/gen_eval_metadata.py

@@ -10,7 +10,7 @@ config:
   executor: copilot-sdk
   model: auto
   trials_per_task: 1
-  timeout_seconds: 6000
+  timeout_seconds: 900
   parallel: false
 
 tasks:

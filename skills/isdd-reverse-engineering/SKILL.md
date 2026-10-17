@@ -1,32 +1,35 @@
 ---
 name: isdd-reverse-engineering
 description: >
-  既存コードベースから設計書・要件定義書を逆引き生成し、インタビューで補完・修正した上でトレーサブルコメントを追加するスキル。
+  既存コードベースから設計書・要件定義書を逆引き生成し、インタビューで補完・修正した上で、設計IDとコードの対応表（docs/trace_map.md）を作成するスキル。
   「既存コードから要件定義書を作りたい」「既存PJをisdd化したい」「コードから設計書を逆引きして」「既存システムの仕様を整理したい」などの依頼では必ずこのスキルを使うこと。
   コードベースがすでに存在するプロジェクトに対して isdd の仕様駆動開発を適用する場面で必ず起動すること。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.14"
+  version: "v1.0.15"
 ---
 
 # isdd-reverse-engineering — 既存プロジェクト仕様駆動化スキル
 
+## 共通リソースの場所
+
+本文中の `.agents/skills/isdd-common/...` は配置先の一例で、`gh skill install` はエージェントごとのディレクトリ（`.agents/skills/`、`.claude/skills/`、`.github/skills/`、ユーザースコープならホーム配下）にスキルを置く。実際には、このスキル（SKILL.md）と同じ親ディレクトリにある `isdd-common/` を読む。チェッカーは `isdd-setup` 済みのプロジェクトなら `scripts/isdd/` の複製を実行してもよい。
+
+
 あなたはレガシーシステム解析とisdd仕様駆動開発の専門家として振る舞う。
-既存コードベースを解析して設計書・要件定義書を逆引き生成し、インタビューで不足を補完した後、トレーサブルコメントを付与することで既存プロジェクトをisddの仕様駆動開発に組み込む。
+既存コードベースを解析して設計書・要件定義書を逆引き生成し、インタビューで不足を補完した後、設計IDとコードの対応表（`docs/trace_map.md`）を作成することで既存プロジェクトをisddの仕様駆動開発に組み込む。コードには一切手を入れない。
 
 ## 適用範囲（必須）
 
 - 本スキルは既存プロジェクトの初回 isdd 導入時に限定して利用すること。
-- 実装後の逆引き整合チェックは本スキルの責務に含めない。
-- 要件・設計・実装差分の逆引き整合チェックは `isdd-post-implementation-review` を利用すること。
-- トレーサブルコメントの付与率と記載不足の検証（Trace Comment Coverage Checker実行）は本スキルの責務として実施すること。
-- 正本（`docs/requirements.md` と `docs/detail_design.md`）の更新は本スキルで確定せず、逆引き結果は `docs/proposals.md` に集約して `isdd-post-implementation-review` へ引き継ぐこと。
+- 逆引き結果は作業中 `docs/proposals.md` に集約し、インタビューと採番が終わったら本スキル内で正本（`docs/requirements.md` と `docs/detail_design.md`）を確定すること。`isdd-post-implementation-review` は実装起因の差分を扱うスキルであり、初回導入時の正本確定には使わない。
+- 対応表の作成と整合検証（`trace_map_checker.py` の実行）は本スキルの責務として実施すること。
+- 本スキル完了後は「isdd 運用あり」の状態になる。以後の新たな要求は `isdd-change-req` から始め、実装後の整合は `isdd-post-implementation-review` で確認する。
 
 ## 最重要制約
 
-- **既存コードのロジックは一切変更しない**
-- 追加・変更して良いのはコメント（docstring、インラインコメント等）のみ
-- コメントの追加が既存の動作に影響する可能性がある場合（例: Pythonのデコレータ、JavaのAnnotation等）は、必ずユーザーに確認してから実施する
+- **既存コードは一切変更しない**（ロジックもコメントも）
+- 仕様とコードの対応は、コードではなく対応表 `docs/trace_map.md` に書く（`.agents/skills/isdd-common/references/trace-map-rules.md`）
 
 ## 基本方針
 
@@ -57,14 +60,16 @@ metadata:
 
 ```mermaid
 graph TD
-    A[コード解析 - Agent隔離] --> B[設計書生成（ID未採番）]
+    A[コード解析 - 可能なら委譲] --> B[設計書生成（ID未採番）]
     B --> C[要件定義書生成]
     C --> D[インタビューで補完]
     D --> E[要件定義書・設計書を修正]
     E --> F[設計書へのDS-*ID採番]
-  F --> F2["isdd-post-implementation-review 実行"]
-  F2 --> G[トレーサブルコメント追加]
-    G --> G2["Trace Comment Coverage Checker実行"]
+    F --> F2["正本確定（proposals.md を docs/ へ）"]
+    F2 --> F3["rq_integrity_checker と rq_ds_link_checker 実行"]
+    F3 --> G0["isdd-setup 実行（未導入なら）"]
+    G0 --> G[対応表 docs/trace_map.md の作成]
+    G --> G2["check.sh --strict 実行"]
     G2 --> H[セルフレビュー・報告]
 ```
 
@@ -72,9 +77,7 @@ graph TD
 
 ## ステップ1: コード解析
 
-⚠️ **本ステップは `code-structure-analyzer` Agent により実行されます。**
-
-Agent が既存コードベース全体を読み込み、以下を把握します。
+既存コードベース全体を読み込み、以下を把握する。
 
 - ディレクトリ構成とファイルの役割
 - 使用言語・フレームワーク・ライブラリ
@@ -83,18 +86,17 @@ Agent が既存コードベース全体を読み込み、以下を把握しま�
 - 外部システム連携の有無とその内容
 - バッチ・ジョブ・イベント処理の有無
 
+**実施方法**:
+
+- 実行環境にサブエージェント（下請けのエージェントを起動して結果だけ受け取る機能）があれば、汎用のサブエージェントに次の指示を渡して委譲する。コードベースが大きいとき、本体の文脈を使い切らないためである。
+  > 対象ディレクトリ [パス] のコードを読み、ディレクトリ構成とファイルの役割、使用言語・フレームワーク・ライブラリ、クラス・関数・モジュールの一覧と依存関係、データモデル、外部システム連携、バッチ・ジョブ・イベント処理を Markdown でまとめて返す。コードは変更しない。
+- サブエージェント機能が無い環境では、本体がそのまま読み込んで同じ項目をまとめる。
+- isdd は特定のエージェント定義ファイルを同梱しない。存在しないエージェント名を指定してはならない。
+
 **手順**:
-1. 以下を実行してください：
-   ```
-   Agentを起動: code-structure-analyzer
-   
-   入力パラメータ:
-   - コードベースの保存パス: [対象ディレクトリ]
-   ```
-
-2. Agent からの返答を確認してください（ディレクトリ構成・言語・FW・ライブラリ・クラス・関数・依存関係・データモデル・外部連携・バッチ処理情報）
-
-3. 構造情報に誤りがないかご確認ください。修正・追加がある場合はその旨をお知らせください。
+1. 上記の実施方法で構造情報をまとめる
+2. 構造情報（ディレクトリ構成・言語・FW・ライブラリ・クラス・関数・依存関係・データモデル・外部連携・バッチ処理）をユーザーに提示する
+3. 誤りや追加があればユーザーの指摘を反映する
 
 ---
 
@@ -116,7 +118,7 @@ Agent が既存コードベース全体を読み込み、以下を把握しま�
 - `isdd-requirements` スキルの要件定義書フォーマットに準拠した提案として整理する
 - 設計から読み取れる業務機能・データ・非機能要件を記述する
 - 業務的背景（なぜその機能が必要か）がコードから読み取れない場合は「要インタビュー」として明示する
-- `isdd-traceable-coding` のRQ-*体系に基づき、各要件に要件IDを採番する
+- `.agents/skills/isdd-common/references/id-definitions.md` の RQ-* 体系に基づき、各要件に要件IDを採番する
 - CRUDテーブルを必須セクションとして含める
 
 ---
@@ -169,39 +171,49 @@ Agent が既存コードベース全体を読み込み、以下を把握しま�
 
 ### 正本確定（必須）
 
-採番完了後、`isdd-post-implementation-review` を必ず実行し、`docs/proposals.md` の内容を正本へ反映して整合を確定する。
+採番完了後、`docs/proposals.md` の要件提案を `docs/requirements.md` に、設計提案を `docs/detail_design.md` に書き出して正本を確定する。
+
+- 章構成は `.agents/skills/isdd-common/references/requirements-chapters.md` と `design-chapters.md` に従う。「要インタビュー」の印はインタビューで解消済みなので正本に残さない
+- 詳細設計書の第 1 章（技術選定）は、既存コードの言語・フレームワーク・DB・実行形態をそのまま記録する。既存資産との整合が最優先の判断軸であり、インターネット調査と再選定は行わない
+- 正本の確定後、`docs/proposals.md` を削除する
+- 次を **bash で必ず実行**し、両方が合格するまで修正する
+
+  ```bash
+  python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py docs/requirements.md
+  python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md
+  ```
 
 **Step 6 完了ゲート（Step 7 へ進む前に全て満たすこと）**：
 
-- [ ] `isdd-post-implementation-review` を実行した
-- [ ] `docs/requirements.md` と `docs/detail_design.md` が最新状態に更新された
+- [ ] `docs/requirements.md` と `docs/detail_design.md` を作成した
+- [ ] `rq_integrity_checker.py` と `rq_ds_link_checker.py` を bash で実行し、問題 0 件の実行ログをレスポンスに記載した
 - [ ] `docs/proposals.md` が削除済みである
 
 ---
 
-## ステップ7: トレーサブルコメント追加
+## ステップ7: 対応表の作成
 
-`isdd-traceable-coding` スキルの規則に従い、全ての関数・クラス・モジュールにトレーサブルコメントを付与する。
+`scripts/isdd/check.sh` が無ければ、先に `isdd-setup` スキルを実行して対応表チェックを導入する。導入時は、確定した詳細設計書から読み取った実行形態・認証の有無・外部連携の有無を `isdd-setup` に渡す。
 
-- 確定した要件ID（RQ-*）・設計ID（DS-*）を使用する
-- 既存コードのロジックは変更しない（コメントのみ追加）
-- コメントの追加が動作に影響する可能性がある場合はユーザーに確認してから実施する
+確定した設計ID（DS-*）と既存コードのファイル・クラス・公開関数の対応を `docs/trace_map.md` に書く。
 
-### トレーサブルコメント付与検証（自動実行）
+- 書式と粒度は `.agents/skills/isdd-common/references/trace-map-rules.md` に従う
+- 既存コードは変更しない（コメントも追加しない）
+- 対応が判断できない要素はユーザーに確認する
 
-トレーサブルコメント付与完了後、以下の検証スクリプトを自動実行します：
+### 対応表の検証（必須実行）
+
+対応表作成後、以下を **bash で必ず実行**する：
 
 ```bash
-python3 .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py \
-  <source_dir>
+bash scripts/isdd/check.sh --strict
 ```
 
 **出力**:
-- 未付与要素一覧：トレーサブルコメント未付与の関数/クラス/モジュール
-- 記載不足項目一覧：RQ-* または DS-* が不足しているコメント
-- カバレッジ率：トレーサブルコメント付与率（%）
+- エラー：対応表の DS-ID が設計書に無い、修飾名がコードに無い
+- 警告：コードのクラス・公開関数・ファイルが対応表に無い、設計書の設計要素が対応表に無い
 
-**カバレッジが100%でない場合は、未付与・不足箇所を修正してください。**
+**エラーも警告も 0 件になるまで、対応表または設計書を修正してください。**
 
 ---
 
@@ -209,8 +221,10 @@ python3 .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py \
 
 | 成果物 | 保存先 |
 |---|---|
-| 要件・設計の逆引き提案 | `docs/proposals.md` |
-| トレーサブルコメント | 各ソースファイルのインライン |
+| 要件・設計の逆引き提案（作業中のみ。正本確定後に削除） | `docs/proposals.md` |
+| 要件定義書（正本） | `docs/requirements.md` |
+| 詳細設計書（正本） | `docs/detail_design.md` |
+| 設計IDとコードの対応表 | `docs/trace_map.md` |
 
 ---
 
@@ -227,20 +241,22 @@ python3 .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py \
 1. 設計書・要件定義書がisddの標準フォーマットに準拠しているか
 2. 全ての要件にRQ-*IDが採番されているか
 3. 全ての設計要素にDS-*IDが採番されているか
-4. 全ての関数・クラス・モジュールにトレーサブルコメントが付与されているか
-5. 既存コードのロジックが変更されていないか
+4. 全てのファイル・クラス・公開関数が対応表に登録されているか
+5. 既存コードが変更されていないか
 6. CRUDテーブルが要件定義書に含まれているか
 7. ドキュメント作成ルールを全て満たしているか
 
 ## 必須完了条件（これを満たすまで完了と報告してはならない）
 
-1. `docs/requirements.md` と `docs/detail_design.md` を作成すること
-2. `python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を bash で実行し、問題0件を確認すること
+1. `docs/requirements.md` と `docs/detail_design.md` を作成し、`docs/proposals.md` を削除すること
+2. `python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py docs/requirements.md` と `python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を bash で実行し、問題0件を確認すること
+3. `docs/trace_map.md` を作成し、`bash scripts/isdd/check.sh --strict` でエラー 0 件・警告 0 件を確認すること
 
 ---
 
 ## 次のステップ
 
-完了を報告する際に、ユーザーに次のスキルを提案する。
+完了を報告する際に、ユーザーに次を案内する。本スキルの完了で正本と対応表が揃い、プロジェクトは「isdd 運用あり」の状態になる。
 
-- `isdd-requirements` を実行して、逆引き提案をもとにインタビュー駆動で要件定義書を確定する
+- **既存コードに機能を追加・変更したい場合**: `isdd-change-req` を実行して変更要件定義から始める
+- **既存コードの仕様化だけが目的の場合**: ここで完了。以後コードを変えたら `isdd-post-implementation-review` で整合を確認する

@@ -6,10 +6,15 @@ RQ Integrity Checker Script
   要件定義書 (requirements.md) の内部整合性をチェックします。
   - IDフォーマット検証
   - RQ-BK 双方向マッピング検証
-  - 必須カテゴリ存在確認
+  - 必須カテゴリ存在確認（RQ-BK、RQ-BZ）
+
+変更要件定義書（change_requirements.md）の扱い:
+  [追加] または [削除] の区分を含む文書は変更要件定義書とみなす。変更要件定義書は
+  変更のない章を「変更なし。既存要件定義書を参照」と書くため、RQ-BZ が現れないことがある。
+  そのため必須カテゴリ存在確認は RQ-BK だけに緩め、その旨を出力に書く。
 
 使用方法:
-  python3 rq_integrity_checker.py <requirements.md>
+  python3 rq_integrity_checker.py <requirements.md | change_requirements.md>
 
 出力:
   - フォーマット違反一覧: 不正なRQ-* IDフォーマット
@@ -72,6 +77,7 @@ class RQIntegrityChecker:
         self.req_to_bks: Dict[str, Set[str]] = defaultdict(set)  # 非BK要件 → BK
         self.issues: List[str] = []
         self.content_lines: List[str] = []
+        self.is_change_doc: bool = False  # [追加] / [削除] の区分を含む変更要件定義書か
 
     def _extract_ids_from_text(self, text: str) -> List[str]:
         """テキストからRQ-* IDを抽出（無効ID除外）"""
@@ -145,8 +151,9 @@ class RQIntegrityChecker:
             )
 
     def check_required_categories(self):
-        """必須カテゴリ（RQ-BK, RQ-BZ）が存在するか確認する"""
-        for cat in REQUIRED_CATEGORIES:
+        """必須カテゴリ（RQ-BK, RQ-BZ）が存在するか確認する。変更要件定義書では RQ-BK だけを必須にする"""
+        required = {'BK'} if self.is_change_doc else REQUIRED_CATEGORIES
+        for cat in required:
             if not self.ids_by_category.get(cat):
                 self.issues.append(
                     f"✗ 必須カテゴリ欠落: RQ-{cat}-* が1件も見つかりません"
@@ -185,6 +192,9 @@ class RQIntegrityChecker:
 
         total = len(self.unique_ids)
         by_cat = {cat: len(ids) for cat, ids in self.ids_by_category.items()}
+        self.is_change_doc = any('[追加]' in line or '[削除]' in line for line in self.content_lines)
+        if self.is_change_doc:
+            print("文書種別: 変更要件定義書（[追加] / [削除] を検出）。RQ-BZ の存在確認は省く")
         print(f"検出: RQ-* ID 総数: {total}")
         for cat in sorted(VALID_CATEGORIES):
             count = by_cat.get(cat, 0)

@@ -5,16 +5,20 @@ RQ-DS Link Checker Script
 目的:
   要件定義書 (requirements.md) と詳細設計書 (detail_design.md) の
   要件ID (RQ-*) と設計ID (DS-*) の対応関係をチェックし、
-  欠落・重複・不整合を検出します。
+  欠落・不整合を検出します。
+  （1 つの DS-* が複数の RQ-* に対応することは isdd では正常な設計表現なので、重複は検出しません）
 
 使用方法:
   python3 rq_ds_link_checker.py <requirements.md> <detail_design.md>
 
 出力:
   - 対応欠落一覧: RQ-* にマッピングされていない DS-*、その逆
-  - 重複一覧: 複数の RQ-* にマッピングされている DS-*
   - 不整合一覧: マッピング構造の矛盾
-  - 検証サマリ: 総数、欠落数、重複数、不整合数
+  - 検証サマリ: 総数、欠落数、不整合数
+
+終了コード:
+  0: 問題なし
+  1: 1 件以上の問題あり、またはファイルを読めなかった
 """
 
 import re
@@ -195,15 +199,6 @@ class RQDSChecker:
                 f"  {', '.join(sorted(unmapped_rq))}"
             )
 
-    def check_duplicates(self):
-        """複数の RQ-* にマッピングされている DS-* をチェック（重複判定）。
-        
-        注意: isdd の命名規則では DS-ID のサフィックスが RQ-ID を一意に示すため、
-        共通化方針テーブルなどで DS-ID が複数 RQ-ID と同一行に出現することがある。
-        これは設計上の表現方法であり、真の重複ではないためこのチェックは実行しない。
-        """
-        pass  # 重複チェックは誤検知が多いため無効化
-
     def check_consistency(self):
         """マッピング構造の整合性をチェック"""
         for rq, ds_set in self.rq_to_ds.items():
@@ -231,7 +226,6 @@ class RQDSChecker:
         print(f"マッピング: RQ-DS 対応数: {sum(len(v) for v in self.rq_to_ds.values())}\n")
 
         self.check_coverage()
-        self.check_duplicates()
         self.check_consistency()
 
         return True
@@ -246,7 +240,6 @@ class RQDSChecker:
             print(f"  - RQ-* 総数: {len(self.rq_ids)}")
             print(f"  - DS-* 総数: {len(self.ds_ids)}")
             print(f"  - 欠落: 0件")
-            print(f"  - 重複: 0件")
             print(f"  - 不整合: 0件")
         else:
             print(f"✗ {len(self.issues)} 件の問題が検出されました:\n")
@@ -273,10 +266,12 @@ def main():
     ds_file = Path(sys.argv[2])
 
     checker = RQDSChecker(rq_file, ds_file)
-    if checker.run():
-        checker.report()
-    else:
+    if not checker.run():
         print("チェックに失敗しました")
+        sys.exit(1)
+    checker.report()
+    # 問題があれば終了コード 1 を返し、フックや CI で機械判定できるようにする
+    if checker.issues:
         sys.exit(1)
 
 

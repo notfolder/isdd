@@ -1,0 +1,26 @@
+{
+  "skill_name": "isdd-setup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-setupを実行してください。\nソースディレクトリは src です。",
+      "expected_output": "scripts/isdd/ にチェッカーと check.sh と pre-commit が生成され、AGENTS.md と CLAUDE.md に規則ブロックが追記され、チェッカーの実行結果とフックの可否が報告されること",
+      "files": [
+        "evals/isdd-setup/fixtures/docs/requirements.md",
+        "evals/isdd-setup/fixtures/docs/detail_design.md",
+        "evals/isdd-setup/fixtures/docs/trace_map.md",
+        "evals/isdd-setup/fixtures/src/hello.py"
+      ],
+      "expectations": [
+        "scripts/isdd/check.sh が存在すること",
+        "scripts/isdd/pre-commit が存在すること",
+        "scripts/isdd/trace_map_checker.py が存在すること",
+        "AGENTS.md と CLAUDE.md に isdd-setup:begin のマーカーで囲まれた規則ブロックがあること",
+        "src/hello.py が変更されていないこと",
+        "isdd_setup.py と scripts/isdd/check.sh が bash ツールで実行されること",
+        "最終報告にエージェントのフックを作ったか作れなかったかが明記されていること"
+      ],
+      "eval_name": "hello-world-setup"
+    }
+  ]
+}

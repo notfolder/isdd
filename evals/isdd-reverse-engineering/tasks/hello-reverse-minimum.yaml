@@ -1,8 +1,8 @@
 id: isdd-reverse-engineering-hello-001
 name: Hello World リバースエンジニアリング
 description: |
-  src/hello.py から要件定義書・設計書を逆引き生成し、
-  トレーサブルコメントを付与できるかを検証する。
+  src/hello.py から要件定義書・設計書を逆引き生成して正本を確定し、
+  コードに手を入れずに対応表（docs/trace_map.md）を作成できるかを検証する。
 
 tags:
   - isdd
@@ -29,11 +29,22 @@ inputs:
       これ以上の情報はありません。
       上記の情報をもとに今すぐ docs/requirements.md と docs/detail_design.md を作成してください。
 
+    # ターン3への応答: isdd-setup の導入やフックに関する確認があった場合
+    - |
+      ソースディレクトリは src、実行形態は CLI、認証なし、外部連携なしです。isdd-setup をそのまま実行して進めてください。
+      この環境ではエージェントのフックは作らなくて構いません。
+      続けて docs/trace_map.md を作成し、チェッカーを実行して完了してください。
+
+    # ターン4への応答: 追加質問があった場合の催促
+    - |
+      これ以上の情報はありません。今すぐ対応表を作成し、チェッカーを実行して完了報告をしてください。
+
   context:
     task_type: reverse-engineering-minimum
   files:
     - path: src/hello.py
     - path: .agents/skills/isdd-reverse-engineering/SKILL.md
+    - path: .agents/skills/isdd-setup/SKILL.md
     - path: .agents/skills/isdd-common/SKILL.md
     - path: .agents/skills/isdd-common/references/design-chapters.md
     - path: .agents/skills/isdd-common/references/design-completeness.md
@@ -42,9 +53,11 @@ inputs:
     - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
     - path: .agents/skills/isdd-common/references/id-definitions.md
     - path: .agents/skills/isdd-common/references/requirements-chapters.md
+    - path: .agents/skills/isdd-common/references/trace-map-rules.md
     - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_comment_coverage_checker.py
+    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
     - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
 
 expected:
@@ -87,6 +100,26 @@ graders:
 
         実行されていた場合は set_waza_grade_pass を呼び出してください。
         実行されていなかった場合は set_waza_grade_fail を呼び出してください。
+
+  - name: trace_map_created
+    type: file
+    config:
+      must_exist:
+        - "docs/trace_map.md"
+      content_patterns:
+        - path: "docs/trace_map.md"
+          must_match:
+            - "\\|\\s*DS-ID\\s*\\|\\s*修飾名\\s*\\|"
+            - "DS-MD-[A-Z0-9-]+[^\\n]*src/hello\\.py"
+            - "DS-FN-[A-Z0-9-]+[^\\n]*src/hello\\.py::HelloWorldPrinter\\.get_hello_message"
+
+  - name: code_untouched
+    type: file
+    config:
+      content_patterns:
+        - path: "src/hello.py"
+          must_not_match:
+            - "要件ID|設計ID|RQ-[A-Z]{2}-|DS-[A-Z]{2}-"
 
   - name: logic_preserved
     type: file
