@@ -4,28 +4,34 @@ set -u
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 mode="${1:-mock}"
 
-# .env ファイルが存在する場合は読み込む（既存の環境変数は上書きしない）
+# .env ファイルが存在する場合は読み込む（既に設定済みの環境変数は上書きしない。
+# 例: WAZA_CLAUDE_MODEL=claude-haiku-5-5 bash evals/run-all.sh claude は .env の値より優先される）
 env_file="$repo_root/.env"
 if [[ -f "$env_file" ]]; then
-    set -o allexport
-    # shellcheck source=/dev/null
-    source "$env_file"
-    set +o allexport
-    echo "[env] loaded: $env_file"
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # 空行・コメント・KEY=VALUE 以外は読み飛ばす
+        [[ "$line" =~ ^[[:space:]]*# ]] && continue
+        [[ "$line" =~ ^[[:space:]]*$ ]] && continue
+        [[ "$line" =~ ^[A-Za-z_][A-Za-z0-9_]*= ]] || continue
+        key="${line%%=*}"
+        if [[ -z "${!key+x}" ]]; then
+            eval "export $line"
+        fi
+    done < "$env_file"
+    echo "[env] loaded: ${env_file} (設定済みの変数は上書きしない)"
 fi
 
 usage() {
     echo "usage: $0 [mock|real|local|claude] [skill-name ...]" >&2
     echo "example: $0 real isdd-traceable-coding isdd-design" >&2
     echo "         $0 local isdd-requirements  # LM Studio (http://127.0.0.1:1234) を使用" >&2
-    echo "         $0 claude                  # Anthropic API (BYOK)。Haiku で実行し、失敗分だけ再試行と Sonnet 昇格" >&2
+    echo "         $0 claude                  # Anthropic API (BYOK)。Haiku で実行し、失敗分だけ同じモデルで 1 回再試行（昇格はしない）" >&2
     echo "  環境変数: WAZA_LOCAL_LM_STUDIO_URL (デフォルト: http://127.0.0.1:1234/v1)" >&2
     echo "            WAZA_LOCAL_MODEL        (デフォルト: local-model)" >&2
+    echo "            WAZA_LOCAL_TIMEOUT_SCALE (デフォルト: 10。local モードで timeout_seconds に掛ける倍率)" >&2
     echo "            ANTHROPIC_API_KEY       (claude モードで必須)" >&2
-    echo "            WAZA_CLAUDE_MODEL_PRIMARY   (デフォルト: claude-haiku-5-5)" >&2
-    echo "            WAZA_CLAUDE_MODEL_SECONDARY (デフォルト: claude-sonnet-5-5)" >&2
-    echo "            WAZA_CLAUDE_ESCALATE        (デフォルト: 1。0 で昇格しない)" >&2
-    echo "            WAZA_BIN                    (デフォルト: waza。フォーク版を使うときに指定)" >&2
+    echo "            WAZA_CLAUDE_MODEL       (デフォルト: claude-haiku-5-5)" >&2
+    echo "            WAZA_BIN                (デフォルト: waza。フォーク版を使うときに指定)" >&2
     echo "            COPILOT_CLI_PATH            (claude モード。未指定なら evals/.copilot-cli/ の CLI を自動使用)" >&2
 }
 
@@ -70,6 +76,9 @@ selected_skills=("$@")
 # COPILOT_BASE_URL はOpenAI互換エンドポイントとして Copilot SDK の BYOK 機能に渡される
 lm_studio_url="${WAZA_LOCAL_LM_STUDIO_URL:-http://127.0.0.1:1234/v1}"
 local_model="${WAZA_LOCAL_MODEL:-gemma-4-e4b-it-mlx}"
+# eval.copilot.yaml の timeout_seconds は Claude の実測の約 3 倍（5〜15 分）に設定してある。
+# ローカルモデルは遅いので、local モードではこの倍率を掛けた一時ファイルで実行する
+local_timeout_scale="${WAZA_LOCAL_TIMEOUT_SCALE:-10}"
 
 waza_run_env=()
 waza_model_flag=()
@@ -85,10 +94,10 @@ if [[ "$local_mode" == "true" ]]; then
     waza_model_flag=(--model "$local_model")
 fi
 
-# claudeモード: Anthropic API を BYOK で使う。Haiku → Haiku 再試行 → Sonnet 昇格
-claude_primary="${WAZA_CLAUDE_MODEL_PRIMARY:-claude-haiku-5-5}"
-claude_secondary="${WAZA_CLAUDE_MODEL_SECONDARY:-claude-sonnet-5-5}"
-claude_escalate="${WAZA_CLAUDE_ESCALATE:-1}"
+# claudeモード: Anthropic API を BYOK で使う。Haiku で 1 回目 → 失敗なら同じモデルで 1 回だけ再試行。
+# 強いモデルへの昇格はしない。Haiku で落ちたらスキルの質の問題として SKILL.md を直す（2026-10-17 の運用方針）。
+# 旧変数名 WAZA_CLAUDE_MODEL_PRIMARY も読む（.env の互換のため）。
+claude_model="${WAZA_CLAUDE_MODEL:-${WAZA_CLAUDE_MODEL_PRIMARY:-claude-haiku-5-5}}"
 if [[ "$claude_mode" == "true" ]]; then
     if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
         echo "claude モードには ANTHROPIC_API_KEY が必要です（.env に置くか環境変数で渡す）" >&2
@@ -104,7 +113,7 @@ if [[ "$claude_mode" == "true" ]]; then
             echo "[claude-mode] 注意: 新しい Copilot CLI が未導入です。Haiku 5.5 は waza 同梱ランタイムでは動きません。bash evals/install-copilot-cli.sh を実行してください" >&2
         fi
     fi
-    echo "[claude-mode] primary: $claude_primary / secondary: $claude_secondary / escalate: $claude_escalate / copilot cli: ${COPILOT_CLI_PATH:-(waza 同梱)}"
+    echo "[claude-mode] model: ${claude_model} (1 回目と再試行とも。昇格なし) / copilot cli: ${COPILOT_CLI_PATH:-(waza 同梱)}"
 fi
 
 # claude モード用: 指定モデルで waza を 1 回実行する環境変数を組み立てる
@@ -232,7 +241,6 @@ skill_is_selected() {
 summary_skills=()
 summary_first=()
 summary_retry=()
-summary_escalated=()
 
 # 1 回分の waza 実行。引数: eval_file skill_name fixtures_dir transcript_dir [model]
 run_one() {
@@ -251,6 +259,16 @@ run_one() {
 
   mkdir -p "$transcript_dir"
 
+  # local モードでは timeout_seconds を倍率で伸ばした一時 eval ファイルを同じディレクトリに作る
+  # （tasks/*.yaml の相対パスを保つため同じディレクトリに置く）
+  local eval_to_run="$eval_file" tmp_eval=""
+  if [[ "$local_mode" == "true" ]]; then
+    tmp_eval="$(dirname "$eval_file")/.eval.local.$$.yaml"
+    awk -v s="$local_timeout_scale" '/^[[:space:]]*timeout_seconds:[[:space:]]*[0-9]+/ { sub(/[0-9]+/, int($2 * s)) } { print }' "$eval_file" > "$tmp_eval"
+    eval_to_run="$tmp_eval"
+    echo "[local-mode] timeout_seconds を ${local_timeout_scale} 倍にした一時ファイルで実行: $tmp_eval"
+  fi
+
   if [[ -d "$fixtures_dir" ]]; then
     temp_context_dir="$(mktemp -d "${TMPDIR:-/tmp}/waza-context-${skill_name}-XXXXXX")"
     cp -R "$fixtures_dir"/. "$temp_context_dir"/
@@ -263,16 +281,18 @@ run_one() {
     if ! check_task_files "$skill_name" "$(dirname "$eval_file")" "$temp_context_dir"; then
       echo "==> [files-check] fix files: entries above before running eval" >&2
       rm -rf "$temp_context_dir"
+      [[ -n "$tmp_eval" ]] && rm -f "$tmp_eval"
       return 3
     fi
 
-    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_file" ${model_flag[@]+"${model_flag[@]}"} --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
+    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_to_run" ${model_flag[@]+"${model_flag[@]}"} --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
     exit_code=$?
     rm -rf "$temp_context_dir"
   else
-    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_file" ${model_flag[@]+"${model_flag[@]}"} --transcript-dir "$transcript_dir" --keep-workspace -v
+    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_to_run" ${model_flag[@]+"${model_flag[@]}"} --transcript-dir "$transcript_dir" --keep-workspace -v
     exit_code=$?
   fi
+  [[ -n "$tmp_eval" ]] && rm -f "$tmp_eval"
   return $exit_code
 }
 
@@ -305,38 +325,25 @@ for eval_file in "${files[@]}"; do
     continue
   fi
 
-  # claude モード: 1 回目（primary）→ 再試行（primary）→ 昇格（secondary）
-  first="FAIL"; retry="-"; escalated="-"
-  echo "==> [claude-mode] attempt 1: $claude_primary"
-  run_one "$eval_file" "$skill_name" "$fixtures_dir" "$transcript_dir/$claude_primary/attempt-1" "$claude_primary"
+  # claude モード: 1 回目 → 失敗なら同じモデルで 1 回だけ再試行。昇格はしない
+  first="FAIL"; retry="-"
+  echo "==> [claude-mode] attempt 1: $claude_model"
+  run_one "$eval_file" "$skill_name" "$fixtures_dir" "$transcript_dir/$claude_model/attempt-1" "$claude_model"
   exit_code=$?
   if [[ $exit_code -eq 0 ]]; then
     first="PASS"
   elif [[ $exit_code -eq 3 ]]; then
     first="FILES-ERROR"
   else
-    echo "==> [claude-mode] attempt 2 (retry): $claude_primary"
-    run_one "$eval_file" "$skill_name" "$fixtures_dir" "$transcript_dir/$claude_primary/attempt-2" "$claude_primary"
+    echo "==> [claude-mode] attempt 2 (retry): $claude_model"
+    run_one "$eval_file" "$skill_name" "$fixtures_dir" "$transcript_dir/$claude_model/attempt-2" "$claude_model"
     exit_code=$?
-    if [[ $exit_code -eq 0 ]]; then
-      retry="PASS"
-    else
-      retry="FAIL"
-      if [[ "$claude_escalate" == "1" ]]; then
-        echo "==> [claude-mode] attempt 3 (escalate): $claude_secondary"
-        run_one "$eval_file" "$skill_name" "$fixtures_dir" "$transcript_dir/$claude_secondary/attempt-3" "$claude_secondary"
-        exit_code=$?
-        if [[ $exit_code -eq 0 ]]; then escalated="PASS"; else escalated="FAIL"; fi
-      else
-        escalated="SKIP"
-      fi
-    fi
+    if [[ $exit_code -eq 0 ]]; then retry="PASS"; else retry="FAIL"; fi
   fi
 
   summary_skills+=("$skill_name")
   summary_first+=("$first")
   summary_retry+=("$retry")
-  summary_escalated+=("$escalated")
 
   if [[ $exit_code -ne 0 ]]; then
     failures=$((failures + 1))
@@ -346,13 +353,13 @@ for eval_file in "${files[@]}"; do
 done
 
 if [[ "$claude_mode" == "true" && ${#summary_skills[@]} -gt 0 ]]; then
-  echo "==> [claude-mode] 結果表（1 回目と再試行は ${claude_primary}、昇格は ${claude_secondary}）"
-  printf '| %-36s | %-11s | %-6s | %-6s |\n' "skill" "1回目" "再試行" "昇格"
-  printf '|%s|%s|%s|%s|\n' "--------------------------------------" "-------------" "--------" "--------"
+  echo "==> [claude-mode] 結果表（モデル: ${claude_model}）"
+  printf '| %-36s | %-11s | %-6s |\n' "skill" "1回目" "再試行"
+  printf '|%s|%s|%s|\n' "--------------------------------------" "-------------" "--------"
   for i in "${!summary_skills[@]}"; do
-    printf '| %-36s | %-11s | %-6s | %-6s |\n' "${summary_skills[$i]}" "${summary_first[$i]}" "${summary_retry[$i]}" "${summary_escalated[$i]}"
+    printf '| %-36s | %-11s | %-6s |\n' "${summary_skills[$i]}" "${summary_first[$i]}" "${summary_retry[$i]}"
   done
-  echo "  1回目が FAIL で後段が PASS のスキルは、弱いモデルで崩れる兆候として SKILL.md の見直し対象にする"
+  echo "  1回目が FAIL のスキルは、再試行で通ってもスキルの質の問題として SKILL.md を直す（昇格による救済はしない）"
   echo
 fi
 

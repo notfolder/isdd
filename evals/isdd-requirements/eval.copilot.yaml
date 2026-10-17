@@ -10,7 +10,7 @@ config:
   executor: copilot-sdk
   model: auto
   trials_per_task: 1
-  timeout_seconds: 6000
+  timeout_seconds: 600
   parallel: false
   instruction_files:
     - .agents/skills/isdd-common/references/id-definitions.md
