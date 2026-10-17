@@ -51,20 +51,11 @@ inputs:
     task_type: requirements-minimum
   files:
     - path: .agents/skills/isdd-requirements/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-requirements/references/document-rules.md
+    - path: .agents/skills/isdd-requirements/references/hearing-rules.md
+    - path: .agents/skills/isdd-requirements/references/id-definitions.md
+    - path: .agents/skills/isdd-requirements/references/requirements-chapters.md
+    - path: .agents/skills/isdd-requirements/scripts/rq_integrity_checker.py
 
 expected:
   outcomes:

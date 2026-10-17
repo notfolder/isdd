@@ -32,20 +32,14 @@ inputs:
   files:
     - path: docs/requirements.md
     - path: .agents/skills/isdd-design/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-design/references/design-chapters.md
+    - path: .agents/skills/isdd-design/references/design-completeness.md
+    - path: .agents/skills/isdd-design/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-design/references/document-rules.md
+    - path: .agents/skills/isdd-design/references/id-definitions.md
+    - path: .agents/skills/isdd-design/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-design/references/trace-map-rules.md
+    - path: .agents/skills/isdd-design/scripts/rq_ds_link_checker.py
 
 expected:
   outcomes:

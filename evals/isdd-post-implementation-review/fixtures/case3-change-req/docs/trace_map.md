@@ -1,6 +1,6 @@
 # 対応表（設計IDとコードの対応）
 
-書式は `.agents/skills/isdd-common/references/trace-map-rules.md` に従う。コードには ID を書かない。
+書式は isdd の対応表のルール（各スキルの `references/trace-map-rules.md`）に従う。コードには ID を書かない。
 
 | DS-ID | 修飾名 | 備考 |
 |---|---|---|

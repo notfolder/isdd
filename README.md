@@ -146,7 +146,6 @@ graph TD
 | isdd-setup | 対応表チェック（チェッカー複製・check.sh・pre-commit・AGENTS.md と CLAUDE.md の規則・実装完了チェックのプロファイル・エージェント自身のフック）をプロジェクトに導入する | scripts/isdd/（check.sh、completeness.json を含む）、.git/hooks/pre-commit、AGENTS.md、CLAUDE.md |
 | isdd-traceable-coding | 設計書にもとづいて実装し、設計 ID とコードの対応を対応表で管理する | 実装ソース、docs/trace_map.md |
 | isdd-post-implementation-review | 実装後に実装起因の要件・設計・対応表・コードの逆引き整合を検証し正本を確定する | docs/requirements.md、docs/detail_design.md、docs/trace_map.md（更新後）、未マッピング一覧、整合レポート |
-| isdd-common | 共通参照ルールを提供する基盤スキル | skills/isdd-common/references 配下の定義ファイル |
 
 ---
 
@@ -164,30 +163,48 @@ graph TD
 
 ## 共通リファレンスとスクリプト
 
-isdd-common の references 配下に全スキルで参照する共通ルール、scripts 配下に整合性検証スクリプトを格納します。
+全スキルで使う共通ルールとチェッカーの正本は `shared/` にあり、ビルドスクリプトで各スキルの `references/` と `scripts/` に複製して配る。
 
-### references/
+```mermaid
+graph LR
+    S[shared/references, shared/scripts<br>正本] -->|tools/build_skills.py<br>manifest.json の一覧どおりに複製| K[skills/各スキル/references, scripts]
+    K -->|gh skill publish| G[GitHub Release]
+    K -->|install.sh| A[.agents/skills/]
+    G -->|gh skill install| A2[各エージェントのスキル置き場]
+```
 
-| ファイル | 内容 |
-|---|---|
-| id-definitions.md | 要件 ID と設計 ID の定義 |
-| document-rules.md | 仕様書・設計書の記述ルール |
-| requirements-chapters.md | 要件定義書の章構成 |
-| design-chapters.md | 詳細設計書の章構成 |
-| design-completeness.md | 設計網羅性の確認ルール |
-| design-tasks-rules.md | 実装タスク化のルール |
-| hearing-complexity-rules.md | ヒアリング共通ルール |
-| trace-map-rules.md | 設計 ID とコードの対応表（docs/trace_map.md）の書式・粒度・チェック規則 |
+- 各スキルは自分のディレクトリの中だけを参照する（Agent Skills の仕様どおり、参照はスキルのルートからの相対パス）。スキルを 1 つだけ入れても動き、`.agents/skills/` 以外の置き場でもパスの読み替えが要らない。
+- どのスキルにどのファイルを複製するかは `shared/manifest.json` で決める。`skills/<スキル>/references/` と `scripts/` は手で編集しない。
+- 複製はリポジトリに含める。`gh skill publish` はリポジトリの内容をそのまま公開し、`install.sh` も `skills/` をそのまま展開するので、複製をコミットしておけば両者の中身が一致する。
+- `python3 tools/build_skills.py --check` が、複製が正本と一致するか、manifest に漏れが無いか、全スキルの `metadata.version` が揃っているかを確かめる。`install.sh`・`evals/run-all.sh`・GitHub Actions（`.github/workflows/skills-sync.yml`）がこれを実行し、不一致なら止まる。
 
-### scripts/
+### shared/references/
 
-| スクリプト | 用途 | 実行例 |
+| ファイル | 内容 | 複製先 |
+|---|---|---|
+| id-definitions.md | 要件 ID と設計 ID の定義 | 要件・設計・逆引き・外部調査・実装後レビュー |
+| document-rules.md | 仕様書・設計書の書き方と、作成後のレビュー | 要件・設計・逆引き・外部調査・実装後レビュー |
+| hearing-rules.md | ヒアリングの共通ルール（質問の出し方、複雑さの算定、用語の確定、GUI の 5 項目） | 要件・変更要件・逆引き・外部連携 2 本 |
+| requirements-chapters.md | 要件定義書の章構成 | 要件・変更要件・逆引き・外部調査 |
+| design-chapters.md | 詳細設計書の章構成と技術選定の手順 | 設計・変更設計・逆引き・外部調査 |
+| design-completeness.md | 設計網羅性のチェックリスト | 設計・変更設計・逆引き |
+| design-tasks-rules.md | 実装タスク化のルール | 設計・変更設計 |
+| requirement-exclusion.md | 最小設計の意味、要件除外ゲート、設計から要件へのフィードバック | 設計・変更設計 |
+| trace-map-rules.md | 設計 ID とコードの対応表（docs/trace_map.md）の書式・粒度・チェック規則 | 設計・変更設計・逆引き・実装・実装後レビュー |
+| external-credentials.md | 接続情報（.env）の扱いと接続テスト | 外部連携 2 本 |
+| subagent-delegation.md | サブエージェントへの委譲のしかた | 逆引き・外部調査 |
+
+### shared/scripts/
+
+| スクリプト | 用途 | 複製先と実行のしかた |
 | --- | --- | --- |
-| rq_integrity_checker.py | 要件定義書の RQ-* 内部整合性を検証（BKマッピング・フォーマット） | `python3 rq_integrity_checker.py docs/requirements.md` |
-| rq_ds_link_checker.py | 要件ID（RQ-*）と設計ID（DS-*）の対応欠落・不整合を検証し、未マッピング要件抽出の起点にする。問題があれば終了コード 1 | `python3 rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` |
-| trace_map_checker.py | 詳細設計書・対応表・コードの 3 者を突合し、壊れた参照（エラー）と未登録（警告）を検出。Python は構文木、TypeScript / JavaScript・Java・Go は正規表現で記号まで確認し、その他の言語はファイルの存在だけ確認する | `python3 trace_map_checker.py docs/detail_design.md docs/trace_map.md src/ --strict` |
-| implementation_completeness_checker.py | E2E・README・docs/trace_map.md の存在を機械確認。docker compose と「初期ユーザー」は scripts/isdd/completeness.json の実行形態・認証に応じて要求する | `python3 implementation_completeness_checker.py .` |
-| isdd_setup.py | チェッカーを scripts/isdd/ に複製し、check.sh と pre-commit と completeness.json を生成し、AGENTS.md と CLAUDE.md に規則を追記 | `python3 isdd_setup.py --src src --runtime cli --no-auth --no-external` |
+| rq_integrity_checker.py | 要件定義書の RQ-* 内部整合性を検証（BK マッピング・フォーマット） | 要件・変更要件・変更設計・逆引き。各スキルの同梱版を実行する |
+| rq_ds_link_checker.py | 要件 ID（RQ-*）と設計 ID（DS-*）の対応欠落・不整合を検証。問題があれば終了コード 1 | 設計・変更設計・逆引き・実装・実装後レビュー。各スキルの同梱版を実行する |
+| trace_map_checker.py | 詳細設計書・対応表・コードの 3 者を突合し、壊れた参照（エラー）と未登録（警告）を検出 | isdd-setup がプロジェクトの `scripts/isdd/` に複製し、`check.sh` から実行する |
+| implementation_completeness_checker.py | E2E・README・docs/trace_map.md の存在を機械確認。docker compose と「初期ユーザー」は completeness.json に応じて要求 | 同上（`python3 scripts/isdd/implementation_completeness_checker.py .`） |
+| isdd_setup.py | コード用チェッカーを scripts/isdd/ に複製して版を VERSION に記録し、check.sh・pre-commit・completeness.json を生成し、AGENTS.md と CLAUDE.md に規則を追記 | isdd-setup に同梱 |
+
+要件・設計のチェッカーは各スキルの同梱版を、コードのチェッカーはプロジェクトの `scripts/isdd/` の複製（pre-commit と同じもの）を使う。`scripts/isdd/VERSION` がスキルの版と違えば、スキルが `isdd-setup` の再実行を案内する。
 
 ### 実装後逆引き整合の共通部品
 
@@ -222,12 +239,14 @@ graph LR
 
 ## GitHub Skill 公開手順
 
-スキルの編集は `skills/` 配下で直接行い、`gh skill publish` で GitHub に公開します。
+SKILL.md の編集は `skills/` 配下で、共通ファイルの編集は `shared/` 配下で行い、`gh skill publish` で GitHub に公開します。
 
 ### 事前確認
 
-1. `skills/` 配下の各 SKILL.md の frontmatter に `license` フィールドが含まれていることを確認する。
-2. 公開前に dry-run を実行し、エラーがないことを確認する。
+1. 共通ファイルを変えたら `python3 tools/build_skills.py` で各スキルへ複製し、複製もコミットする。
+2. `python3 tools/build_skills.py --check` が「一致」で終わることを確認する（全スキルの `metadata.version` が揃っていることも確かめる）。
+3. `skills/` 配下の各 SKILL.md の frontmatter に `license` フィールドが含まれていることを確認する。
+4. 公開前に dry-run を実行し、エラーがないことを確認する。
 
 ### dry-run（検証のみ）
 
@@ -334,11 +353,23 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 #### 新規追加
 
 - `isdd-setup` スキルを新規追加。チェッカーを `scripts/isdd/` に複製し、`check.sh` と pre-commit を生成し、`AGENTS.md` と `CLAUDE.md` に規則を追記する。応答終了時のフックはエージェント自身に自分の環境向けに作らせ、作れない環境では作らない。
-- `isdd-common/scripts/trace_map_checker.py` を追加。詳細設計書・対応表・コードの 3 者を突合し、壊れた参照をエラー、未登録を警告として報告する。
-- `isdd-common/scripts/isdd_setup.py` を追加。
-- `isdd-common/references/trace-map-rules.md` を追加。対応表の書式・粒度・チェック規則。
+- `trace_map_checker.py` を追加（現在の正本は `shared/scripts/`）。詳細設計書・対応表・コードの 3 者を突合し、壊れた参照をエラー、未登録を警告として報告する。
+- `isdd_setup.py` を追加（現在の正本は `shared/scripts/`）。
+- `trace-map-rules.md` を追加（現在の正本は `shared/references/`）。対応表の書式・粒度・チェック規則。
 - `evals/run-all.sh` に `claude` モードを追加。Anthropic API（BYOK）で Haiku を既定に回し、失敗した eval だけ同じモデルで 1 回再試行する。当初あった Sonnet への昇格は、「Haiku で落ちたらスキルの質が悪いと判断する」方針に合わせて削除（`WAZA_CLAUDE_MODEL_SECONDARY`・`WAZA_CLAUDE_ESCALATE` を廃止、`WAZA_CLAUDE_MODEL_PRIMARY` は `WAZA_CLAUDE_MODEL` に改名。旧名も読む）。
 - `evals/install-copilot-cli.sh` を追加。waza 同梱の Copilot ランタイム（1.0.85）は Haiku 5.5 に旧式の思考設定を送って 400 になるため、新しい Copilot CLI を `evals/.copilot-cli/` に入れて `run-all.sh claude` が自動で使う。
+
+#### 構成の変更（スキルの書き方の見直しと共通部分の共有方式）
+
+- **共通スキル `isdd-common` を廃止し、共通ファイルを各スキルに同梱する方式に変更。** 兄弟スキルを `.agents/skills/isdd-common/...` で参照する方式は Agent Skills の仕様の外で、スキルを 1 つだけ入れた場合や置き場が違う場合に壊れた。正本を `shared/` に移し、`tools/build_skills.py` が `shared/manifest.json` の一覧どおりに各スキルの `references/` と `scripts/` へ複製する。複製はコミットし、`gh skill publish` と `install.sh` で中身が一致する（`install.sh` は `--check` で不一致なら止まり、スキル単位で過不足なく展開し、旧版の `isdd-common` を削除する）。
+- **チェッカーの実行元を一本化。** 要件・設計のチェッカー（`rq_*.py`）は各スキルの同梱版を実行し、コードのチェッカーはプロジェクトの `scripts/isdd/` の複製を使う。`isdd_setup.py` は `rq_*.py` を複製しなくなり、旧版の複製を削除し、版を `scripts/isdd/VERSION` に記録する。各スキルは VERSION と自分の版を比べ、違えば `isdd-setup` の再実行を案内する。
+- **最近のモデル向けに指示の書き方を見直し。** 役割指定（「あなたは〜として振る舞う」）を目的の文に置き換え、「必ず」「絶対」「禁止」などの強調（SKILL.md で計 135 か所）を、本当に変わらない規則だけ平叙文で残して理由を添える形に変更。description を「何をするか＋いつ使うか＋使わない場面」で書き、二重の「必ず使うこと」を削除（isdd-requirements と isdd-change-req の守備範囲を明記）。
+- **共通部分を reference に集約。** ヒアリングのルール（2 系統に分かれ三重に書かれていた）を `hearing-rules.md`（旧 `hearing-complexity-rules.md`）に統合。最小設計と要件除外ゲート、設計から要件へのフィードバックを `requirement-exclusion.md` に、`.env` の扱いを `external-credentials.md` に、サブエージェントへの委譲を `subagent-delegation.md` に切り出した。作成後のレビューの共通項目は `document-rules.md` に置いた。reference から別の reference のパスを指す記述を無くし、参照を SKILL.md から 1 段にした。`isdd-reverse-engineering` が別スキルの本文（レビュー手順、完全性制約）に依存していた箇所を reference の参照に置き換えた。
+- 実装に無い「ID 重複一覧」の記述（isdd-requirements・isdd-change-req・isdd-traceable-coding）を削除。
+- `isdd-change-design` の事前確認から「既存コードがあれば先に isdd-reverse-engineering」を削除（変更フローでは既存コードが常にあり、逆引きの完了後は変更要件定義へ進むため矛盾していた）。
+- `isdd-post-implementation-review` は `scripts/isdd/check.sh` が無ければ先に `isdd-setup` を実行する（`trace_map_checker.py` を直接呼ぶ代替経路を削除）。
+- `skills/gen_eval_metadata.py` を `tools/` に移動（公開対象の `skills/` にスキル以外のファイルを置かない）。
+- `evals/run-all.sh` の事前検査を、eval が SKILL.md を挙げたスキルのファイルをすべて列挙しているかの確認に変更し、開始時に `build_skills.py --check` を実行する。
 
 #### 変更
 
@@ -355,7 +386,6 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 - Haiku の eval で 1 回目に落ちた 2 件を受けて、`design-chapters.md` に「12. 要件と設計の対応表」の章を追加（`rq_ds_link_checker.py` が対応の根拠にする表を設計書の必須章にした）。`isdd-post-implementation-review` の手順 5 に「未マッピング一覧」の表の列と、該当なしでも表を出す規則を追加（一覧を文章で済ませて採点に落ちたため）。
 - サブエージェント `code-structure-analyzer`・`external-research-investigator`・`db-schema-extractor` の起動指示を削除。定義ファイルがリポジトリに無く、存在しないエージェント名の起動指示になっていた。「サブエージェント機能があれば汎用のサブエージェントに次の指示で委譲し、無ければ本体で実施する」に書き換え、渡す指示文をスキル本文に置いた。
 - `isdd-external-research` に残っていた旧方式（コードへの ID コメント付与、仮 ID コメントの確認）を削除し、`external/[システム名]/src` を対応表の対象に含めることを `trace-map-rules.md` に明記。引き継ぎ先の見出しを `isdd-design` / `isdd-change-design` に修正。
-- 全スキルに「共通リソースの場所」の注記を追加。本文の `.agents/skills/isdd-common/...` は配置先の一例で、`gh skill install` はエージェントごとのディレクトリに置くため、自分の SKILL.md と同じ親ディレクトリの `isdd-common/` に読み替える。
 - `hearing-complexity-rules.md` の「MVP 適合性」を「最小案との関係」に改め、同じファイル内の「MVP という語をユーザーに伝えない」との矛盾を解消。
 - `isdd-requirements`・`isdd-change-req` の「事前確認」節が開始ゲートと同内容だったため削除し、ペルソナ文を冒頭へ移動。`isdd-change-req` の技術制約の記録先を変更要件定義書に修正。誤字（「片恋」「基本方针」）を修正。`design-chapters.md` の見出しレベルを揃え、`document-rules.md` に起動・テスト実行コマンド 1 行はコード例に当たらないことを明記。
 - `isdd-reverse-engineering` は既存コードに一切手を入れず、対応表を作る方式に変更。

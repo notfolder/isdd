@@ -40,6 +40,13 @@ if [[ ! -d "$repo_root/skills" ]]; then
   exit 1
 fi
 
+# 各スキルの references/ と scripts/ が shared/ の正本と一致しているかを確かめる。
+# 一致していないと、公開・install.sh で配る中身と eval で試す中身が食い違うため、止める。
+if ! python3 "$repo_root/tools/build_skills.py" --check; then
+  echo "==> skills/ の複製が shared/ と一致しません。python3 tools/build_skills.py を実行してから再実行してください" >&2
+  exit 1
+fi
+
 claude_mode=false
 case "$mode" in
   mock)
@@ -168,7 +175,7 @@ print_skill_fingerprint() {
 
 # Check that task files: entries are complete and exist in context-dir.
 # ERROR: skill: field is missing in eval yaml
-# ERROR: any file under skills/{skill} or isdd-common is not listed
+# ERROR: any file of a skill whose SKILL.md is listed is not listed (skills/{skill}/evals is excluded)
 # ERROR: listed file does not exist in context-dir
 check_task_files() {
   local skill_name="$1"
@@ -193,19 +200,31 @@ check_task_files() {
   listed_paths=$(grep -h "^    - path:" "$eval_dir/tasks/"*.yaml 2>/dev/null \
     | sed 's/^    - path:[[:space:]]*//' | sed 's/[[:space:]]*$//' | tr -d '"'"'")
 
-  # 2. All files under skills/{skill} and isdd-common must be listed
-  #    __pycache__, .pyc, .DS_Store files are excluded from the check
-  for check_subdir in ".agents/skills/$skill_name" ".agents/skills/isdd-common"; do
-    local full_dir="$repo_root/$check_subdir"
-    [[ -d "$full_dir" ]] || continue
+  # 2. For every skill whose SKILL.md is listed, all files under skills/{skill} must be listed
+  #    (evals/, __pycache__, .pyc, .DS_Store are excluded from the check)
+  local listed_skills
+  listed_skills=$(printf '%s\n' "$listed_paths" | sed -n 's#^\.agents/skills/\([^/]*\)/SKILL\.md$#\1#p' | sort -u)
+  if ! printf '%s\n' "$listed_skills" | grep -qxF "$skill_name"; then
+    echo "  [ERROR] not listed: .agents/skills/$skill_name/SKILL.md" >&2
+    has_error=1
+  fi
+  local listed_skill
+  while IFS= read -r listed_skill; do
+    [[ -z "$listed_skill" ]] && continue
+    local full_dir="$repo_root/skills/$listed_skill"
+    if [[ ! -d "$full_dir" ]]; then
+      echo "  [ERROR] skill not found: skills/$listed_skill" >&2
+      has_error=1
+      continue
+    fi
     while IFS= read -r full_path; do
-      local rel_path="${full_path#$repo_root/}"
+      local rel_path=".agents/skills/$listed_skill/${full_path#$full_dir/}"
       if ! printf '%s\n' "$listed_paths" | grep -qxF "$rel_path"; then
         echo "  [ERROR] not listed: $rel_path" >&2
         has_error=1
       fi
-    done < <(find "$full_dir" -type f -not -path "*/__pycache__/*" -not -name "*.pyc" -not -name ".DS_Store" | sort)
-  done
+    done < <(find "$full_dir" -type f -not -path "$full_dir/evals/*" -not -path "*/__pycache__/*" -not -name "*.pyc" -not -name ".DS_Store" | sort)
+  done <<< "$listed_skills"
 
   # 3. All listed files must exist in context-dir
   while IFS= read -r rel_path; do

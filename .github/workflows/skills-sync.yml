@@ -1,0 +1,19 @@
+name: skills-sync
+
+# 各スキルに複製した共通ファイル（skills/*/references, skills/*/scripts）が shared/ の正本と一致するかを確かめる。
+# gh skill publish はリポジトリの内容をそのまま公開するため、不一致のまま main に入ると古い複製が配られる。
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 複製と正本の一致を確認
+        run: python3 tools/build_skills.py --check

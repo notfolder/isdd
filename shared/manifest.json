@@ -1,0 +1,45 @@
+{
+  "_comment": "各スキルに複製する共通ファイルの一覧。正本は shared/ 配下。複製は python3 tools/build_skills.py で作り、skills/<スキル>/references/ と scripts/ は手で編集しない。",
+  "skills": {
+    "isdd-requirements": {
+      "references": ["hearing-rules.md", "id-definitions.md", "requirements-chapters.md", "document-rules.md"],
+      "scripts": ["rq_integrity_checker.py"]
+    },
+    "isdd-change-req": {
+      "references": ["hearing-rules.md", "id-definitions.md", "requirements-chapters.md", "document-rules.md"],
+      "scripts": ["rq_integrity_checker.py"]
+    },
+    "isdd-external-precheck": {
+      "references": ["hearing-rules.md", "external-credentials.md"],
+      "scripts": []
+    },
+    "isdd-external-research": {
+      "references": ["hearing-rules.md", "id-definitions.md", "requirements-chapters.md", "design-chapters.md", "document-rules.md", "external-credentials.md", "subagent-delegation.md"],
+      "scripts": []
+    },
+    "isdd-design": {
+      "references": ["id-definitions.md", "document-rules.md", "design-chapters.md", "design-completeness.md", "design-tasks-rules.md", "requirement-exclusion.md", "trace-map-rules.md"],
+      "scripts": ["rq_ds_link_checker.py"]
+    },
+    "isdd-change-design": {
+      "references": ["id-definitions.md", "document-rules.md", "design-chapters.md", "design-completeness.md", "design-tasks-rules.md", "requirement-exclusion.md", "trace-map-rules.md"],
+      "scripts": ["rq_integrity_checker.py", "rq_ds_link_checker.py"]
+    },
+    "isdd-setup": {
+      "references": [],
+      "scripts": ["isdd_setup.py", "trace_map_checker.py", "implementation_completeness_checker.py"]
+    },
+    "isdd-traceable-coding": {
+      "references": ["trace-map-rules.md"],
+      "scripts": ["rq_ds_link_checker.py"]
+    },
+    "isdd-post-implementation-review": {
+      "references": ["id-definitions.md", "document-rules.md", "trace-map-rules.md"],
+      "scripts": ["rq_ds_link_checker.py"]
+    },
+    "isdd-reverse-engineering": {
+      "references": ["hearing-rules.md", "id-definitions.md", "requirements-chapters.md", "design-chapters.md", "design-completeness.md", "document-rules.md", "trace-map-rules.md", "subagent-delegation.md"],
+      "scripts": ["rq_integrity_checker.py", "rq_ds_link_checker.py"]
+    }
+  }
+}
