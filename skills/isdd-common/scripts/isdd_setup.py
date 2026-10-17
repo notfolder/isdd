@@ -9,13 +9,19 @@ isdd の対応表チェックをプロジェクトに組み込むセットアッ
   2. scripts/isdd/check.sh を生成する（対応表チェックの唯一の入口。エージェントのフックも pre-commit もこれを呼ぶ）
   3. scripts/isdd/pre-commit を生成し、.git/hooks/pre-commit に組み込む（.git が無い場合は組み込みを省略して報告する）
   4. AGENTS.md と CLAUDE.md に isdd のトレーサビリティ規則を追記する（マーカーで囲み、再実行時は置き換える）
+  5. scripts/isdd/completeness.json（実装完了チェックのプロファイル）を生成する。
+     実行形態・認証の有無・外部連携の有無を記録し、implementation_completeness_checker.py が
+     docker compose や「初期ユーザー」を要求するかどうかの判断に使う
 
 行わないこと:
   - エージェント固有のフック設定の生成（エージェント自身が自分の環境向けに作る。作れない場合は作らない）
 
 使用方法:
   python3 .agents/skills/isdd-common/scripts/isdd_setup.py --src src [--src another_dir]
-      [--design docs/detail_design.md] [--map docs/trace_map.md] [--skills-dir .agents/skills]
+      [--runtime container|cli|server|desktop|library|unspecified] [--auth|--no-auth] [--external|--no-external]
+      [--e2e-dir e2e] [--design docs/detail_design.md] [--map docs/trace_map.md] [--skills-dir .agents/skills]
+
+  --runtime、--auth、--external は詳細設計書の第 1 章（実行形態）、第 6 章（認証の有無）、第 4 章（外部連携の有無）から読み取って渡す。
 
 終了コード:
   0: 完了（省略した項目があっても報告済みなら 0）
@@ -23,11 +29,13 @@ isdd の対応表チェックをプロジェクトに組み込むセットアッ
 """
 
 import argparse
-import os
+import json
 import shutil
 import stat
 import sys
 from pathlib import Path
+
+RUNTIMES = ("container", "cli", "server", "desktop", "library", "unspecified")
 
 CHECKER_FILES = (
     "trace_map_checker.py",
@@ -81,6 +89,15 @@ def main() -> int:
     parser.add_argument("--map", default="docs/trace_map.md")
     parser.add_argument("--skills-dir", default=".agents/skills")
     parser.add_argument("--project-root", default=".")
+    parser.add_argument("--runtime", choices=RUNTIMES, default="unspecified",
+                        help="実行形態（詳細設計書の第 1 章から読み取る）。container のときだけ docker compose を要求する")
+    parser.add_argument("--auth", dest="auth", action="store_true", default=False,
+                        help="認証がある（README に「初期ユーザー」を要求する）")
+    parser.add_argument("--no-auth", dest="auth", action="store_false", help="認証が無い")
+    parser.add_argument("--external", dest="external", action="store_true", default=False,
+                        help="外部連携がある（E2E を mock モードで回す前提）")
+    parser.add_argument("--no-external", dest="external", action="store_false", help="外部連携が無い")
+    parser.add_argument("--e2e-dir", default="e2e", help="E2E テストの置き場所")
     args = parser.parse_args()
 
     root = Path(args.project_root).resolve()
@@ -162,6 +179,22 @@ def main() -> int:
     for name in ("AGENTS.md", "CLAUDE.md"):
         report.append(upsert_block(root / name, block))
 
+    # 5. 実装完了チェックのプロファイル
+    profile = {
+        "runtime": args.runtime,
+        "auth": bool(args.auth),
+        "external": bool(args.external),
+        "e2e_dir": args.e2e_dir,
+    }
+    profile_path = dest / "completeness.json"
+    profile_path.write_text(json.dumps(profile, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    report.append(
+        f"生成: {profile_path}（実行形態 {args.runtime} / 認証 {'あり' if args.auth else 'なし'} / "
+        f"外部連携 {'あり' if args.external else 'なし'} / E2E {args.e2e_dir}）"
+    )
+    if args.runtime == "unspecified":
+        report.append("注意: --runtime が未指定のため docker compose は要求しない。詳細設計書の第 1 章に実行形態があれば --runtime を付けて再実行する")
+
     print("isdd-setup 完了")
     print("-" * 50)
     for line in report:
@@ -171,6 +204,8 @@ def main() -> int:
     print("  1. `bash scripts/isdd/check.sh` を一度実行して、チェッカーが動くことを確かめる")
     print("  2. エージェントの実行環境に「応答終了時に `bash scripts/isdd/check.sh` を実行する」フックを")
     print("     設定できる場合だけ設定する。応答終了時のイベントやフック機能が無ければ設定せず、その旨を報告する")
+    print("  3. `python3 scripts/isdd/implementation_completeness_checker.py .` の冒頭に出る実行形態・認証・外部連携が")
+    print("     詳細設計書と合っているか確かめる。違えば --runtime / --auth / --external を付けて再実行する")
     return 0
 
 

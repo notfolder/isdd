@@ -21,10 +21,16 @@ inputs:
       これ以上の情報はありません。
       上記の情報をもとに今すぐ change_detail_design.md を作成してください。
 
-    # ターン2への応答: tasks.md 作成の催促
+    # ターン2への応答: 正本反映と tasks.md 作成の催促
     - |
       これ以上の情報はありません。
-      今すぐ tasks.md も作成してください。
+      正本への反映（docs/requirements.md と docs/detail_design.md の更新）を承認します。
+      反映とチェッカーの実行を行い、tasks.md も作成してください。
+
+    # ターン3への応答: 追加質問があった場合の催促
+    - |
+      これ以上の情報はありません。
+      今すぐ docs/requirements.md と docs/detail_design.md への反映と tasks.md の作成を完了してください。
 
   context:
     task_type: change-design-minimum
@@ -78,8 +84,8 @@ graders:
 
         確認条件:
         - tasks.md が存在する
-        - ファイル内に docs/requirements.md への反映に関するタスクが記載されている
-        - ファイル内に docs/detail_design.md への反映に関するタスクが記載されている
+        - ファイル内に docs/requirements.md と docs/detail_design.md への反映が完了していることを確認するタスク（正本反映の確認タスク）が記載されている
+        - ファイル内に対応表（docs/trace_map.md）の更新タスクが記載されている
 
   - name: ds_ids_present
     type: prompt
@@ -112,18 +118,54 @@ graders:
         - ファイル内に「[追加]」という文字列が存在する
         - ファイル内に「[削除]」という文字列が存在する
 
-  - name: existing_docs_unchanged
+  - name: canonical_docs_updated
     type: file
     config:
       content_patterns:
-        - path: "docs/detail_design.md"
+        - path: "docs/requirements.md"
           must_match:
-            - "DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD"
-            - "DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD"
-            - "DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE"
+            - "RQ-FT-GET-CURRENT-TIME"
+            - "RQ-FT-BUILD-TIMESTAMPED-MESSAGE"
+            - "RQ-FT-PRINT-TIMESTAMPED-OUTPUT"
+            - "RQ-BK-EXECUTION-TIME-UNIDENTIFIABLE"
           must_not_match:
             - "\\[追加\\]"
             - "\\[削除\\]"
+            - "RQ-FT-GET-HELLO-MESSAGE"
+        - path: "docs/detail_design.md"
+          must_match:
+            - "DS-FN-[A-Z0-9-]*GET-CURRENT-TIME"
+            - "DS-FN-[A-Z0-9-]*BUILD-TIMESTAMPED-MESSAGE"
+            - "DS-FN-[A-Z0-9-]*PRINT-TIMESTAMPED-OUTPUT"
+            - "DS-MD-[A-Z0-9-]+"
+          must_not_match:
+            - "\\[追加\\]"
+            - "\\[削除\\]"
+            - "DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE"
+
+  - name: history_docs_kept
+    type: file
+    config:
+      must_exist:
+        - ".history/20260508-add-timestamp-to-hello-world/change_requirements.md"
+      content_patterns:
+        - path: ".history/20260508-add-timestamp-to-hello-world/change_requirements.md"
+          must_match:
+            - "\\[追加\\]"
+            - "\\[削除\\]"
+
+  - name: canonical_checkers_pass
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        bash ツールで以下の 2 つのコマンドを実行してください。
+
+        python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py docs/requirements.md
+        python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md
+
+        両方の実行結果に「全てのチェックに合格しました」が含まれる場合は set_waza_grade_pass を呼び出してください。
+        どちらかが合格しない場合は set_waza_grade_fail を呼び出してください。
 
   - name: rq_ds_link_checker_pass
     type: prompt

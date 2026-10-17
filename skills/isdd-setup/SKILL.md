@@ -13,6 +13,11 @@ metadata:
 
 # isdd-setup — 対応表チェック導入スキル
 
+## 共通リソースの場所
+
+本文中の `.agents/skills/isdd-common/...` は配置先の一例で、`gh skill install` はエージェントごとのディレクトリ（`.agents/skills/`、`.claude/skills/`、`.github/skills/`、ユーザースコープならホーム配下）にスキルを置く。実際には、このスキル（SKILL.md）と同じ親ディレクトリにある `isdd-common/` を読む。チェッカーは `isdd-setup` 済みのプロジェクトなら `scripts/isdd/` の複製を実行してもよい。
+
+
 あなたは isdd の導入担当として振る舞い、プロジェクトに対応表チェックを組み込む。
 この作業は冪等で、何度実行しても同じ状態になる。
 
@@ -24,19 +29,24 @@ metadata:
 | `scripts/isdd/check.sh` | 対応表チェックの唯一の入口。エージェントのフックも pre-commit もこれを呼ぶ |
 | `scripts/isdd/pre-commit` と `.git/hooks/pre-commit` | 対応表の壊れた参照（エラー）だけでコミットを止める。未登録（警告）は表示だけ |
 | `AGENTS.md` と `CLAUDE.md` の規則ブロック | スキルが起動していない時でも、エージェントが対応表を更新しチェックを実行するように指示する |
+| `scripts/isdd/completeness.json` | 実装完了チェックのプロファイル。実行形態・認証の有無・外部連携の有無を記録し、docker compose や「初期ユーザー」を要求するかどうかを決める |
 | エージェントのフック設定 | 応答終了時に `bash scripts/isdd/check.sh` を実行する。作れる環境でだけ作る |
 
 ## 手順
 
-1. ソースディレクトリを特定する。`docs/detail_design.md` のコード設計章にディレクトリ構成があればそれを使い、無ければ `src` を既定にする。判断がつかない場合だけユーザーに確認する。
-2. 次を **bash で必ず実行**する（ソースディレクトリが複数なら `--src` を繰り返す）。
+1. `docs/detail_design.md` から次を読み取る。設計書が無い、または記載が無い項目は、ユーザーに確認する。
+   - ソースディレクトリ: コード設計章のディレクトリ構成。無ければ `src` を既定にする
+   - 実行形態（`--runtime`）: 第 1 章の選定結果。`container`（docker compose で動かす）、`cli`、`server`（コンテナを使わないサーバー）、`desktop`、`library` のいずれか。読み取れなければ `unspecified`
+   - 認証の有無（`--auth` / `--no-auth`）: セキュリティ設計にログインや利用者認証があるか
+   - 外部連携の有無（`--external` / `--no-external`）: 外部システム連携の章に連携先があるか
+2. 次を **bash で必ず実行**する（ソースディレクトリが複数なら `--src` を繰り返す。例は CLI・認証なし・外部連携なしの場合）。
 
    ```bash
-   python3 .agents/skills/isdd-common/scripts/isdd_setup.py --src src
+   python3 .agents/skills/isdd-common/scripts/isdd_setup.py --src src --runtime cli --no-auth --no-external
    ```
 
    - `.agents/skills` 以外にスキルが置かれている場合は `--skills-dir` で指定する。
-   - 出力の「省略」行はそのまま報告に写す（`.git` が無い、既存の pre-commit がある、など）。
+   - 出力の「省略」行と「注意」行はそのまま報告に写す（`.git` が無い、既存の pre-commit がある、実行形態が未指定、など）。
 3. チェッカーが動くことを確かめる。`docs/trace_map.md` が無いプロジェクト（実装前）では「対応表が見つかりません」のエラーで終わるが、スクリプト自体が動いたことを確認できればよい。
 
    ```bash
@@ -53,6 +63,7 @@ metadata:
 ## 報告に含めること
 
 - 複製・生成・組み込みしたファイルの一覧
+- `completeness.json` に記録した実行形態・認証・外部連携と、その根拠（設計書のどこから読んだか、またはユーザー回答）
 - 省略した項目とその理由（`.git` が無い、既存フックがある、応答終了時のイベントが無い）
 - エージェントのフックを作ったか、作った場合はその場所と呼び出すコマンド
 - チェッカーを 1 回実行した結果
@@ -62,6 +73,7 @@ metadata:
 - [ ] `isdd_setup.py` を bash で実行し、出力をレスポンスに貼り付けた
 - [ ] `bash scripts/isdd/check.sh` を実行し、結果をレスポンスに貼り付けた
 - [ ] `AGENTS.md` と `CLAUDE.md` に規則ブロックがある
+- [ ] `scripts/isdd/completeness.json` の実行形態・認証・外部連携が詳細設計書（またはユーザー回答）と一致している
 - [ ] エージェントのフックについて、作った・作れなかったのどちらかを明記した
 
 ## 次のステップ

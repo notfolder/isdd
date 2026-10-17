@@ -36,6 +36,12 @@ Trace Map Checker Script
   アンダースコア始まりの名前（_private、__dunder__）は対象外。
   テストファイル（test_*.py、*_test.py、*.spec.ts、*.test.ts、conftest.py）は対象外。
   node_modules、.venv、venv、__pycache__、dist、build、.git 配下は対象外。
+
+言語の扱い:
+  記号（クラス・関数・メソッド）まで確認できる言語: Python（ast）、TypeScript / JavaScript、Java、Go（正規表現で近似）
+  ファイルの存在だけ確認する言語: それ以外の一般的なソース拡張子（C#、Ruby、PHP、Kotlin、Swift、Rust、C/C++ など）。
+    これらのファイルを指す「::名前」付きの修飾名は、ファイルが存在すれば「確認対象外」として数え、エラーにも警告にもしない。
+    対応表に未登録のファイルは、どの言語でも警告にする。
 """
 
 import ast
@@ -52,22 +58,42 @@ TEST_FILE_PATTERNS = (
     re.compile(r'^test_.*\.py$'),
     re.compile(r'.*_test\.py$'),
     re.compile(r'^conftest\.py$'),
-    re.compile(r'.*\.spec\.ts$'),
-    re.compile(r'.*\.test\.ts$'),
-    re.compile(r'.*\.spec\.tsx$'),
-    re.compile(r'.*\.test\.tsx$'),
+    re.compile(r'.*\.spec\.[jt]sx?$'),
+    re.compile(r'.*\.test\.[jt]sx?$'),
     re.compile(r'.*_test\.go$'),
     re.compile(r'.*Test\.java$'),
+    re.compile(r'.*Tests?\.cs$'),
+    re.compile(r'.*_spec\.rb$'),
+    re.compile(r'.*_test\.rb$'),
+    re.compile(r'.*Test\.php$'),
+    re.compile(r'.*Test\.kt$'),
+    re.compile(r'.*Tests\.swift$'),
 )
+
+# 記号（クラス・関数・メソッド）まで抽出できる言語
+SYMBOL_LANGS = {'.py', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.java', '.go'}
+# ファイルの存在だけ確認する言語（記号の抽出はしない）
+FILE_ONLY_LANGS = {
+    '.cs', '.rb', '.php', '.kt', '.kts', '.swift', '.rs', '.c', '.h', '.cpp', '.hpp', '.cc', '.hh',
+    '.scala', '.dart', '.vue', '.svelte', '.sh', '.bash', '.pl', '.pm', '.lua', '.ex', '.exs', '.erl',
+    '.hs', '.ml', '.fs', '.clj', '.cljs', '.m', '.mm', '.r', '.jl', '.groovy', '.ps1', '.vb', '.sql',
+}
+TS_LIKE_LANGS = {'.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'}
 
 # Python 以外は正規表現で近似抽出する（クラス所属は判定しない）
 REGEX_LANGS = {
     '.ts': {
-        'function': re.compile(r'^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s+(\w+)\s*\(', re.MULTILINE),
+        'function': re.compile(
+            # function 宣言、または const/let/var に代入されたアロー関数・function 式
+            r'^\s*(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s*\*?\s*(\w+)\s*[(<]'
+            r'|^\s*(?:export\s+)?(?:const|let|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*(?:async\s*)?(?:\([^)\n]*\)|\w+)\s*(?::[^=\n]+)?=>'
+            r'|^\s*(?:export\s+)?(?:const|let|var)\s+(\w+)\s*(?::[^=\n]+)?=\s*(?:async\s+)?function\b',
+            re.MULTILINE,
+        ),
         'class': re.compile(r'^\s*(?:export\s+)?(?:default\s+)?(?:abstract\s+)?class\s+(\w+)', re.MULTILINE),
         'method': re.compile(r'^\s+(?:public|private|protected|static|async|\s)*\s*(\w+)\s*\([^)]*\)\s*(?::\s*[\w<>\[\]|, ]+)?\s*\{', re.MULTILINE),
     },
-    '.tsx': None,  # .ts と同じ
+    '.tsx': None,  # .ts と同じ（.js .jsx .mjs .cjs も同じ）
     '.java': {
         'function': re.compile(r'^\s*(?:public|private|protected)?\s*(?:static\s+)?(?:final\s+)?[\w<>\[\], ]+\s+(\w+)\s*\([^)]*\)\s*(?:throws[\w, ]+)?\s*\{', re.MULTILINE),
         'class': re.compile(r'^\s*(?:public|private|protected)?\s*(?:abstract\s+|final\s+)?(?:class|interface|enum|record)\s+(\w+)', re.MULTILINE),
@@ -101,6 +127,8 @@ class CodeSymbols:
 
     def __init__(self):
         self.files: Set[str] = set()
+        # 記号を抽出できなかった言語のファイル（存在確認だけに使う）
+        self.file_only: Set[str] = set()
         # 修飾名 → 種別（'class' | 'function' | 'method'）
         self.symbols: Dict[str, str] = {}
 
@@ -129,7 +157,7 @@ def extract_python(rel: str, content: str, out: CodeSymbols) -> None:
 
 def extract_regex(rel: str, content: str, lang: str, out: CodeSymbols) -> None:
     """Python 以外のファイルを正規表現で近似解析する"""
-    patterns = REGEX_LANGS['.ts'] if lang in ('.ts', '.tsx') else REGEX_LANGS[lang]
+    patterns = REGEX_LANGS['.ts'] if lang in TS_LIKE_LANGS else REGEX_LANGS[lang]
     classes: List[str] = []
     for m in patterns['class'].finditer(content):
         name = m.group(1)
@@ -137,8 +165,9 @@ def extract_regex(rel: str, content: str, lang: str, out: CodeSymbols) -> None:
             classes.append(name)
             out.add(f"{rel}::{name}", 'class')
     for m in patterns['function'].finditer(content):
-        name = m.group(1)
-        if name in JAVA_KEYWORDS or not _is_public(name):
+        # 選択肢のある正規表現では、マッチしたグループだけが名前を持つ
+        name = next((g for g in m.groups() if g), None)
+        if not name or name in JAVA_KEYWORDS or not _is_public(name):
             continue
         out.add(f"{rel}::{name}", 'function')
     if patterns.get('method') is not None:
@@ -177,7 +206,7 @@ def collect_code(root: Path, source_dirs: List[Path]) -> CodeSymbols:
             if _is_test_file(path):
                 continue
             lang = path.suffix.lower()
-            if lang not in ('.py', '.ts', '.tsx', '.java', '.go'):
+            if lang not in SYMBOL_LANGS and lang not in FILE_ONLY_LANGS:
                 continue
             try:
                 content = path.read_text(encoding='utf-8')
@@ -190,7 +219,9 @@ def collect_code(root: Path, source_dirs: List[Path]) -> CodeSymbols:
             if path.name == '__init__.py' and not content.strip():
                 continue
             out.files.add(rel)
-            if lang == '.py':
+            if lang not in SYMBOL_LANGS:
+                out.file_only.add(rel)
+            elif lang == '.py':
                 extract_python(rel, content, out)
             else:
                 extract_regex(rel, content, lang, out)
@@ -211,10 +242,16 @@ def parse_trace_map(map_path: Path) -> Tuple[List[Tuple[str, str, int]], List[st
     content = map_path.read_text(encoding='utf-8')
     ds_col: Optional[int] = None
     name_col: Optional[int] = None
+    in_table = False
     for lineno, line in enumerate(content.splitlines(), 1):
         stripped = line.strip()
         if not stripped.startswith('|'):
+            if in_table:
+                # 対応表の表が終わった。以降の表（凡例など）は読まない
+                break
             continue
+        if ds_col is not None:
+            in_table = True
         cells = [c.strip() for c in stripped.strip('|').split('|')]
         if all(re.fullmatch(r':?-{3,}:?', c) for c in cells if c):
             continue
@@ -249,6 +286,8 @@ class TraceMapChecker:
         self.root = root
         self.errors: List[str] = []
         self.warnings: List[str] = []
+        # 言語未対応のため記号の実在を確認できなかった行（エラーでも警告でもない）
+        self.unverified: List[str] = []
 
     def run(self) -> None:
         for p, label in ((self.design, '詳細設計書'), (self.trace_map, '対応表')):
@@ -278,7 +317,14 @@ class TraceMapChecker:
                 if qualified not in code.files:
                     self.errors.append(f"対応表 {lineno} 行目: ファイルが見つかりません: {qualified}")
             elif qualified not in code.symbols:
-                self.errors.append(f"対応表 {lineno} 行目: コードに存在しない修飾名です（改名・削除の見落とし）: {qualified}")
+                file_part = qualified.split('::', 1)[0]
+                if file_part in code.file_only:
+                    # 記号を抽出できない言語。ファイルがあれば確認対象外として数える（DS-MD の行は別に要る）
+                    self.unverified.append(f"対応表 {lineno} 行目: 言語未対応のため記号の実在は未確認（ファイルは存在）: {qualified}")
+                elif file_part not in code.files:
+                    self.errors.append(f"対応表 {lineno} 行目: ファイルが見つかりません: {qualified}")
+                else:
+                    self.errors.append(f"対応表 {lineno} 行目: コードに存在しない修飾名です（改名・削除の見落とし）: {qualified}")
 
         for rel in sorted(code.files):
             if rel not in mapped_names:
@@ -306,6 +352,7 @@ class TraceMapChecker:
             'design_ids': len(design_ids),
             'rows': len(rows),
             'files': len(code.files),
+            'file_only': len(code.file_only),
             'symbols': len(code.symbols),
         }
 
@@ -316,7 +363,8 @@ class TraceMapChecker:
         print(f"ソース: {', '.join(str(s) for s in self.source_dirs)}")
         if hasattr(self, 'summary'):
             s = self.summary
-            print(f"検出: 設計ID {s['design_ids']} 件 / 対応表 {s['rows']} 行 / ファイル {s['files']} 件 / クラス・関数 {s['symbols']} 件")
+            print(f"検出: 設計ID {s['design_ids']} 件 / 対応表 {s['rows']} 行 / ファイル {s['files']} 件"
+                  f"（うち記号未対応の言語 {s['file_only']} 件）/ クラス・関数 {s['symbols']} 件")
         print("\n結果レポート\n" + "-" * 50)
         if self.errors:
             print(f"✗ エラー {len(self.errors)} 件（直してからコミットすること）")
@@ -326,6 +374,10 @@ class TraceMapChecker:
             print(f"⚠ 警告 {len(self.warnings)} 件（実装スキルの完了条件では 0 件にすること）")
             for w in self.warnings:
                 print(f"  - {w}")
+        if self.unverified:
+            print(f"ℹ 確認対象外 {len(self.unverified)} 件（記号を抽出できない言語。ファイルの存在だけ確認した）")
+            for u in self.unverified:
+                print(f"  - {u}")
         print("\n検証サマリ\n" + "-" * 50)
         print(f"エラー: {len(self.errors)} 件")
         print(f"警告: {len(self.warnings)} 件")

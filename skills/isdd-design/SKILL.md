@@ -11,6 +11,11 @@ metadata:
 
 # isdd-design - インタビュー駆動 詳細設計スキル
 
+## 共通リソースの場所
+
+本文中の `.agents/skills/isdd-common/...` は配置先の一例で、`gh skill install` はエージェントごとのディレクトリ（`.agents/skills/`、`.claude/skills/`、`.github/skills/`、ユーザースコープならホーム配下）にスキルを置く。実際には、このスキル（SKILL.md）と同じ親ディレクトリにある `isdd-common/` を読む。チェッカーは `isdd-setup` 済みのプロジェクトなら `scripts/isdd/` の複製を実行してもよい。
+
+
 ## 事前確認（必須）
 
 - **既存のコードベースがすでに存在するプロジェクトにこのスキルを適用する場合**: 先に `isdd-reverse-engineering` スキルを実行して要件定義書と設計書を生成・確定させること。
@@ -86,6 +91,7 @@ ID は表の専用列に書き、本文の文章や図の中には書かない�
 ## 詳細設計書に必須の内容
 
 `.agents/skills/isdd-common/references/design-chapters.md` を参照し、全項目を漏れなく作成すること。
+特に最終章「要件と設計の対応表」（`DS-ID` と `対応要件ID` の 2 列で全設計 ID を 1 行ずつ並べる表）は、各章の表に対応要件 ID 列があっても省略してはならない。`rq_ds_link_checker.py` はこの表を対応の根拠にする。
 
 ---
 
@@ -108,7 +114,7 @@ ID は表の専用列に書き、本文の文章や図の中には書かない�
 ## tasks.md 作成ルール
 
 `.agents/skills/isdd-common/references/design-tasks-rules.md` を参照し、全て遵守すること。
-**注記**：isdd-design は「isdd-change-design 固有の記載」セクションは不要。
+**注記**：isdd-design では、isdd-change-design のみに要る「正本反映の確認タスク」は不要。
 
 ---
 
@@ -124,14 +130,13 @@ python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py \
 
 **出力**:
 - 対応欠落一覧：マッピングされていないRQ-*/DS-*
-- 重複一覧：複数のRQ-*にマッピングされているDS-*
 - 不整合一覧：マッピング構造の矛盾
-- 検証サマリ：総数、欠落数、重複数、不整合数
+- 検証サマリ：総数、欠落数、不整合数（1 つの DS-* が複数の RQ-* に対応することは正常な設計表現なので、重複は検出しない）
 
 **完了ゲート（レビューへ進む前に全て満たすこと）**：
 
 - [ ] `rq_ds_link_checker.py` を bash で実行し、実行ログをレスポンスに記載した
-- [ ] 問題が検出された場合は設計書を修正して再実行し、欠落・重複・不整合が0件になった
+- [ ] 問題が検出された場合は設計書を修正して再実行し、欠落・不整合が0件になった
 - [ ] 未マッピング要件が検出された場合、要件一覧を作成し、1件ずつユーザーヒアリングして `docs/requirements.md` を更新した
 - [ ] 要件更新に伴うID再整理を `docs/detail_design.md` へ伝播した
 - [ ] 問題なしを確認してからレビューへ進む
@@ -139,7 +144,7 @@ python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py \
 ## ドキュメント作成ルール
 
 `.agents/skills/isdd-common/references/document-rules.md` のルールに従い、必ず遵守すること。
-なお、設計固有ルールとして「冗長コード・処理の再実装禁止」は「基本方针」に定める通り適用すること。
+なお、設計固有ルールとして「冗長コード・処理の再実装禁止」は「基本方針」に定める通り適用すること。
 
 ---
 

@@ -35,7 +35,7 @@ Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固
 
 - ソースファイル（`DS-MD-*`）、クラス（`DS-CL-*`）、公開関数とメソッド（`DS-FN-*`。API の入口なら `DS-IF-*`、バッチの入口なら `DS-BT-*` でもよい）。
 - アンダースコア始まりの内部関数と、`__init__` などのダンダーメソッドは載せない。
-- テストファイル（`test_*.py`、`*_test.py`、`*.spec.ts`、`*.test.ts`）は載せない。
+- テストファイル（`test_*.py`、`*_test.py`、`*.spec.ts`、`*.test.ts`、`*_test.go`、`*Test.java`、`*Tests.cs` など）は載せない。
 
 ## チェッカー
 
@@ -49,9 +49,24 @@ python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.m
 |---|---|---|
 | エラー | 対応表の DS-ID が設計書に無い。対応表の修飾名がコードに無い（改名・削除の見落とし）。`DS-MD-*` と修飾名の形が合わない | 終了コード 1。pre-commit で止まる |
 | 警告 | コードのファイル・クラス・公開関数が対応表に無い。設計書の `DS-MD-*` `DS-CL-*` `DS-FN-*` が対応表に無い（未実装の可能性） | 既定では終了コード 0。`--strict` で終了コード 1 |
+| 確認対象外 | 記号を抽出できない言語のファイルを指す `::名前` の行。ファイルの存在だけ確認する | 件数を表示するだけ。終了コードに影響しない |
+
+### 言語ごとの確認の深さ
+
+| 言語 | 確認できること | 方法 |
+|---|---|---|
+| Python | ファイル、クラス、関数、メソッド | 構文木（ast）で正確に抽出する |
+| TypeScript / JavaScript、Java、Go | ファイル、クラス、関数、メソッド | 正規表現で近似抽出する。TypeScript / JavaScript はアロー関数（`const f = () =>`）も関数として拾う。クラス所属の判定は近似 |
+| C#、Ruby、PHP、Kotlin、Swift、Rust、C / C++、Scala、Dart、Vue、Svelte、シェルなど | ファイルの存在だけ | `::名前` の行は「確認対象外」として数え、エラーにも警告にもしない。未登録ファイルの警告は出る |
+| 上記以外の拡張子 | 何も確認しない | 対応表の行は「ファイルが見つかりません」のエラーになる。必要なら `trace_map_checker.py` の `FILE_ONLY_LANGS` に拡張子を足す |
 
 - 実装スキル（`isdd-traceable-coding`）の完了条件は `--strict` で合格すること（エラーも警告も 0 件）。
 - pre-commit はエラーだけで止める。スキルを使わずにコードを変えた人が関数を足しても止まらない。その抜けは `isdd-post-implementation-review` で対応表と設計書に取り込む。
+
+## 外部連携ライブラリの扱い
+
+- `isdd-external-research` が作る `external/[システム名]/src/` はプロジェクトのコードなので、`isdd-setup` の `--src` に含めて対応表に載せる（例: `--src src --src external/foo/src`）。
+- `external/[システム名]/mock/` と `e2e/` はテスト資材なので載せない。
 
 ## 更新のタイミング
 

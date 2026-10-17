@@ -11,6 +11,11 @@ metadata:
 
 # isdd-traceable-coding — トレーサブル実装スキル
 
+## 共通リソースの場所
+
+本文中の `.agents/skills/isdd-common/...` は配置先の一例で、`gh skill install` はエージェントごとのディレクトリ（`.agents/skills/`、`.claude/skills/`、`.github/skills/`、ユーザースコープならホーム配下）にスキルを置く。実際には、このスキル（SKILL.md）と同じ親ディレクトリにある `isdd-common/` を読む。チェッカーは `isdd-setup` 済みのプロジェクトなら `scripts/isdd/` の複製を実行してもよい。
+
+
 あなたは isdd 仕様駆動開発の実装担当として振る舞う。
 詳細設計書の設計要素を 1 対 1 でコードに落とし、設計 ID とコードの対応を対応表 `docs/trace_map.md` に記録する。
 
@@ -78,18 +83,20 @@ metadata:
    python3 scripts/isdd/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md
    ```
    - 実行結果（欠落/重複/不整合の有無）を最終報告に必ず記載する
-7. 以下を**必ず bash で実行**して実装完了条件（docker-compose / E2E / README / 対応表）を機械的に確認する
+7. 以下を**必ず bash で実行**して実装完了条件を機械的に確認する。要求される項目は `scripts/isdd/completeness.json`（isdd-setup が詳細設計書の実行形態・認証・外部連携から生成）で決まる
    ```bash
    python3 scripts/isdd/implementation_completeness_checker.py .
    ```
+   - 出力の冒頭に出る「実行形態 / 認証 / 外部連携」が詳細設計書と合っているか確認する。違えば `isdd-setup` を正しい値で再実行する
    - 実行結果（OK/FAIL 件数）を最終報告に必ず記載する
    - FAIL が 1 件でもある場合は**完了を報告してはならない**。FAIL 項目を対処してから再実行する
    - 対処内容の例:
-     - `docker-compose.yml が見つかりません` → docker-compose.yml を作成する
-     - `e2e/ ディレクトリが存在しません` → E2E テストを実装し `e2e/` に配置する
-     - `README.md に不足があります` → 起動方法・初期ユーザー情報を README.md に追記する
+     - `docker-compose.yml が見つかりません`（実行形態がコンテナの場合だけ出る）→ docker-compose.yml を作成する
+     - `e2e/ ディレクトリが存在しません` → 詳細設計書 第 11 章のとおり E2E テストを実装し `e2e/` に配置する
+     - `README.md に不足があります` → 起動方法（認証がある場合は初期ユーザー情報も）を README.md に追記する
      - `docs/trace_map.md が見つかりません` → 対応表を作成する
-8. 要件・設計との対応漏れがないかをセルフレビューしてユーザーに報告する
+8. 詳細設計書 第 9 章の起動方法で起動または実行できることと、第 11 章の実行コマンドで E2E テストが全件通過することを確認する（外部連携がある場合は mock モードで実行する）
+9. 要件・設計との対応漏れがないかをセルフレビューしてユーザーに報告する
 
 ### 完了判定ルール（報告前に必ず自己確認）
 
@@ -98,9 +105,9 @@ metadata:
 - [ ] `bash scripts/isdd/check.sh --strict` の実行ログをレスポンスに貼り付けた（エラー 0 件・警告 0 件）
 - [ ] `rq_ds_link_checker.py` の実行ログをレスポンスに貼り付けた
 - [ ] `implementation_completeness_checker.py` の実行ログをレスポンスに貼り付けた（全項目 OK であること）
-- [ ] `docker-compose.yml` が存在し起動確認済みである
-- [ ] E2E テストが `e2e/` 配下に存在し mock モードで全件通過している
-- [ ] `README.md` に「起動方法」と「初期ユーザー」が記載されている
+- [ ] 詳細設計書 第 9 章の起動方法で起動または実行できることを確認した（実行形態がコンテナなら `docker compose up`）
+- [ ] E2E テストが `e2e/` 配下に存在し、第 11 章の実行コマンドで全件通過している（外部連携がある場合は mock モード）
+- [ ] `README.md` に「起動方法」が記載されている（認証がある場合は「初期ユーザー」も）
 - [ ] コードに `要件ID:` `設計ID:` `RQ-` `DS-` を含むトレーサビリティコメントが 1 件もない
 
 ## 実装スキルのゴール
@@ -108,8 +115,8 @@ metadata:
 以下の**全て**を満たすことをこの実装スキルの完了条件とする。1 つでも未達の場合は完了を報告してはならない。
 
 - `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件である
-- `implementation_completeness_checker.py` の全項目（docker-compose / E2E / README / 対応表）が OK である
-- E2E テストを mock モードで実際に実行し、全件通過している
+- `implementation_completeness_checker.py` の全項目が OK である（要求される項目は実行形態・認証・外部連携で変わる）
+- E2E テストを実際に実行し、全件通過している（外部連携がある場合は mock モード）
 
 ---
 
