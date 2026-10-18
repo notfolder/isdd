@@ -109,7 +109,8 @@ def cmd_match(args: List[str]) -> None:
         else:
             fail(f"不明な引数: {args[i]}")
         i += 2
-    files = sorted(glob.glob(str(ws / pattern), recursive=True))
+    # glob の ** はディレクトリにも一致するので、ファイルだけを数えて読む
+    files = sorted(f for f in glob.glob(str(ws / pattern), recursive=True) if Path(f).is_file())
     if len(files) < min_files:
         fail(f"{pattern} に一致するファイルが {len(files)} 件（{min_files} 件以上必要）")
     text = "\n".join(Path(f).read_text(encoding="utf-8", errors="replace") for f in files)

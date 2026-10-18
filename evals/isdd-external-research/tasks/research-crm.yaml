@@ -81,7 +81,7 @@ graders:
       command: "bash"
       args:
         - "-c"
-        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/requirements.md --re 'RQ-EX-USE-(LOCAL-HTTP|FIXED-RESPONSE|MOCK-SERVER)-[A-Z-]*[^\\n]*RQ-BK-[A-Z0-9]'"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/requirements.md --re '^(?=.*RQ-EX-USE-(LOCAL-HTTP|FIXED-RESPONSE|MOCK-SERVER)-)(?=.*RQ-BK-[A-Z0-9]).*$'"
   - name: "requirements_still_valid"
     type: "program"
     config:
