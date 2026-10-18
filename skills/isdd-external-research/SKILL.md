@@ -23,8 +23,8 @@ metadata:
 | `references/hearing-rules.md` | すべての質問 |
 | `references/external-credentials.md` | `.env` と接続情報の扱い |
 | `references/subagent-delegation.md` | ライブラリ調査や DB スキーマ取得を委譲するとき |
-| `references/requirements-chapters.md` | CRUD テーブルの形式（4-1） |
-| `references/design-chapters.md` | E2E の 2 モード運用（第 11 章） |
+| `references/requirements-chapters.md` | CRUD テーブルの形式（4-3） |
+| `references/design-chapters.md` | E2E の 2 モード運用（第 8 章 8-2〜8-4） |
 | `references/id-definitions.md` | モック方式の ID |
 | `references/document-rules.md` | レポートの書き方 |
 
@@ -138,7 +138,7 @@ external/
 
 4. 連携先のデータ構造
    - DB 系: 全テーブルのカラム名・型・制約（NOT NULL / PK / FK / UNIQUE など）の表と、全テーブルのリレーション図（mermaid の erDiagram）
-   - 非 DB 系: 全業務エンティティの一覧と、`references/requirements-chapters.md` の 4-1 の形式の CRUD テーブル（全エンティティ分）
+   - 非 DB 系: 全業務エンティティの一覧と、`references/requirements-chapters.md` の 4-3 の形式の CRUD テーブル（全エンティティ分）
 5. 制限事項: レート制限、ページネーション方式、タイムアウトの推奨値、その他の制約
 6. モックの説明: 設計方針、各モックの役割、使い方（コードは書かず日本語で手順を説明する）
 7. 既存ライブラリの選定結果: 候補一覧、比較表（7 項目）、推奨理由、不採用理由、リスク評価、ユーザーの最終決定
@@ -178,7 +178,7 @@ external/
 
 ### E2E 基盤（e2e/）
 
-E2E の 2 モード運用は `references/design-chapters.md` 第 11 章に従う。要点:
+E2E の 2 モード運用は `references/design-chapters.md` 第 8 章（8-2〜8-4）に従う。要点:
 
 - mock モードと real モードを定義し、設計上はすべてのシナリオを両モードで実行対象にする。
 - 実装時・CI の必須ゴールは mock モードの全件通過。real モードは手動実行だけを必須にする。

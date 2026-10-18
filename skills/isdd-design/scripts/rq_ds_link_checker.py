@@ -11,6 +11,10 @@ RQ-DS Link Checker Script
 使用方法:
   python3 rq_ds_link_checker.py <requirements.md> <detail_design.md>
 
+除外要件:
+  設計書の「除外要件」を含む見出しの節に書かれた RQ-* は、ユーザーの承認を得て設計から外した要件として扱い、
+  DS-* への対応を求めない（件数だけ表示する）。
+
 出力:
   - 対応欠落一覧: RQ-* にマッピングされていない DS-*、その逆
   - 不整合一覧: マッピング構造の矛盾
@@ -36,7 +40,12 @@ DS_PATTERN = re.compile(r'\bDS(?:-[A-Z0-9][A-Z0-9_]*)+')
 HEADER_LABEL_PATTERN = re.compile(r'^(?:RQ|DS)(?:-[A-Z0-9]+)+-ID$')
 
 # 業務コンテキストIDのプレフィックス（DS-*へのマッピング不要）
-CONTEXT_PREFIXES = ('RQ-BK-', 'RQ-BZ-')
+# RQ-BZ: 業務、RQ-BK: 業務課題、RQ-EF: 見込み経営効果。いずれも設計要素で実現するものではない
+CONTEXT_PREFIXES = ('RQ-BK-', 'RQ-BZ-', 'RQ-EF-')
+
+# 設計書の「除外要件」節の見出し
+HEADING_PATTERN = re.compile(r'^\s{0,3}#{1,6}\s+(.*)$')
+EXCLUSION_HEADING = '除外要件'
 
 
 def _is_valid_id(id_str: str) -> bool:
@@ -64,6 +73,7 @@ class RQDSChecker:
         self.ds_file = ds_file
         self.rq_ids: Set[str] = set()
         self.deleted_rq_ids: Set[str] = set()  # [削除]行のRQ-ID（命名推論専用）
+        self.excluded_rq_ids: Set[str] = set()  # 設計書の「除外要件」節にある RQ-ID（承認済みの除外）
         self.ds_ids: Set[str] = set()
         self.rq_to_ds: Dict[str, Set[str]] = defaultdict(set)  # RQ → DS のマッピング
         self.ds_to_rq: Dict[str, Set[str]] = defaultdict(set)  # DS → RQ のマッピング
@@ -113,6 +123,21 @@ class RQDSChecker:
             self.ds_ids = self.extract_ids(active_content, DS_PATTERN)
             if not self.ds_ids:
                 self.issues.append("警告: detail_design.md から DS-* ID が検出されませんでした")
+
+            # 「除外要件」を含む見出しの節にある RQ-* を、承認済みの除外として集める
+            in_exclusion = False
+            exclusion_level = 0
+            for line in active_lines:
+                heading = HEADING_PATTERN.match(line)
+                if heading:
+                    level = len(line.strip()) - len(line.strip().lstrip('#'))
+                    if EXCLUSION_HEADING in heading.group(1):
+                        in_exclusion, exclusion_level = True, level
+                        continue
+                    if in_exclusion and level <= exclusion_level:
+                        in_exclusion = False
+                if in_exclusion:
+                    self.excluded_rq_ids |= {m for m in RQ_PATTERN.findall(line) if _is_valid_id(m)}
 
             # マークダウンテーブルの行ごとに DS-* と RQ-* の共起を検出（[削除]行はスキップ済み）
             for line in active_lines:
@@ -192,7 +217,7 @@ class RQDSChecker:
 
         # DS-* にマッピングされていない RQ-*（コンテキストIDは除外）
         mappable_rq = {rq for rq in self.rq_ids if not _is_context_id(rq)}
-        unmapped_rq = mappable_rq - set(self.rq_to_ds.keys())
+        unmapped_rq = mappable_rq - set(self.rq_to_ds.keys()) - self.excluded_rq_ids
         if unmapped_rq:
             self.issues.append(
                 f"⚠ 対応欠落: 以下の RQ-* には対応する DS-* がマッピングされていません:\n"
@@ -223,6 +248,9 @@ class RQDSChecker:
         mappable_rq = sum(1 for rq in self.rq_ids if not _is_context_id(rq))
         print(f"検出: RQ-* ID 数: {len(self.rq_ids)} (コンテキストID除外後: {mappable_rq})")
         print(f"検出: DS-* ID 数: {len(self.ds_ids)}")
+        if self.excluded_rq_ids:
+            print(f"除外: 設計書の「除外要件」節にある RQ-* {len(self.excluded_rq_ids)} 件は対応を求めない: "
+                  f"{', '.join(sorted(self.excluded_rq_ids))}")
         print(f"マッピング: RQ-DS 対応数: {sum(len(v) for v in self.rq_to_ds.values())}\n")
 
         self.check_coverage()

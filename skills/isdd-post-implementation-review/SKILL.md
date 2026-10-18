@@ -106,6 +106,6 @@ metadata:
 - `docs/requirements.md`: 確定した要件定義書。次の変更要件定義の起点になる
 - `docs/detail_design.md`: 確定した詳細設計書。要件との対応をたどれる
 - `docs/trace_map.md`: 設計 ID とファイル・クラス・公開関数の対応表。コードに ID を書かずに仕様とコードを結ぶ
-- `e2e/`: 実装を検証する E2E テスト。詳細設計書 第 11 章の実行コマンドで動かす（外部連携がある場合は mock と real の 2 モード）
+- `e2e/`: 実装を検証する E2E テスト。詳細設計書 8-4 の実行コマンドで動かす（外部連携がある場合は mock と real の 2 モード）
 - 新しい要求は `isdd-change-req` から始める
 - 既存の実装にバグや仕様誤りが見つかった場合は、`docs/requirements.md` を直し、`isdd-design` で設計を更新してから `isdd-traceable-coding` で直す

@@ -36,7 +36,7 @@ RQ_PATTERN = re.compile(r'\bRQ(?:-[A-Z0-9][A-Z0-9_]*)+')
 HEADER_LABEL_PATTERN = re.compile(r'^(?:RQ)(?:-[A-Z0-9]+)+-ID$')
 
 # 有効なカテゴリ
-VALID_CATEGORIES = {'BZ', 'BK', 'FT', 'UI', 'EX', 'DT', 'NF', 'TS', 'OP'}
+VALID_CATEGORIES = {'BZ', 'BK', 'EF', 'FT', 'UI', 'EX', 'DT', 'NF', 'TS', 'OP'}
 
 # 必須カテゴリ（最低1件必要）
 REQUIRED_CATEGORIES = {'BK', 'BZ'}

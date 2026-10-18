@@ -189,7 +189,7 @@ graph LR
 | design-chapters.md | 詳細設計書の章構成と技術選定の手順 | 設計・変更設計・逆引き・外部調査 |
 | design-completeness.md | 設計網羅性のチェックリスト | 設計・変更設計・逆引き |
 | design-tasks-rules.md | 実装タスク化のルール | 設計・変更設計 |
-| requirement-exclusion.md | 最小設計の意味、要件除外ゲート、設計から要件へのフィードバック | 設計・変更設計 |
+| requirement-exclusion.md | 最小設計の意味、要件除外ゲート（設計書 11-1 に記録）、設計から要件へのフィードバック | 設計・変更設計 |
 | trace-map-rules.md | 設計 ID とコードの対応表（docs/trace_map.md）の書式・粒度・チェック規則 | 設計・変更設計・逆引き・実装・実装後レビュー |
 | external-credentials.md | 接続情報（.env）の扱いと接続テスト | 外部連携 2 本 |
 | subagent-delegation.md | サブエージェントへの委譲のしかた | 逆引き・外部調査 |
@@ -365,6 +365,12 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 - **チェッカーの実行元を一本化。** 要件・設計のチェッカー（`rq_*.py`）は各スキルの同梱版を実行し、コードのチェッカーはプロジェクトの `scripts/isdd/` の複製を使う。`isdd_setup.py` は `rq_*.py` を複製しなくなり、旧版の複製を削除し、版を `scripts/isdd/VERSION` に記録する。各スキルは VERSION と自分の版を比べ、違えば `isdd-setup` の再実行を案内する。
 - **最近のモデル向けに指示の書き方を見直し。** 役割指定（「あなたは〜として振る舞う」）を目的の文に置き換え、「必ず」「絶対」「禁止」などの強調（SKILL.md で計 135 か所）を、本当に変わらない規則だけ平叙文で残して理由を添える形に変更。description を「何をするか＋いつ使うか＋使わない場面」で書き、二重の「必ず使うこと」を削除（isdd-requirements と isdd-change-req の守備範囲を明記）。
 - **共通部分を reference に集約。** ヒアリングのルール（2 系統に分かれ三重に書かれていた）を `hearing-rules.md`（旧 `hearing-complexity-rules.md`）に統合。最小設計と要件除外ゲート、設計から要件へのフィードバックを `requirement-exclusion.md` に、`.env` の扱いを `external-credentials.md` に、サブエージェントへの委譲を `subagent-delegation.md` に切り出した。作成後のレビューの共通項目は `document-rules.md` に置いた。reference から別の reference のパスを指す記述を無くし、参照を SKILL.md から 1 段にした。`isdd-reverse-engineering` が別スキルの本文（レビュー手順、完全性制約）に依存していた箇所を reference の参照に置き換えた。
+- **要件定義書と詳細設計書の章立ての過不足を見直し。**
+  - 問題（業務のあるべき姿と現状のギャップ）と課題（問題を解決するために取り組むアクション・テーマ）を定義し、業務章を「業務の問題」「業務課題一覧（`RQ-BK`）」「見込み経営効果」に組み直した。見込み経営効果に新しいカテゴリ `RQ-EF` を設けた（業務課題に結びつける。設計 ID の対応は求めない）。
+  - 要件定義書に、システムの形態（GUI / CUI / Web API / バッチ）、帳票・出力ファイル（3-1）、業務ルール（3-2）、外部連携の表（3-3）、データ要件一覧（4-1）、データ項目（4-2）、検索列を足した CRUD テーブル（4-3）、状態遷移（4-4）、運用要件の章（第 6 章、`RQ-OP`）を追加。画面一覧に対応業務課題 ID 列を追加し、利用者の種別・アクセス経路・SSO を非機能要件（ID 付き）に移した。
+  - 設計 ID にテスト（`DS-TS`）と運用（`DS-OP`）を追加し、要件カテゴリごとにどの設計 ID で受けるかの対応表を `id-definitions.md` に置いた。従来はテストシナリオ・非機能・運用の要件を受ける設計 ID が決まっておらず、`rq_ds_link_checker.py` の対応チェックをモデルが場当たり的に合わせていた。
+  - 設計書に、トランザクションと排他制御（3-2）、状態遷移（3-3）、インターフェース仕様（入力・バリデーション・出力・エラー）、認証・認可・監査ログ、設定値・環境変数の一覧、バックアップ、障害対応、除外要件（11-1）を追加。E2E の記述を第 8 章に統合し、旧第 11 章を廃止（対応表は第 11 章になった）。ネットワーク構成図はネットワーク越しの通信がある構成だけにし、API の経路の `/api/` の決め打ちをやめた。
+  - `rq_ds_link_checker.py` は設計書の「除外要件」節にある要件 ID に対応を求めないようにし、`RQ-EF` を業務コンテキストとして扱う。`rq_integrity_checker.py` は `RQ-EF` を有効なカテゴリにした。
 - 実装に無い「ID 重複一覧」の記述（isdd-requirements・isdd-change-req・isdd-traceable-coding）を削除。
 - `isdd-change-design` の事前確認から「既存コードがあれば先に isdd-reverse-engineering」を削除（変更フローでは既存コードが常にあり、逆引きの完了後は変更要件定義へ進むため矛盾していた）。
 - `isdd-post-implementation-review` は `scripts/isdd/check.sh` が無ければ先に `isdd-setup` を実行する（`trace_map_checker.py` を直接呼ぶ代替経路を削除）。

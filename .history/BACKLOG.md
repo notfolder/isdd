@@ -48,6 +48,7 @@
 - [x] (2026-10-18) `run-all.sh` から Sonnet 昇格を削除（`WAZA_CLAUDE_MODEL` に統一）。`.env` が環境変数を上書きする不具合を修正。`timeout_seconds` を実測の約 3 倍（600〜900 秒）に短縮し、local モードは `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）倍で実行
 - [-] (2026-10-18) 落ちた eval を Sonnet で自動再実行する運用 — ユーザー指示で廃止。Haiku で落ちたらスキルの質の問題として直す
 - [x] (2026-10-18) 最近のモデル向けの指示の見直しと共通部分の共有方式の変更（ブランチ feature-skill-modernize）。役割指定と強調語を外して理由を添える形に、description を「何をするか＋いつ使うか＋使わない場面」に。isdd-common を廃止し、正本を `shared/` に置いて `tools/build_skills.py` で各スキルへ複製（gh skill publish と install.sh で同じ中身）。Haiku の eval で 8 スキル 11 ケースが 1 回目で全合格（06:02〜06:19）
+- [x] (2026-10-18) 要件定義書・詳細設計書の章立ての過不足を見直し（問題と課題の定義、`RQ-EF`・`DS-TS`・`DS-OP` の追加、要件カテゴリと設計 ID の対応表、E2E を第 8 章に統合、除外要件 11-1 とチェッカー対応）。Haiku の eval で 8 スキル 11 ケースが 1 回目で全合格（08:50〜09:10）。PR #5 に追加
 - [ ] `.env` の旧変数 3 行（`WAZA_CLAUDE_MODEL_PRIMARY`・`WAZA_CLAUDE_MODEL_SECONDARY`・`WAZA_CLAUDE_ESCALATE`）を削除する（ユーザー作業。残っていても動作に影響なし）
 - [ ] 実行基盤の固まり（2026-10-18 の eval で 2 回。Copilot CLI がモデル応答待ちのまま 22〜40 分停止、転記ファイル未作成）の再発を観察し、再発するなら Copilot CLI の更新か検証 D を優先する
 - [ ] ユーザーが現在のスキルを目視確認する（2026-10-18 ユーザー指示。公開はこの確認が終わってから）
