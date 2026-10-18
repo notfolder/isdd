@@ -49,4 +49,4 @@
 - [-] (2026-10-18) 落ちた eval を Sonnet で自動再実行する運用 — ユーザー指示で廃止。Haiku で落ちたらスキルの質の問題として直す
 - [ ] `.env` の旧変数 3 行（`WAZA_CLAUDE_MODEL_PRIMARY`・`WAZA_CLAUDE_MODEL_SECONDARY`・`WAZA_CLAUDE_ESCALATE`）を削除する（ユーザー作業。残っていても動作に影響なし）
 - [ ] 実行基盤の固まり（2026-10-18 の eval で 2 回。Copilot CLI がモデル応答待ちのまま 22〜40 分停止、転記ファイル未作成）の再発を観察し、再発するなら Copilot CLI の更新か検証 D を優先する
-- [ ] v1.0.15 を `gh skill publish ./skills --tag v1.0.15` で公開する（README の変更履歴を読み直してから）
+- [x] (2026-10-19) v1.0.15 の予定を v2.0.0 に変更し、`gh skill publish ./skills --tag v2.0.0` で公開した
