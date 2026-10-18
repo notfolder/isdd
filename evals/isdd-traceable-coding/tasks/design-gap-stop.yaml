@@ -1,0 +1,61 @@
+id: "isdd-traceability-design-gap-001"
+name: "設計に無い要素が要るときは止まる"
+description: "設計書に無い機能の実装を頼まれたら、コードと正本を変えずに docs/proposals.md に提案を書いて設計スキルへ戻すかを検証する。"
+tags:
+  - "isdd"
+  - "traceability"
+  - "stop"
+inputs:
+  prompt: |
+    isdd-traceable-codingを実行してください。
+    src/hello.py に --upper オプション（大文字で出力する）を追加してください。
+  follow_up_prompts:
+    - "これ以上の情報はありません。isdd の規則どおりに進めてください。"
+  context:
+    task_type: "isdd-traceability-design-gap-001"
+    fixture: "fixtures/design-gap"
+  files:
+    - path: .agents/skills/isdd-traceable-coding/SKILL.md
+    - path: .agents/skills/isdd-traceable-coding/references/trace-map-rules.md
+    - path: .agents/skills/isdd-traceable-coding/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-setup/SKILL.md
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "proposal_written"
+    type: "file"
+    config:
+      must_exist:
+        - "docs/proposals.md"
+  - name: "code_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged src/hello.py evals/isdd-traceable-coding/fixtures/design-gap/src/hello.py"
+  - name: "design_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/detail_design.md evals/isdd-traceable-coding/fixtures/design-gap/docs/detail_design.md"
+  - name: "requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/requirements.md evals/isdd-traceable-coding/fixtures/design-gap/docs/requirements.md"
+  - name: "routes_to_design_skill"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。エージェントは --upper オプションが設計書に無いことを理由に実装を止め、設計スキル（isdd-design または isdd-change-design）で設計を直すよう案内しましたか。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

@@ -44,21 +44,20 @@ inputs:
   files:
     - path: src/hello.py
     - path: .agents/skills/isdd-reverse-engineering/SKILL.md
+    - path: .agents/skills/isdd-reverse-engineering/references/design-chapters.md
+    - path: .agents/skills/isdd-reverse-engineering/references/design-completeness.md
+    - path: .agents/skills/isdd-reverse-engineering/references/document-rules.md
+    - path: .agents/skills/isdd-reverse-engineering/references/hearing-rules.md
+    - path: .agents/skills/isdd-reverse-engineering/references/id-definitions.md
+    - path: .agents/skills/isdd-reverse-engineering/references/requirements-chapters.md
+    - path: .agents/skills/isdd-reverse-engineering/references/subagent-delegation.md
+    - path: .agents/skills/isdd-reverse-engineering/references/trace-map-rules.md
+    - path: .agents/skills/isdd-reverse-engineering/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-reverse-engineering/scripts/rq_integrity_checker.py
     - path: .agents/skills/isdd-setup/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
 
 expected:
   outcomes:
@@ -135,3 +134,37 @@ graders:
             - "print\\(message\\)"
             - "printer\\s*=\\s*HelloWorldPrinter\\(\\)"
             - "printer\\.print_hello_world\\(\\)"
+
+  - name: "proposals_removed"
+    type: "file"
+    config:
+      must_not_exist:
+        - "docs/proposals.md"
+  - name: "no_interview_marks_left"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match 'docs/*.md' --min-files 2 --not-re '要インタビュー'"
+  - name: "rq_integrity_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"
+  - name: "trace_map_strict_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" strict-trace"

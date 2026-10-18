@@ -1,125 +1,71 @@
-id: isdd-change-design-hello-001
-name: Hello World 時刻表示追加 変更設計
-description: |
-  既存の Hello World 設計書に対して、時刻表示追加の変更要件定義書をもとに
-  change_detail_design.md の生成・DS-* ID付与・整合性チェッカー通過を検証する。
-
+id: "isdd-change-design-hello-001"
+name: "Hello World 時刻表示追加 変更設計"
+description: "変更要件定義書から変更設計書を作り、正本へ反映（ID と本文）し、tasks.md を決まりどおりに作るかを検証する。"
 tags:
-  - isdd
-  - change-design
-  - minimum
-
+  - "isdd"
+  - "change-design"
+  - "minimum"
 inputs:
   prompt: |
     isdd-change-designを実行してください。
     変更要件定義書は .history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。
-
-  # モデルの応答ターンごとに順番に送信される固定応答
   follow_up_prompts:
-    # ターン1への応答: 設計作業の催促
     - |
       これ以上の情報はありません。
       上記の情報をもとに今すぐ change_detail_design.md を作成してください。
-
-    # ターン2への応答: 正本反映と tasks.md 作成の催促
     - |
       これ以上の情報はありません。
       正本への反映（docs/requirements.md と docs/detail_design.md の更新）を承認します。
       反映とチェッカーの実行を行い、tasks.md も作成してください。
-
-    # ターン3への応答: 追加質問があった場合の催促
     - |
       これ以上の情報はありません。
       今すぐ docs/requirements.md と docs/detail_design.md への反映と tasks.md の作成を完了してください。
-
   context:
-    task_type: change-design-minimum
+    task_type: "isdd-change-design-hello-001"
   files:
     - path: docs/requirements.md
     - path: docs/detail_design.md
     - path: docs/trace_map.md
     - path: .history/20260508-add-timestamp-to-hello-world/change_requirements.md
     - path: .agents/skills/isdd-change-design/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
-
+    - path: .agents/skills/isdd-change-design/references/design-chapters.md
+    - path: .agents/skills/isdd-change-design/references/design-completeness.md
+    - path: .agents/skills/isdd-change-design/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-change-design/references/document-rules.md
+    - path: .agents/skills/isdd-change-design/references/id-definitions.md
+    - path: .agents/skills/isdd-change-design/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-change-design/references/trace-map-rules.md
+    - path: .agents/skills/isdd-change-design/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-change-design/scripts/rq_integrity_checker.py
 expected:
   outcomes:
-    - type: task_completed
-
+    - type: "task_completed"
 graders:
-  - name: change_detail_design_generated
-    type: prompt
+  - name: "change_detail_design_generated"
+    type: "file"
     config:
-      continue_session: true
-      prompt: |
-        bash ツールで `find .history -name change_detail_design.md` を実行し、
-        ファイルが存在するか確認してください。
-
-        存在する場合は set_waza_grade_pass を呼び出してください。
-        存在しない場合は set_waza_grade_fail を呼び出してください。
-
-  - name: tasks_generated
-    type: prompt
+      must_exist:
+        - ".history/20260508-add-timestamp-to-hello-world/change_detail_design.md"
+  - name: "change_design_ids_and_markers"
+    type: "file"
     config:
-      continue_session: true
-      prompt: |
-        bash ツールで `find .history -name tasks.md` を実行し、
-        見つかったファイルの内容を確認してください。
-
-        以下の条件を全て満たす場合は set_waza_grade_pass を呼び出してください。
-        1つでも満たさない場合は set_waza_grade_fail を呼び出してください。
-
-        確認条件:
-        - tasks.md が存在する
-        - ファイル内に docs/requirements.md と docs/detail_design.md への反映が完了していることを確認するタスク（正本反映の確認タスク）が記載されている
-        - ファイル内に対応表（docs/trace_map.md）の更新タスクが記載されている
-
-  - name: ds_ids_present
-    type: prompt
+      content_patterns:
+        - path: ".history/20260508-add-timestamp-to-hello-world/change_detail_design.md"
+          must_match:
+            - "DS-[A-Z]{2}-[A-Z0-9-]*GET-CURRENT-TIME"
+            - "DS-[A-Z]{2}-[A-Z0-9-]*BUILD-TIMESTAMPED-MESSAGE"
+            - "DS-[A-Z]{2}-[A-Z0-9-]*PRINT-TIMESTAMPED-OUTPUT"
+            - "\\[追加\\]"
+            - "\\[削除\\]"
+  - name: "change_docs_rq_ds_link_pass"
+    type: "program"
     config:
-      continue_session: true
-      prompt: |
-        bash ツールで `find .history -name change_detail_design.md` を実行し、
-        見つかったファイルの内容を確認してください。
-
-        以下の条件を全て満たす場合は set_waza_grade_pass を呼び出してください。
-        1つでも満たさない場合は set_waza_grade_fail を呼び出してください。
-
-        確認条件:
-        - RQ-FT-GET-CURRENT-TIME に対応する DS-* ID が1件以上存在する
-        - RQ-FT-BUILD-TIMESTAMPED-MESSAGE に対応する DS-* ID が1件以上存在する
-        - RQ-FT-PRINT-TIMESTAMPED-OUTPUT に対応する DS-* ID が1件以上存在する
-
-  - name: add_delete_markers
-    type: prompt
-    config:
-      continue_session: true
-      prompt: |
-        bash ツールで `find .history -name change_detail_design.md` を実行し、
-        見つかったファイルの内容を確認してください。
-
-        以下の条件を全て満たす場合は set_waza_grade_pass を呼び出してください。
-        1つでも満たさない場合は set_waza_grade_fail を呼び出してください。
-
-        確認条件:
-        - ファイル内に「[追加]」という文字列が存在する
-        - ファイル内に「[削除]」という文字列が存在する
-
-  - name: canonical_docs_updated
-    type: file
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py .history/20260508-add-timestamp-to-hello-world/change_requirements.md .history/20260508-add-timestamp-to-hello-world/change_detail_design.md"
+  - name: "canonical_requirements_updated"
+    type: "file"
     config:
       content_patterns:
         - path: "docs/requirements.md"
@@ -127,57 +73,55 @@ graders:
             - "RQ-FT-GET-CURRENT-TIME"
             - "RQ-FT-BUILD-TIMESTAMPED-MESSAGE"
             - "RQ-FT-PRINT-TIMESTAMPED-OUTPUT"
-            - "RQ-BK-EXECUTION-TIME-UNIDENTIFIABLE"
+            - "RQ-BK-OUTPUT-TIMESTAMP"
+            - "RQ-UI-TIMESTAMPED-STDOUT-OUTPUT"
           must_not_match:
             - "\\[追加\\]"
             - "\\[削除\\]"
             - "RQ-FT-GET-HELLO-MESSAGE"
+            - "RQ-UI-HELLO-STDOUT-OUTPUT"
+            - "固定文字列を出力するのみ"
+  - name: "canonical_design_updated"
+    type: "file"
+    config:
+      content_patterns:
         - path: "docs/detail_design.md"
           must_match:
             - "DS-FN-[A-Z0-9-]*GET-CURRENT-TIME"
             - "DS-FN-[A-Z0-9-]*BUILD-TIMESTAMPED-MESSAGE"
             - "DS-FN-[A-Z0-9-]*PRINT-TIMESTAMPED-OUTPUT"
             - "DS-MD-[A-Z0-9-]+"
+            - "除外要件"
           must_not_match:
             - "\\[追加\\]"
             - "\\[削除\\]"
             - "DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE"
-
-  - name: history_docs_kept
-    type: file
+            - "get_hello_message"
+  - name: "history_change_requirements_unchanged"
+    type: "program"
     config:
-      must_exist:
-        - ".history/20260508-add-timestamp-to-hello-world/change_requirements.md"
-      content_patterns:
-        - path: ".history/20260508-add-timestamp-to-hello-world/change_requirements.md"
-          must_match:
-            - "\\[追加\\]"
-            - "\\[削除\\]"
-
-  - name: canonical_checkers_pass
-    type: prompt
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged .history/20260508-add-timestamp-to-hello-world/change_requirements.md evals/isdd-change-design/fixtures/.history/20260508-add-timestamp-to-hello-world/change_requirements.md"
+  - name: "tasks_md_rules"
+    type: "program"
     config:
-      continue_session: true
-      prompt: |
-        bash ツールで以下の 2 つのコマンドを実行してください。
-
-        python3 .agents/skills/isdd-common/scripts/rq_integrity_checker.py docs/requirements.md
-        python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md
-
-        両方の実行結果に「全てのチェックに合格しました」が含まれる場合は set_waza_grade_pass を呼び出してください。
-        どちらかが合格しない場合は set_waza_grade_fail を呼び出してください。
-
-  - name: rq_ds_link_checker_pass
-    type: prompt
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/20260508-add-timestamp-to-hello-world/tasks.md' --re 'DS-[A-Z]{2}-[A-Z0-9]' --re '単体テスト|結合テスト' --re 'E2E' --re 'README' --re 'implementation_completeness_checker' --re 'isdd-setup|check\\.sh' --re 'trace_map' --re '正本'"
+  - name: "canonical_rq_integrity_pass"
+    type: "program"
     config:
-      continue_session: true
-      prompt: |
-        bash ツールで以下を実行してください。
-
-        1. `find .history -name change_detail_design.md` を実行してファイルのパスを取得する
-        2. 同じディレクトリにある change_requirements.md のパスを構築する
-        3. 以下のコマンドを実行する:
-           python3 .agents/skills/isdd-common/scripts/rq_ds_link_checker.py [change_requirements.mdのパス] [change_detail_design.mdのパス]
-
-        実行結果に「全てのチェックに合格しました」が含まれる場合は set_waza_grade_pass を呼び出してください。
-        ファイルが存在しない場合やチェックに失敗した場合は set_waza_grade_fail を呼び出してください。
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"
+  - name: "canonical_rq_ds_link_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"

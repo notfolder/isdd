@@ -13,7 +13,7 @@ config:
   timeout_seconds: 600
   parallel: false
   instruction_files:
-    - .agents/skills/isdd-common/references/id-definitions.md
+    - .agents/skills/isdd-requirements/references/id-definitions.md
 
 tasks:
   - tasks/*.yaml

@@ -1,0 +1,16 @@
+name: isdd-external-research-minimum
+skill: isdd-external-research
+version: "1.0"
+description: |
+  isdd-external-research 向けの評価。検証用の SQLite（extdata/crm.sqlite3）を連携先とし、
+  接続情報（.env）の扱い、成果物の節、要件との整合を検証する。
+
+config:
+  executor: copilot-sdk
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 1200
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

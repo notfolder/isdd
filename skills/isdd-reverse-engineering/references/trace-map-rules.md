@@ -1,0 +1,79 @@
+# 対応表（docs/trace_map.md）のルール
+
+設計 ID（`DS-*`）とソースコードの対応は、コードにコメントを書かず、対応表 `docs/trace_map.md` で管理する。
+要件 ID（`RQ-*`）との対応は設計 ID の末尾略称で表すため、対応表には書かない。
+
+---
+
+## 書式
+
+Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固定する。
+
+| DS-ID | 修飾名 | 備考 |
+|---|---|---|
+| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | `src/hello.py` | モジュール |
+| `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter` | クラス |
+| `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE` | `src/hello.py::HelloWorldPrinter.get_hello_message` | メソッド |
+| `DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter.print_hello_world` | メソッド |
+
+- 1 行に 1 対応。同じ DS-ID が複数行に現れてよい（1 つの設計要素を複数の関数で実現する場合）。
+- 同じ修飾名が複数行に現れてよい（1 つの関数が複数の設計要素を実現する場合）。
+- 備考は自由記述。空でもよい。
+
+## 修飾名の文法
+
+| 形 | 対象 | 例 |
+|---|---|---|
+| `<ファイルパス>` | モジュール（ファイル）単位。`DS-MD-*` にだけ使う | `src/app/order.py` |
+| `<ファイルパス>::<名前>` | トップレベルのクラスまたは関数 | `src/app/order.py::OrderService` |
+| `<ファイルパス>::<クラス名>.<名前>` | メソッド | `src/app/order.py::OrderService.create_order` |
+
+- ファイルパスはプロジェクトルートからの相対パスで、区切りは `/`。
+- `DS-MD-*` の行はファイルパスだけを書く。`DS-MD-*` 以外の行は `::` を含める。
+
+## 載せる粒度
+
+- ソースファイル（`DS-MD-*`）、クラス（`DS-CL-*`）、公開関数とメソッド（`DS-FN-*`。API の入口なら `DS-IF-*`、バッチの入口なら `DS-BT-*` でもよい）。
+- 次の設計 ID は、対応表に載せなくてよい（チェッカーも未登録の警告を出さない）。ソースディレクトリの中のクラスや関数として実装した場合は、載せてよい。
+  - `DS-SC-*`（データモデル）: DB のテーブル定義やファイル形式は修飾名で表せないため。データクラスとして実装した場合は、そのクラスを載せてよい
+  - `DS-TS-*`（テスト）: テストファイルは対応表に載せないため
+  - `DS-OP-*`（運用）: compose ファイル、設定ファイル、運用手順などはソースコードではないため
+  - `DS-EV-*`（イベント）: イベントを処理するクラスや関数を `DS-CL-*`・`DS-FN-*` で載せる
+- アンダースコア始まりの内部関数と、`__init__` などのダンダーメソッドは載せない。
+- テストファイル（`test_*.py`、`*_test.py`、`*.spec.ts`、`*.test.ts`、`*_test.go`、`*Test.java`、`*Tests.cs` など）は載せない。
+
+## チェッカー
+
+`trace_map_checker.py` が、詳細設計書・対応表・コードの 3 者を突き合わせる。
+
+```bash
+python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src [--strict]
+```
+
+| 区分 | 内容 | 扱い |
+|---|---|---|
+| エラー | 対応表の DS-ID が設計書に無い。対応表の修飾名がコードに無い（改名・削除の見落とし）。`DS-MD-*` と修飾名の形が合わない | 終了コード 1。pre-commit で止まる |
+| 警告 | コードのファイル・クラス・公開関数が対応表に無い。設計書の `DS-MD-*` `DS-CL-*` `DS-FN-*` が対応表に無い（未実装の可能性） | 既定では終了コード 0。`--strict` で終了コード 1 |
+| 確認対象外 | 記号を抽出できない言語のファイルを指す `::名前` の行。ファイルの存在だけ確認する | 件数を表示するだけ。終了コードに影響しない |
+
+### 言語ごとの確認の深さ
+
+| 言語 | 確認できること | 方法 |
+|---|---|---|
+| Python | ファイル、クラス、関数、メソッド | 構文木（ast）で正確に抽出する |
+| TypeScript / JavaScript、Java、Go | ファイル、クラス、関数、メソッド | 正規表現で近似抽出する。TypeScript / JavaScript はアロー関数（`const f = () =>`）も関数として拾う。クラス所属の判定は近似 |
+| C#、Ruby、PHP、Kotlin、Swift、Rust、C / C++、Scala、Dart、Vue、Svelte、シェルなど | ファイルの存在だけ | `::名前` の行は「確認対象外」として数え、エラーにも警告にもしない。未登録ファイルの警告は出る |
+| 上記以外の拡張子 | 何も確認しない | 対応表の行は「ファイルが見つかりません」のエラーになる。必要なら `trace_map_checker.py` の `FILE_ONLY_LANGS` に拡張子を足す |
+
+- 実装スキル（`isdd-traceable-coding`）の完了条件は `--strict` で合格すること（エラーも警告も 0 件）。
+- pre-commit はエラーだけで止める。スキルを使わずにコードを変えた人が関数を足しても止まらない。その抜けは `isdd-post-implementation-review` で対応表と設計書に取り込む。
+
+## 外部連携ライブラリの扱い
+
+- `isdd-external-research` が作る `external/[システム名]/src/` はプロジェクトのコードなので、`isdd-setup` の `--src` に含めて対応表に載せる（例: `--src src --src external/foo/src`）。
+- `external/[システム名]/mock/` と `e2e/` はテスト資材なので載せない。
+
+## 更新のタイミング
+
+- クラス・公開関数・ファイルを追加、改名、削除したら、同じ作業の中で対応表を更新する。
+- 設計要素を増やす必要があれば、先に設計書を更新して DS-ID を採番し、それから対応表に行を足す。実装中に ID を作らない。

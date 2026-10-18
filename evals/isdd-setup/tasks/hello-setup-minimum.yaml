@@ -33,14 +33,9 @@ inputs:
     - path: docs/trace_map.md
     - path: src/hello.py
     - path: .agents/skills/isdd-setup/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
 
 expected:
   outcomes:
@@ -54,7 +49,7 @@ graders:
         - "scripts/isdd/check.sh"
         - "scripts/isdd/pre-commit"
         - "scripts/isdd/trace_map_checker.py"
-        - "scripts/isdd/rq_ds_link_checker.py"
+        - "scripts/isdd/VERSION"
         - "scripts/isdd/implementation_completeness_checker.py"
 
   - name: rules_appended
@@ -103,3 +98,54 @@ graders:
 
         明記されている場合は set_waza_grade_pass を呼び出してください。
         明記されていない場合は set_waza_grade_fail を呼び出してください。
+
+  - name: "setup_outputs"
+    type: "file"
+    config:
+      must_exist:
+        - "scripts/isdd/check.sh"
+        - "scripts/isdd/pre-commit"
+        - "scripts/isdd/trace_map_checker.py"
+        - "scripts/isdd/implementation_completeness_checker.py"
+        - "scripts/isdd/VERSION"
+        - "scripts/isdd/completeness.json"
+  - name: "old_rq_copy_removed"
+    type: "file"
+    config:
+      must_not_exist:
+        - "scripts/isdd/rq_ds_link_checker.py"
+  - name: "version_current"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" version-current"
+  - name: "profile_runtime_cli"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" json-eq scripts/isdd/completeness.json runtime '\"cli\"'"
+  - name: "profile_no_auth"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" json-eq scripts/isdd/completeness.json auth false"
+  - name: "profile_no_external"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" json-eq scripts/isdd/completeness.json external false"
+  - name: "rules_block_single"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" count AGENTS.md '<!-- isdd-setup:begin -->' 1"

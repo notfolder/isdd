@@ -1,0 +1,43 @@
+id: "isdd-traceability-version-001"
+name: "チェッカーの版の食い違い"
+description: "scripts/isdd/VERSION がスキルの版と違うとき、isdd-setup の再実行を案内するか、再実行して版を揃えるかを検証する。"
+tags:
+  - "isdd"
+  - "traceability"
+  - "version"
+inputs:
+  prompt: |
+    isdd-traceable-codingを実行してください。
+    src/hello.py は設計書どおりに実装済みです。対応表の作成とチェックを行ってください。
+  follow_up_prompts:
+    - "これ以上の情報はありません。isdd の規則どおりに進めてください。この環境ではエージェントのフックは作らなくて構いません。"
+    - "これ以上の情報はありません。今すぐ docs/trace_map.md を確認し、チェッカーを実行して完了報告をしてください。"
+  context:
+    task_type: "isdd-traceability-version-001"
+    fixture: "fixtures/version-old"
+  files:
+    - path: .agents/skills/isdd-traceable-coding/SKILL.md
+    - path: .agents/skills/isdd-traceable-coding/references/trace-map-rules.md
+    - path: .agents/skills/isdd-traceable-coding/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-setup/SKILL.md
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "version_aligned_or_reported"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" version-current --or-output-re 'isdd-setup|VERSION|版'"
+  - name: "version_mismatch_handled"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。エージェントは scripts/isdd/VERSION（v1.0.14）とスキルの版が違うことに自分で気づき（ユーザーに言われてからではなく）、そのことを報告して isdd-setup を再実行したか、再実行を案内しましたか。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

@@ -1,93 +1,87 @@
-# 詳細設計書
+# Hello World 出力システム 詳細設計書
 
-## 1. 言語・フレームワーク
+## 1. 言語・フレームワーク・アーキテクチャの選定
 
-| DS-ID | 項目 | 選定結果 | 選定理由 | 対応要件ID |
-|---|---|---|---|---|
-| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | 言語 | Python 3.x | 最小構成での CUI 実行と可読性を両立できるため | `RQ-FT-PRINT-HELLO-WORLD` |
-| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | フレームワーク | なし | 固定文字列出力のみで外部ライブラリが不要なため | `RQ-FT-PRINT-HELLO-WORLD` |
+- 判定日時: 2026-10-17
+- 技術制約の要約: 既存コードなし。配備先は開発者の PC と CI パイプライン。チームの技術は Python。OSS のみ
 
----
+| 判断軸 | 該当 | 理由 |
+|---|---|---|
+| 既存資産との整合 | なし | 既存コードが無い |
+| チームの技術 | あり | Python を扱える |
+| 配備先 | あり | PC と CI の両方で動く必要がある |
+| データの規模と構造 | なし | データを保持しない |
+
+| 候補 | 判断軸の評価 | 出典 URL | 確認日 |
+|---|---|---|---|
+| Python 3（標準ライブラリのみ） | チームが扱え、PC と CI で動く | 未調査（ユーザー承認: 2026-10-17） | 2026-10-17 |
+
+- 最終選定結果: 言語は Python 3、フレームワークなし、DB なし、実行形態は CLI
+- 選定理由: 固定文字列の出力だけで、外部ライブラリが要らないため
+- ユーザー承認: 2026-10-17
 
 ## 2. システム構成
 
-### 2-1. コンポーネント一覧
-
-| DS-ID | コンポーネント名 | 役割 | 対応要件ID |
-|---|---|---|---|
-| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | hello モジュール | 出力処理全体を保持する実行エントリポイント | `RQ-FT-PRINT-HELLO-WORLD` |
-| `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | HelloWorldPrinter クラス | 文字列取得と表示処理の責務を持つクラス | `RQ-FT-PRINT-HELLO-WORLD` |
-
-### 2-2. システム全体構成図
+| コンポーネント名 | 役割 |
+|---|---|
+| hello モジュール | 実行の入口と出力処理を持つ |
 
 ```mermaid
 flowchart TD
-    A[利用者] --> B[CLI エントリポイント]
-    B --> C[HelloWorldPrinter.print_hello_world]
-    C --> D[HelloWorldPrinter.get_hello_message]
-    D --> E["Hello, World!"]
-    E --> F[標準出力]
+    A[利用者] --> B[CLI の入口]
+    B --> C[表示処理]
+    C --> D[標準出力]
 ```
 
-### 2-3. コンポーネント間インターフェースとデータフロー
+ネットワーク越しの通信が無いため、ネットワーク構成図は書かない。
 
-| DS-ID | 送信元 | 送信先 | データ | 対応要件ID |
-|---|---|---|---|---|
-| `DS-IF-CLI-ENTRY-FT-PRINT-HELLO-WORLD` | CLI エントリ | print_hello_world | メソッド呼び出し | `RQ-FT-PRINT-HELLO-WORLD` |
-| `DS-IF-GET-MESSAGE-FT-GET-HELLO-MESSAGE` | print_hello_world | get_hello_message | 文字列取得要求 | `RQ-FT-GET-HELLO-MESSAGE` |
-| `DS-IF-PRINT-OUTPUT-FT-PRINT-HELLO-WORLD` | print_hello_world | 標準出力 | "Hello, World!" 文字列 | `RQ-FT-PRINT-HELLO-WORLD` |
+## 3. データ設計
 
----
+### 3-1. データモデル
 
-## 3. データベース設計
+DB は必須ではないため、DB 設計は行わない。
 
-DB は不要。固定文字列をメモリ上で扱うのみで永続化しない。
+| DS-ID | データ | 構造 | 対応要件ID |
+|---|---|---|---|
+| `DS-SC-NO-PERSISTENCE-DT-DB-NOT-REQUIRED` | 表示文字列 | プログラム内の固定値。永続化しない | `RQ-DT-DB-NOT-REQUIRED` |
 
-テーブル設計: 該当なし。
+### 3-2. トランザクションと排他制御
 
----
+トランザクション・排他制御が要る操作は無い。
+
+### 3-3. 状態遷移
+
+状態を持つエンティティは無い。
 
 ## 4. アーキテクチャ設計
 
 ### 4-1. 外部設計
 
-#### CUI 仕様
+| DS-ID | インターフェース | 入力 | バリデーション | 出力 | エラー仕様 | 対応要件ID |
+|---|---|---|---|---|---|---|
+| `DS-IF-CLI-ENTRY-UI-HELLO-STDOUT-OUTPUT` | スクリプトの実行（引数なし） | なし | なし | 標準出力に "Hello, World!" を 1 行 | 例外は伝播させ、0 以外の終了コードで終わる | `RQ-UI-HELLO-STDOUT-OUTPUT` |
 
-| DS-ID | コマンド | 引数 | 動作 | 対応要件ID |
-|---|---|---|---|---|
-| `DS-IF-CLI-ENTRY-FT-PRINT-HELLO-WORLD` | Python スクリプト実行 | なし | HelloWorldPrinter を生成して print_hello_world を呼び出す | `RQ-FT-PRINT-HELLO-WORLD` |
-
-#### テスト実行インターフェース
-
-| DS-ID | 目的 | 実行方法 | 対応要件ID |
-|---|---|---|---|
-| `DS-IF-CLI-TEST-TS-VERIFY-HELLO-WORLD-OUTPUT` | 正常出力を確認する | スクリプトを引数なしで実行し stdout を検証する | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` |
+外部システム連携と外部 DB 連携は無い。
 
 ### 4-2. 内部設計
 
-#### 処理フロー図
-
 ```mermaid
 flowchart TD
-    A[main 開始] --> B[HelloWorldPrinter 生成]
-    B --> C[print_hello_world 呼び出し]
-    C --> D[get_hello_message 呼び出し]
-    D --> E["Hello, World!" 返却]
-    E --> F[print で標準出力へ表示]
-    F --> G[終了]
+    A[開始] --> B[表示処理を呼ぶ]
+    B --> C[表示文字列を取得する]
+    C --> D[標準出力に表示する]
 ```
-
----
 
 ## 5. クラス設計
 
-### 5-1. クラス一覧
+| DS-ID | クラス名 | 責務 | SOLID 原則への適合 | 対応要件ID |
+|---|---|---|---|---|
+| `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | HelloWorldPrinter | 表示文字列の取得と表示 | 単一責任: 表示だけを担う | `RQ-FT-PRINT-HELLO-WORLD` |
 
-| DS-ID | クラス名 | 役割 | 対応要件ID |
+| DS-ID | メソッド | 責務 | 対応要件ID |
 |---|---|---|---|
-| `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | HelloWorldPrinter | 表示文字列の取得と標準出力表示 | `RQ-FT-PRINT-HELLO-WORLD` |
-
-### 5-2. クラス図
+| `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE` | HelloWorldPrinter.get_hello_message | 固定文字列 "Hello, World!" を返す | `RQ-FT-GET-HELLO-MESSAGE` |
+| `DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD` | HelloWorldPrinter.print_hello_world | 表示文字列を標準出力へ表示する | `RQ-FT-PRINT-HELLO-WORLD` |
 
 ```mermaid
 classDiagram
@@ -97,58 +91,66 @@ classDiagram
     }
 ```
 
----
+システム内メッセージは無い。
 
-## 6. 関数設計
+## 6. エラーハンドリングとセキュリティ設計
 
-### 6-1. 関数一覧
+- エラーハンドリング: 例外は捕捉せず伝播させ、実行失敗として終わる
+- 認証は無い
+- 認可は無い
+- 監査ログは無い
 
-| DS-ID | 関数名 | 所属クラス | 責務 | 対応要件ID |
-|---|---|---|---|---|
-| `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE` | get_hello_message | HelloWorldPrinter | 固定文字列 "Hello, World!" を返す | `RQ-FT-GET-HELLO-MESSAGE` |
-| `DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD` | print_hello_world | HelloWorldPrinter | get_hello_message の結果を標準出力へ表示する | `RQ-FT-PRINT-HELLO-WORLD` |
-
-### 6-2. シーケンス図
-
-```mermaid
-sequenceDiagram
-    participant Main as main
-    participant P as HelloWorldPrinter
-    Main->>P: print_hello_world()
-    P->>P: get_hello_message()
-    P-->>P: "Hello, World!"
-    P->>stdout: print("Hello, World!")
-```
-
----
-
-## 7. エラーハンドリング設計
-
-例外は伝播させて実行失敗として終了する。明示的な try/except は設けない。
-
----
-
-## 8. コード設計
-
-### 8-1. ディレクトリ構成
+## 7. コード設計
 
 ```
 src/
-  hello.py
-docs/
-  requirements.md
-  detail_design.md
 ```
 
-### 8-2. ファイル一覧
+| DS-ID | ファイル | 役割 | 含まれるクラス | 実現する設計 ID |
+|---|---|---|---|---|
+| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | src/hello.py | 実行の入口と出力処理 | HelloWorldPrinter | `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` |
 
-| DS-ID | ファイル名 | 役割 | 対応要件ID |
+コーディング規約: PEP 8。コードには要件 ID・設計 ID を書かず、設計 ID とコードの対応は `docs/trace_map.md` に記録する。
+
+## 8. テスト設計
+
+### 8-1. テストの種類と方針
+
+- 単体テスト: HelloWorldPrinter の 2 つのメソッド
+- 単体テストの実行コマンド: `python3 -m unittest discover -s tests`
+
+### 8-2. E2E テストのシナリオ
+
+| DS-ID | 対応要件ID | 目的 | 前提条件 | 手順 | 期待結果 |
+|---|---|---|---|---|---|
+| `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | 正常出力の確認 | スクリプトが配置されている | 引数なしで実行する | "Hello, World!" が 1 行表示され、終了コード 0 |
+
+### 8-3. E2E の実行手段
+
+CLI なので、スクリプトを実行して標準出力と終了コードを確かめるテストを Python の unittest で書く。
+
+### 8-4. E2E の実行コマンドと運用
+
+- 実行コマンド: `python3 -m unittest discover -s e2e`
+- テスト資産は `e2e/` に置く。全件通過をゴールにする
+
+## 9. 運用設計
+
+| DS-ID | 項目 | 内容 | 対応要件ID |
 |---|---|---|---|
-| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | src/hello.py | CUI 実行エントリポイントと出力処理 | `RQ-FT-PRINT-HELLO-WORLD` |
+| `DS-OP-CLI-RUN-FT-PRINT-HELLO-WORLD` | 起動 | `python3 src/hello.py` で実行する | `RQ-FT-PRINT-HELLO-WORLD` |
 
----
+- 初期化は不要。認証が無いため、初期ユーザーは無い
+- 設定値・環境変数は無い
+- 起動方法を README.md に書く
 
-## 9. RQ-DS 対応表
+## 10. ログ・監視・アラート・障害対応設計
+
+- ログの設計は必須ではないため、ログの種類と内容の記述は行わない
+- 監視・アラートの設計は必須ではないため、監視・アラートの内容と対応方法の記述は行わない
+- 障害対応: 実行に失敗したら、利用者が終了コードと例外の表示を確かめて再実行する
+
+## 11. 要件と設計の対応表
 
 | DS-ID | 対応要件ID |
 |---|---|
@@ -156,7 +158,11 @@ docs/
 | `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | `RQ-FT-PRINT-HELLO-WORLD` |
 | `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE` | `RQ-FT-GET-HELLO-MESSAGE` |
 | `DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD` | `RQ-FT-PRINT-HELLO-WORLD` |
-| `DS-IF-CLI-ENTRY-FT-PRINT-HELLO-WORLD` | `RQ-FT-PRINT-HELLO-WORLD` |
-| `DS-IF-GET-MESSAGE-FT-GET-HELLO-MESSAGE` | `RQ-FT-GET-HELLO-MESSAGE` |
-| `DS-IF-PRINT-OUTPUT-FT-PRINT-HELLO-WORLD` | `RQ-FT-PRINT-HELLO-WORLD` |
-| `DS-IF-CLI-TEST-TS-VERIFY-HELLO-WORLD-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` |
+| `DS-IF-CLI-ENTRY-UI-HELLO-STDOUT-OUTPUT` | `RQ-UI-HELLO-STDOUT-OUTPUT` |
+| `DS-SC-NO-PERSISTENCE-DT-DB-NOT-REQUIRED` | `RQ-DT-DB-NOT-REQUIRED` |
+| `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` |
+| `DS-OP-CLI-RUN-FT-PRINT-HELLO-WORLD` | `RQ-FT-PRINT-HELLO-WORLD` |
+
+### 11-1. 除外要件
+
+除外要件は無い。

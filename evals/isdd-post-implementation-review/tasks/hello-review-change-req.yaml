@@ -1,84 +1,90 @@
-id: isdd-post-implementation-review-hello-change-req-001
-name: Hello World 変更要件フロー後 実装後整合確認
-description: |
-  時刻表示を追加した hello.py の実装後に、変更前の要件定義書・詳細設計書と
-  change_requirements.md を入力として isdd-post-implementation-review を実行し、
-  三者突合・正本更新ができるかを検証する。
-
+id: "isdd-post-implementation-review-change-req-001"
+name: "Hello World 変更要件フロー後 実装後整合確認"
+description: "変更要件が正本に反映されていない状態で、聞き直さずに正本（ID と本文）と対応表を更新し、変更要件定義書を書き換えないかを検証する。"
 tags:
-  - isdd
-  - post-implementation-review
-  - change-req
-
+  - "isdd"
+  - "post-implementation-review"
 inputs:
   prompt: |
     isdd-post-implementation-reviewを実行してください。
-    変更要件定義書は case3-change-req/.history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。
-    実装差分は case3-change-req/src/hello.py の内容を確認してください。
-    要件定義書は case3-change-req/docs/requirements.md、詳細設計書は case3-change-req/docs/detail_design.md を参照してください。
-    対応表は case3-change-req/docs/trace_map.md にあります。
+    実装差分は src/hello.py、変更要件定義書は .history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。
 
+    （scripts/isdd/check.sh が無い場合は isdd-setup を実行してください。ソースディレクトリは src、実行形態は CLI、認証なし、外部連携なしです。エージェントのフックは作らなくて構いません。）
   context:
-    task_type: post-implementation-review-change-req
+    task_type: "isdd-post-implementation-review-change-req-001"
+    fixture: "fixtures/case3-change-req"
   files:
-    - path: case3-change-req/docs/requirements.md
-    - path: case3-change-req/docs/detail_design.md
-    - path: case3-change-req/.history/20260508-add-timestamp-to-hello-world/change_requirements.md
-    - path: case3-change-req/src/hello.py
-    - path: case3-change-req/docs/trace_map.md
     - path: .agents/skills/isdd-post-implementation-review/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
-
+    - path: .agents/skills/isdd-post-implementation-review/references/document-rules.md
+    - path: .agents/skills/isdd-post-implementation-review/references/id-definitions.md
+    - path: .agents/skills/isdd-post-implementation-review/references/trace-map-rules.md
+    - path: .agents/skills/isdd-post-implementation-review/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-setup/SKILL.md
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
 expected:
   outcomes:
-    - type: task_completed
-
+    - type: "task_completed"
 graders:
-  - name: requirements_updated_with_timestamp
-    type: file
+  - name: "requirements_updated"
+    type: "file"
     config:
       content_patterns:
-        - path: "case3-change-req/docs/requirements.md"
+        - path: "docs/requirements.md"
           must_match:
-            - "RQ-FT-GET-CURRENT-TIME|RQ-FT-BUILD-TIMESTAMPED-MESSAGE|RQ-FT-PRINT-TIMESTAMPED-OUTPUT"
-
-  - name: design_updated_with_timestamp
-    type: file
+            - "RQ-FT-GET-CURRENT-TIME"
+            - "RQ-FT-BUILD-TIMESTAMPED-MESSAGE"
+            - "RQ-FT-PRINT-TIMESTAMPED-OUTPUT"
+          must_not_match:
+            - "固定文字列を出力するのみ"
+            - "\\[追加\\]"
+            - "\\[削除\\]"
+  - name: "design_updated"
+    type: "file"
     config:
       content_patterns:
-        - path: "case3-change-req/docs/detail_design.md"
+        - path: "docs/detail_design.md"
           must_match:
-            - "DS-FN-GET-CURRENT-TIME|DS-FN-BUILD-TIMESTAMPED-MESSAGE|DS-FN-PRINT-TIMESTAMPED-OUTPUT"
-
-  - name: trace_map_updated_with_timestamp
-    type: file
+            - "DS-FN-[A-Z0-9-]*GET-CURRENT-TIME"
+            - "DS-FN-[A-Z0-9-]*BUILD-TIMESTAMPED-MESSAGE"
+            - "DS-FN-[A-Z0-9-]*PRINT-TIMESTAMPED-OUTPUT"
+  - name: "trace_map_updated"
+    type: "file"
     config:
       content_patterns:
-        - path: "case3-change-req/docs/trace_map.md"
+        - path: "docs/trace_map.md"
           must_match:
-            - "get_current_time|build_timestamped_message|print_timestamped_output"
-
-  - name: change_req_intent_consistent
-    type: prompt
+            - "get_current_time"
+            - "build_timestamped_message"
+            - "print_timestamped_output"
+          must_not_match:
+            - "get_hello_message"
+  - name: "change_requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged .history/20260508-add-timestamp-to-hello-world/change_requirements.md evals/isdd-post-implementation-review/fixtures/case3-change-req/.history/20260508-add-timestamp-to-hello-world/change_requirements.md"
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"
+  - name: "trace_map_strict_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" strict-trace"
+  - name: "unmapped_table_presented"
+    type: "prompt"
     config:
       continue_session: true
       prompt: |
-        エージェントの最終報告と case3-change-req/docs/requirements.md の更新内容を確認し、
-        change_requirements.md の要求意図（時刻表示追加）と正本更新結果が
-        矛盾していないかを評価してください。
-
-        矛盾がなく整合している場合は set_waza_grade_pass を呼び出してください。
-        矛盾がある場合は set_waza_grade_fail を呼び出してください。
+        このセッションでエージェントが出した応答を確認してください。「未マッピング一覧」という見出しと、実装要素・対応表の DS-ID・設計書に DS-ID があるか・対応する RQ-ID・要件定義書に RQ-ID があるか・状態 の列を持つ表が、どこかの応答に含まれていますか（該当なしの場合も見出しと表が必要）。
+        含まれている場合は set_waza_grade_pass を、含まれていない場合は set_waza_grade_fail を呼び出してください。

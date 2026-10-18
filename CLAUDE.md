@@ -15,6 +15,7 @@
 
 ## スキルの設計上の決まり
 
+- **共通ファイルの正本は `shared/`。`skills/<スキル>/references/` と `scripts/` は `python3 tools/build_skills.py` が作る複製なので手で編集しない。複製もコミットする**（2026-10-18）。`gh skill publish` と `install.sh` が同じ中身を配るため。
 - **コードに ID を書かない。設計 ID とコードの対応は `docs/trace_map.md` で管理し、`scripts/isdd/check.sh` で検証する**（2026-10-17）。
 - **変更設計の正本反映は `isdd-change-design` の完了時に行う。PIR は反映漏れの安全網**（2026-10-18）。`check.sh` が正本の設計書だけを読むため。
 - **逆引きスキルは自分で正本を確定し、完了後の新要求は `isdd-change-req` へ**（2026-10-18）。

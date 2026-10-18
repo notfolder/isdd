@@ -1,128 +1,86 @@
-id: isdd-change-req-hello-001
-name: Hello World 時刻表示追加 変更要件定義
-description: |
-  既存の Hello World 要件定義書に対して、出力に現在時刻を追加する変更要件を定義し、
-  change_requirements.md の生成・RQ-* ID付与・整合性チェッカー実行を検証する。
-
+id: "isdd-change-req-hello-001"
+name: "Hello World 時刻表示追加 変更要件定義"
+description: "既存の要件定義書を書き換えずに、問題と業務課題を分けた変更要件定義書を [追加] [削除] で作り、チェッカーが合格するかを検証する。"
 tags:
-  - isdd
-  - change-req
-  - minimum
-
+  - "isdd"
+  - "change-req"
+  - "minimum"
 inputs:
   prompt: |
     isdd-change-reqを実行してください。
-
-  # モデルの応答ターンごとに順番に送信される固定応答
   follow_up_prompts:
-    # ターン1への応答: 開始ゲートQ1（外部連携有無）
     - "選択肢B（外部連携なし）"
-
-    # ターン2への応答: 変更要件ヒアリング
     - |
       以下の情報を使用してください：
       - 変更ビジョン: Hello Worldの出力に現在時刻を追加したい
-      - 変更業務課題: 出力内容に実行時刻が含まれないため、ログやCIパイプラインで実行タイミングを特定できない
-      - 時刻フォーマット: HH:MM:SS形式（ローカル時刻、Pythonのdatetime.now()を使用）
-      - 出力形式: "Hello, World! (HH:MM:SS)" の1行
+      - あるべき姿: ログや CI パイプラインの出力だけで、いつ実行されたかを特定できる
+      - 現状: 出力内容に実行時刻が含まれないため、ログや CI パイプラインで実行タイミングを特定できない
+      - 変更業務課題（取り組むこと）: 出力に実行時刻を付ける
+      - 見込み経営効果: 変更なし（追加の効果は算定しない）
+      - 時刻フォーマット: HH:MM:SS形式（ローカル時刻、24 時間制、ミリ秒なし）
+      - 出力形式: "Hello, World! (HH:MM:SS)" の1行（帳票・出力ファイルの変更に当たる）
+      - 業務ルール: 時刻は HH:MM:SS で表す。時刻を取得できなければ例外を伝播させて 0 以外で終わる
       - 外部ライブラリ: 使用しない（Python標準ライブラリのみ）
-      - エラーハンドリング: 例外は伝播させて実行失敗として終了する（既存方針を踏襲）
-      - 時刻の精度: 秒単位（ミリ秒は不要）
-      - タイムゾーン: ローカル時刻（タイムゾーン変換は不要）
-
-    # ターン3への応答: 追加質問があった場合の催促
+      - データ・状態遷移・非機能・運用: 変更なし
     - |
       これ以上の情報はありません。
       上記の情報をもとに今すぐ change_requirements.md を作成してください。
-
   context:
-    task_type: change-req-minimum
+    task_type: "isdd-change-req-hello-001"
   files:
     - path: docs/requirements.md
     - path: docs/detail_design.md
-    - path: src/hello.py
     - path: docs/trace_map.md
+    - path: src/hello.py
     - path: .agents/skills/isdd-change-req/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
-
+    - path: .agents/skills/isdd-change-req/references/document-rules.md
+    - path: .agents/skills/isdd-change-req/references/hearing-rules.md
+    - path: .agents/skills/isdd-change-req/references/id-definitions.md
+    - path: .agents/skills/isdd-change-req/references/requirements-chapters.md
+    - path: .agents/skills/isdd-change-req/scripts/rq_integrity_checker.py
 expected:
   outcomes:
-    - type: task_completed
-
+    - type: "task_completed"
 graders:
-  - name: change_req_generated
-    type: prompt
+  - name: "change_requirements_created"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/change_requirements.md' --re 'RQ-BK-[A-Z0-9]+-[A-Z0-9]' --re 'RQ-FT-[A-Z0-9]+-[A-Z0-9]' --re '\\[追加\\]' --re '\\[削除\\]'"
+  - name: "problem_and_issue_separated"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/change_requirements.md' --re 'あるべき姿' --re '現状'"
+  - name: "deleted_requirements_have_bk"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/change_requirements.md' --not-re '^(?!.*RQ-BK-)(?=.*\\[削除\\])(?=.*RQ-(?:FT|UI|TS|DT|NF|OP|EX)-).*$'"
+  - name: "rq_integrity_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py '.history/*/change_requirements.md'"
+  - name: "canonical_requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/requirements.md evals/isdd-change-req/fixtures/docs/requirements.md"
+  - name: "rq_integrity_checker_executed"
+    type: "prompt"
     config:
       continue_session: true
       prompt: |
-        bash ツールで `find .history -name change_requirements.md` を実行し、
-        ファイルが存在するか確認してください。
-
-        存在する場合は set_waza_grade_pass を呼び出してください。
-        存在しない場合は set_waza_grade_fail を呼び出してください。
-
-  - name: rq_ids_present
-    type: prompt
-    config:
-      continue_session: true
-      prompt: |
-        bash ツールで `find .history -name change_requirements.md` を実行し、
-        見つかったファイルの内容を確認してください。
-
-        以下の条件を全て満たす場合は set_waza_grade_pass を呼び出してください。
-        1つでも満たさない場合は set_waza_grade_fail を呼び出してください。
-
-        確認条件:
-        - RQ-BK-* ID が1件以上存在する（時刻表示に関連する新しい業務課題）
-        - RQ-FT-* ID が1件以上存在する（時刻取得または時刻付き出力に関連する機能）
-
-  - name: add_delete_markers
-    type: prompt
-    config:
-      continue_session: true
-      prompt: |
-        bash ツールで `find .history -name change_requirements.md` を実行し、
-        見つかったファイルの内容を確認してください。
-
-        以下の条件を全て満たす場合は set_waza_grade_pass を呼び出してください。
-        1つでも満たさない場合は set_waza_grade_fail を呼び出してください。
-
-        確認条件:
-        - ファイル内に「[追加]」という文字列が存在する
-        - ファイル内に「[削除]」という文字列が存在する
-
-  - name: docs_unchanged
-    type: file
-    config:
-      content_patterns:
-        - path: "docs/requirements.md"
-          must_match:
-            - "RQ-BK-ENV-VERIFICATION-UNGOVERNED"
-            - "RQ-FT-PRINT-HELLO-WORLD"
-          must_not_match:
-            - "\\[追加\\]"
-            - "\\[削除\\]"
-
-  - name: rq_integrity_checker_executed
-    type: prompt
-    config:
-      continue_session: true
-      prompt: |
-        セッションのツール呼び出し履歴を確認し、bash ツールで
-        `rq_integrity_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
-
-        実行されていた場合は set_waza_grade_pass を呼び出してください。
-        実行されていなかった場合は set_waza_grade_fail を呼び出してください。
+        セッションのツール呼び出し履歴を確認し、bash ツールで `rq_integrity_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
+        実行されていた場合は set_waza_grade_pass を、実行されていなかった場合は set_waza_grade_fail を呼び出してください。

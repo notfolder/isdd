@@ -1,69 +1,57 @@
-id: isdd-post-implementation-review-hello-proposals-001
-name: Hello World 実装後整合確認（proposals.md あり）
-description: |
-  docs/proposals.md が存在する状態で isdd-post-implementation-review スキルを実行し、
-  提案内容の処理（正本反映または追記不要の確定）と proposals.md の削除が行えるかを検証する。
-
+id: "isdd-post-implementation-review-hello-proposals-001"
+name: "Hello World 実装後整合確認（proposals.md あり）"
+description: "docs/proposals.md の提案を処理し、完了時に削除するかを検証する。"
 tags:
-  - isdd
-  - post-implementation-review
-  - proposals
-
+  - "isdd"
+  - "post-implementation-review"
 inputs:
   prompt: |
     isdd-post-implementation-reviewを実行してください。
-    実装差分は case2-proposals/src/hello.py の内容を確認してください。
-    要件定義書は case2-proposals/docs/requirements.md、詳細設計書は case2-proposals/docs/detail_design.md を参照してください。
-    対応表は case2-proposals/docs/trace_map.md にあります。
-    proposals は case2-proposals/docs/proposals.md にあります。
+    実装差分は src/hello.py、実装中の提案は docs/proposals.md にあります。
 
-  # モデルの応答ターンごとに順番に送信される固定応答
+    （scripts/isdd/check.sh が無い場合は isdd-setup を実行してください。ソースディレクトリは src、実行形態は CLI、認証なし、外部連携なしです。エージェントのフックは作らなくて構いません。）
   follow_up_prompts:
-    # ターン1への応答: proposals.md 処理判断のヒアリング
     - "PROP-001 について: 要件定義書への追記は不要です。詳細設計書の記述で十分と判断してください。"
-
   context:
-    task_type: post-implementation-review-proposals
+    task_type: "isdd-post-implementation-review-hello-proposals-001"
+    fixture: "fixtures/case2-proposals"
   files:
-    - path: case2-proposals/docs/requirements.md
-    - path: case2-proposals/docs/detail_design.md
-    - path: case2-proposals/docs/proposals.md
-    - path: case2-proposals/src/hello.py
-    - path: case2-proposals/docs/trace_map.md
     - path: .agents/skills/isdd-post-implementation-review/SKILL.md
-    - path: .agents/skills/isdd-common/SKILL.md
-    - path: .agents/skills/isdd-common/references/design-chapters.md
-    - path: .agents/skills/isdd-common/references/design-completeness.md
-    - path: .agents/skills/isdd-common/references/design-tasks-rules.md
-    - path: .agents/skills/isdd-common/references/document-rules.md
-    - path: .agents/skills/isdd-common/references/hearing-complexity-rules.md
-    - path: .agents/skills/isdd-common/references/id-definitions.md
-    - path: .agents/skills/isdd-common/references/requirements-chapters.md
-    - path: .agents/skills/isdd-common/references/trace-map-rules.md
-    - path: .agents/skills/isdd-common/scripts/rq_ds_link_checker.py
-    - path: .agents/skills/isdd-common/scripts/rq_integrity_checker.py
-    - path: .agents/skills/isdd-common/scripts/trace_map_checker.py
-    - path: .agents/skills/isdd-common/scripts/isdd_setup.py
-    - path: .agents/skills/isdd-common/scripts/implementation_completeness_checker.py
-
+    - path: .agents/skills/isdd-post-implementation-review/references/document-rules.md
+    - path: .agents/skills/isdd-post-implementation-review/references/id-definitions.md
+    - path: .agents/skills/isdd-post-implementation-review/references/trace-map-rules.md
+    - path: .agents/skills/isdd-post-implementation-review/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-setup/SKILL.md
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
 expected:
   outcomes:
-    - type: task_completed
-
+    - type: "task_completed"
 graders:
-  - name: proposals_deleted
-    type: file
+  - name: "proposals_deleted"
+    type: "file"
     config:
       must_not_exist:
-        - "case2-proposals/docs/proposals.md"
-
-  - name: proposals_processed
-    type: prompt
+        - "docs/proposals.md"
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"
+  - name: "trace_map_strict_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" strict-trace"
+  - name: "unmapped_table_presented"
+    type: "prompt"
     config:
       continue_session: true
       prompt: |
-        セッションのツール呼び出し履歴を確認し、エージェントが case2-proposals/docs/proposals.md の内容を
-        読み込んで処理（正本への反映または「追記不要」の確定）を実施したかどうかを評価してください。
-
-        処理が確認できる場合は set_waza_grade_pass を呼び出してください。
-        確認できない場合は set_waza_grade_fail を呼び出してください。
+        このセッションでエージェントが出した応答を確認してください。「未マッピング一覧」という見出しと、実装要素・対応表の DS-ID・設計書に DS-ID があるか・対応する RQ-ID・要件定義書に RQ-ID があるか・状態 の列を持つ表が、どこかの応答に含まれていますか（該当なしの場合も見出しと表が必要）。
+        含まれている場合は set_waza_grade_pass を、含まれていない場合は set_waza_grade_fail を呼び出してください。
