@@ -397,6 +397,7 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
   - eval の fixture を新しい章立てに作り直し、新しい章（業務の問題、見込み経営効果、帳票、業務ルール、運用要件、テストと運用の設計 ID、除外要件、tasks.md の決まりなど）を採点するグレーダーを追加。チェッカーを「実行したか」だけでなく、採点の中で再実行して「合格したか」を見る。
   - 新しいタスク: 開始ゲートの分岐（isdd-requirements 3 本、isdd-change-req 1 本）、技術選定の承認前に止まる、除外要件の記録と正本への書き写し、チェッカーの版の食い違い（isdd-traceable-coding・isdd-post-implementation-review）、設計に無い機能を頼まれたら止まる。isdd-external-precheck と isdd-external-research の eval を新設（検証用の SQLite を連携先にする）。
   - チェッカーと複製スクリプトの単体テスト（`tests/`、45 件）を追加し、CI で実行する。
+  - ヒアリングの作法を会話で採点するタスクを追加。Haiku が選択肢の複雑さを示さない、複雑な案が選ばれても確認しない、ユーザーが述べていない理由を作って要件に書く、の 3 点が見つかったため、質問する 5 スキルの本文に選択肢の表の形を直接書き、複雑な案が選ばれたときの手順と理由の書き方（「ユーザーの選択（理由: …）」）、網羅性チェックの確認項目を足した。事前確認の `.gitignore` の規則は、追加を依頼しつつ接続テストを止めない形にした。
   - `rq_ds_link_checker.py` が、要件定義書に無い要件 ID を設計書が参照していても合格していた不具合を修正（未定義参照として報告する）。ファイルが無いときに理由を表示するようにした。
 - 実装に無い「ID 重複一覧」の記述（isdd-requirements・isdd-change-req・isdd-traceable-coding）を削除。
 - `isdd-change-design` の事前確認から「既存コードがあれば先に isdd-reverse-engineering」を削除（変更フローでは既存コードが常にあり、逆引きの完了後は変更要件定義へ進むため矛盾していた）。

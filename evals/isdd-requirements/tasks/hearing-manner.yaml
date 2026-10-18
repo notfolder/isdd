@@ -1,0 +1,88 @@
+id: "isdd-requirements-hearing-001"
+name: "ヒアリングの作法（複雑な案を選んだときの扱い）"
+description: "選択肢を伴う質問を 1 問ずつ、各選択肢に複雑さと推奨を付けて出し、ユーザーが推奨より複雑な案を理由無しで選んだら、最小案との違いを示して選び直してもらい、最終的な選択と理由を要件に記録するかを検証する。"
+tags:
+  - "isdd"
+  - "requirements"
+  - "hearing"
+inputs:
+  prompt: |
+    isdd-requirementsを実行してください。
+    対象システム: Hello World出力システム
+  follow_up_prompts:
+    - "選択肢B（外部連携なし）"
+    - "選択肢A（既存ソースコードなし）"
+    - |
+      以下の情報を使用してください：
+      - システムの目的: "Hello, World!" を表示して、実行環境の動作を確かめる
+      - 対象業務: 実行環境の動作検証（担当: 開発者）
+      - あるべき姿: 誰でも同じ手順で 1 分以内に動作を確認できる
+      - 現状: 確認方法が担当者ごとに違う
+      - 業務課題（取り組むこと）: 共通の検証スクリプトを用意する
+      - 見込み経営効果: 算定しない（検証用の最小構成のため）
+      - システムの形態: CUI。引数は無い
+      - 出力先: 標準出力だけにするか、ファイル（hello.log）にも書くかは、まだ決めていません。選択肢を示して聞いてください
+      - 業務ルール・業務エンティティ・状態遷移・外部連携: 無い
+      - 非機能（性能・可用性・移行）: 要求は無い。運用（ログ・監視・バックアップ）: 不要
+      - 技術制約: 既存コードなし、配備先は開発者の PC、チームの技術は Python、OSS のみ、利用者は数名
+    - "ファイルにも書く案を選びます。書き方は、カレントディレクトリの hello.log に、実行のたびに 1 行追記します。理由は特に無いが、この案にします。"
+    - "それでもファイルにも書く案にします。理由は特に無いが、この案にします。"
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ docs/requirements.md を作成し、チェッカーを実行してください。
+  context:
+    task_type: "isdd-requirements-hearing-001"
+  files:
+    - path: .agents/skills/isdd-requirements/SKILL.md
+    - path: .agents/skills/isdd-requirements/references/document-rules.md
+    - path: .agents/skills/isdd-requirements/references/hearing-rules.md
+    - path: .agents/skills/isdd-requirements/references/id-definitions.md
+    - path: .agents/skills/isdd-requirements/references/requirements-chapters.md
+    - path: .agents/skills/isdd-requirements/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "docs_generated"
+    type: "file"
+    config:
+      must_exist:
+        - "docs/requirements.md"
+  - name: "chosen_option_recorded"
+    type: "file"
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "hello\\.log"
+            - "理由は特に無い|特に理由は無い|理由は特にない|ユーザーの選択"
+  - name: "cui_items_recorded"
+    type: "file"
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "終了コード"
+  - name: "rq_integrity_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"
+  - name: "one_question_with_complexity"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションでエージェントが出した質問を確認してください。次の両方を満たしていますか。
+        1. 1 回の応答で聞く質問は 1 問だけである（開始ゲートの 2 問も 1 問ずつ聞いている）
+        2. 出力先（標準出力だけか、ファイルにも書くか）の質問では、選択肢ごとに複雑さ（C=1〜5 など）と根拠を示し、推奨を 1 つ示している
+        両方を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。
+  - name: "complex_choice_reconfirmed"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。ユーザーが推奨より複雑な「ファイルにも書く」案を理由無しで選んだとき、エージェントは最小案では満たせない業務上の理由を尋ねるか、最小案との違い（複雑さと業務への影響）をもう一度示して選び直しを求めましたか。そのうえで、最終的にはユーザーの選択（ファイルにも書く）に従いましたか。
+        両方を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。
