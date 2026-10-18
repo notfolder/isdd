@@ -32,6 +32,11 @@ inputs:
       - 現状: テキスト出力の動作を確認できる共通手段がなく、担当者ごとに確認方法が違い、検証が属人化している
       - 業務課題（取り組むこと）: 固定文字列を出力する共通の検証スクリプトを用意する
       - 見込み経営効果: 算定しない（検証用の最小構成で、効果を金額や時間で見込む対象ではないため）
+      - 帳票・出力: 標準出力に "Hello, World!" を 1 行出す（これ以外の帳票や出力ファイルは無い）
+      - 業務ルール: 無い
+      - 業務エンティティ・状態遷移: 無い（データを保持しない）
+      - 可用性: 要求は無い。移行: 無い
+      - 運用（ログ・監視・バックアップ）: どれも不要
       - 機能: print()で固定文字列 "Hello, World!" を出力する1機能のみ
       - 画面/UI: CLIのみ、対話なし
       - 外部連携: なし
@@ -72,29 +77,17 @@ graders:
       must_exist:
         - "docs/requirements.md"
 
-  - name: rq_bz_ids
+  # 表の見出し（RQ-BZ-ID など）に一致しないよう、略称を 2 語以上求める
+  - name: core_ids
     type: file
     config:
       content_patterns:
         - path: "docs/requirements.md"
           must_match:
-            - "RQ-BZ-[A-Z]"
-
-  - name: rq_bk_ids
-    type: file
-    config:
-      content_patterns:
-        - path: "docs/requirements.md"
-          must_match:
-            - "RQ-BK-[A-Z]"
-
-  - name: rq_ft_ids
-    type: file
-    config:
-      content_patterns:
-        - path: "docs/requirements.md"
-          must_match:
-            - "RQ-FT-[A-Z]"
+            - "RQ-BZ-[A-Z0-9]+-[A-Z0-9]"
+            - "RQ-BK-[A-Z0-9]+-[A-Z0-9]"
+            - "RQ-FT-[A-Z0-9]+-[A-Z0-9]"
+            - "RQ-TS-[A-Z0-9]+-[A-Z0-9]"
 
   - name: tech_constraints_recorded
     type: file
@@ -103,15 +96,71 @@ graders:
         - path: "docs/requirements.md"
           must_match:
             - "技術制約"
+            - "既存コードベース"
             - "配備先"
+            - "チームの技術"
+            - "ライセンスとコスト"
+            - "性能と規模"
 
-  - name: rq_bk_mapping_table
+  # 問題（あるべき姿と現状のギャップ）と業務課題を分けて書いているか
+  - name: problem_and_issue_separated
     type: file
     config:
       content_patterns:
         - path: "docs/requirements.md"
           must_match:
-            - "\\|.*RQ-BK-[A-Z0-9-]+.*\\|"
+            - "業務の問題"
+            - "あるべき姿"
+            - "現状"
+            - "解決する問題"
+
+  - name: business_effect_recorded
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "RQ-EF-[A-Z0-9]+-[A-Z0-9]|算定しない"
+
+  # 標準出力の書式を帳票・出力の要件（RQ-UI）として書いているか
+  - name: output_requirement
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "帳票"
+            - "RQ-UI-[A-Z0-9]+-[A-Z0-9]"
+
+  # 該当しない章も消さずに「無い」と書いているか
+  - name: empty_sections_stated
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "業務ルール"
+            - "外部連携"
+            - "状態を持つエンティティは無い|状態遷移[^\\n]*無い"
+            - "可用性"
+            - "移行"
+            - "運用要件"
+            - "ログ[^\\n]*(必要ない|不要)"
+
+  - name: crud_section_present
+    type: file
+    config:
+      content_patterns:
+        - path: "docs/requirements.md"
+          must_match:
+            - "CRUD"
+
+  # チェッカーを採点の中で実行し直し、合格するかを見る
+  - name: rq_integrity_checker_pass
+    type: program
+    config:
+      command: bash
+      args: ["-c", "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"]
 
   - name: rq_integrity_checker_executed
     type: prompt

@@ -134,3 +134,37 @@ graders:
             - "print\\(message\\)"
             - "printer\\s*=\\s*HelloWorldPrinter\\(\\)"
             - "printer\\.print_hello_world\\(\\)"
+
+  - name: "proposals_removed"
+    type: "file"
+    config:
+      must_not_exist:
+        - "docs/proposals.md"
+  - name: "no_interview_marks_left"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match 'docs/*.md' --min-files 2 --not-re '要インタビュー'"
+  - name: "rq_integrity_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"
+  - name: "trace_map_strict_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" strict-trace"

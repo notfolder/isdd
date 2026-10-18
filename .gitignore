@@ -126,3 +126,7 @@ skills/*-workspace/
 
 # claude モード用の Copilot CLI（evals/install-copilot-cli.sh が入れる）
 evals/.copilot-cli/
+
+# eval の fixture にある検証用の .env（ダミーの値）と SQLite は追跡する
+!evals/**/fixtures/**/.env
+!evals/**/fixtures/**/*.sqlite3

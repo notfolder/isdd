@@ -2,6 +2,8 @@
 set -u
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+# program グレーダー（evals/_graders/isdd_grade.py）がリポジトリの場所を知るために使う
+export ISDD_REPO_ROOT="$repo_root"
 mode="${1:-mock}"
 
 # .env ファイルが存在する場合は読み込む（既に設定済みの環境変数は上書きしない。

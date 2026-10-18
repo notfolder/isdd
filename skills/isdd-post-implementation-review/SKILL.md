@@ -26,7 +26,13 @@ metadata:
 | `references/document-rules.md` | 正本を書き換えるときの書き方 |
 | `scripts/rq_ds_link_checker.py` | 要件 ID と設計 ID の対応チェック |
 
-対応表チェックは、`isdd-setup` がプロジェクトに入れた `scripts/isdd/check.sh` を使う（pre-commit と同じものを動かすため）。`scripts/isdd/check.sh` が無ければ、先に `isdd-setup` を実行する。`scripts/isdd/VERSION` がこの SKILL.md の `metadata.version` と違う場合は、古いチェッカーで判定することになるので、`isdd-setup` を再実行してから進める。
+対応表チェックは、`isdd-setup` がプロジェクトに入れた `scripts/isdd/check.sh` を使う（pre-commit と同じものを動かすため）。`scripts/isdd/check.sh` が無ければ、先に `isdd-setup` を実行する。
+
+版を比べる。`cat scripts/isdd/VERSION` の出力と、この SKILL.md の先頭（frontmatter）にある `metadata.version` の値（`v` で始まる版番号）を、1 文字ずつ同じか比べる。
+
+- 同じなら次へ進む。
+- VERSION が無いか、違う場合は、作業を始める前に「scripts/isdd/VERSION（読んだ値）とスキルの版（metadata.version の値）が違うため、isdd-setup を再実行します」と報告し、`isdd-setup` を再実行してから進める。古いチェッカーで判定すると、規則の変更を見落とすため。`isdd-setup` は何度実行しても同じ状態になる。
+- 比べた結果（両方の値と、再実行したか）を最終報告に書く。
 
 ## 扱う範囲
 

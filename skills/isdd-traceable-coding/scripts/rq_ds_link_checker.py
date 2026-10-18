@@ -15,8 +15,12 @@ RQ-DS Link Checker Script
   設計書の「除外要件」を含む見出しの節に書かれた RQ-* は、ユーザーの承認を得て設計から外した要件として扱い、
   DS-* への対応を求めない（件数だけ表示する）。
 
+未定義の参照:
+  設計書が参照する RQ-* が要件定義書に無い場合（要件を消したのに設計に残っている、ID の書き間違いなど）を問題として報告する。
+
 出力:
   - 対応欠落一覧: RQ-* にマッピングされていない DS-*、その逆
+  - 未定義参照一覧: 要件定義書に無いのに設計書が参照している RQ-*
   - 不整合一覧: マッピング構造の矛盾
   - 検証サマリ: 総数、欠落数、不整合数
 
@@ -74,6 +78,7 @@ class RQDSChecker:
         self.rq_ids: Set[str] = set()
         self.deleted_rq_ids: Set[str] = set()  # [削除]行のRQ-ID（命名推論専用）
         self.excluded_rq_ids: Set[str] = set()  # 設計書の「除外要件」節にある RQ-ID（承認済みの除外）
+        self.design_rq_refs: Set[str] = set()  # 設計書（[削除] 行を除く）に現れる RQ-ID
         self.ds_ids: Set[str] = set()
         self.rq_to_ds: Dict[str, Set[str]] = defaultdict(set)  # RQ → DS のマッピング
         self.ds_to_rq: Dict[str, Set[str]] = defaultdict(set)  # DS → RQ のマッピング
@@ -121,6 +126,7 @@ class RQDSChecker:
 
             # DS-* ID を抽出（[削除]行を除外済みのテキストから）
             self.ds_ids = self.extract_ids(active_content, DS_PATTERN)
+            self.design_rq_refs = self.extract_ids(active_content, RQ_PATTERN)
             if not self.ds_ids:
                 self.issues.append("警告: detail_design.md から DS-* ID が検出されませんでした")
 
@@ -224,6 +230,15 @@ class RQDSChecker:
                 f"  {', '.join(sorted(unmapped_rq))}"
             )
 
+    def check_undefined_refs(self):
+        """設計書が参照しているのに要件定義書に無い RQ-* を検出する"""
+        undefined = self.design_rq_refs - self.rq_ids - self.deleted_rq_ids
+        if undefined:
+            self.issues.append(
+                f"⚠ 未定義参照: 以下の RQ-* は設計書が参照していますが、要件定義書にありません:\n"
+                f"  {', '.join(sorted(undefined))}"
+            )
+
     def check_consistency(self):
         """マッピング構造の整合性をチェック"""
         for rq, ds_set in self.rq_to_ds.items():
@@ -254,6 +269,7 @@ class RQDSChecker:
         print(f"マッピング: RQ-DS 対応数: {sum(len(v) for v in self.rq_to_ds.values())}\n")
 
         self.check_coverage()
+        self.check_undefined_refs()
         self.check_consistency()
 
         return True
@@ -295,6 +311,8 @@ def main():
 
     checker = RQDSChecker(rq_file, ds_file)
     if not checker.run():
+        for issue in checker.issues:
+            print(issue)
         print("チェックに失敗しました")
         sys.exit(1)
     checker.report()

@@ -1,0 +1,68 @@
+id: "isdd-change-design-exclusion-001"
+name: "除外要件を正本へ書き写す"
+description: "既存設計で実現済みの [追加] 要件を承認を得て除外し、変更設計書と正本の設計書の両方の 11-1 に記録して、正本のチェッカーが合格するかを検証する。"
+tags:
+  - "isdd"
+  - "change-design"
+  - "exclusion"
+inputs:
+  prompt: |
+    isdd-change-designを実行してください。
+    変更要件定義書は .history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。
+  follow_up_prompts:
+    - |
+      RQ-NF-EXIT-CODE-ON-ERROR（例外時は 0 以外で終わる）は、既存設計の例外を伝播させる設計で実現済みなので、除外要件として扱うことを承認します（承認日: 2026-10-18）。
+      これ以上の情報はありません。今すぐ change_detail_design.md を作成してください。
+    - |
+      これ以上の情報はありません。
+      正本への反映（docs/requirements.md と docs/detail_design.md の更新）を承認します。
+      反映とチェッカーの実行を行い、tasks.md も作成してください。
+    - |
+      これ以上の情報はありません。
+      今すぐ docs/requirements.md と docs/detail_design.md への反映と tasks.md の作成を完了してください。
+  context:
+    task_type: "isdd-change-design-exclusion-001"
+    fixture: "fixtures/exclusion"
+  files:
+    - path: .agents/skills/isdd-change-design/SKILL.md
+    - path: .agents/skills/isdd-change-design/references/design-chapters.md
+    - path: .agents/skills/isdd-change-design/references/design-completeness.md
+    - path: .agents/skills/isdd-change-design/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-change-design/references/document-rules.md
+    - path: .agents/skills/isdd-change-design/references/id-definitions.md
+    - path: .agents/skills/isdd-change-design/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-change-design/references/trace-map-rules.md
+    - path: .agents/skills/isdd-change-design/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-change-design/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "exclusion_in_change_design"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match .history/20260508-add-timestamp-to-hello-world/change_detail_design.md --re 'RQ-NF-EXIT-CODE-ON-ERROR[^\\n]*DS-[A-Z]{2}-[A-Z0-9-]+[^\\n]*20[0-9]{2}-[0-9]{2}-[0-9]{2}'"
+  - name: "exclusion_copied_to_canonical"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/detail_design.md --re 'RQ-NF-EXIT-CODE-ON-ERROR[^\\n]*DS-[A-Z]{2}-[A-Z0-9-]+[^\\n]*20[0-9]{2}-[0-9]{2}-[0-9]{2}'"
+  - name: "canonical_rq_integrity_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"
+  - name: "canonical_rq_ds_link_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"

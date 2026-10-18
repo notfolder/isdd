@@ -35,7 +35,10 @@ cat scripts/isdd/VERSION
 ```
 
 - ファイルが無い場合は、作業を止めて `isdd-setup` を先に実行するよう案内する。チェッカーが無いと完了条件を確かめられないため。
-- `scripts/isdd/VERSION` が無いか、この SKILL.md の `metadata.version` と違う場合は、古いチェッカーで判定することになるので、`isdd-setup` の再実行を案内する。
+- 版を比べる。`cat scripts/isdd/VERSION` の出力と、この SKILL.md の先頭（frontmatter）にある `metadata.version` の値（`v` で始まる版番号）を、1 文字ずつ同じか比べる。
+  - 同じなら次へ進む。
+  - VERSION が無いか、違う場合は、作業を始める前に「scripts/isdd/VERSION（読んだ値）とスキルの版（metadata.version の値）が違うため、isdd-setup を再実行します」と報告し、`isdd-setup` を再実行してから進める。古いチェッカーで判定すると、規則の変更を見落とすため。`isdd-setup` は何度実行しても同じ状態になる。
+  - 比べた結果（両方の値と、再実行したか）を最終報告に書く。
 - `docs/requirements.md` と `docs/detail_design.md` があり、`rq_ds_link_checker.py` が問題 0 件であること。
 
 ## 守ること
@@ -102,6 +105,7 @@ tasks.md がある場合は、そのタスクを上から順に進める。無�
 - E2E テストが `e2e/` にあり、詳細設計書 8-4 の実行コマンドで全件通った（外部連携がある場合は mock モード）
 - `README.md` に「起動方法」がある（認証がある場合は「初期ユーザー」も）
 - コードに `要件ID:` `設計ID:` `RQ-` `DS-` を含むコメントが無い
+- `scripts/isdd/VERSION` とこの SKILL.md の `metadata.version` を比べた結果を報告に書いた
 
 ## 次のステップ
 

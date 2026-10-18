@@ -1,0 +1,41 @@
+id: "isdd-change-req-gate-external-001"
+name: "開始ゲート（外部連携あり）"
+description: "外部連携が「ある」と答えたら、変更要件の本編に入らず isdd-external-precheck へ進むかを検証する。"
+tags:
+  - "isdd"
+  - "change-req"
+  - "gate"
+inputs:
+  prompt: |
+    isdd-change-reqを実行してください。
+  follow_up_prompts:
+    - "選択肢A（外部連携あり）"
+  context:
+    task_type: "isdd-change-req-gate-external-001"
+  files:
+    - path: docs/requirements.md
+    - path: docs/detail_design.md
+    - path: .agents/skills/isdd-change-req/SKILL.md
+    - path: .agents/skills/isdd-change-req/references/document-rules.md
+    - path: .agents/skills/isdd-change-req/references/hearing-rules.md
+    - path: .agents/skills/isdd-change-req/references/id-definitions.md
+    - path: .agents/skills/isdd-change-req/references/requirements-chapters.md
+    - path: .agents/skills/isdd-change-req/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "change_requirements_not_created"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/change_requirements.md' --min-files 0 --not-re '.'"
+  - name: "routes_to_isdd_external_precheck"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。エージェントは外部連携ありの回答を受けた後、変更要件の本編（業務の問題・業務課題・機能などの質問）に入らず、外部連携の事前確認（isdd-external-precheck）を案内したか、その事前確認の質問を始めましたか。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

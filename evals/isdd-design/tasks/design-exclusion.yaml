@@ -1,0 +1,56 @@
+id: "isdd-design-exclusion-001"
+name: "除外要件の記録"
+description: "他の要件の設計で実現済みの要件を、ユーザーの承認を得て設計書 11-1 に承認日・吸収先の設計 ID つきで記録し、チェッカーが合格するかを検証する。"
+tags:
+  - "isdd"
+  - "design"
+  - "exclusion"
+inputs:
+  prompt: |
+    isdd-designを実行してください。
+    対象: docs/requirements.md
+  follow_up_prompts:
+    - |
+      インターネット調査ができない場合は、未調査のまま進めることを承認します（承認日: 2026-10-17）。
+      技術選定は、要件定義書の技術制約どおり Python（フレームワークなし、DB なし、実行形態は CLI スクリプト）で承認します。
+      比較表の出典列には「未調査（ユーザー承認: 2026-10-17）」と書いてください。
+      また、RQ-NF-SINGLE-LINE-OUTPUT（表示は 1 行だけ）は表示処理の関数の設計で実現済みなので、除外要件として扱うことを承認します（承認日: 2026-10-18）。
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ docs/detail_design.md と tasks.md を作成し、チェッカーを実行してください。
+  context:
+    task_type: "isdd-design-exclusion-001"
+    fixture: "fixtures/exclusion"
+  files:
+    - path: .agents/skills/isdd-design/SKILL.md
+    - path: .agents/skills/isdd-design/references/design-chapters.md
+    - path: .agents/skills/isdd-design/references/design-completeness.md
+    - path: .agents/skills/isdd-design/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-design/references/document-rules.md
+    - path: .agents/skills/isdd-design/references/id-definitions.md
+    - path: .agents/skills/isdd-design/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-design/references/trace-map-rules.md
+    - path: .agents/skills/isdd-design/scripts/rq_ds_link_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "docs_generated"
+    type: "file"
+    config:
+      must_exist:
+        - "docs/detail_design.md"
+  - name: "exclusion_recorded"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/detail_design.md --re 'RQ-NF-SINGLE-LINE-OUTPUT[^\\n]*DS-[A-Z]{2}-[A-Z0-9-]+[^\\n]*20[0-9]{2}-[0-9]{2}-[0-9]{2}'"
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"

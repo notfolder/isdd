@@ -1,0 +1,40 @@
+id: "isdd-requirements-gate-external-001"
+name: "開始ゲート（外部連携あり）"
+description: "質問 1 で外部連携が「ある」と答えたら、要件ヒアリングに入らず外部連携の事前確認（isdd-external-precheck）へ進むかを検証する。"
+tags:
+  - "isdd"
+  - "requirements"
+  - "gate"
+inputs:
+  prompt: |
+    isdd-requirementsを実行してください。
+    対象システム: Hello World出力システム
+  follow_up_prompts:
+    - "選択肢A（外部連携あり）"
+    - "選択肢A（既存ソースコードなし）"
+  context:
+    task_type: "isdd-requirements-gate-external-001"
+  files:
+    - path: .agents/skills/isdd-requirements/SKILL.md
+    - path: .agents/skills/isdd-requirements/references/document-rules.md
+    - path: .agents/skills/isdd-requirements/references/hearing-rules.md
+    - path: .agents/skills/isdd-requirements/references/id-definitions.md
+    - path: .agents/skills/isdd-requirements/references/requirements-chapters.md
+    - path: .agents/skills/isdd-requirements/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "requirements_not_created"
+    type: "file"
+    config:
+      must_not_exist:
+        - "docs/requirements.md"
+  - name: "routes_to_isdd_external_precheck"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。
+        エージェントは開始ゲートの 2 問の回答を受けた後、要件ヒアリングの本編（業務課題・機能・画面・非機能などの質問）に入らず、外部連携の事前確認（isdd-external-precheck）を案内したか、その事前確認の質問（連携先、接続、認証など）を始めましたか。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

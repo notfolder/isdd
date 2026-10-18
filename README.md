@@ -330,6 +330,21 @@ bash evals/run-all.sh claude isdd-traceable-coding
 - `.env` の読み込みは設定済みの環境変数を上書きしない。`WAZA_CLAUDE_MODEL=... bash evals/run-all.sh claude` のように一時指定できる。
 - 各 `eval.copilot.yaml` の `timeout_seconds` は Claude での実測の約 3 倍（600〜900 秒）。実行基盤が固まったときに 1 時間単位で待たないための値。`local` モードはこの値に `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）を掛けた一時ファイルで実行するので、ローカルモデルでも従来どおりの長さで動く。
 
+### タスクと採点の作り
+
+- 1 つのスキルに複数のケースを置くときは、`evals/<skill>/fixtures/<ケース名>/` に入力をまとめ、タスクの `inputs.context.fixture: fixtures/<ケース名>` で作業場所の直下に展開する。スキルの本文が書くとおりの `docs/...` のパスで試せる。
+- 採点は、決められる判定をプログラム型のグレーダー（`type: program`）で行う。共通の補助スクリプト `evals/_graders/isdd_grade.py` が、チェッカーの再実行（`checker`）、対応表の厳格チェック（`strict-trace`）、ファイルの照合（`match`・`unchanged`）、接続情報の値が成果物に無いか（`no-secret`）、`scripts/isdd/VERSION` の照合（`version-current`）などを行う。`run-all.sh` が環境変数 `ISDD_REPO_ROOT` を設定する。
+- 会話の流れで決まる判定（開始ゲートでどのスキルへ進んだか、承認の前に止まったか）だけを、プロンプト型のグレーダーで判定する。
+- 固定応答（`follow_up_prompts`）はすべて順に送られるので、「止まる」ことを試すタスクには催促の応答を入れない。
+
+### 単体テスト
+
+チェッカーと複製スクリプトの単体テストは `tests/` にある（標準ライブラリの unittest だけを使う）。GitHub Actions でも実行する。
+
+```bash
+python3 -m unittest discover -s tests -t tests
+```
+
 ### mock モードについて
 
 `eval.mock.yaml` が存在するスキルのみ mock モードで実行できる。
@@ -378,6 +393,11 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
   - ヒアリングの確認項目を GUI だけでなく CUI・Web API・バッチにも広げた。推奨より複雑な案が選ばれたときは、最小案との違いをもう一度示したうえでユーザーの選択に従い、理由を要件に記録する（従来はエージェントが最小案で確定していた）。
   - tasks.md の各タスクに実装する設計 ID を書き、単体テスト・結合テストの全件通過を固定タスクに追加（実装スキルの完了条件にも追加）。設計の網羅性チェックにシステム構成・コード設計・外部連携の確認項目を追加。
   - 接続テストは検証用アカウントか読み取り専用の権限で行い、`.gitignore` の確認と使い捨て環境の片付けを追加。文書のレビュー項目に mermaid の構文を追加。サブエージェントの結果は元の資料と突き合わせてから使う。
+- **eval とテストの拡充。**
+  - eval の fixture を新しい章立てに作り直し、新しい章（業務の問題、見込み経営効果、帳票、業務ルール、運用要件、テストと運用の設計 ID、除外要件、tasks.md の決まりなど）を採点するグレーダーを追加。チェッカーを「実行したか」だけでなく、採点の中で再実行して「合格したか」を見る。
+  - 新しいタスク: 開始ゲートの分岐（isdd-requirements 3 本、isdd-change-req 1 本）、技術選定の承認前に止まる、除外要件の記録と正本への書き写し、チェッカーの版の食い違い（isdd-traceable-coding・isdd-post-implementation-review）、設計に無い機能を頼まれたら止まる。isdd-external-precheck と isdd-external-research の eval を新設（検証用の SQLite を連携先にする）。
+  - チェッカーと複製スクリプトの単体テスト（`tests/`、45 件）を追加し、CI で実行する。
+  - `rq_ds_link_checker.py` が、要件定義書に無い要件 ID を設計書が参照していても合格していた不具合を修正（未定義参照として報告する）。ファイルが無いときに理由を表示するようにした。
 - 実装に無い「ID 重複一覧」の記述（isdd-requirements・isdd-change-req・isdd-traceable-coding）を削除。
 - `isdd-change-design` の事前確認から「既存コードがあれば先に isdd-reverse-engineering」を削除（変更フローでは既存コードが常にあり、逆引きの完了後は変更要件定義へ進むため矛盾していた）。
 - `isdd-post-implementation-review` は `scripts/isdd/check.sh` が無ければ先に `isdd-setup` を実行する（`trace_map_checker.py` を直接呼ぶ代替経路を削除）。

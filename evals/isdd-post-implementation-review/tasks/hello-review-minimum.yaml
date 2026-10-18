@@ -1,29 +1,19 @@
-id: isdd-post-implementation-review-hello-minimum-001
-name: Hello World 実装後整合確認（最小）
-description: |
-  hello.py と対応表 と要件定義書・詳細設計書を入力として、
-  isdd-post-implementation-review スキルが整合チェックを実行し、
-  未整合ゼロで完了報告できるかを検証する。
-
+id: "isdd-post-implementation-review-hello-minimum-001"
+name: "Hello World 実装後整合確認（最小）"
+description: "整合している実装に対して、チェッカーを通し、未マッピング一覧（該当なし）を表で示して未整合ゼロを報告するかを検証する。"
 tags:
-  - isdd
-  - post-implementation-review
-  - minimum
-
+  - "isdd"
+  - "post-implementation-review"
 inputs:
   prompt: |
     isdd-post-implementation-reviewを実行してください。
-    実装差分は case1-minimum/src/hello.py の内容を確認してください。
-    要件定義書は case1-minimum/docs/requirements.md、詳細設計書は case1-minimum/docs/detail_design.md を参照してください。
-    対応表は case1-minimum/docs/trace_map.md にあります。
+    実装差分は src/hello.py の内容を確認してください。
 
+    （scripts/isdd/check.sh が無い場合は isdd-setup を実行してください。ソースディレクトリは src、実行形態は CLI、認証なし、外部連携なしです。エージェントのフックは作らなくて構いません。）
   context:
-    task_type: post-implementation-review-minimum
+    task_type: "isdd-post-implementation-review-hello-minimum-001"
+    fixture: "fixtures/case1-minimum"
   files:
-    - path: case1-minimum/docs/requirements.md
-    - path: case1-minimum/docs/detail_design.md
-    - path: case1-minimum/src/hello.py
-    - path: case1-minimum/docs/trace_map.md
     - path: .agents/skills/isdd-post-implementation-review/SKILL.md
     - path: .agents/skills/isdd-post-implementation-review/references/document-rules.md
     - path: .agents/skills/isdd-post-implementation-review/references/id-definitions.md
@@ -33,31 +23,35 @@ inputs:
     - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
     - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
     - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
-
 expected:
   outcomes:
-    - type: task_completed
-
+    - type: "task_completed"
 graders:
-  - name: integrity_check_executed
-    type: prompt
+  - name: "zero_inconsistency_reported"
+    type: "prompt"
     config:
       continue_session: true
       prompt: |
-        セッションのツール呼び出し履歴を確認し、bash ツールで
-        整合性チェッカースクリプト（rq_ds_link_checker.py または rq_integrity_checker.py）を
-        実行するコマンドが呼ばれたかどうかを評価してください。
-
-        実行されていた場合は set_waza_grade_pass を呼び出してください。
-        実行されていなかった場合は set_waza_grade_fail を呼び出してください。
-
-  - name: zero_inconsistency_reported
-    type: prompt
+        エージェントの最終報告を確認し、「未整合ゼロ」「不整合なし」「整合性に問題なし」という趣旨の完了報告が含まれているかを評価してください。
+        含まれている場合は set_waza_grade_pass を、含まれていない場合は set_waza_grade_fail を呼び出してください。
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"
+  - name: "trace_map_strict_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" strict-trace"
+  - name: "unmapped_table_presented"
+    type: "prompt"
     config:
       continue_session: true
       prompt: |
-        エージェントの最終報告を確認し、「未整合ゼロ」または「不整合なし」または
-        「整合性に問題なし」という趣旨の完了報告が含まれているかどうかを評価してください。
-
-        含まれている場合は set_waza_grade_pass を呼び出してください。
-        含まれていない場合は set_waza_grade_fail を呼び出してください。
+        このセッションでエージェントが出した応答を確認してください。「未マッピング一覧」という見出しと、実装要素・対応表の DS-ID・設計書に DS-ID があるか・対応する RQ-ID・要件定義書に RQ-ID があるか・状態 の列を持つ表が、どこかの応答に含まれていますか（該当なしの場合も見出しと表が必要）。
+        含まれている場合は set_waza_grade_pass を、含まれていない場合は set_waza_grade_fail を呼び出してください。

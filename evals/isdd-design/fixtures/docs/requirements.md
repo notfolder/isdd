@@ -1,27 +1,22 @@
-# 要件定義書
+# Hello World 出力システム 要件定義書
+
+## 用語: 問題と課題
+
+問題は業務のあるべき姿と現状のギャップ、課題（業務課題）は問題を解決するために取り組むアクションやテーマを指す。
 
 ## 1. 目的・前提
 
-### 1-1. システムの目的
+- システムの目的: 固定文字列 "Hello, World!" を標準出力に表示し、実行環境の基本的な動作を検証する
+- 用語集
 
-| RQ-ID | 項目 | 内容 |
-|---|---|---|
-| RQ-BK-MINIMUM-GREETING-OUTPUT | システムの目的 | 最小機能の実装検証として、固定メッセージ出力機能を確実に実行できることを確認する。 |
+| 用語 | 業務上の意味 | 本案件での使用範囲 | 同義語/類義語 |
+|---|---|---|---|
+| 標準出力 | プロセスが文字を書き出す出力先（stdout） | 検証結果の表示先 | stdout |
+| CI パイプライン | スクリプトを自動で実行する仕組み | 検証スクリプトの実行元 | CI |
 
-### 1-2. 用語集
+- システムの形態: CUI（コマンド）のみ。対話は無い
 
-| RQ-ID | 用語 | 定義 |
-|---|---|---|
-| RQ-DT-HELLO-MESSAGE-CONSTANT | Helloメッセージ | 文字列「Hello, World!」を指す固定文字列。 |
-| RQ-UI-CLI-EXECUTION | CLI実行 | Pythonスクリプトを直接実行して標準出力を確認する操作。 |
-
-### 1-3. GUI か CUI か
-
-| RQ-ID | 種別 | 内容 |
-|---|---|---|
-| RQ-UI-CLI-EXECUTION | UI種別 | CUI とする。 |
-
-### 1-1. 技術制約（前提。ID は付与しない）
+### 1-1. 技術制約
 
 | 制約項目 | 内容 | 出どころ（誰がいつ答えたか） |
 |---|---|---|
@@ -33,191 +28,125 @@
 
 ## 2. 業務
 
-### 2-1. 対象業務一覧
-
-| RQ-ID | 対象業務 | 内容 |
-|---|---|---|
-| RQ-BZ-HELLO-OUTPUT-VALIDATION | Hello出力確認業務 | 固定文字列出力の実行可否を確認する業務。 |
-
-### 2-2. 業務フロー（mermaid）
+| RQ-BZ-ID | 業務名 | 業務の範囲 | 担当者 |
+|---|---|---|---|
+| `RQ-BZ-OUTPUT-VERIFICATION` | 出力動作検証 | スクリプトの実行から標準出力の確認まで | 開発者、CI パイプライン |
 
 ```mermaid
 flowchart TD
-	A[利用者がCUIで実行開始] --> B[print_hello_world 実行]
-	B --> C[get_hello_message で文字列取得]
-	C --> D[標準出力へ表示]
-	D --> E[利用者が出力結果を確認]
+    A[開発者・CI パイプライン] -->|スクリプト実行| B[Hello World 出力システム]
+    B -->|標準出力に表示| C[Hello, World!]
 ```
 
-### 2-3. 業務の範囲・担当者
+### 2-1. 業務の問題
 
-| RQ-ID | 範囲 | 担当者 |
-|---|---|---|
-| RQ-BZ-HELLO-OUTPUT-VALIDATION | ローカル実行時の出力確認のみ | 開発者 |
+| 問題 | 対象業務（RQ-BZ） | あるべき姿 | 現状 | ギャップ（KPI） | 業務影響 |
+|---|---|---|---|---|---|
+| 出力動作の確認方法が人によって違う | `RQ-BZ-OUTPUT-VERIFICATION` | 誰でも同じ手順で 1 分以内に確認できる | 共通の確認手段が無く、担当者ごとに確認方法が違う | 確認手順の数: あるべき姿 1 種類、現状は担当者の人数分 | 環境ごとに独自の確認が要り、結果を比べられない |
 
-### 2-4. 業務課題・KPI
+### 2-2. 業務課題一覧
 
-| RQ-ID | 業務課題 | KPI |
-|---|---|---|
-| RQ-BK-MINIMUM-GREETING-OUTPUT | 出力処理の最小構成でも処理追跡ができることを確認したい | 実行1回あたり成功率100%、期待文字列一致率100% |
-
-### 2-5. 解決すべき課題と対応方針
-
-| RQ-ID | 解決課題 | 対応方針 |
-|---|---|---|
-| RQ-BK-MINIMUM-GREETING-OUTPUT | 固定文字列出力処理を関数呼び出し単位で追跡できない | メッセージ取得関数と表示関数を分離し、呼び出し関係を明確化する。 |
-
-### 2-6. システム化による見込み経営効果
-
-| RQ-ID | 効果区分 | 内容 |
-|---|---|---|
-| RQ-BK-MINIMUM-GREETING-OUTPUT | Cost Avoidance | 不具合切り分け時間の削減により、調査工数の増大を抑制する。 |
-
-### 2-7. 業務課題と機能の整合
-
-| RQ-BK-ID | 対応機能ID | 確認結果 |
-|---|---|---|
-| RQ-BK-MINIMUM-GREETING-OUTPUT | RQ-FT-GET-HELLO-MESSAGE, RQ-FT-PRINT-HELLO-WORLD | 業務課題に紐づかない機能は存在しない。 |
-
-### 2-1. 業務課題一覧（必須）
-
-| RQ-BK-ID | 業務課題 | 現状の問題 | 業務影響 | 解決状態 |
+| RQ-BK-ID | 業務課題（取り組むこと） | 解決する問題（2-1） | 解決後の状態（KPI の目標値） | 対象業務（RQ-BZ） |
 |---|---|---|---|---|
-| RQ-BK-MINIMUM-GREETING-OUTPUT | 最小出力処理の追跡性不足 | 出力文字列の生成元と表示処理の責務が曖昧 | 修正時に影響範囲判断を誤る | メッセージ取得と表示を分離し、追跡可能となる |
+| `RQ-BK-SHARED-VERIFICATION-SCRIPT` | 固定文字列を出力する共通の検証スクリプトを用意する | 出力動作の確認方法が人によって違う | 確認手順が 1 種類になる | `RQ-BZ-OUTPUT-VERIFICATION` |
+
+### 2-3. 見込み経営効果
+
+見込み経営効果は算定しない（検証用の最小構成で、効果を金額や時間で見込む対象ではないため）。
 
 ## 3. 機能要件
 
-### 3-1. 入力データ（人手入力 / 外部連携）
-
-| RQ-ID | 種別 | 内容 |
-|---|---|---|
-| RQ-UI-CLI-EXECUTION | 人手入力 | CUIでスクリプトを実行する。 |
-| RQ-EX-NO-EXTERNAL-INTEGRATION | 外部連携 | 外部連携は行わない。 |
-
-### 3-2. 出力データ
-
-| RQ-ID | 出力項目 | 内容 |
-|---|---|---|
-| RQ-FT-PRINT-HELLO-WORLD | 標準出力 | 文字列「Hello, World!」を1回表示する。 |
-
-### 3-3. 外部連携
-
-| RQ-ID | 項目 | 内容 |
-|---|---|---|
-| RQ-EX-NO-EXTERNAL-INTEGRATION | 外部連携要件 | 外部システムとの接続は不要とする。 |
-
-### 3-4. CUI の場合：全引数の仕様
-
-| RQ-ID | 引数名 | 必須 | 内容 |
-|---|---|---|---|
-| RQ-UI-CLI-EXECUTION | なし | - | 引数は受け付けない。 |
-
-### 3-5. 全機能のユーザー利用フロー（mermaid）
+- 入力データ: なし（引数・設定ファイル・標準入力は受け付けない）
+- 出力データ: 標準出力に固定文字列を 1 行
+- CUI: スクリプトを引数なしで実行する。正常時の終了コードは 0、例外時は 0 以外
 
 ```mermaid
 flowchart TD
-	A[利用者がスクリプト実行] --> B[HelloWorldPrinter 生成]
-	B --> C[print_hello_world 実行]
-	C --> D[get_hello_message 実行]
-	D --> E[標準出力に表示]
+    A[開始] --> B[スクリプトを引数なしで実行する]
+    B --> C{例外が発生するか}
+    C -->|いいえ| D[Hello, World! を標準出力に 1 行表示する]
+    D --> E[終了コード 0 で終了する]
+    C -->|はい| F[例外を伝播させて 0 以外で終了する]
 ```
-
-### 3-6. 業務フローとの対応関係
-
-| RQ-ID | 業務フロー工程 | 対応機能 |
-|---|---|---|
-| RQ-FT-GET-HELLO-MESSAGE | 文字列取得 | get_hello_message |
-| RQ-FT-PRINT-HELLO-WORLD | 表示処理 | print_hello_world |
-
-### 3-7. ログ要件
-
-| RQ-ID | 判定 | 内容 |
-|---|---|---|
-| RQ-OP-NO-APPLICATION-LOG | ログ要件 | ログは必要ないため、ログの内容と保存期間の記述は行わない。 |
-
-### 3-8. 監視・アラート要件
-
-| RQ-ID | 判定 | 内容 |
-|---|---|---|
-| RQ-OP-NO-MONITORING-ALERT | 監視・アラート要件 | 監視・アラートは必要ないため、監視・アラートの内容と対応方法の記述は行わない。 |
-
-### 3-9. 機能一覧
 
 | RQ-ID | カテゴリ | 機能名 | 対応業務課題ID（RQ-BK-*） | この機能が無いと何が困るか |
 |---|---|---|---|---|
-| RQ-FT-GET-HELLO-MESSAGE | 機能 | 表示文字列取得機能 | RQ-BK-MINIMUM-GREETING-OUTPUT | 表示文字列の責務分離ができず、追跡できない。 |
-| RQ-FT-PRINT-HELLO-WORLD | 機能 | Hello表示機能 | RQ-BK-MINIMUM-GREETING-OUTPUT | 利用者が期待する出力を確認できない。 |
-| RQ-UI-CLI-EXECUTION | 画面 | CUI実行機能 | RQ-BK-MINIMUM-GREETING-OUTPUT | 機能実行手段がなく、検証できない。 |
+| `RQ-FT-GET-HELLO-MESSAGE` | 業務機能 | 表示文字列の取得 | `RQ-BK-SHARED-VERIFICATION-SCRIPT` | 出力する文字列を用意できず検証できない |
+| `RQ-FT-PRINT-HELLO-WORLD` | 業務機能 | Hello, World! の標準出力 | `RQ-BK-SHARED-VERIFICATION-SCRIPT` | 実行環境の動作を確認する共通手段が無くなる |
+
+### 3-1. 帳票・出力ファイル
+
+| RQ-ID | 帳票・出力名 | 形式（PDF / CSV / 標準出力など） | 出力項目 | 出力のきっかけ | 対応業務課題ID（RQ-BK-*） |
+|---|---|---|---|---|---|
+| `RQ-UI-HELLO-STDOUT-OUTPUT` | 検証結果の表示 | 標準出力 1 行 | 文字列 "Hello, World!" | スクリプトの実行 | `RQ-BK-SHARED-VERIFICATION-SCRIPT` |
+
+### 3-2. 業務ルール
+
+業務ルールは無い。
+
+### 3-3. 外部連携
+
+外部連携は無い。
 
 ## 4. データ
 
-### 4-1. 内部データ / 外部データの区別
+業務エンティティは無い。固定文字列を出力するのみで、データを保持しない。
 
-| RQ-ID | データ名 | 区分 | 内容 |
-|---|---|---|---|
-| RQ-DT-HELLO-MESSAGE-CONSTANT | Helloメッセージ定数 | 内部データ | 「Hello, World!」固定文字列。 |
+### 4-1. データ要件一覧
 
-### 4-2. データ保持期間
-
-| RQ-ID | データ名 | 保持期間 |
-|---|---|---|
-| RQ-DT-HELLO-MESSAGE-CONSTANT | Helloメッセージ定数 | 実行時メモリ上のみ。永続化しない。 |
-
-### 4-3. 外部DB接続先と接続方法
-
-| RQ-ID | 接続先 | 接続方法 |
-|---|---|---|
-| RQ-DT-NO-EXTERNAL-DB | なし | 外部DB接続は行わない。 |
-
-### 4-4. DB の必要性の有無と理由
-
-| RQ-ID | 判定 | 理由 |
-|---|---|---|
-| RQ-DT-DB-NOT-REQUIRED | 不要 | 固定文字列出力のみで永続データを扱わないため。 |
-
-### 4-5. 業務エンティティ一覧
-
-| RQ-ID | カテゴリ | 業務エンティティ名 | 対応業務課題ID（RQ-BK-*） | この業務エンティティが無いと何が困るか |
+| RQ-ID | 種別 | 内容 | 対応業務課題ID（RQ-BK-*） | この要件が無いと何が困るか |
 |---|---|---|---|---|
-| RQ-DT-HELLO-MESSAGE-CONSTANT | データ | GreetingMessage | RQ-BK-MINIMUM-GREETING-OUTPUT | 出力内容の基準値を定義できない。 |
+| `RQ-DT-DB-NOT-REQUIRED` | DB の必要性 | DB は不要。データを永続化しない | `RQ-BK-SHARED-VERIFICATION-SCRIPT` | DB を用意する手間が検証の妨げになる |
 
-### 4-1. CRUDテーブル（必須）
+### 4-2. 業務エンティティとデータ項目
 
-| エンティティ名 | Create | Read（一覧） | Read（詳細） | Update | Delete | 備考 |
-|---|---|---|---|---|---|---|
-| GreetingMessage | × | × | ○ | × | × | 固定文字列を参照するのみ |
+業務エンティティは無い。
+
+### 4-3. CRUD テーブル
+
+業務エンティティが無いため対象外。
+
+### 4-4. 状態遷移
+
+状態を持つエンティティは無い。
+
+### 4-5. 画面一覧
+
+画面は無い。
 
 ## 5. 非機能要件
 
-### 5-1. 性能
-
-| RQ-ID | 項目 | 要件 |
-|---|---|---|
-| RQ-NF-RESPONSE-TIME-UNDER-1S | 応答時間 | ローカル実行時に1秒以内で標準出力を完了する。 |
-
-### 5-2. 利用人数
-
-| RQ-ID | 項目 | 要件 |
-|---|---|---|
-| RQ-NF-SINGLE-USER-EXECUTION | 同時利用人数 | 同時利用1名を対象とする。 |
-
-### 5-3. セキュリティ要件
-
-| RQ-ID | 項目 | 要件 |
-|---|---|---|
-| RQ-NF-NO-SECRET-OUTPUT | 出力制御 | 機密情報を扱わず、固定文字列のみを出力する。 |
-
-### 5-4. 非機能要件一覧
+- 利用者の種別とアクセス経路: 開発者のみ。各自の PC と CI パイプラインで実行する
+- 性能: 実行から表示まで 1 秒以内
+- 利用人数: 要求は無い
+- 可用性の要求は無い
+- 移行は無い
+- セキュリティ: 認証は無い
 
 | RQ-ID | カテゴリ | 非機能要件名 | 対応業務課題ID（RQ-BK-*） | この非機能要件が無いと何が困るか |
 |---|---|---|---|---|
-| RQ-NF-RESPONSE-TIME-UNDER-1S | 性能 | 1秒以内出力 | RQ-BK-MINIMUM-GREETING-OUTPUT | 最小機能検証の効率が落ちる。 |
-| RQ-NF-SINGLE-USER-EXECUTION | 利用人数 | 単一利用者前提 | RQ-BK-MINIMUM-GREETING-OUTPUT | 想定外負荷条件で評価がぶれる。 |
-| RQ-NF-NO-SECRET-OUTPUT | セキュリティ | 固定文字列のみ出力 | RQ-BK-MINIMUM-GREETING-OUTPUT | 出力内容の安全性を保証できない。 |
+| `RQ-NF-RESPONSE-UNDER-1S` | 性能 | 実行から表示まで 1 秒以内 | `RQ-BK-SHARED-VERIFICATION-SCRIPT` | CI の実行時間が延び、確認を待たされる |
 
-## 6. テスト用利用シナリオ
+## 6. 運用要件
 
-| RQ-TS-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 対応業務課題ID（RQ-BK-*） |
+- ログは必要ないため、ログの内容と保存期間の記述は行わない
+- 実行結果の判定: CI パイプラインが終了コードで成否を判定できる（下の表）
+- 監査ログは必要ない
+- 監視・アラートは必要ないため、監視・アラートの内容と対応方法の記述は行わない
+- バックアップは必要ない
+
+| RQ-ID | 種別 | 内容 | 対応業務課題ID（RQ-BK-*） | この要件が無いと何が困るか |
+|---|---|---|---|---|
+| `RQ-OP-EXIT-CODE-RESULT` | 実行結果の判定 | 成功は終了コード 0、失敗は 0 以外で返し、CI が成否を判定できる | `RQ-BK-SHARED-VERIFICATION-SCRIPT` | CI が成否を判定できず、失敗を見逃す |
+
+## 7. テスト用利用シナリオ
+
+| RQ-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 対応業務課題ID（RQ-BK-*） |
 |---|---|---|---|---|---|
-| RQ-TS-EXECUTE-HELLO-PRINT | CUI実行で表示処理全体を確認する | Python実行環境がある | スクリプトを実行する | 「Hello, World!」が1回表示される | RQ-BK-MINIMUM-GREETING-OUTPUT |
-| RQ-TS-VERIFY-MESSAGE-RESOLUTION | 文字列取得関数の利用を確認する | クラスとメソッドが定義されている | print_hello_world を実行する | get_hello_message の戻り値が表示される | RQ-BK-MINIMUM-GREETING-OUTPUT |
+| `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | 正常実行で "Hello, World!" が表示されることを確かめる | スクリプトが配置されている | スクリプトを引数なしで実行する | "Hello, World!" が 1 行表示され、終了コード 0 で終わる | `RQ-BK-SHARED-VERIFICATION-SCRIPT` |
+
+## 8. 業務課題と要件の対応表
+
+| RQ-BK-ID | 業務課題 | 対応要件ID |
+|---|---|---|
+| `RQ-BK-SHARED-VERIFICATION-SCRIPT` | 共通の検証スクリプトを用意する | `RQ-FT-GET-HELLO-MESSAGE`, `RQ-FT-PRINT-HELLO-WORLD`, `RQ-UI-HELLO-STDOUT-OUTPUT`, `RQ-DT-DB-NOT-REQUIRED`, `RQ-NF-RESPONSE-UNDER-1S`, `RQ-OP-EXIT-CODE-RESULT`, `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` |

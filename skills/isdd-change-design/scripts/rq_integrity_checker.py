@@ -240,6 +240,8 @@ def main():
     checker = RQIntegrityChecker(rq_file)
 
     if not checker.run():
+        for issue in checker.issues:
+            print(issue)
         print("\nチェックに失敗しました")
         sys.exit(1)
 
