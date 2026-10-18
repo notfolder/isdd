@@ -8,7 +8,7 @@ description: >
   「scripts/isdd/check.sh が無い」と判断した場合に必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.15"
+  version: "v2.0.0"
 ---
 
 # isdd-setup — 対応表チェック導入スキル

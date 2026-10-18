@@ -198,7 +198,7 @@ isdd-common の references 配下に全スキルで参照する共通ルール�
 - 未マッピング一覧生成: RQ-DS突合結果・対応表チェック結果と差分要約を統合して要件単位の一覧を作る
 - ID再伝播: 要件更新後のID差分を設計と対応表へ反映する
 
-### 対応表による追跡（v1.0.15 以降）
+### 対応表による追跡（v2.0.0 以降）
 
 ```mermaid
 graph LR
@@ -238,7 +238,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v1.0.15
+gh skill publish ./skills --tag v2.0.0
 ```
 
 ---
@@ -262,7 +262,7 @@ gh skill install notfolder/req-spec-driven isdd-requirements
 ### バージョンを固定して導入
 
 ```bash
-gh skill install notfolder/req-spec-driven isdd-requirements@v1.0.15
+gh skill install notfolder/req-spec-driven isdd-requirements@v2.0.0
 ```
 
 ### ユーザースコープへ導入
@@ -329,7 +329,7 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 
 ## 変更履歴
 
-### v1.0.15
+### v2.0.0
 
 #### 新規追加
 

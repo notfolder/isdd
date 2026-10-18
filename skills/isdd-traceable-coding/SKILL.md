@@ -6,7 +6,7 @@ description: >
   「実装して」「設計書どおりに実装して」「対応表を更新して」「isdd の実装ルールを適用して」などの依頼では必ずこのスキルを使うこと。
 license: CC-BY-4.0
 metadata:
-  version: "v1.0.15"
+  version: "v2.0.0"
 ---
 
 # isdd-traceable-coding — トレーサブル実装スキル

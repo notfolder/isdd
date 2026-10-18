@@ -5,7 +5,7 @@ Trace Map Checker Script
 目的:
   対応表（docs/trace_map.md）を介して、詳細設計書の設計ID（DS-*）と
   ソースコードのクラス・公開関数・モジュールの対応を検証する。
-  コード側には ID を書かない方式（isdd v1.0.15 以降）の整合チェッカー。
+  コード側には ID を書かない方式（isdd v2.0.0 以降）の整合チェッカー。
 
 使用方法:
   python3 trace_map_checker.py <detail_design.md> <trace_map.md> <source_dir> [<source_dir> ...] [--strict]
