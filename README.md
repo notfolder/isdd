@@ -26,7 +26,7 @@ isdd は、AI 実装で起こりやすい次の問題を抑制することを目
 最初の導入は対話モードで実行し、スキル選択画面で `(all skills)` を選ぶ。
 
 ```bash
-gh skill install notfolder/req-spec-driven
+gh skill install notfolder/isdd
 ```
 
 `@vX.Y.Z` を付けずにインストールすると、公開されている最新リリースが導入される。
@@ -250,25 +250,25 @@ gh skill publish ./skills --tag v2.0.0
 ### 全スキルを導入
 
 ```bash
-gh skill install notfolder/req-spec-driven
+gh skill install notfolder/isdd
 ```
 
 ### 1つのスキルを導入
 
 ```bash
-gh skill install notfolder/req-spec-driven isdd-requirements
+gh skill install notfolder/isdd isdd-requirements
 ```
 
 ### バージョンを固定して導入
 
 ```bash
-gh skill install notfolder/req-spec-driven isdd-requirements@v2.0.0
+gh skill install notfolder/isdd isdd-requirements@v2.0.0
 ```
 
 ### ユーザースコープへ導入
 
 ```bash
-gh skill install notfolder/req-spec-driven isdd-requirements --scope user
+gh skill install notfolder/isdd isdd-requirements --scope user
 ```
 
 必要に応じて skill 名を isdd-design など他のスキル名に置き換えて導入する。
