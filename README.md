@@ -292,6 +292,30 @@ gh skill install notfolder/isdd isdd-requirements --scope user
 
 必要に応じて skill 名を isdd-design など他のスキル名に置き換えて導入する。
 
+### v1.0.14 以前から更新する
+
+v2.0.0 で `isdd-setup` を追加し、共通スキル `isdd-common` を廃止した。`gh skill update` は新しく増えたスキルを入れず、廃止したスキルも消さない。そのため v1.0.14 以前から更新するときは、全スキルを入れ直してから `isdd-common` を消す。
+
+```bash
+# 全スキルを入れ直す（isdd-setup も入る。--pin で固定していたスキルも最新になる）
+gh skill install notfolder/isdd --all --force --agent claude-code
+# 廃止した共通スキルを消す（パスは導入先に合わせる。例は Claude Code のプロジェクトスコープ）
+rm -rf .claude/skills/isdd-common
+```
+
+- `--agent` と `--scope` は、最初に導入したときと同じ値にする。
+- 古い `isdd-common` には、旧方式（コードに ID コメントを書く）の規則が入っている。新しいスキルはこれを参照しないが、エージェントが読むと古い規則で動くおそれがあるので消す。
+- `install.sh` で導入している場合は、リポジトリを最新にして `install.sh` を再実行する。`isdd-common` も消える。
+- スキルの追加や廃止が無い版への更新は、`gh skill update --all` でよい。
+
+### v1.0.14 で作ったプロジェクトを使い続ける
+
+コードに旧方式の ID コメントが残っていても、新しいスキルはそのまま使える。対応表のチェック（`scripts/isdd/check.sh`）はコメントを読まず、pre-commit もエラーだけで止めるため。
+
+1. `isdd-setup` を実行する。`scripts/isdd/` のチェッカー、`check.sh`、pre-commit、`AGENTS.md` と `CLAUDE.md` の規則が入る。
+2. 対応表 `docs/trace_map.md` を作る。`isdd-post-implementation-review` を使うか、次に `isdd-traceable-coding` で実装するときに作る。どちらも `check.sh --strict` の警告が 0 件になるまで、既存のファイル・クラス・公開関数を登録する。旧コメントに書いてある設計 ID が、登録の手がかりになる。
+3. 対応表ができたら、旧コメントの ID を消す。`isdd-traceable-coding` の完了条件に「コードに要件 ID・設計 ID を含むコメントが無い」があり、残っていると完了条件を満たさない。対応表と二重に管理すると、ずれる原因にもなる。
+
 ---
 
 ## Waza 評価運用
@@ -364,6 +388,11 @@ waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/f
 ## 変更履歴
 
 ### v2.0.0
+
+#### 更新時の注意
+
+- `gh skill update` だけでは `isdd-setup` が入らず、廃止した `isdd-common` が残る。「v1.0.14 以前から更新する」の手順で入れ直す。
+- v1.0.14 で作ったプロジェクトは、「v1.0.14 で作ったプロジェクトを使い続ける」の手順で対応表に移る。
 
 #### 新規追加
 
