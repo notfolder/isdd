@@ -58,6 +58,6 @@
 - [x] (2026-10-19) ユーザーの目視確認 — 2026-10-19 にユーザーが公開を指示したため完了扱い
 - [x] (2026-10-19) PR #5 をマージし、全スキルの version 欄と README を v2.0.0 に揃えた
 - [x] (2026-10-19) Haiku の eval で 10 スキルが 1 回目で合格（isdd-post-implementation-review と isdd-external-research は SKILL.md を直して再実行、採点スクリプトの不具合 2 件も修正）。旧 v2.0.0（8b97765）のリリースとタグを削除し、e922934 で v2.0.0 を出し直した
-- [ ] README に更新手順を書く。`gh skill update --all` では新しい `isdd-setup` が入らず、廃止した `isdd-common` が古い版のまま残る（2026-10-19 に v1.0.14 と旧 v2.0.0 から実測）。`install.sh` は両方に対応済み
-- [ ] v1.0.14 で作ったプロジェクトの移行方法を決める。コードに残った ID コメントを消す手順がどのスキルにも無く、`isdd-traceable-coding` の完了条件（ID コメント 0 件）を満たせない
-- [ ] isdd v2.0.0 の Qiita 記事（docs/qiita/2026-10-19-isdd-v2-0-0-trace-map/article.md）をモダナイズの内容と 2.0.0 にした理由を入れて書き直し、コミットする
+- [x] (2026-10-19) README に更新手順を書いた。`gh skill install notfolder/isdd --all --force` で入れ直してから `isdd-common` を消す（v1.0.14 から実測）。スキルは変えていないので v2.0.1 は出していない
+- [x] (2026-10-19) v1.0.14 で作ったプロジェクトの移行は README の手作業手順にした（ID コメントが残っていてもスキルは使える。isdd-setup → 対応表の作成 → 旧コメントの削除）
+- [x] (2026-10-19) isdd v2.0.0 の Qiita 記事を書き直してコミットした（投稿はしていない）
