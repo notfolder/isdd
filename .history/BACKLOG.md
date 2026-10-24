@@ -61,3 +61,5 @@
 - [x] (2026-10-19) README に更新手順を書いた。`gh skill install notfolder/isdd --all --force` で入れ直してから `isdd-common` を消す（v1.0.14 から実測）。スキルは変えていないので v2.0.1 は出していない
 - [x] (2026-10-19) v1.0.14 で作ったプロジェクトの移行は README の手作業手順にした（ID コメントが残っていてもスキルは使える。isdd-setup → 対応表の作成 → 旧コメントの削除）
 - [x] (2026-10-19) isdd v2.0.0 の Qiita 記事を書き直してコミットした（投稿はしていない）
+- [x] (2026-10-24) マージ済みの `feature-skill-modernize`・`feature-rethink-env-and-id` をローカルと GitHub から削除した
+- [ ] このワークツリー（drum）を閉じるときに、ローカルの `notfolder/release-v2-0-0` を削除する（main に無いコミットは 0 件。GitHub 側は削除済み）
