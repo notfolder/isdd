@@ -63,3 +63,4 @@
 - [x] (2026-10-19) isdd v2.0.0 の Qiita 記事を書き直してコミットした（投稿はしていない）
 - [x] (2026-10-24) マージ済みの `feature-skill-modernize`・`feature-rethink-env-and-id` をローカルと GitHub から削除した
 - [ ] このワークツリー（drum）を閉じるときに、ローカルの `notfolder/release-v2-0-0` を削除する（main に無いコミットは 0 件。GitHub 側は削除済み）
+- [ ] ローカルブランチ `feature-equipment-lending-management`（2026-10-19、main に無いコミット 7 件。備品管理・貸出管理アプリを題材に、最新のスキルで要件定義・詳細設計・実装まで通した記録とみられる）の扱いを決める。残すなら目的をここに書き、不要なら削除する

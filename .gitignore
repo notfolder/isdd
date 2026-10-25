@@ -117,6 +117,9 @@ apm_modules/
 
 # Waza / eval artifacts
 evals/**/artifacts/transcripts/
+# run-all.sh local が作る一時ファイル（途中で止まったときに残ることがある）
+evals/*/.eval.local.*.yaml
+evals/*/.tasks.local.*/
 last-real-results.json
 last-real-reslts.json
 
@@ -130,3 +133,6 @@ evals/.copilot-cli/
 # eval の fixture にある検証用の .env（ダミーの値）と SQLite は追跡する
 !evals/**/fixtures/**/.env
 !evals/**/fixtures/**/*.sqlite3
+
+# install.sh が展開する isdd のスキル（skills/ の複製なので追跡しない）
+.agents/skills/isdd-*/

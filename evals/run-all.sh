@@ -29,7 +29,7 @@ usage() {
     echo "         $0 local isdd-requirements  # LM Studio (http://127.0.0.1:1234) を使用" >&2
     echo "         $0 claude                  # Anthropic API (BYOK)。Haiku で実行し、失敗分だけ同じモデルで 1 回再試行（昇格はしない）" >&2
     echo "  環境変数: WAZA_LOCAL_LM_STUDIO_URL (デフォルト: http://127.0.0.1:1234/v1)" >&2
-    echo "            WAZA_LOCAL_MODEL        (デフォルト: local-model)" >&2
+    echo "            WAZA_LOCAL_MODEL        (デフォルト: gemma-4-e4b-it-mlx)" >&2
     echo "            WAZA_LOCAL_TIMEOUT_SCALE (デフォルト: 10。local モードで timeout_seconds に掛ける倍率)" >&2
     echo "            ANTHROPIC_API_KEY       (claude モードで必須)" >&2
     echo "            WAZA_CLAUDE_MODEL       (デフォルト: claude-haiku-5-5)" >&2
@@ -85,7 +85,7 @@ selected_skills=("$@")
 # COPILOT_BASE_URL はOpenAI互換エンドポイントとして Copilot SDK の BYOK 機能に渡される
 lm_studio_url="${WAZA_LOCAL_LM_STUDIO_URL:-http://127.0.0.1:1234/v1}"
 local_model="${WAZA_LOCAL_MODEL:-gemma-4-e4b-it-mlx}"
-# eval.copilot.yaml の timeout_seconds は Claude の実測の約 3 倍（5〜15 分）に設定してある。
+# eval.copilot.yaml の timeout_seconds は Claude の実測の約 3 倍（10〜20 分）に設定してある。
 # ローカルモデルは遅いので、local モードではこの倍率を掛けた一時ファイルで実行する
 local_timeout_scale="${WAZA_LOCAL_TIMEOUT_SCALE:-10}"
 
@@ -281,13 +281,27 @@ run_one() {
   mkdir -p "$transcript_dir"
 
   # local モードでは timeout_seconds を倍率で伸ばした一時 eval ファイルを同じディレクトリに作る
-  # （tasks/*.yaml の相対パスを保つため同じディレクトリに置く）
-  local eval_to_run="$eval_file" tmp_eval=""
+  # （inputs.context.fixture は eval ファイルのディレクトリからの相対パスなので、同じディレクトリに置く）。
+  # タスク側の timeout_seconds は eval ファイルの値より優先されるため、tasks/*.yaml も倍率を掛けた
+  # 一時コピーを作り、一時 eval ファイルの tasks: をそちらへ向ける
+  local eval_to_run="$eval_file" tmp_eval="" tmp_tasks=""
   if [[ "$local_mode" == "true" ]]; then
-    tmp_eval="$(dirname "$eval_file")/.eval.local.$$.yaml"
-    awk -v s="$local_timeout_scale" '/^[[:space:]]*timeout_seconds:[[:space:]]*[0-9]+/ { sub(/[0-9]+/, int($2 * s)) } { print }' "$eval_file" > "$tmp_eval"
+    local eval_dir_of_file tmp_tasks_name scale_awk task_file
+    eval_dir_of_file="$(dirname "$eval_file")"
+    tmp_eval="$eval_dir_of_file/.eval.local.$$.yaml"
+    tmp_tasks_name=".tasks.local.$$"
+    tmp_tasks="$eval_dir_of_file/$tmp_tasks_name"
+    scale_awk='/^[[:space:]]*timeout_seconds:[[:space:]]*[0-9]+/ { sub(/[0-9]+/, int($2 * s)) } { print }'
+    mkdir -p "$tmp_tasks"
+    for task_file in "$eval_dir_of_file"/tasks/*.yaml; do
+      [[ -f "$task_file" ]] || continue
+      awk -v s="$local_timeout_scale" "$scale_awk" "$task_file" > "$tmp_tasks/$(basename "$task_file")"
+    done
+    awk -v s="$local_timeout_scale" -v d="$tmp_tasks_name/" '
+      /^[[:space:]]*-[[:space:]]*tasks\// { sub(/tasks\//, d) }
+      '"$scale_awk" "$eval_file" > "$tmp_eval"
     eval_to_run="$tmp_eval"
-    echo "[local-mode] timeout_seconds を ${local_timeout_scale} 倍にした一時ファイルで実行: $tmp_eval"
+    echo "[local-mode] timeout_seconds を ${local_timeout_scale} 倍にした一時ファイルで実行: ${tmp_eval}（タスク: ${tmp_tasks}）"
   fi
 
   if [[ -d "$fixtures_dir" ]]; then
@@ -303,6 +317,7 @@ run_one() {
       echo "==> [files-check] fix files: entries above before running eval" >&2
       rm -rf "$temp_context_dir"
       [[ -n "$tmp_eval" ]] && rm -f "$tmp_eval"
+      [[ -n "$tmp_tasks" ]] && rm -rf "$tmp_tasks"
       return 3
     fi
 
@@ -314,6 +329,7 @@ run_one() {
     exit_code=$?
   fi
   [[ -n "$tmp_eval" ]] && rm -f "$tmp_eval"
+  [[ -n "$tmp_tasks" ]] && rm -rf "$tmp_tasks"
   return $exit_code
 }
 

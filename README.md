@@ -169,7 +169,7 @@ graph TD
 graph LR
     S[shared/references, shared/scripts<br>正本] -->|tools/build_skills.py<br>manifest.json の一覧どおりに複製| K[skills/各スキル/references, scripts]
     K -->|gh skill publish| G[GitHub Release]
-    K -->|install.sh| A[.agents/skills/]
+    K -->|install.sh| A[このリポジトリの .agents/skills/]
     G -->|gh skill install| A2[各エージェントのスキル置き場]
 ```
 
@@ -206,14 +206,16 @@ graph LR
 
 要件・設計のチェッカーは各スキルの同梱版を、コードのチェッカーはプロジェクトの `scripts/isdd/` の複製（pre-commit と同じもの）を使う。`scripts/isdd/VERSION` がスキルの版と違えば、スキルが `isdd-setup` の再実行を案内する。
 
-### 実装後逆引き整合の共通部品
+### 実装後逆引き整合の進め方
 
-`isdd-post-implementation-review` で使う共通部品は、次の役割を担う。
+`isdd-post-implementation-review` は専用のスクリプトを持たず、上の 2 つのチェッカー（`rq_ds_link_checker.py` と `scripts/isdd/check.sh`）の結果とコードの読み取りを組み合わせて、次の順に進める。
 
-- 構造抽出: コードからモジュール・クラス・関数・依存関係を抽出する
-- 差分要約: 実装差分から仕様影響点を抽出する
-- 未マッピング一覧生成: RQ-DS突合結果・対応表チェック結果と差分要約を統合して要件単位の一覧を作る
-- ID再伝播: 要件更新後のID差分を設計と対応表へ反映する
+1. 実装差分の影響範囲をまとめる。
+2. `rq_ds_link_checker.py` で要件と設計の対応を、`check.sh` で対応表とコードのずれを確かめる。
+3. 変更フローでは、変更要件定義書・`docs/proposals.md`・実装差分を突き合わせ、正本への反映漏れを拾う。
+4. 実装の全関数から逆にたどり、未マッピング一覧（要件未定義・設計未定義・対応表未登録）を表で出す。
+5. 未マッピングを 1 件ずつユーザーに確かめて要件定義書へ反映し、更新した要件 ID を設計書と対応表へ伝える。
+6. 両チェッカーを再実行し、未整合ゼロ（`check.sh --strict` のエラー・警告とも 0 件）を確かめてから `docs/proposals.md` を削除する。
 
 ### 対応表による追跡（v2.0.0 以降）
 
@@ -292,6 +294,19 @@ gh skill install notfolder/isdd isdd-requirements --scope user
 
 必要に応じて skill 名を isdd-design など他のスキル名に置き換えて導入する。
 
+### このリポジトリの中で試す（install.sh）
+
+`install.sh` は、このリポジトリを clone した場所でスキルを試すためのスクリプトで、利用者のプロジェクトには導入しない。利用者のプロジェクトへは `gh skill install` で導入する。
+
+```bash
+bash install.sh
+```
+
+- `build_skills.py --check` で複製が正本と一致するかを確かめ、不一致なら止まる。
+- `skills/` の各スキルを、このリポジトリの `.agents/skills/<スキル>/` に過不足なくコピーする（OpenCode・Codex・Copilot・Gemini CLI 向け）。旧版の `isdd-common` があれば消す。
+- `.claude/skills` から `../.agents/skills` へのシンボリックリンクを作る（Claude Code 向け）。
+- コピーした `.agents/skills/isdd-*/` と `.claude/` は `.gitignore` で追跡しない。`.agents/skills/mermaid-syntax-skill/` は、このリポジトリで文書の mermaid 図を書くときのために外部（re2zero/deepin-skills）から入れたスキルで、isdd としては配布しない。
+
 ### v1.0.14 以前から更新する
 
 v2.0.0 で `isdd-setup` を追加し、共通スキル `isdd-common` を廃止した。`gh skill update` は新しく増えたスキルを入れず、廃止したスキルも消さない。そのため v1.0.14 以前から更新するときは、全スキルを入れ直してから `isdd-common` を消す。
@@ -321,6 +336,25 @@ rm -rf .claude/skills/isdd-common
 ## Waza 評価運用
 
 評価資材は `evals/[skill-name]/` 配下に配置し、評価は `evals/run-all.sh` で実行する。`waza run --discover` は使用しない。
+
+### 準備
+
+- waza を入れる。手順は [microsoft/waza の README](https://github.com/microsoft/waza) の「Installation」にある。動作を確かめた版は 0.38.10。
+- `.env.sample` を `.env` にコピーし、使うモードの変数を書く。
+- Python 3（チェッカーと採点スクリプト）と bash が要る。`claude` モードは Node.js（npm）も要る。
+
+### モード
+
+`run-all.sh` の第 1 引数でモードを選ぶ。省略すると `mock`。
+
+| モード | 使う eval | モデルの呼び先 | 必要なもの |
+|---|---|---|---|
+| `mock` | `eval.mock.yaml`（3 スキルだけ） | 呼ばない（YAML が読めるか、`files:` のファイルが揃っているかの確認。採点はすべて不合格になる） | waza |
+| `real` | `eval.copilot.yaml` | GitHub Copilot | GitHub Copilot を使えるアカウントでの認証 |
+| `local` | `eval.copilot.yaml` | LM Studio（OpenAI 互換の API） | LM Studio でモデルを読み込んでおく。`.env` の `WAZA_LOCAL_LM_STUDIO_URL`（既定 `http://127.0.0.1:1234/v1`）と `WAZA_LOCAL_MODEL`（既定 `gemma-4-e4b-it-mlx`） |
+| `claude` | `eval.copilot.yaml` | Anthropic API | `.env` の `ANTHROPIC_API_KEY` と、`evals/install-copilot-cli.sh` で入れた Copilot CLI |
+
+フォークした waza を使うときは、環境変数 `WAZA_BIN` に実行ファイルを指定する。
 
 ### 特定スキルのみ実行
 
@@ -352,7 +386,7 @@ bash evals/run-all.sh claude isdd-traceable-coding
 - 最後に「スキル / 1 回目 / 再試行」の表を出す。
 - transcript はモデルごとに `evals/<skill>/artifacts/transcripts/<model>/` に残る。
 - `.env` の読み込みは設定済みの環境変数を上書きしない。`WAZA_CLAUDE_MODEL=... bash evals/run-all.sh claude` のように一時指定できる。
-- 各 `eval.copilot.yaml` の `timeout_seconds` は Claude での実測の約 3 倍（600〜900 秒）。実行基盤が固まったときに 1 時間単位で待たないための値。`local` モードはこの値に `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）を掛けた一時ファイルで実行するので、ローカルモデルでも従来どおりの長さで動く。
+- 各 `eval.copilot.yaml` の `timeout_seconds` は Claude での実測の約 3 倍（600〜1200 秒）。外部連携の 2 スキルは接続テストを含むので 1200 秒で、`isdd-external-research` のタスクはタスク側で 1500 秒を指定している。実行基盤が固まったときに 1 時間単位で待たないための値。`local` モードは、eval ファイルとタスク側の値の両方に `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）を掛けた一時ファイル（eval のディレクトリの `.eval.local.<番号>.yaml` と `.tasks.local.<番号>/`）で実行するので、ローカルモデルでも従来どおりの長さで動く。
 
 ### タスクと採点の作り
 
@@ -369,19 +403,29 @@ bash evals/run-all.sh claude isdd-traceable-coding
 python3 -m unittest discover -s tests -t tests
 ```
 
-### mock モードについて
+### mock モードとローカルモデルでの実行
 
-`eval.mock.yaml` が存在するスキルのみ mock モードで実行できる。
+`mock` は `eval.mock.yaml` があるスキル（`isdd-setup`・`isdd-traceable-coding`・`isdd-post-implementation-review`）だけを実行する。モデルが作業しないので採点は全タスク不合格になり、終了コードも 1 になる。確かめられるのは、eval の YAML が読めることと、タスクの `files:` に挙げたファイルが揃っていることまで。`local` は LM Studio を先に起動してから実行する。
 
 ```bash
 bash evals/run-all.sh mock
+bash evals/run-all.sh local isdd-requirements
 ```
 
-### 単体実行（デバッグ用）
+### 1 スキルだけ試す（デバッグ用）
+
+1 スキルだけ試すときも `run-all.sh` にスキル名を渡す。`waza run` を直接呼ぶと、作業場所にスキルのファイルが無いまま実行される。
 
 ```bash
-waza run evals/[skill-name]/eval.copilot.yaml --context-dir evals/[skill-name]/fixtures -v
+bash evals/run-all.sh claude isdd-setup
 ```
+
+`run-all.sh` は eval ごとに次を行ってから `waza run` を呼ぶ。
+
+1. `evals/<skill>/fixtures/` の中身を一時ディレクトリへコピーする。
+2. `skills/` を一時ディレクトリの `.agents/skills/` へコピーする（タスクの `files:` が指す `.agents/skills/...` のパスはここを指す）。
+3. タスクの `files:` に挙げたファイルがすべて揃っているかを確かめ、欠けていれば実行せずに止める。
+4. `--context-dir` に一時ディレクトリを、`--transcript-dir` に `evals/<skill>/artifacts/transcripts/`（claude モードでは `<モデル>/attempt-<回>/` の下）を渡して実行し、終わったら一時ディレクトリを消す。
 
 ---
 
