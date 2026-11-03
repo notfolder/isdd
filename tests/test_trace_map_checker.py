@@ -87,6 +87,46 @@ class TraceMapCheckerTest(TempDirMixin, unittest.TestCase):
         code, out = self.run_checker(MAP + extra)
         self.assertEqual(code, 0, out)
 
+    def run_with_change(self, trace_map: str, change_design: str, strict: bool = True):
+        write(self.tmp, ".history/20260508-add-bye/change_detail_design.md", change_design)
+        write(self.tmp, "docs/active_change", ".history/20260508-add-bye/\n")
+        write(self.tmp, "docs/trace_map.md", trace_map)
+        args = ["docs/detail_design.md", "docs/trace_map.md", "src", "--active-change", "docs/active_change"]
+        return run_script("trace_map_checker.py", args + (["--strict"] if strict else []), cwd=self.tmp)
+
+    def test_active_change_adds_design_ids(self):
+        write(self.tmp, "src/hello.py", CODE + "\n    def print_bye(self) -> None:\n        print(\"Bye\")\n")
+        change = "| DS-ID | 区分 |\n|---|---|\n| `DS-FN-PRINT-BYE-FT-PRINT-BYE` | [追加] |\n"
+        extra = "| `DS-FN-PRINT-BYE-FT-PRINT-BYE` | `src/hello.py::HelloPrinter.print_bye` | |\n"
+        code, out = self.run_checker(MAP + extra, strict=False)
+        self.assertEqual(code, 1, out)
+        code, out = self.run_with_change(MAP + extra, change)
+        self.assertEqual(code, 0, out)
+        self.assertIn("進行中の変更", out)
+
+    def test_active_change_deleted_id_left_in_map_is_warning(self):
+        change = "| DS-ID | 区分 |\n|---|---|\n| `DS-FN-PRINT-HELLO-FT-PRINT-HELLO` | [削除] |\n"
+        code, out = self.run_with_change(MAP, change, strict=False)
+        self.assertEqual(code, 0, out)
+        code, out = self.run_with_change(MAP, change, strict=True)
+        self.assertEqual(code, 1, out)
+        self.assertIn("削除する設計 ID が残っています", out)
+
+    def test_active_change_pointer_to_missing_design_is_error(self):
+        write(self.tmp, "docs/active_change", ".history/none/\n")
+        write(self.tmp, "docs/trace_map.md", MAP)
+        args = ["docs/detail_design.md", "docs/trace_map.md", "src", "--active-change", "docs/active_change"]
+        code, out = run_script("trace_map_checker.py", args, cwd=self.tmp)
+        self.assertEqual(code, 1, out)
+        self.assertIn("change_detail_design.md", out)
+
+    def test_absent_pointer_checks_canonical_only(self):
+        write(self.tmp, "docs/trace_map.md", MAP)
+        args = ["docs/detail_design.md", "docs/trace_map.md", "src", "--strict", "--active-change", "docs/active_change"]
+        code, out = run_script("trace_map_checker.py", args, cwd=self.tmp)
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("進行中の変更", out)
+
     def test_missing_map_is_error(self):
         code, out = run_script("trace_map_checker.py", ["docs/detail_design.md", "docs/none.md", "src"], cwd=self.tmp)
         self.assertNotEqual(code, 0, out)

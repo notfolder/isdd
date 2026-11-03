@@ -47,13 +47,21 @@ Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固
 `trace_map_checker.py` が、詳細設計書・対応表・コードの 3 者を突き合わせる。
 
 ```bash
-python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src [--strict]
+python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src [--strict] [--active-change docs/active_change]
 ```
+
+`scripts/isdd/check.sh` は `--active-change docs/active_change` を付けて呼ぶ。
+
+### 進行中の変更（変更フロー）
+
+- `isdd-change-design` は正本を書き換えず、変更のディレクトリ（`.history/[YYYYMMDD]-[タスク名]/`）を `docs/active_change` の 1 行目に書く。
+- `docs/active_change` があれば、チェッカーはそのディレクトリの `change_detail_design.md` を正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書の [削除] 行の ID」。出力の冒頭に「進行中の変更」の行が出る。
+- 実装後に `isdd-post-implementation-review` が変更を正本へ反映し、`docs/active_change` を消す。以後は正本だけで判定する。
 
 | 区分 | 内容 | 扱い |
 |---|---|---|
 | エラー | 対応表の DS-ID が設計書に無い。対応表の修飾名がコードに無い（改名・削除の見落とし）。`DS-MD-*` と修飾名の形が合わない | 終了コード 1。pre-commit で止まる |
-| 警告 | コードのファイル・クラス・公開関数が対応表に無い。設計書の `DS-MD-*` `DS-CL-*` `DS-FN-*` が対応表に無い（未実装の可能性） | 既定では終了コード 0。`--strict` で終了コード 1 |
+| 警告 | コードのファイル・クラス・公開関数が対応表に無い。設計書の `DS-MD-*` `DS-CL-*` `DS-FN-*` が対応表に無い（未実装の可能性）。進行中の変更で [削除] にした DS-ID が対応表に残っている | 既定では終了コード 0。`--strict` で終了コード 1 |
 | 確認対象外 | 記号を抽出できない言語のファイルを指す `::名前` の行。ファイルの存在だけ確認する | 件数を表示するだけ。終了コードに影響しない |
 
 ### 言語ごとの確認の深さ
@@ -76,4 +84,4 @@ python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.m
 ## 更新のタイミング
 
 - クラス・公開関数・ファイルを追加、改名、削除したら、同じ作業の中で対応表を更新する。
-- 設計要素を増やす必要があれば、先に設計書を更新して DS-ID を採番し、それから対応表に行を足す。実装中に ID を作らない。
+- 設計要素を増やす必要があれば、先に設計書（変更フローでは変更設計書）を更新して DS-ID を採番し、それから対応表に行を足す。実装中に ID を作らない。

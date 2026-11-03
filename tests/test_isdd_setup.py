@@ -30,6 +30,13 @@ class IsddSetupTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(profile["runtime"], "cli")
         self.assertFalse(profile["auth"])
 
+    def test_check_sh_passes_active_change_pointer(self):
+        self.setup()
+        check_sh = (self.tmp / "scripts" / "isdd" / "check.sh").read_text(encoding="utf-8")
+        self.assertIn('--active-change "docs/active_change"', check_sh)
+        agents = (self.tmp / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("docs/active_change", agents)
+
     def test_version_comes_from_skill(self):
         self.setup()
         version = (self.tmp / "scripts" / "isdd" / "VERSION").read_text(encoding="utf-8").strip()

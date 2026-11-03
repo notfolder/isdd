@@ -8,7 +8,7 @@ description: >
   他の isdd スキルが「scripts/isdd/check.sh が無い」「scripts/isdd/VERSION がスキルの版と違う」と判断したときに使う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-setup — 対応表チェック導入スキル
@@ -31,7 +31,7 @@ metadata:
 |---|---|
 | `scripts/isdd/trace_map_checker.py`、`implementation_completeness_checker.py` | コード用チェッカーの複製。スキルを持たない人や CI でも動くよう git 管理対象にする |
 | `scripts/isdd/VERSION` | 複製したチェッカーの isdd の版。各スキルはこれと自分の版を比べ、違えばこのスキルの再実行を案内する |
-| `scripts/isdd/check.sh` | 対応表チェックの入口。エージェントのフックも pre-commit もこれを呼ぶ |
+| `scripts/isdd/check.sh` | 対応表チェックの入口。エージェントのフックも pre-commit もこれを呼ぶ。`docs/active_change`（変更の実装中だけある）があれば、変更設計書を正本に重ねて判定する |
 | `scripts/isdd/pre-commit` と `.git/hooks/pre-commit` | 対応表の壊れた参照（エラー）だけでコミットを止める。未登録（警告）は表示だけ |
 | `AGENTS.md` と `CLAUDE.md` の規則ブロック | スキルが起動していない時でも、エージェントが対応表を更新しチェックを実行するようにする |
 | `scripts/isdd/completeness.json` | 実装完了チェックの設定。実行形態・認証の有無・外部連携の有無を記録し、docker compose や「初期ユーザー」を要求するかを決める |

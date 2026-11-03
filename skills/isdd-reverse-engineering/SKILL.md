@@ -7,7 +7,7 @@ description: >
   といった、コードはあるが isdd の文書が無いプロジェクトへの初回導入で使う。導入後の新しい要求は isdd-change-req が扱う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-reverse-engineering — 既存プロジェクト仕様駆動化スキル

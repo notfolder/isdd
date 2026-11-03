@@ -131,6 +131,13 @@ def cmd_unchanged(args: List[str]) -> None:
     ok(f"{args[0]} は変わっていない")
 
 
+def cmd_absent(args: List[str]) -> None:
+    path = workspace() / args[0]
+    if path.exists():
+        fail(f"{args[0]} が残っています")
+    ok(f"{args[0]} は無い")
+
+
 def cmd_no_secret(args: List[str]) -> None:
     ws, secret = workspace(), args[0]
     leaked = []
@@ -189,6 +196,7 @@ COMMANDS = {
     "strict-trace": cmd_strict_trace,
     "match": cmd_match,
     "unchanged": cmd_unchanged,
+    "absent": cmd_absent,
     "no-secret": cmd_no_secret,
     "version-current": cmd_version_current,
     "json-eq": cmd_json_eq,

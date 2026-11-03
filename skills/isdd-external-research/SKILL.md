@@ -7,7 +7,7 @@ description: >
   isdd-requirements / isdd-change-req の完了後に外部連携がある場合に使う。要件定義前の軽い確認は isdd-external-precheck が扱う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-external-research — 外部連携 要件整合調査スキル

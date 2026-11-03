@@ -1,6 +1,6 @@
 id: "isdd-change-design-hello-001"
 name: "Hello World 時刻表示追加 変更設計"
-description: "変更要件定義書から変更設計書を作り、正本へ反映（ID と本文）し、tasks.md を決まりどおりに作るかを検証する。"
+description: "変更要件定義書から変更設計書を作り、正本を書き換えずに進行中の変更（docs/active_change）として登録し、tasks.md を決まりどおりに作るかを検証する。"
 tags:
   - "isdd"
   - "change-design"
@@ -15,11 +15,10 @@ inputs:
       上記の情報をもとに今すぐ change_detail_design.md を作成してください。
     - |
       これ以上の情報はありません。
-      正本への反映（docs/requirements.md と docs/detail_design.md の更新）を承認します。
-      反映とチェッカーの実行を行い、tasks.md も作成してください。
+      スキルの手順どおり、完了条件をすべて満たすまで進めてください。tasks.md も作成してください。
     - |
       これ以上の情報はありません。
-      今すぐ docs/requirements.md と docs/detail_design.md への反映と tasks.md の作成を完了してください。
+      今すぐ残りの手順を完了してください。
   context:
     task_type: "isdd-change-design-hello-001"
   files:
@@ -57,46 +56,41 @@ graders:
             - "DS-[A-Z]{2}-[A-Z0-9-]*PRINT-TIMESTAMPED-OUTPUT"
             - "\\[追加\\]"
             - "\\[削除\\]"
+  - name: "change_req_rq_integrity_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py .history/20260508-add-timestamp-to-hello-world/change_requirements.md"
   - name: "change_docs_rq_ds_link_pass"
     type: "program"
     config:
       command: "bash"
       args:
         - "-c"
-        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py .history/20260508-add-timestamp-to-hello-world/change_requirements.md .history/20260508-add-timestamp-to-hello-world/change_detail_design.md"
-  - name: "canonical_requirements_updated"
-    type: "file"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py .history/20260508-add-timestamp-to-hello-world/change_requirements.md .history/20260508-add-timestamp-to-hello-world/change_detail_design.md --base docs/requirements.md"
+  - name: "active_change_registered"
+    type: "program"
     config:
-      content_patterns:
-        - path: "docs/requirements.md"
-          must_match:
-            - "RQ-FT-GET-CURRENT-TIME"
-            - "RQ-FT-BUILD-TIMESTAMPED-MESSAGE"
-            - "RQ-FT-PRINT-TIMESTAMPED-OUTPUT"
-            - "RQ-BK-OUTPUT-TIMESTAMP"
-            - "RQ-UI-TIMESTAMPED-STDOUT-OUTPUT"
-          must_not_match:
-            - "\\[追加\\]"
-            - "\\[削除\\]"
-            - "RQ-FT-GET-HELLO-MESSAGE"
-            - "RQ-UI-HELLO-STDOUT-OUTPUT"
-            - "固定文字列を出力するのみ"
-  - name: "canonical_design_updated"
-    type: "file"
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/active_change --re '^\\.history/20260508-add-timestamp-to-hello-world/?$'"
+  - name: "canonical_requirements_unchanged"
+    type: "program"
     config:
-      content_patterns:
-        - path: "docs/detail_design.md"
-          must_match:
-            - "DS-FN-[A-Z0-9-]*GET-CURRENT-TIME"
-            - "DS-FN-[A-Z0-9-]*BUILD-TIMESTAMPED-MESSAGE"
-            - "DS-FN-[A-Z0-9-]*PRINT-TIMESTAMPED-OUTPUT"
-            - "DS-MD-[A-Z0-9-]+"
-            - "除外要件"
-          must_not_match:
-            - "\\[追加\\]"
-            - "\\[削除\\]"
-            - "DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE"
-            - "get_hello_message"
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/requirements.md evals/isdd-change-design/fixtures/docs/requirements.md"
+  - name: "canonical_design_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/detail_design.md evals/isdd-change-design/fixtures/docs/detail_design.md"
   - name: "history_change_requirements_unchanged"
     type: "program"
     config:
@@ -110,18 +104,4 @@ graders:
       command: "bash"
       args:
         - "-c"
-        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/20260508-add-timestamp-to-hello-world/tasks.md' --re 'DS-[A-Z]{2}-[A-Z0-9]' --re '単体テスト|結合テスト' --re 'E2E' --re 'README' --re 'implementation_completeness_checker' --re 'isdd-setup|check\\.sh' --re 'trace_map' --re '正本'"
-  - name: "canonical_rq_integrity_pass"
-    type: "program"
-    config:
-      command: "bash"
-      args:
-        - "-c"
-        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"
-  - name: "canonical_rq_ds_link_pass"
-    type: "program"
-    config:
-      command: "bash"
-      args:
-        - "-c"
-        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/20260508-add-timestamp-to-hello-world/tasks.md' --re 'DS-[A-Z]{2}-[A-Z0-9]' --re '単体テスト|結合テスト' --re 'E2E' --re 'README' --re 'implementation_completeness_checker' --re 'isdd-setup|check\\.sh' --re 'trace_map' --re 'active_change'"

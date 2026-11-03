@@ -2,17 +2,17 @@
 name: isdd-change-design
 description: >
   変更要件定義書（.history/[YYYYMMDD]-[タスク名]/change_requirements.md）から、既存設計との整合を保った
-  変更詳細設計書（change_detail_design.md）を作り、確定後に正本（docs/requirements.md・docs/detail_design.md）へ反映して、
-  実装タスクの一覧（tasks.md）を作る。「変更設計書を作って」「既存設計への差分設計をまとめて」
+  変更詳細設計書（change_detail_design.md）と実装タスクの一覧（tasks.md）を作り、進行中の変更として登録する。
+  正本（docs/requirements.md・docs/detail_design.md）は書き換えない（反映は実装後に isdd-post-implementation-review が行う）。「変更設計書を作って」「既存設計への差分設計をまとめて」
   「change_requirements から詳細設計を作成して」といった依頼で使う。要件定義書からの新規設計は isdd-design が扱う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-change-design — 変更詳細設計スキル
 
-既存の要件定義書と設計書を理解したうえで、変更要件定義書の [追加] [削除] を設計の差分に落とし、確定したら正本へ反映する。
+既存の要件定義書と設計書を理解したうえで、変更要件定義書の [追加] [削除] を設計の差分に落とし、確定したら進行中の変更として登録する。
 
 ## このスキルのファイル
 
@@ -27,24 +27,24 @@ metadata:
 | `references/id-definitions.md` | 設計 ID の採番と変更管理 |
 | `references/trace-map-rules.md` | 対応表（コード設計章で触れる） |
 | `references/document-rules.md` | 文書の書き方と、作成後のレビュー |
-| `scripts/rq_integrity_checker.py` | 要件 ID の整合チェック（正本への反映後） |
-| `scripts/rq_ds_link_checker.py` | 要件 ID と設計 ID の対応チェック（正本への反映後） |
+| `scripts/rq_integrity_checker.py` | 変更要件定義書の要件 ID の整合チェック |
+| `scripts/rq_ds_link_checker.py` | 変更要件定義書と変更設計書の要件 ID・設計 ID の対応チェック |
 
 ## 入力と出力
 
 - 入力: `.history/[YYYYMMDD]-[タスク名]/change_requirements.md`。ユーザーの指定が無ければ、`.history/` 配下から対象を確かめる。
-- 出力: 同じディレクトリの `change_detail_design.md` と `tasks.md`、および反映後の `docs/requirements.md` と `docs/detail_design.md`。
-- `.history/` 配下の変更要件定義書と変更設計書は変更の記録として残し、反映後も書き換えない。
+- 出力: 同じディレクトリの `change_detail_design.md` と `tasks.md`、および進行中の変更を指す `docs/active_change`。
+- `.history/` 配下の変更要件定義書と変更設計書は変更の記録として残し、正本への反映後も書き換えない。
 
 ## 始める前に確かめること
 
 - 外部連携がある場合: `isdd-external-research` の整合確認が終わり、未解消の不整合が無いこと。
 - `docs/requirements.md` と `docs/detail_design.md` を読み、既存の仕様を理解する。
 
-## 正本を書き換える時期
+## 正本を書き換えない
 
-変更設計書のレビューに合格するまでは、`docs/requirements.md` と `docs/detail_design.md` を書き換えない。合格したら「正本への反映」で両方を更新する。
-実装スキルと対応表チェック（`scripts/isdd/check.sh`）は正本の `docs/detail_design.md` だけを読むので、ここで反映しないと、変更設計の設計 ID が実装中ずっと「設計書に無い」エラーになるため。
+このスキルでは `docs/requirements.md` と `docs/detail_design.md` を書き換えない。正本は「実装済みの仕様」だけを持ち、変更は実装が終わってから `isdd-post-implementation-review` が反映する。実装の前に書き換えると、実装をやめたり途中で止まったりしたときに、作っていない仕様が正本に残るため。
+実装中は、`docs/active_change` が指す変更設計書を対応表チェック（`scripts/isdd/check.sh`）と実装スキルが正本に重ねて読むので、変更設計の設計 ID はエラーにならない。
 
 ## 最小設計と要件の除外
 
@@ -85,42 +85,35 @@ metadata:
 2. 網羅性チェックをすべて満たしているか
 3. 未マッピングが出た場合、変更要件への反映と設計 ID への伝播が終わっているか
 
-合格したら `.history/[YYYYMMDD]-[タスク名]/change_detail_design.md` を保存し、正本への反映に進む。
+合格したら `.history/[YYYYMMDD]-[タスク名]/change_detail_design.md` を保存し、整合チェックに進む。
 
-## 正本への反映
+## 整合チェック
 
-反映する前に、反映する要件 ID と設計 ID の一覧（追加・削除）をユーザーに示す。
+変更設計書を保存したら、次を bash で実行し、両方が合格するまで変更要件定義書と変更設計書を直す。`[YYYYMMDD]-[タスク名]` は実際のディレクトリ名に置き換える。実行ログは応答に載せる。
 
-1. `docs/requirements.md` を更新する。
-   - [追加] 要件を該当章へ足し、[削除]（`deprecated`）要件とその ID を消す。
-   - 業務課題一覧と、業務課題と要件の対応表を変更後の状態にする。技術制約（1-1）に変更があれば書き換える。
-   - 全章を通読し、変更前の挙動を前提にした本文（概要、データ章、用語定義、旧機能名・旧画面名への言及）を変更後の内容に書き換える。ID の表だけを差し替えると、本文が旧仕様のまま残るため。
-2. `docs/detail_design.md` を更新する。
-   - [追加] 設計要素を該当章へ足し、[削除] 設計要素とその ID を消す。
-   - 1 と同じく全章を通読し、旧設計を前提にした本文（構成図、処理フロー、クラス図、ファイル一覧、要件と設計の対応表）を書き換える。
-   - 変更設計書の「11-1. 除外要件」の行を、`docs/detail_design.md` の 11-1 に書き写す（書き写さないと、正本どうしのチェックで除外した要件が未マッピングになるため）。
-   - 正本には [追加] [削除] の区分を書かない。正本は現在有効な内容だけを持つ。
-3. 次を bash で実行し、両方が合格するまで正本を直す。
+```bash
+python3 .agents/skills/isdd-change-design/scripts/rq_integrity_checker.py .history/[YYYYMMDD]-[タスク名]/change_requirements.md
+python3 .agents/skills/isdd-change-design/scripts/rq_ds_link_checker.py .history/[YYYYMMDD]-[タスク名]/change_requirements.md .history/[YYYYMMDD]-[タスク名]/change_detail_design.md --base docs/requirements.md
+```
 
-   ```bash
-   python3 .agents/skills/isdd-change-design/scripts/rq_integrity_checker.py docs/requirements.md
-   python3 .agents/skills/isdd-change-design/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md
-   ```
+`--base` に正本の要件定義書を渡すと、変更設計書が既存の要件（変更要件定義書に無い `RQ-*`）を参照していても未定義参照にならない。
 
-4. 反映した要件 ID・設計 ID の一覧と、書き換えた本文の箇所をユーザーに報告する。
+## 進行中の変更の登録
 
-反映後に実装で見つかる差分と、ここでの反映漏れは、`isdd-post-implementation-review` が拾う。
+整合チェックに合格したら、`docs/active_change` に変更のディレクトリのパス（例: `.history/20250115-add-user-profile/`）を 1 行だけ書く。
+`scripts/isdd/check.sh` はこのファイルがあれば変更設計書を正本に重ねて判定し、`isdd-post-implementation-review` は正本へ反映し終えたらこのファイルを消す。別の変更が登録済み（`docs/active_change` が別のディレクトリを指している）なら書き換えず、先にその変更を `isdd-post-implementation-review` で正本へ反映するようユーザーに伝えて止まる。変更を重ねると、どの差分がどの変更のものか分からなくなるため。
 
 ## tasks.md
 
-反映が終わったら、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を `references/design-tasks-rules.md` に従って作る。先頭の固定タスクには「正本反映の確認タスク」も入れる。
+登録が終わったら、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を `references/design-tasks-rules.md` に従って作る。先頭の固定タスクには「進行中の変更の登録確認タスク」も入れる。
 設計中に `change_requirements.md` を直した場合は、直した要件 ID と理由、`change_detail_design.md` への伝播を確認するタスクを末尾に書く。
 
 ## 完了条件
 
 - `change_detail_design.md` と `tasks.md` を保存した
-- `docs/requirements.md` と `docs/detail_design.md` に変更を反映した（[追加] [削除] の区分は正本に残さない）
-- `rq_integrity_checker.py` と `rq_ds_link_checker.py` を正本に対して実行し、合格した実行ログを応答に載せた
+- `rq_integrity_checker.py` と `rq_ds_link_checker.py` を変更要件定義書と変更設計書に対して実行し、合格した実行ログを応答に載せた
+- `docs/active_change` に変更のディレクトリのパスを書いた
+- `docs/requirements.md` と `docs/detail_design.md` を書き換えていない
 
 ## 次のステップ
 
@@ -128,3 +121,4 @@ metadata:
 
 - `scripts/isdd/check.sh` が無いプロジェクトでは、先に `isdd-setup` で対応表チェックを導入する
 - `isdd-traceable-coding` で変更設計にもとづく実装と対応表の更新を行う
+- 実装が終わったら `isdd-post-implementation-review` で変更を正本へ反映する

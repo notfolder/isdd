@@ -7,7 +7,7 @@ description: >
   といった、要件定義書が既にあるプロジェクトでの依頼で使う。要件定義書がまだ無い場合は isdd-requirements を使う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-change-req — インタビュー駆動 変更要件定義スキル
@@ -29,7 +29,7 @@ metadata:
 ## 書く場所と書かない場所
 
 - 変更要件は `.history/[YYYYMMDD]-[タスク名]/change_requirements.md` にだけ書く。タスク名は `20250115-add-user-profile` の形にする。
-- 既存の `docs/requirements.md` はこのスキルでは書き換えない。正本への反映は `isdd-change-design` が変更設計の確定時に行う。ここで書き換えると、設計前に正本と変更記録の 2 か所が食い違うため。
+- 既存の `docs/requirements.md` はこのスキルでは書き換えない。正本への反映は、実装が終わってから `isdd-post-implementation-review` が行う。正本は実装済みの仕様だけを持つので、実装の前に書き換えると、作っていない仕様が正本に残るため。
 
 ## 開始ゲート
 
