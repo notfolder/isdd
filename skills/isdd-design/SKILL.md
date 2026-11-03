@@ -6,6 +6,7 @@ description: >
   「詳細設計して」「設計書を作りたい」「要件から設計に落として」「内部設計まで詰めたい」といった依頼で使う。
   変更要件定義書（change_requirements.md）からの差分設計は isdd-change-design が扱う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

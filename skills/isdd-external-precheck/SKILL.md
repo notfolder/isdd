@@ -6,6 +6,7 @@ description: >
   「外部連携の事前確認をしたい」「要件前に連携リスクだけ見たい」という依頼や、isdd-requirements / isdd-change-req の
   開始時に「外部連携がある」と答えた場合に使う。外部仕様と要件の詳細な突き合わせは isdd-external-research が扱う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

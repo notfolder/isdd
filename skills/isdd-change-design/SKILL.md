@@ -6,6 +6,7 @@ description: >
   正本（docs/requirements.md・docs/detail_design.md）は書き換えない（反映は実装後に isdd-post-implementation-review が行う）。「変更設計書を作って」「既存設計への差分設計をまとめて」
   「change_requirements から詳細設計を作成して」といった依頼で使う。要件定義書からの新規設計は isdd-design が扱う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

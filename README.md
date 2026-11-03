@@ -176,7 +176,7 @@ graph LR
 - 各スキルは自分のディレクトリの中だけを参照する（Agent Skills の仕様どおり、参照はスキルのルートからの相対パス）。スキルを 1 つだけ入れても動き、`.agents/skills/` 以外の置き場でもパスの読み替えが要らない。
 - どのスキルにどのファイルを複製するかは `shared/manifest.json` で決める。`skills/<スキル>/references/` と `scripts/` は手で編集しない。
 - 複製はリポジトリに含める。`gh skill publish` はリポジトリの内容をそのまま公開し、`install.sh` も `skills/` をそのまま展開するので、複製をコミットしておけば両者の中身が一致する。
-- `python3 tools/build_skills.py --check` が、複製が正本と一致するか、manifest に漏れが無いか、全スキルの `metadata.version` が揃っているかを確かめる。`install.sh`・`evals/run-all.sh`・GitHub Actions（`.github/workflows/skills-sync.yml`）がこれを実行し、不一致なら止まる。
+- `python3 tools/build_skills.py --check` が、複製が正本と一致するか、manifest に漏れが無いか、全スキルの `metadata.version` が揃っているかを確かめる。`install.sh`・`evals/run-all.sh` がこれを実行し、不一致なら止まる。
 
 ### shared/references/
 
@@ -397,11 +397,19 @@ bash evals/run-all.sh claude isdd-traceable-coding
 
 ### 単体テスト
 
-チェッカーと複製スクリプトの単体テストは `tests/` にある（標準ライブラリの unittest だけを使う）。GitHub Actions でも実行する。
+チェッカーと複製スクリプトの単体テストは `tests/` にある（標準ライブラリの unittest だけを使う）。
 
 ```bash
 python3 -m unittest discover -s tests -t tests
 ```
+
+スクリプトは Python 3.9 以上の標準ライブラリだけで動かす（macOS 標準の `python3` が 3.9 のため）。古い版と新しい版の両方で動くことは、このマシンにある版をすべて使って確かめる。非推奨の警告も失敗として扱う。
+
+```bash
+bash tools/test_pythons.sh
+```
+
+PATH 上の `python3`・`python3.X`、`/usr/bin/python3`、uv が管理する版を探して実行する。古い版と新しい版がそろっていなければ `uv python install 3.9 3.15` などで入れる。
 
 ### mock モードとローカルモデルでの実行
 
@@ -445,6 +453,8 @@ bash evals/run-all.sh claude isdd-setup
 - `rq_ds_link_checker.py` に `--base` を追加。変更要件定義書と変更設計書を検査するとき、変更設計書が参照する既存の要件（変更要件定義書に無い `RQ-*`）を正本で解決し、未定義参照にしない。
 - `design-tasks-rules.md` の変更設計固有の固定タスクを「正本反映の確認タスク」から「進行中の変更の登録確認タスク」に変更。
 - `isdd-external-research` の要件整合チェックで、変更フローの反映先を変更要件定義書と明記（正本を書き換えると読めたため）。
+- 全スキルの SKILL.md に `compatibility`（Python 3.9 以上と bash）を追加。Python 3.9・3.10・3.12・3.14・3.15 で単体テストが通ることを確かめた。複数の版でテストする `tools/test_pythons.sh` を追加。
+- GitHub Actions（`.github/workflows/skills-sync.yml`）を削除。複製の一致は `install.sh`・`evals/run-all.sh` が、単体テストは `tools/test_pythons.sh` が確かめる。
 
 ### v2.0.0
 

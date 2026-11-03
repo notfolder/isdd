@@ -6,6 +6,7 @@ description: >
   「要件と外部仕様の整合を確認したい」「要件出力後に連携先を調査したい」「設計前に外部連携の差分を確定したい」という依頼や、
   isdd-requirements / isdd-change-req の完了後に外部連携がある場合に使う。要件定義前の軽い確認は isdd-external-precheck が扱う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

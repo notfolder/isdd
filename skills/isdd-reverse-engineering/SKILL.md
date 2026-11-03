@@ -6,6 +6,7 @@ description: >
   「既存コードから要件定義書を作りたい」「既存 PJ を isdd 化したい」「コードから設計書を逆引きして」「既存システムの仕様を整理したい」
   といった、コードはあるが isdd の文書が無いプロジェクトへの初回導入で使う。導入後の新しい要求は isdd-change-req が扱う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

@@ -6,6 +6,7 @@ description: >
   「要件の変更を整理したい」「機能を追加したい」「変更要求の要件定義を作りたい」「既存要件に対する差分要件を作って」
   といった、要件定義書が既にあるプロジェクトでの依頼で使う。要件定義書がまだ無い場合は isdd-requirements を使う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

@@ -6,6 +6,7 @@ description: >
   「実装して」「設計書どおりに実装して」「tasks.md を進めて」「対応表を更新して」「isdd の実装ルールを適用して」といった依頼で使う。
   設計書に無い設計要素が必要になったときは実装を止め、設計スキル（isdd-design / isdd-change-design）に戻す。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

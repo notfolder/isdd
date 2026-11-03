@@ -7,6 +7,7 @@ description: >
   「isdd をセットアップして」「対応表チェックを導入して」「isdd-setup を実行して」という依頼や、
   他の isdd スキルが「scripts/isdd/check.sh が無い」「scripts/isdd/VERSION がスキルの版と違う」と判断したときに使う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---
@@ -71,7 +72,7 @@ metadata:
 - 複製・生成・組み込み・削除したファイルの一覧と、`scripts/isdd/VERSION` に記録した版
 - `completeness.json` に記録した実行形態・認証・外部連携と、その根拠（設計書のどこから読んだか、またはユーザーの回答）
 - 省略した項目とその理由（`.git` が無い、既存のフックがある、応答終了時のイベントが無い）
-- エージェントのフックを作ったか。作った場合はその場所と呼び出すコマンド
+- エージェントのフックを作ったか。作った場合はその場所と呼び出すコマンド。作らなかった場合はその理由（応答終了時のイベントが無い環境だった、ユーザーが不要と言った、など）。途中の応答で書いていても、最終報告にもう一度書く
 - チェッカーを 1 回実行した結果
 
 ## 完了条件
@@ -80,7 +81,7 @@ metadata:
 - `bash scripts/isdd/check.sh` を実行し、結果を応答に載せた
 - `AGENTS.md` と `CLAUDE.md` に規則ブロックがある
 - `scripts/isdd/completeness.json` の実行形態・認証・外部連携が詳細設計書（またはユーザーの回答）と一致している
-- エージェントのフックについて、作った・作れなかったのどちらかを書いた
+- エージェントのフックについて、最終報告に「作った（場所とコマンド）」か「作らなかった（理由）」のどちらかを書いた
 
 ## 次のステップ
 
