@@ -2,21 +2,21 @@
   "stage": 3,
   "app": "/private/tmp/claude-501/-Users-notfolder-Documents-isdd/49090259-0412-4808-99fc-5bedf53f2f86/scratchpad/work/control-r2",
   "tests": {
-    "test_employee_restrictions[chromium]": "fail",
-    "test_staff_role_change[chromium]": "fail",
-    "test_password_reset[chromium]": "fail",
+    "test_employee_restrictions[chromium]": "pass",
+    "test_staff_role_change[chromium]": "pass",
+    "test_password_reset[chromium]": "pass",
     "test_account_delete[chromium]": "pass",
-    "test_first_account_becomes_staff[chromium]": "fail",
-    "test_account_registration[chromium]": "fail",
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
     "test_login_logout[chromium]": "pass",
-    "test_session_timeout[chromium]": "fail",
-    "test_employee_cannot_manage_equipment[chromium]": "fail",
-    "test_equipment_create[chromium]": "fail",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
     "test_equipment_update_and_delete_without_lending[chromium]": "pass",
     "test_equipment_update_keeps_lending[chromium]": "pass",
-    "test_stale_equipment_update[chromium]": "fail",
+    "test_stale_equipment_update[chromium]": "pass",
     "test_equipment_delete_rejects_lent[chromium]": "pass",
-    "test_lending[chromium]": "fail",
+    "test_lending[chromium]": "pass",
     "test_concurrent_lending[chromium]": "fail",
     "test_return[chromium]": "pass",
     "test_duplicate_return[chromium]": "pass",
@@ -24,11 +24,11 @@
     "test_lending_status_empty_and_sorted[chromium]": "pass",
     "test_response_time[chromium]": "fail"
   },
-  "passed": 9,
+  "passed": 19,
   "total": 21,
-  "setup_ok": true,
+  "setup_ok": null,
   "error": null,
-  "pytest_tail": "py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1 (<lambda>)\n  \n  Traceback (most recent call last):\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1075, in _bootstrap_inner\n      self.run()\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1012, in run\n      self._target(*self._args, **self._kwargs)\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 89, in <lambda>\n      thread = threading.Thread(target=lambda: result.update(asyncio.run(_measure(app.base_url))))\n                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 195, in run\n      return runner.run(main)\n             ^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 118, in run\n      return self._loop.run_until_complete(task)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n      return future.result()\n             ^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 71, in _measure\n      async with staff.expect_navigation(url=f\"{base_url}/\"):\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 60, in __aexit__\n      await self._event.value\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 35, in value\n      return mapping.from_maybe_impl(await self._future)\n                                     ^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py\", line 265, in continuation\n      event = await waiter.result()\n              ^^^^^^^^^^^^^^^^^^^^^\n  playwright._impl._errors.TimeoutError: Timeout 30000ms exceeded.\n  =========================== logs ===========================\n  waiting for navigation to \"http://127.0.0.1:53772/\" until 'load'\n    navigated to \"http://127.0.0.1:53772/?msg=lent\"\n  ============================================================\n  \n  Enable tracemalloc to get traceback where the object was allocated.\n  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.\n    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED test_access.py::test_employee_restrictions[chromium] - AssertionError:...\nFAILED test_access.py::test_staff_role_change[chromium] - AssertionError: Loc...\nFAILED test_access.py::test_password_reset[chromium] - AssertionError: Page U...\nFAILED test_accounts.py::test_first_account_becomes_staff[chromium] - Asserti...\nFAILED test_accounts.py::test_account_registration[chromium] - AssertionError...\nFAILED test_accounts.py::test_session_timeout[chromium] - playwright._impl._e...\nFAILED test_accounts.py::test_employee_cannot_manage_equipment[chromium] - As...\nFAILED test_equipment.py::test_equipment_create[chromium] - playwright._impl....\nFAILED test_equipment.py::test_stale_equipment_update[chromium] - AssertionEr...\nFAILED test_lending.py::test_lending[chromium] - AssertionError: Page URL exp...\nFAILED test_lending.py::test_concurrent_lending[chromium] - AssertionError: P...\nFAILED test_performance.py::test_response_time[chromium] - KeyError: 'open'\n12 failed, 9 passed, 1 warning in 275.72s (0:04:35)\n",
+  "pytest_tail": "ata())\n        result: dict = {}\n        # pytest-playwright の同期 API と混ざらないよう、非同期 API は別のスレッドで動かす\n        thread = threading.Thread(target=lambda: result.update(asyncio.run(_measure(app.base_url))))\n        thread.start()\n        thread.join()\n        print(\n>           f\"open max={max(result['open']):.2f}s lend={result['lend']:.2f}s \"\n                            ^^^^^^^^^^^^^^\n            f\"return={result['return']:.2f}s reload max={max(result['reload']):.2f}s\",\n            file=sys.stderr, flush=True,\n        )\nE       KeyError: 'open'\n\ntest_performance.py:93: KeyError\n=============================== warnings summary ===============================\ntest_performance.py::test_response_time[chromium]\n  /Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/_pytest/threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1 (<lambda>)\n  \n  Traceback (most recent call last):\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1075, in _bootstrap_inner\n      self.run()\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1012, in run\n      self._target(*self._args, **self._kwargs)\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 89, in <lambda>\n      thread = threading.Thread(target=lambda: result.update(asyncio.run(_measure(app.base_url))))\n                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 195, in run\n      return runner.run(main)\n             ^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 118, in run\n      return self._loop.run_until_complete(task)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n      return future.result()\n             ^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 71, in _measure\n      async with staff.expect_navigation(url=f\"{base_url}/\"):\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 60, in __aexit__\n      await self._event.value\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 35, in value\n      return mapping.from_maybe_impl(await self._future)\n                                     ^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py\", line 265, in continuation\n      event = await waiter.result()\n              ^^^^^^^^^^^^^^^^^^^^^\n  playwright._impl._errors.TimeoutError: Timeout 30000ms exceeded.\n  =========================== logs ===========================\n  waiting for navigation to \"http://127.0.0.1:51510/\" until 'load'\n    navigated to \"http://127.0.0.1:51510/?msg=lent\"\n  ============================================================\n  \n  Enable tracemalloc to get traceback where the object was allocated.\n  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.\n    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED test_lending.py::test_concurrent_lending[chromium] - AssertionError: L...\nFAILED test_performance.py::test_response_time[chromium] - KeyError: 'open'\n2 failed, 19 passed, 1 warning in 183.49s (0:03:03)\n",
   "overbuild": {
     "source_files": 1,
     "lines": 913,
@@ -36,5 +36,5 @@
     "classes": 2,
     "templates": 0
   },
-  "duration_sec": 275.9
+  "duration_sec": 183.7
 }

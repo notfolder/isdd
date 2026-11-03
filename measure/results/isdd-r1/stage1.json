@@ -15,7 +15,7 @@
   "total": 8,
   "setup_ok": true,
   "error": null,
-  "pytest_tail": "........                                                                 [100%]\n8 passed, 13 deselected in 20.58s\n",
+  "pytest_tail": "........                                                                 [100%]\n8 passed, 13 deselected in 19.54s\n",
   "overbuild": {
     "source_files": 11,
     "lines": 901,
@@ -23,5 +23,5 @@
     "classes": 2,
     "templates": 7
   },
-  "duration_sec": 22.8
+  "duration_sec": 20.5
 }

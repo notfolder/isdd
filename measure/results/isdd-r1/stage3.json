@@ -1,6 +1,6 @@
 {
   "stage": 3,
-  "app": "/private/tmp/claude-501/-Users-notfolder-Documents-isdd/49090259-0412-4808-99fc-5bedf53f2f86/scratchpad/work/isdd-r1",
+  "app": "/Users/notfolder/Documents/isdd/measure/results/isdd-r1/snapshot-stage3",
   "tests": {
     "test_employee_restrictions[chromium]": "pass",
     "test_staff_role_change[chromium]": "pass",
@@ -28,7 +28,7 @@
   "total": 21,
   "setup_ok": true,
   "error": null,
-  "pytest_tail": ".....................                                                    [100%]\n21 passed in 154.37s (0:02:34)\n",
+  "pytest_tail": ".....................                                                    [100%]\n21 passed in 156.48s (0:02:36)\n",
   "overbuild": {
     "source_files": 11,
     "lines": 901,
@@ -36,5 +36,5 @@
     "classes": 2,
     "templates": 7
   },
-  "duration_sec": 155.4
+  "duration_sec": 158.5
 }
