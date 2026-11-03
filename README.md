@@ -225,7 +225,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v2.0.1
+gh skill publish ./skills --tag v2.1.0
 ```
 
 ---
