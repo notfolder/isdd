@@ -5,8 +5,8 @@
 
 ## 場所
 
-- 残作業: `.history/BACKLOG.md`。最新の引き継ぎ: `.history/2026-10-18-0312-スキルレビューと重大修正/summary.md`
-- 2026-10-19 以降の作業（PR #5 のマージ、v2.0.0 の出し直し、README の更新手順）は引き継ぎ記録が無い。経緯は `.history/BACKLOG.md` の完了項目とコミット履歴にある。
+- 残作業: `.history/BACKLOG.md`（完了は `BACKLOG-archive.md`、案は `IDEAS.md`）。最新の引き継ぎ: `.history/2026-11-03-1404-正本反映時期とスキル再構成/summary.md`
+- 2026-10-19〜24 の作業（PR #5 のマージ、v2.0.0 の出し直し、README の更新手順）は引き継ぎ記録が無い。経緯は `.history/BACKLOG-archive.md` とコミット履歴にある。
 
 ## eval の運用（強い指示）
 
@@ -16,6 +16,7 @@
 
 ## スキルの設計上の決まり
 
+- **CI は持たない。チェッカーは標準ライブラリだけで Python 3.9 以上に対応させ、変更したら `bash tools/test_pythons.sh` で手元の複数の版の単体テストを通す**（2026-11-03）。
 - **共通ファイルの正本は `shared/`。`skills/<スキル>/references/` と `scripts/` は `python3 tools/build_skills.py` が作る複製なので手で編集しない。複製もコミットする**（2026-10-18）。`gh skill publish` と `install.sh` が同じ中身を配るため。
 - **コードに ID を書かない。設計 ID とコードの対応は `docs/trace_map.md` で管理し、`scripts/isdd/check.sh` で検証する**（2026-10-17）。
 - **スキルは人が確認・承認する区切りで分ける（`isdd-spec`・`isdd-build`・`isdd-reverse-engineering`・`isdd-setup` の 4 本）。基本の流れ（業務課題 → 要件 → 設計 → 実装 → 実装後レビュー）は変えない**（2026-11-03、v2.1.0。小さな変更向けの近道は作らない。小さいつもりでも大きな変更になりうるため）。
