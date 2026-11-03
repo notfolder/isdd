@@ -2,10 +2,10 @@
 
 - セッション: `34d7b069-ca61-430f-93b4-ce1616c2430a`
 - cwd: `/Users/notfolder/Documents/isdd`（branch: main）
-- 期間: 2026-10-25 18:52 〜 2026-11-03 23:40
+- 期間: 2026-10-25 18:52 〜 2026-11-03 23:44
 - Claude Code: 2.1.310
-- 発言: ユーザー 60 / Claude 53 / ツール呼び出し 602
-- 書き出し: 2026-11-03 23:40 JST
+- 発言: ユーザー 63 / Claude 54 / ツール呼び出し 606
+- 書き出し: 2026-11-03 23:44 JST
 
 > ユーザー発言と Claude の本文は逐語。ツール呼び出しは `🔧` の 1 行に要約し、ツール結果・思考ブロックは含まない。
 
@@ -4035,3 +4035,67 @@ The run started cleanly at 22:38: isdd-build is first, and the new remap scene (
 > 🔧 `Bash` Append the estimate-vs-actual row to the estimate log
 
 > 🔧 `Bash` Update the handover summary and backlog, commit and push
+
+> 🔧 `Bash` Re-export the session log to include tonight, scan it, commit and push
+
+今日の作業は全部終わりました（23:42）。ブランチ `v2.1.0-restructure` に push 済みで、PR #9 に載っています。
+
+## 結果
+
+| 項目 | 結果 |
+|---|---|
+| eval（Haiku） | isdd-build 10/10、isdd-setup 1/1、isdd-reverse-engineering 1/1、isdd-spec 15/15。直した場面の回し直しを含め、最終的に全 27 場面が 1 回目で合格 |
+| 単体テスト | 75 本が Python 3.9〜3.15 の 5 つの版で合格。公開の dry-run も合格 |
+| コミット | `e38a81b` 追跡の 3 分割と文言、`5918beb`・`6789d8d`・`5f8f63e` isdd-build / isdd-spec の指示の弱さ 6 点、`6c70079` チェッカーの見逃し 4 件と fixture、`c53fb85` 差分 eval、`accfeac`・`14eb9a8` 引き継ぎ |
+
+## 今夜変えたこと
+
+| 区分 | 内容 |
+|---|---|
+| 文言 | 矛盾 7 件（別の変更が登録済みなら開始時に止まる、承認の一覧、外部ライブラリ調査の言語未定時、「正本は実装済み」の言い換え、逆引きの VERSION 比較など）、総称の置換、承認を 2 回に、SOLID 表の廃止、逆引きの KPI「不明」 |
+| 追跡の 3 分割 | 前向き: `DS-TS` → `e2e/` のテスト関数（`--tests`）。後ろ向き: 対応表（既定 `function`、`class` も選べる）。構造: `dependency_checker.py`（第 7 章の依存の規則 → `scripts/isdd/dependencies.json`）。第 7 章の「実現する設計 ID」の未登録を警告 |
+| チェッカーの見逃し | 報告いただいた 1 件と同種 4 件（移したクラス、「変更なし（既存）」の行、同じ行に両区分、正本の「[削除]」の文字）。実装後レビューで正本の要件定義書にも整合チェック。`tests/README.md` に規則 → テストの対応表 |
+| eval | 「対応の差し替えとファイルの分割」の場面を追加。`WAZA_TASKS` で場面を絞って回せる。差分で回す決まりを CLAUDE.md に |
+
+## 試用中のプロジェクトへの反映（ユーザー作業）
+
+チェッカーの複製と `check.sh` が変わったので、次の 2 つが要ります。
+
+```
+gh skill install notfolder/isdd --all --pin 5f8f63e --scope user --agent claude-code --force
+```
+
+そのあと各プロジェクトで `isdd-setup` を再実行してください（`scripts/isdd/` の複製を更新し、`check.sh` に `--tests`・`--granularity`・依存チェックが入ります。`VERSION` が同じ v2.1.0 のままなので、isdd-build は自動では再実行を促しません）。
+
+## 見積もりとの差
+
+見積もり約 2.4 時間に対し、実績約 2.5 時間（21:09〜23:40）。実装は見積もりの半分でしたが、eval を同梱ファイルが変わるたびに全場面で回して 2 周分を無駄にしました（差分実行の仕組みで解消）。`~/.claude/estimate-log.md` に 1 行足しました（コミットはホームのセッションで）。
+
+## 残作業（`BACKLOG.md` に記録済み）
+
+- 試用中のプロジェクトでの入れ直しと `isdd-setup` の再実行（重要 高）
+- v2.2: P1（受け入れテストを整合の主役に）、P3〜P5（文言）。着手は PR #9 のマージと公開の後
+- 効果の計測: 備品管理で試運転 → SWE-Dev → FeatureBench → WebGen-Bench
+- 粒度 `class` の eval 場面（重要 低）
+
+確認事項はありません。
+
+## 114. ユーザー（2026-11-03 23:43）
+
+PRをマージしたのでmain`ni
+
+## 115. ユーザー（2026-11-03 23:43）
+
+PRをマージしたのでmainに復帰して、引き継ぎ準備をしてmainに直接コミットとpushをしてください。セッションを切り替えてv2.2o
+
+## 116. ユーザー（2026-11-03 23:43）
+
+PRをマージしたのでmainに復帰して、引き継ぎ準備をしてmainに直接コミットとpushをしてください。セッションを切り替えてv2.2の実装に移ります
+
+## 117. Claude
+
+> 🔧 `Bash` Switch to main, pull the merged PR, check the feature branch state
+
+> 🔧 `Bash` Delete the merged local branch, update summary and backlog for the handover
+
+> 🔧 `Bash` Archive completed backlog items, re-export the session log, commit to main and push
