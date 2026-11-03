@@ -7,7 +7,7 @@ description: >
   変更要件定義書（change_requirements.md）からの差分設計は isdd-change-design が扱う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-design — インタビュー駆動 詳細設計スキル
@@ -69,7 +69,7 @@ metadata:
 ## 保存と tasks.md
 
 1. 設計書を `docs/detail_design.md` に保存する。
-2. `.history/[YYYYMMDD]-[タスク名]/tasks.md` を `references/design-tasks-rules.md` に従って作る。「正本反映の確認タスク」は変更設計だけのものなので、このスキルでは入れない。
+2. `.history/[YYYYMMDD]-[タスク名]/tasks.md` を `references/design-tasks-rules.md` に従って作る。「進行中の変更の登録確認タスク」は変更設計だけのものなので、このスキルでは入れない。
 
 ## 整合チェック
 

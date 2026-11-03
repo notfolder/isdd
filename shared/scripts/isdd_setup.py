@@ -21,7 +21,7 @@ isdd の対応表チェックをプロジェクトに組み込むセットアッ
 使用方法:
   python3 .agents/skills/isdd-setup/scripts/isdd_setup.py --src src [--src another_dir]
       [--runtime container|cli|server|desktop|library|unspecified] [--auth|--no-auth] [--external|--no-external]
-      [--e2e-dir e2e] [--design docs/detail_design.md] [--map docs/trace_map.md]
+      [--e2e-dir e2e] [--design docs/detail_design.md] [--map docs/trace_map.md] [--active-change docs/active_change]
 
   --runtime、--auth、--external は詳細設計書の第 1 章（実行形態）、第 6 章（認証の有無）、第 4 章（外部連携の有無）から読み取って渡す。
 
@@ -55,7 +55,7 @@ MARK_END = "<!-- isdd-setup:end -->"
 HOOK_MARK = "# isdd-setup pre-commit"
 
 
-def rules_block(check_cmd: str, map_path: str, design_path: str) -> str:
+def rules_block(check_cmd: str, map_path: str, design_path: str, active_change: str) -> str:
     """AGENTS.md / CLAUDE.md に追記する規則ブロックを返す"""
     return f"""{MARK_BEGIN}
 ## isdd トレーサビリティ規則（isdd-setup が管理する。手で編集しない）
@@ -64,6 +64,7 @@ def rules_block(check_cmd: str, map_path: str, design_path: str) -> str:
 - クラス・公開関数・ソースファイルを追加、改名、削除したら、同じ作業の中で `{map_path}` の行を更新する。
 - コードを変更した作業の終わりに `{check_cmd}` を実行する。エラーが出たら直してから作業を終える。警告は報告に含める。
 - 設計要素を増やす必要があれば、コードを書く前に `{design_path}` を更新する。設計 ID の採番は設計スキルの責務で、実装中に ID を作らない。
+- `{active_change}` がある間は変更の実装中。そこに書かれた変更のディレクトリの変更要件定義書・変更設計書を正本に重ねて読む。正本への反映は実装後に `isdd-post-implementation-review` が行う。
 {MARK_END}
 """
 
@@ -104,6 +105,8 @@ def main() -> int:
     parser.add_argument("--src", action="append", required=True, help="ソースディレクトリ（複数指定可）")
     parser.add_argument("--design", default="docs/detail_design.md")
     parser.add_argument("--map", default="docs/trace_map.md")
+    parser.add_argument("--active-change", default="docs/active_change",
+                        help="進行中の変更を指すポインタファイル（isdd-change-design が作り、isdd-post-implementation-review が消す）")
     parser.add_argument("--project-root", default=".")
     parser.add_argument("--runtime", choices=RUNTIMES, default="unspecified",
                         help="実行形態（詳細設計書の第 1 章から読み取る）。container のときだけ docker compose を要求する")
@@ -152,9 +155,11 @@ def main() -> int:
         "# isdd 対応表チェックの入口（isdd-setup が生成。再実行で上書き）\n"
         "# 使い方: bash scripts/isdd/check.sh [--strict]\n"
         "#   --strict を付けると警告も失敗扱いにする（実装スキルの完了条件用）\n"
+        f"#   {args.active_change} があれば、そこに書かれた変更の change_detail_design.md を正本に重ねて判定する\n"
         "set -u\n"
         'cd "$(dirname "$0")/../.."\n'
-        f'exec python3 scripts/isdd/trace_map_checker.py "{args.design}" "{args.map}" {src_dirs} "$@"\n',
+        f'exec python3 scripts/isdd/trace_map_checker.py "{args.design}" "{args.map}" {src_dirs} '
+        f'--active-change "{args.active_change}" "$@"\n',
         encoding="utf-8",
     )
     make_executable(check_sh)
@@ -196,7 +201,7 @@ def main() -> int:
         report.append("省略: .git が無いため pre-commit は組み込んでいない（git init 後に再実行する）")
 
     # 4. AGENTS.md / CLAUDE.md への規則追記
-    block = rules_block("bash scripts/isdd/check.sh", args.map, args.design)
+    block = rules_block("bash scripts/isdd/check.sh", args.map, args.design, args.active_change)
     for name in ("AGENTS.md", "CLAUDE.md"):
         report.append(upsert_block(root / name, block))
 

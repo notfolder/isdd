@@ -7,7 +7,7 @@ description: >
   開始時に「外部連携がある」と答えた場合に使う。外部仕様と要件の詳細な突き合わせは isdd-external-research が扱う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-external-precheck — 外部連携 軽量事前確認スキル

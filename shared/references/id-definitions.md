@@ -203,6 +203,6 @@ DS-[DSカテゴリ]-[DS内容略称]-[RQカテゴリ]-[RQ内容略称]
 |---|---|
 | 要件の**意味が変わる**場合 | 旧 ID を `.history/` 配下の変更記録内で `deprecated` としてマーク → 新 ID で新要件を登録 |
 
-- `deprecated` となった ID は `docs/requirements.md` と `docs/detail_design.md` から削除する
+- `deprecated` となった ID は、実装後に `isdd-post-implementation-review` が変更を正本へ反映するときに `docs/requirements.md` と `docs/detail_design.md` から削除する
 - これらのドキュメントは常に現在有効な ID のみを記載する
 - 要件 ID を差し替えたら、末尾に旧要件の略称を持つ設計 ID も差し替える。変更設計書では旧設計 ID を [削除]、新しい略称の設計 ID を [追加] にし、実装時に `docs/trace_map.md` の行も新しい設計 ID に書き換える。設計 ID の末尾は対応する要件をたどる手がかりなので、古い略称のまま残すと誤った要件を指すため

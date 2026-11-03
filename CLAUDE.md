@@ -18,6 +18,6 @@
 
 - **共通ファイルの正本は `shared/`。`skills/<スキル>/references/` と `scripts/` は `python3 tools/build_skills.py` が作る複製なので手で編集しない。複製もコミットする**（2026-10-18）。`gh skill publish` と `install.sh` が同じ中身を配るため。
 - **コードに ID を書かない。設計 ID とコードの対応は `docs/trace_map.md` で管理し、`scripts/isdd/check.sh` で検証する**（2026-10-17）。
-- **変更設計の正本反映は `isdd-change-design` の完了時に行う。PIR は反映漏れの安全網**（2026-10-18）。`check.sh` が正本の設計書だけを読むため。
+- **正本は実装済みの仕様だけを持つ。変更フローの正本反映は実装後に PIR が行い、`isdd-change-design` は `docs/active_change` に変更を登録するだけ**（2026-11-03、v2.0.1。2026-10-18 に Claude の判断で変更設計の完了時へ移したのをユーザーの指示で戻した）。実装中は `check.sh`（`--active-change`）と実装スキルが変更設計書を正本に重ねて読む。
 - **逆引きスキルは自分で正本を確定し、完了後の新要求は `isdd-change-req` へ**（2026-10-18）。
 - **docker compose・初期ユーザー・E2E の mock モードは無条件に要求しない。`scripts/isdd/completeness.json` の実行形態・認証・外部連携で切り替える**（2026-10-18）。

@@ -84,6 +84,23 @@ class RqDsLinkCheckerTest(TempDirMixin, unittest.TestCase):
         code, out = self.run_checker(REQ, design)
         self.assertEqual(code, 0, out)
 
+    def test_base_requirements_resolve_existing_references(self):
+        # 変更設計書が既存の要件（変更要件定義書に無い RQ-*）を参照しても、--base の正本にあれば未定義参照にしない
+        change_req = "| RQ-ID | 内容 | 対応業務課題ID |\n|---|---|---|\n| `RQ-FT-PRINT-BYE` | [追加] 出力 | `RQ-BK-SHARED-CHECK-SCRIPT` |\n"
+        change_design = (
+            "## 11. 要件と設計の対応表\n\n| DS-ID | 対応要件ID |\n|---|---|\n"
+            "| `DS-FN-PRINT-BYE-FT-PRINT-BYE` | `RQ-FT-PRINT-BYE` [追加] |\n"
+            "| `DS-FN-PRINT-BYE-FT-PRINT-BYE` | `RQ-FT-PRINT-HELLO` [追加] |\n"
+        )
+        code, out = self.run_checker(change_req, change_design)
+        self.assertEqual(code, 1, out)
+        self.assertIn("RQ-FT-PRINT-HELLO", out)
+        base = write(self.tmp, "base.md", REQ)
+        r = write(self.tmp, "req.md", change_req)
+        d = write(self.tmp, "design.md", change_design)
+        code, out = run_script("rq_ds_link_checker.py", [str(r), str(d), "--base", str(base)])
+        self.assertEqual(code, 0, out)
+
     def test_missing_file_reports_reason(self):
         r = write(self.tmp, "req.md", REQ)
         code, out = run_script("rq_ds_link_checker.py", [str(r), str(self.tmp / "none.md")])
