@@ -57,10 +57,12 @@ isdd では、すべての要件が業務課題から導かれていることを
 ### フォーマット
 
 ```
-DS-[DSカテゴリ]-[DS内容略称]-[RQカテゴリ]-[RQ内容略称]
+DS-[DSカテゴリ]-[DS内容略称]
 ```
 
-末尾の `[RQカテゴリ]-[RQ内容略称]` は、この設計要素が対応する要件 ID の略称部分を表す。
+- DS 内容略称は、設計要素そのもの（ファイル・クラス・関数・画面・テーブルなど）を表す英語 ALL CAPS ケバブケースにする（例: `DS-CL-ORDER-SERVICE`）。要件の略称は付けない。
+- 要件 ID との対応は、設計書の「要件と設計の対応表」の章（design-chapters.md 第 11 章）だけに書く。ID に要件を埋めると、要件を差し替えたときに中身の変わらない設計要素まで ID を変えることになり、1 つの要素が複数の要件を受けるときに表せないため。
+- isdd v2.0 までの、末尾に要件の略称を付けた長い設計 ID（例: `DS-CL-ORDER-SERVICE-FT-CREATE-ORDER`）もそのまま有効。書き換えなくてよい。新しく採番する ID だけを短い形にする。
 
 ### DSカテゴリ一覧（9種）
 
@@ -94,13 +96,13 @@ DS-[DSカテゴリ]-[DS内容略称]-[RQカテゴリ]-[RQ内容略称]
 
 ### ID例
 
-| 要件ID | 設計ID | 説明 |
+| 要件ID（対応表の章に書く） | 設計ID | 説明 |
 |---|---|---|
-| `RQ-FT-CREATE-ORDER` | `DS-FN-CREATE-ORDER-FT-CREATE-ORDER` | 注文作成機能の関数 |
-| `RQ-FT-CREATE-ORDER` | `DS-CL-ORDER-SERVICE-FT-CREATE-ORDER` | 注文作成機能のサービスクラス |
-| `RQ-EX-SYNC-CUSTOMER-MASTER` | `DS-IF-SYNC-CUSTOMER-MASTER-EX-SYNC-CUSTOMER-MASTER` | 顧客マスタ同期 API インターフェース |
-| `RQ-TS-VERIFY-ORDER-CANCEL` | `DS-TS-ORDER-CANCEL-E2E-TS-VERIFY-ORDER-CANCEL` | 注文取消の E2E シナリオ |
-| `RQ-OP-BACKUP-DAILY-POLICY` | `DS-OP-DAILY-BACKUP-OP-BACKUP-DAILY-POLICY` | 日次バックアップの運用設計 |
+| `RQ-FT-CREATE-ORDER` | `DS-FN-CREATE-ORDER` | 注文作成機能の関数 |
+| `RQ-FT-CREATE-ORDER`, `RQ-FT-CANCEL-ORDER` | `DS-CL-ORDER-SERVICE` | 注文の作成と取消を担うサービスクラス（1 つの要素が複数の要件を受ける） |
+| `RQ-EX-SYNC-CUSTOMER-MASTER` | `DS-IF-SYNC-CUSTOMER-MASTER` | 顧客マスタ同期 API インターフェース |
+| `RQ-TS-VERIFY-ORDER-CANCEL` | `DS-TS-ORDER-CANCEL-E2E` | 注文取消の E2E シナリオ |
+| `RQ-OP-BACKUP-DAILY-POLICY` | `DS-OP-DAILY-BACKUP` | 日次バックアップの運用設計 |
 
 ---
 
@@ -108,25 +110,18 @@ DS-[DSカテゴリ]-[DS内容略称]-[RQカテゴリ]-[RQ内容略称]
 
 - ソースコードには要件 ID も設計 ID も書かない。コメントは通常のドキュメントコメント（処理の説明、引数、戻り値）だけにする。
 - 設計 ID とコードの対応は `docs/trace_map.md`（対応表）で管理する。書式と粒度は対応表のルール（trace-map-rules.md）に従う。
-- 要件 ID とコードの対応は、対応表の設計 ID の末尾略称から辿る。対応表に要件 ID は書かない。
+- 要件 ID とコードの対応は、対応表の設計 ID から、設計書の「要件と設計の対応表」の章を引いて辿る。対応表に要件 ID は書かない。
 - 対応表の整合は `trace_map_checker.py` で検証する。
 
 ---
 
 ## スキル固有ID一覧
 
-各 isdd スキルが定義・使用するスキル固有の ID を一覧で管理する。
+各 isdd スキルが定義・使用するスキル固有の ID を一覧で管理する（現在はスキル固有の ID は無い）。
 
-### isdd-external-research スキル固有ID（RQ-EX カテゴリ）
+### モック方式（isdd v2.1 で廃止）
 
-外部システム連携のモック戦略を識別する ID で、isdd-external-research スキルが採番・使用する。
-選んだ方式の ID は、要件定義書の「3-3. 外部連携」の表に、対応する `RQ-BK-*` と一緒に 1 行で書く。設計では、モックを使う E2E の設計（第 8 章の `DS-TS-*`）で受ける。
-
-| ID | モック戦略 | 適用条件 |
-|---|---|---|
-| `RQ-EX-USE-LOCAL-HTTP-MOCK` | ローカル HTTP サーバー方式（方式A） | 状態保持、CRUD、複雑認証の再現が必要な場合 |
-| `RQ-EX-USE-FIXED-RESPONSE-MOCK` | 固定レスポンスファイル方式（方式B） | 静的レスポンス中心、プロトタイプ重視の場合 |
-| `RQ-EX-USE-MOCK-SERVER-TOOL` | 既存モックサーバーツール方式（方式C） | 複数連携先対応、障害注入や遅延制御が必要な場合 |
+isdd v2.0 まではモック方式を要件 ID（`RQ-EX-USE-*`）で表していた。モック方式はテストの設計判断なので、v2.1 からは設計書の 8-4 に書き、モックを `DS-TS-*` で設計する（design-chapters.md）。既存の要件定義書に `RQ-EX-USE-*` が残っていても有効なまま扱ってよい。
 
 ---
 
@@ -194,8 +189,8 @@ DS-[DSカテゴリ]-[DS内容略称]-[RQカテゴリ]-[RQ内容略称]
 ### 新しい DS-* を採番するとき
 
 1. DS カテゴリを、「要件カテゴリと設計 ID の対応先」に従って選ぶ
-2. DS 内容略称を決める（対応する RQ-* の内容略称を流用するケースが多い）
-3. 対応する RQ-* を末尾に付与する
+2. DS 内容略称を、設計要素そのものを表す名前で決める（クラスならクラス名、関数なら関数名をケバブケースにする）。要件の略称は付けない
+3. 対応する RQ-* を、設計書の「要件と設計の対応表」の章に 1 行で書く。複数の要件を受けるなら同じ行にカンマ区切りで並べる
 
 ### 変更管理ルール
 
@@ -203,6 +198,6 @@ DS-[DSカテゴリ]-[DS内容略称]-[RQカテゴリ]-[RQ内容略称]
 |---|---|
 | 要件の**意味が変わる**場合 | 旧 ID を `.history/` 配下の変更記録内で `deprecated` としてマーク → 新 ID で新要件を登録 |
 
-- `deprecated` となった ID は、実装後に `isdd-post-implementation-review` が変更を正本へ反映するときに `docs/requirements.md` と `docs/detail_design.md` から削除する
+- `deprecated` となった ID は、実装後に `isdd-build` の実装後レビューが変更を正本へ反映するときに `docs/requirements.md` と `docs/detail_design.md` から削除する
 - これらのドキュメントは常に現在有効な ID のみを記載する
-- 要件 ID を差し替えたら、末尾に旧要件の略称を持つ設計 ID も差し替える。変更設計書では旧設計 ID を [削除]、新しい略称の設計 ID を [追加] にし、実装時に `docs/trace_map.md` の行も新しい設計 ID に書き換える。設計 ID の末尾は対応する要件をたどる手がかりなので、古い略称のまま残すと誤った要件を指すため
+- 要件 ID を差し替えても、設計要素の中身が変わらなければ設計 ID は変えない。変えるのは「要件と設計の対応表」の行だけで、変更設計書では旧い対応の行を [削除]、新しい対応の行を [追加] にする。設計要素の中身が変わるときは、旧設計 ID を [削除]、新しい設計 ID を [追加] にし、実装時に `docs/trace_map.md` の行も新しい設計 ID に書き換える

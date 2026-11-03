@@ -1,0 +1,87 @@
+id: "isdd-traceability-change-flow-001"
+name: "進行中の変更を正本に重ねて実装する"
+description: "docs/active_change が指す変更設計書を正本に重ねて読み、[追加] を実装して [削除] のコードと対応表の行を消し、正本と変更文書を書き換えずに check.sh --strict を通すかを検証する。"
+tags:
+  - "isdd"
+  - "traceability"
+  - "change-flow"
+inputs:
+  prompt: |
+    isdd-buildを実行してください。
+    変更フローの変更設計が終わったところです。変更設計どおりに src/hello.py を直し、対応表を更新してください。
+    今回は実装だけを行い、実装後レビュー（正本への反映）はまだ行わないでください。src/hello.py と対応表だけを確認します。単体テスト・E2E・README は作らなくて構いません。
+  follow_up_prompts:
+    - |
+      これ以上の情報はありません。isdd の規則どおりに進めてください。
+      この環境ではエージェントのフックは作らなくて構いません。
+    - |
+      これ以上の情報はありません。
+      今すぐ src/hello.py の変更と対応表の更新を終え、bash scripts/isdd/check.sh --strict を実行してください。
+  context:
+    task_type: "isdd-traceability-change-flow-001"
+    fixture: "fixtures/change-flow"
+  files:
+    - path: .agents/skills/isdd-build/SKILL.md
+    - path: .agents/skills/isdd-build/references/build-implement.md
+    - path: .agents/skills/isdd-build/references/build-review.md
+    - path: .agents/skills/isdd-build/references/document-rules.md
+    - path: .agents/skills/isdd-build/references/id-definitions.md
+    - path: .agents/skills/isdd-build/references/trace-map-rules.md
+    - path: .agents/skills/isdd-build/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-setup/SKILL.md
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "code_follows_change_design"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match src/hello.py --re 'def get_current_time' --re 'def build_timestamped_message' --re 'def print_timestamped_output' --not-re 'def get_hello_message' --not-re 'def print_hello_world' --not-re 'RQ-|DS-'"
+  - name: "trace_map_uses_change_ids"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/trace_map.md --re 'DS-FN-GET-CURRENT-TIME-FT-GET-CURRENT-TIME' --re 'DS-FN-BUILD-TIMESTAMPED-MESSAGE-FT-BUILD-TIMESTAMPED-MESSAGE' --re 'DS-FN-PRINT-TIMESTAMPED-OUTPUT-FT-PRINT-TIMESTAMPED-OUTPUT' --not-re 'DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE' --not-re 'DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD'"
+  - name: "trace_map_strict_pass_with_active_change"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" strict-trace"
+  - name: "active_change_kept"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/active_change --re '^\\.history/20260508-add-timestamp-to-hello-world/?$'"
+  - name: "canonical_requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/requirements.md evals/isdd-build/fixtures/change-flow/docs/requirements.md"
+  - name: "canonical_design_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/detail_design.md evals/isdd-build/fixtures/change-flow/docs/detail_design.md"
+  - name: "change_design_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged .history/20260508-add-timestamp-to-hello-world/change_detail_design.md evals/isdd-build/fixtures/change-flow/.history/20260508-add-timestamp-to-hello-world/change_detail_design.md"

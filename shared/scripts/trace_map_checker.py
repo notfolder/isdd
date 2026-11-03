@@ -15,15 +15,15 @@ Trace Map Checker Script
   --active-change に渡したファイル（既定の運用では docs/active_change）があれば、その 1 行目を
   変更のディレクトリ（.history/[YYYYMMDD]-[タスク名]）とみなし、そこにある change_detail_design.md を
   正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書の [削除] 行の ID」。
-  正本への反映は実装後に isdd-post-implementation-review が行い、反映が終わるとポインタファイルを消す。
+  正本への反映は実装後に isdd-build の実装後レビューが行い、反映が終わるとポインタファイルを消す。
   ポインタファイルが無ければ、正本だけで判定する。
 
 対応表の形式（Markdown の表。列名は「DS-ID」「修飾名」「備考」）:
   | DS-ID | 修飾名 | 備考 |
   |---|---|---|
-  | `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | `src/hello.py` | モジュール |
-  | `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter` | クラス |
-  | `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE` | `src/hello.py::HelloWorldPrinter.get_hello_message` | メソッド |
+  | `DS-MD-HELLO-MODULE` | `src/hello.py` | モジュール |
+  | `DS-CL-HELLO-WORLD-PRINTER` | `src/hello.py::HelloWorldPrinter` | クラス |
+  | `DS-FN-GET-HELLO-MESSAGE` | `src/hello.py::HelloWorldPrinter.get_hello_message` | メソッド |
 
 修飾名の文法:
   <ファイルパス>                      … モジュール（ファイル）単位

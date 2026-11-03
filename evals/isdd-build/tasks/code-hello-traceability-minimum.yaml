@@ -1,0 +1,126 @@
+id: isdd-traceability-hello-001
+name: Hello World 対応表作成
+description: |
+  docs/requirements.md と docs/detail_design.md を参照し、
+  isdd-setup の導入と docs/trace_map.md（設計IDとコードの対応表）の作成ができ、
+  コードに ID コメントを書かないことを検証する。
+
+tags:
+  - isdd
+  - traceability
+  - minimum
+
+inputs:
+  prompt: |
+    isdd-buildを実行してください。
+    src/hello.py は設計書どおりに実装済みです。対応表の作成とチェックを行ってください。
+
+  # モデルの応答ターンごとに順番に送信される固定応答
+  follow_up_prompts:
+    # ターン1への応答: isdd-setup の導入やフックに関する確認があった場合
+    - |
+      ソースディレクトリは src です。isdd-setup をそのまま実行して進めてください。
+      この環境ではエージェントのフックは作らなくて構いません。
+
+    # ターン2への応答: 追加質問があった場合の催促
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ docs/trace_map.md を作成し、チェッカーを実行してください。
+
+  context:
+    task_type: traceable-coding-minimum
+    fixture: "fixtures/traceable"
+  files:
+    - path: .agents/skills/isdd-build/SKILL.md
+    - path: .agents/skills/isdd-build/references/build-implement.md
+    - path: .agents/skills/isdd-build/references/build-review.md
+    - path: .agents/skills/isdd-build/references/document-rules.md
+    - path: .agents/skills/isdd-build/references/id-definitions.md
+    - path: .agents/skills/isdd-build/references/trace-map-rules.md
+    - path: .agents/skills/isdd-build/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-setup/SKILL.md
+    - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
+    - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
+    - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
+
+expected:
+  outcomes:
+    - type: task_completed
+
+graders:
+  - name: trace_map_created
+    type: file
+    config:
+      must_exist:
+        - "docs/trace_map.md"
+      content_patterns:
+        - path: "docs/trace_map.md"
+          must_match:
+            - "\\|\\s*DS-ID\\s*\\|\\s*修飾名\\s*\\|"
+            - "DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD[^\\n]*src/hello\\.py"
+            - "DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD[^\\n]*src/hello\\.py::HelloWorldPrinter"
+            - "DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE[^\\n]*src/hello\\.py::HelloWorldPrinter\\.get_hello_message"
+            - "DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD[^\\n]*src/hello\\.py::HelloWorldPrinter\\.print_hello_world"
+
+  - name: setup_installed
+    type: file
+    config:
+      must_exist:
+        - "scripts/isdd/check.sh"
+        - "scripts/isdd/trace_map_checker.py"
+      content_patterns:
+        - path: "AGENTS.md"
+          must_match:
+            - "isdd-setup:begin"
+
+  - name: no_id_comments_in_code
+    type: file
+    config:
+      must_exist:
+        - "src/hello.py"
+      content_patterns:
+        - path: "src/hello.py"
+          must_not_match:
+            - "要件ID|設計ID|RQ-[A-Z]{2}-|DS-[A-Z]{2}-"
+            - "TODO|FIXME|TBD"
+
+  - name: logic_preserved
+    type: file
+    config:
+      content_patterns:
+        - path: "src/hello.py"
+          must_match:
+            - "class\\s+HelloWorldPrinter"
+            - "def\\s+get_hello_message\\(self\\)\\s*->\\s*str"
+            - "return\\s+\\\"Hello, World!\\\""
+            - "def\\s+print_hello_world\\(self\\)\\s*->\\s*None"
+            - "message\\s*=\\s*self\\.get_hello_message\\(\\)"
+            - "print\\(message\\)"
+            - "printer\\s*=\\s*HelloWorldPrinter\\(\\)"
+            - "printer\\.print_hello_world\\(\\)"
+
+  - name: trace_map_checker_executed
+    type: prompt
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴を確認し、bash ツールで
+        `scripts/isdd/check.sh` または `trace_map_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
+
+        実行されていた場合は set_waza_grade_pass を呼び出してください。
+        実行されていなかった場合は set_waza_grade_fail を呼び出してください。
+
+  - name: "trace_map_strict_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" strict-trace"
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"

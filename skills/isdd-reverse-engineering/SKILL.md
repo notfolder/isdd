@@ -4,11 +4,11 @@ description: >
   既存のコードベースから要件定義書と詳細設計書を逆引きで書き起こし、インタビューで補って正本
   （docs/requirements.md・docs/detail_design.md）を確定し、設計 ID とコードの対応表（docs/trace_map.md）を作る。既存コードは変更しない。
   「既存コードから要件定義書を作りたい」「既存 PJ を isdd 化したい」「コードから設計書を逆引きして」「既存システムの仕様を整理したい」
-  といった、コードはあるが isdd の文書が無いプロジェクトへの初回導入で使う。導入後の新しい要求は isdd-change-req が扱う。
+  といった、コードはあるが isdd の文書が無いプロジェクトへの初回導入で使う。導入後の新しい要求は isdd-spec（変更フロー）が扱う。
 license: CC-BY-4.0
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.0.1"
+  version: "v2.1.0"
 ---
 
 # isdd-reverse-engineering — 既存プロジェクト仕様駆動化スキル
@@ -36,7 +36,7 @@ metadata:
 
 - 既存コードは変更しない（ロジックもコメントも）。このスキルの目的は現状を文書にすることで、コードを変えると文書の根拠が動くため。
 - 仕様とコードの対応は、コードではなく対応表 `docs/trace_map.md` に書く。
-- 作業中の逆引き結果は `docs/proposals.md` にまとめ、インタビューと採番が終わったら、このスキルの中で正本を確定する。実装後レビュー（`isdd-post-implementation-review`）は実装が原因の差分を扱うスキルなので、初回の正本確定には使わない。
+- 作業中の逆引き結果は `docs/proposals.md` にまとめ、インタビューと採番が終わったら、このスキルの中で正本を確定する。`isdd-build` の実装後レビューは実装が原因の差分を扱う段階なので、初回の正本確定には使わない。
 - インタビューで分からない点が残る限り質問を続け、全ステップが終わるまで終了しない。
 
 ## 実施フロー
@@ -79,7 +79,7 @@ graph TD
 
 - 章立ては `references/design-chapters.md` に従い、コードから読み取れる範囲ですべての章を埋める。
 - 読み取れない・判断できない箇所は「要インタビュー」と書く。
-- 設計 ID はまだ付けない。要件が確定した後のステップ 6 で採番する（要件 ID が決まらないと設計 ID の末尾を決められないため）。
+- 設計 ID はまだ付けない。要件が確定した後のステップ 6 で採番する（要件が確定しないと、要件と設計の対応表を書けないため）。
 
 ## ステップ 3: 要件定義書の逆引き提案
 
@@ -110,14 +110,14 @@ graph TD
 
 ## ステップ 6: 設計 ID の採番と正本の確定
 
-確定した要件をもとに、設計提案の各設計要素に `references/id-definitions.md` に従って設計 ID を付け、対応する要件 ID を書く。
+確定した要件をもとに、設計提案の各設計要素に `references/id-definitions.md` に従って設計 ID（`DS-[種類]-[要素名]`）を付け、対応する要件 ID を設計書の「要件と設計の対応表」の章に書く。
 
 | 対象 | プレフィックス | 例 |
 |---|---|---|
-| ソースファイル（モジュール） | `DS-MD-` | `DS-MD-HELLO-MODULE-FT-PRINT-HELLO` |
-| クラス | `DS-CL-` | `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO` |
-| 関数・メソッド | `DS-FN-` | `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO` |
-| インターフェース | `DS-IF-` | `DS-IF-CLI-ENTRY-UI-CLI-EXECUTION` |
+| ソースファイル（モジュール） | `DS-MD-` | `DS-MD-HELLO-MODULE` |
+| クラス | `DS-CL-` | `DS-CL-HELLO-WORLD-PRINTER` |
+| 関数・メソッド | `DS-FN-` | `DS-FN-GET-HELLO-MESSAGE` |
+| インターフェース | `DS-IF-` | `DS-IF-CLI-ENTRY` |
 
 ソースファイルにも `DS-MD-*` を付ける。対応表はファイル単位の行を `DS-MD-*` で持つので、省くと対応表を作れないため。
 
@@ -182,5 +182,5 @@ bash scripts/isdd/check.sh --strict
 
 完了を報告するときに、次を案内する。正本と対応表が揃ったので、プロジェクトは「isdd で運用している」状態になった。
 
-- 既存コードに機能を追加・変更したい場合: `isdd-change-req` で変更要件定義から始める
-- 既存コードの仕様化だけが目的の場合: ここで完了。以後コードを変えたら `isdd-post-implementation-review` で整合を確かめる
+- 既存コードに機能を追加・変更したい場合: `isdd-spec` で始める（要件定義書があるので変更フローになる）
+- 既存コードの仕様化だけが目的の場合: ここで完了。以後コードを変えたら `isdd-build` の実装後レビューで整合を確かめる

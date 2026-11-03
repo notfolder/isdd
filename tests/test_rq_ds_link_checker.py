@@ -101,6 +101,37 @@ class RqDsLinkCheckerTest(TempDirMixin, unittest.TestCase):
         code, out = run_script("rq_ds_link_checker.py", [str(r), str(d), "--base", str(base)])
         self.assertEqual(code, 0, out)
 
+    def test_short_ids_mapped_only_in_mapping_chapter_pass(self):
+        req = REQ.replace("RQ-TS-VERIFY-OUTPUT", "RQ-TS-VERIFY-OUTPUT")
+        design = (
+            "## 5. クラス設計\n\n| DS-ID | クラス名 |\n|---|---|\n| `DS-CL-PRINTER` | Printer |\n\n"
+            "## 11. 要件と設計の対応表\n\n| DS-ID | 対応要件ID |\n|---|---|\n"
+            "| `DS-CL-PRINTER` | `RQ-FT-PRINT-HELLO`, `RQ-TS-VERIFY-OUTPUT` |\n\n### 11-1. 除外要件\n\n除外要件は無い。\n"
+        )
+        code, out = self.run_checker(req, design)
+        self.assertEqual(code, 0, out)
+
+    def test_design_id_missing_from_mapping_chapter_fails(self):
+        design = DESIGN.replace("## 11.", "## 5. クラス設計\n\n| DS-ID | クラス名 |\n|---|---|\n| `DS-CL-EXTRA` | Extra |\n\n## 11.")
+        code, out = self.run_checker(REQ, design)
+        self.assertEqual(code, 1, out)
+        self.assertIn("対応表の章に無い", out)
+        self.assertIn("DS-CL-EXTRA", out)
+
+    def test_mapping_outside_mapping_chapter_is_ignored(self):
+        # 各章の表に対応要件 ID を書いても、対応表の章に無ければ対応とみなさない
+        req = REQ + "| `RQ-NF-RESPONSE-1S` | 応答 | `RQ-BK-SHARED-CHECK-SCRIPT` |\n"
+        design = "## 5. クラス設計\n\n| DS-ID | 対応要件ID |\n|---|---|\n| `DS-FN-PRINT-HELLO-FT-PRINT-HELLO` | `RQ-NF-RESPONSE-1S` |\n\n" + DESIGN
+        code, out = self.run_checker(req, design)
+        self.assertEqual(code, 1, out)
+        self.assertIn("RQ-NF-RESPONSE-1S", out)
+
+    def test_missing_mapping_chapter_fails(self):
+        design = "| DS-ID | 対応要件ID |\n|---|---|\n| `DS-FN-PRINT-HELLO-FT-PRINT-HELLO` | `RQ-FT-PRINT-HELLO` |\n"
+        code, out = self.run_checker(REQ, design)
+        self.assertEqual(code, 1, out)
+        self.assertIn("対応表の章が無い", out)
+
     def test_missing_file_reports_reason(self):
         r = write(self.tmp, "req.md", REQ)
         code, out = run_script("rq_ds_link_checker.py", [str(r), str(self.tmp / "none.md")])

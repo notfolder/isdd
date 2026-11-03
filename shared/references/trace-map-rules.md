@@ -1,7 +1,7 @@
 # 対応表（docs/trace_map.md）のルール
 
 設計 ID（`DS-*`）とソースコードの対応は、コードにコメントを書かず、対応表 `docs/trace_map.md` で管理する。
-要件 ID（`RQ-*`）との対応は設計 ID の末尾略称で表すため、対応表には書かない。
+要件 ID（`RQ-*`）との対応は設計書の「要件と設計の対応表」の章で持つため、対応表には書かない。
 
 ---
 
@@ -11,10 +11,10 @@ Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固
 
 | DS-ID | 修飾名 | 備考 |
 |---|---|---|
-| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | `src/hello.py` | モジュール |
-| `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter` | クラス |
-| `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE` | `src/hello.py::HelloWorldPrinter.get_hello_message` | メソッド |
-| `DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter.print_hello_world` | メソッド |
+| `DS-MD-HELLO-MODULE` | `src/hello.py` | モジュール |
+| `DS-CL-HELLO-WORLD-PRINTER` | `src/hello.py::HelloWorldPrinter` | クラス |
+| `DS-FN-GET-HELLO-MESSAGE` | `src/hello.py::HelloWorldPrinter.get_hello_message` | メソッド |
+| `DS-FN-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter.print_hello_world` | メソッド |
 
 - 1 行に 1 対応。同じ DS-ID が複数行に現れてよい（1 つの設計要素を複数の関数で実現する場合）。
 - 同じ修飾名が複数行に現れてよい（1 つの関数が複数の設計要素を実現する場合）。
@@ -54,9 +54,9 @@ python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.m
 
 ### 進行中の変更（変更フロー）
 
-- `isdd-change-design` は正本を書き換えず、変更のディレクトリ（`.history/[YYYYMMDD]-[タスク名]/`）を `docs/active_change` の 1 行目に書く。
+- `isdd-spec` は変更フローで正本を書き換えず、変更のディレクトリ（`.history/[YYYYMMDD]-[タスク名]/`）を `docs/active_change` の 1 行目に書く。
 - `docs/active_change` があれば、チェッカーはそのディレクトリの `change_detail_design.md` を正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書の [削除] 行の ID」。出力の冒頭に「進行中の変更」の行が出る。
-- 実装後に `isdd-post-implementation-review` が変更を正本へ反映し、`docs/active_change` を消す。以後は正本だけで判定する。
+- 実装後に `isdd-build` の実装後レビューが変更を正本へ反映し、`docs/active_change` を消す。以後は正本だけで判定する。
 
 | 区分 | 内容 | 扱い |
 |---|---|---|
@@ -73,12 +73,12 @@ python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.m
 | C#、Ruby、PHP、Kotlin、Swift、Rust、C / C++、Scala、Dart、Vue、Svelte、シェルなど | ファイルの存在だけ | `::名前` の行は「確認対象外」として数え、エラーにも警告にもしない。未登録ファイルの警告は出る |
 | 上記以外の拡張子 | 何も確認しない | 対応表の行は「ファイルが見つかりません」のエラーになる。必要なら `trace_map_checker.py` の `FILE_ONLY_LANGS` に拡張子を足す |
 
-- 実装スキル（`isdd-traceable-coding`）の完了条件は `--strict` で合格すること（エラーも警告も 0 件）。
-- pre-commit はエラーだけで止める。スキルを使わずにコードを変えた人が関数を足しても止まらない。その抜けは `isdd-post-implementation-review` で対応表と設計書に取り込む。
+- `isdd-build` の実装の段階の完了条件は `--strict` で合格すること（エラーも警告も 0 件）。
+- pre-commit はエラーだけで止める。スキルを使わずにコードを変えた人が関数を足しても止まらない。その抜けは `isdd-build` の実装後レビューで対応表と設計書に取り込む。
 
 ## 外部連携ライブラリの扱い
 
-- `isdd-external-research` が作る `external/[システム名]/src/` はプロジェクトのコードなので、`isdd-setup` の `--src` に含めて対応表に載せる（例: `--src src --src external/foo/src`）。
+- `isdd-build` が作る外部連携ライブラリ `external/[システム名]/src/` はプロジェクトのコードなので、`isdd-setup` の `--src` に含めて対応表に載せる（例: `--src src --src external/foo/src`）。
 - `external/[システム名]/mock/` と `e2e/` はテスト資材なので載せない。
 
 ## 更新のタイミング

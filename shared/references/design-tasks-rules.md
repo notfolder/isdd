@@ -1,13 +1,13 @@
 # isdd tasks.md 作成ルール
 
-詳細設計スキル（isdd-design、isdd-change-design）が作る `tasks.md` のルール。実装スキル（isdd-traceable-coding）はこの tasks.md を上から順に実行する。
+isdd-spec の設計の段階が作る `tasks.md` のルール。isdd-build はこの tasks.md を上から順に実行する。
 
 ---
 
 ## tasks.md の配置先
 
-- isdd-design：`docs/detail_design.md` 保存後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
-- isdd-change-design：`change_detail_design.md` の保存と進行中の変更の登録（`docs/active_change`）の後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
+- 新規フロー：`docs/detail_design.md` 保存後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
+- 変更フロー：`change_detail_design.md` の保存と進行中の変更の登録（`docs/active_change`）の後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
 
 ---
 
@@ -26,11 +26,11 @@
    - `scripts/isdd/check.sh` が存在しなければ `isdd-setup` スキルを実行して対応表チェックを導入する。導入時は詳細設計書の実行形態・認証の有無・外部連携の有無を `isdd-setup` に渡す
    - 完了条件: `bash scripts/isdd/check.sh` が実行でき、`scripts/isdd/completeness.json` の実行形態・認証・外部連携が詳細設計書と一致していること
 
-isdd-change-design のみ、続けて次を含める。
+変更フローのみ、続けて次を含める。
 
 0-2. **進行中の変更の登録確認タスク**
-   - `docs/active_change` の 1 行目が、この tasks.md のある変更のディレクトリを指していることを確認する。正本（`docs/requirements.md`・`docs/detail_design.md`）には変更を反映しない。反映は実装後に `isdd-post-implementation-review` が行う
-   - 完了条件: `bash scripts/isdd/check.sh` の出力に「進行中の変更」の行があり、`rq_ds_link_checker.py [変更のディレクトリ]/change_requirements.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md`（isdd-traceable-coding に同梱）が合格すること。登録が無ければ実装を始めず `isdd-change-design` に戻る
+   - `docs/active_change` の 1 行目が、この tasks.md のある変更のディレクトリを指していることを確認する。正本（`docs/requirements.md`・`docs/detail_design.md`）には変更を反映しない。反映は実装後に `isdd-build` の実装後レビューが行う
+   - 完了条件: `bash scripts/isdd/check.sh` の出力に「進行中の変更」の行があり、`rq_ds_link_checker.py [変更のディレクトリ]/change_requirements.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md`（isdd-build に同梱）が合格すること。登録が無ければ実装を始めず `isdd-spec` に戻る
 
 ### 実装完了確認の必須固定タスク
 

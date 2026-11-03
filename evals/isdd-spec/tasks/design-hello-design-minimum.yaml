@@ -1,0 +1,144 @@
+id: "isdd-design-hello-001"
+name: "Hello World 詳細設計"
+description: "docs/requirements.md から詳細設計書と tasks.md を作り、テスト（DS-TS）と運用（DS-OP）の使い分け、新しい章、tasks.md の決まり、チェッカーの合格を検証する。"
+tags:
+  - "isdd"
+  - "design"
+  - "minimum"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+    要件定義書 docs/requirements.md は確定済みです。設計から進めてください。
+  follow_up_prompts:
+    - |
+      インターネット調査ができない場合は、未調査のまま進めることを承認します（承認日: 2026-10-17）。
+      技術選定は、要件定義書の技術制約どおり Python（フレームワークなし、DB なし、実行形態は CLI スクリプト）で承認します。
+      比較表の出典列には「未調査（ユーザー承認: 2026-10-17）」と書いてください。
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ docs/detail_design.md と tasks.md を作成し、チェッカーを実行してください。
+  context:
+    task_type: "isdd-design-hello-001"
+    fixture: "fixtures/design"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "docs_generated"
+    type: "file"
+    config:
+      must_exist:
+        - "docs/detail_design.md"
+  - name: "ds_ids"
+    type: "file"
+    config:
+      content_patterns:
+        - path: "docs/detail_design.md"
+          must_match:
+            - "DS-MD-[A-Z0-9]+-[A-Z0-9]"
+            - "DS-FN-[A-Z0-9]+-[A-Z0-9]"
+  - name: "tech_selection_recorded"
+    type: "file"
+    config:
+      content_patterns:
+        - path: "docs/detail_design.md"
+          must_match:
+            - "技術制約|判断軸"
+            - "出典|未調査"
+            - "承認"
+          must_not_match:
+            - "特段の理由がなければ"
+  - name: "mapping_chapter"
+    type: "file"
+    config:
+      content_patterns:
+        - path: "docs/detail_design.md"
+          must_match:
+            - "\\|\\s*DS-ID\\s*\\|\\s*対応要件ID\\s*\\|"
+            - "除外要件"
+  - name: "rq_ds_link_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py docs/requirements.md docs/detail_design.md"
+  - name: "requirements_still_valid"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py docs/requirements.md"
+  - name: "test_requirement_uses_ds_ts"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/detail_design.md --re 'DS-TS-[A-Z0-9-]+[^\\n]*RQ-TS-VERIFY-HELLO-WORLD-OUTPUT'"
+  - name: "operation_requirement_uses_ds_op"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/detail_design.md --re 'DS-OP-[A-Z0-9-]+[^\\n]*RQ-OP-EXIT-CODE-RESULT'"
+  - name: "nonfunctional_requirement_mapped"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/detail_design.md --re 'DS-[A-Z]{2}-[A-Z0-9-]+[^\\n]*RQ-NF-RESPONSE-UNDER-1S'"
+  - name: "new_chapters_present"
+    type: "file"
+    config:
+      content_patterns:
+        - path: "docs/detail_design.md"
+          must_match:
+            - "トランザクション"
+            - "状態遷移"
+            - "認可"
+            - "8-4|実行コマンド"
+            - "設定値|環境変数"
+            - "障害"
+  - name: "tasks_md_rules"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/tasks.md' --re 'DS-[A-Z]{2}-[A-Z0-9]' --re '単体テスト|結合テスト' --re 'E2E' --re 'README' --re 'implementation_completeness_checker' --re 'isdd-setup|check\\.sh' --re 'trace_map' --not-re '正本反映の確認'"
+  - name: "rq_ds_checker_executed"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        セッションのツール呼び出し履歴を確認し、bash ツールで `rq_ds_link_checker.py` を実行するコマンドが呼ばれたかどうかを評価してください。
+        実行されていた場合は set_waza_grade_pass を、実行されていなかった場合は set_waza_grade_fail を呼び出してください。
+  - name: "short_design_ids"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/detail_design.md --re 'DS-FN-[A-Z0-9]' --not-re 'DS-[A-Z]{2}-[A-Z0-9-]+-(FT|UI|NF|TS|DT|EX|OP)-[A-Z0-9]+-[A-Z0-9]'"

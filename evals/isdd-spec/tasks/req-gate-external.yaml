@@ -1,0 +1,57 @@
+id: "isdd-requirements-gate-external-001"
+name: "開始ゲート（外部連携あり）"
+description: "開始ゲートの 2 問をまとめて出し、外部連携が「ある」と答えたら、要件の本編に入らず業務の問題・業務課題の確定から始めるかを検証する（外部連携の詳細は業務課題の後に聞く）。"
+tags:
+  - "isdd"
+  - "requirements"
+  - "gate"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+    対象システム: Hello World出力システム
+  follow_up_prompts:
+    - "1. A（外部連携あり） 2. A（既存ソースコードなし）"
+  context:
+    task_type: "isdd-requirements-gate-external-001"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "requirements_not_created"
+    type: "file"
+    config:
+      must_not_exist:
+        - "docs/requirements.md"
+  - name: "routes_to_isdd_external_precheck"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。
+        エージェントは開始ゲートの回答（外部連携あり）を受けた後、機能・画面・非機能などの個別の要件の質問に入らず、業務の問題（あるべき姿と現状）や業務課題を確定する質問から始めましたか。外部連携の詳細（接続・認証など）を業務課題より先に聞いていないことも確かめてください。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。
+  - name: "gate_questions_batched"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションでエージェントが最初に出した応答を確認してください。開始ゲートの 2 問（外部連携の有無、既存ソースコードと isdd の運用）を、番号を付けて 1 回の応答でまとめて出していますか。
+        まとめて出している場合は set_waza_grade_pass を、1 問ずつ別の応答で出している場合は set_waza_grade_fail を呼び出してください。

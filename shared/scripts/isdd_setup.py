@@ -64,7 +64,7 @@ def rules_block(check_cmd: str, map_path: str, design_path: str, active_change: 
 - クラス・公開関数・ソースファイルを追加、改名、削除したら、同じ作業の中で `{map_path}` の行を更新する。
 - コードを変更した作業の終わりに `{check_cmd}` を実行する。エラーが出たら直してから作業を終える。警告は報告に含める。
 - 設計要素を増やす必要があれば、コードを書く前に `{design_path}` を更新する。設計 ID の採番は設計スキルの責務で、実装中に ID を作らない。
-- `{active_change}` がある間は変更の実装中。そこに書かれた変更のディレクトリの変更要件定義書・変更設計書を正本に重ねて読む。正本への反映は実装後に `isdd-post-implementation-review` が行う。
+- `{active_change}` がある間は変更の実装中。そこに書かれた変更のディレクトリの変更要件定義書・変更設計書を正本に重ねて読む。正本への反映は実装後に `isdd-build` の実装後レビューが行う。
 {MARK_END}
 """
 
@@ -106,7 +106,7 @@ def main() -> int:
     parser.add_argument("--design", default="docs/detail_design.md")
     parser.add_argument("--map", default="docs/trace_map.md")
     parser.add_argument("--active-change", default="docs/active_change",
-                        help="進行中の変更を指すポインタファイル（isdd-change-design が作り、isdd-post-implementation-review が消す）")
+                        help="進行中の変更を指すポインタファイル（isdd-spec が変更フローで作り、isdd-build の実装後レビューが消す）")
     parser.add_argument("--project-root", default=".")
     parser.add_argument("--runtime", choices=RUNTIMES, default="unspecified",
                         help="実行形態（詳細設計書の第 1 章から読み取る）。container のときだけ docker compose を要求する")

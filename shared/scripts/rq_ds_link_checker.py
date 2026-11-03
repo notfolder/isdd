@@ -16,6 +16,11 @@ RQ-DS Link Checker Script
   変更設計書が既存の要件（変更要件定義書に無い RQ-*）を参照していても、正本にあれば未定義参照にしない。
   対応欠落の判定は、渡した変更要件定義書の要件だけで行う。
 
+対応の根拠:
+  設計書の「要件と設計の対応表」を含む見出しの節にある表の行で、DS-* と RQ-* が同じ行にあることだけを対応の根拠にする
+  （isdd v2.1 以降。各章の表や設計 ID の名前からは対応を読まない）。設計書のほかの章に現れる DS-* が
+  この節に無い場合も問題として報告する。
+
 除外要件:
   設計書の「除外要件」を含む見出しの節に書かれた RQ-* は、ユーザーの承認を得て設計から外した要件として扱い、
   DS-* への対応を求めない（件数だけ表示する）。
@@ -52,8 +57,9 @@ HEADER_LABEL_PATTERN = re.compile(r'^(?:RQ|DS)(?:-[A-Z0-9]+)+-ID$')
 # RQ-BZ: 業務、RQ-BK: 業務課題、RQ-EF: 見込み経営効果。いずれも設計要素で実現するものではない
 CONTEXT_PREFIXES = ('RQ-BK-', 'RQ-BZ-', 'RQ-EF-')
 
-# 設計書の「除外要件」節の見出し
+# 設計書の「要件と設計の対応表」節と「除外要件」節の見出し
 HEADING_PATTERN = re.compile(r'^\s{0,3}#{1,6}\s+(.*)$')
+MAPPING_HEADING = '要件と設計の対応表'
 EXCLUSION_HEADING = '除外要件'
 
 
@@ -83,7 +89,7 @@ class RQDSChecker:
         self.base_rq_file = base_rq_file
         self.base_rq_ids: Set[str] = set()  # 正本の要件定義書の RQ-ID（変更フローで未定義参照の判定にだけ使う）
         self.rq_ids: Set[str] = set()
-        self.deleted_rq_ids: Set[str] = set()  # [削除]行のRQ-ID（命名推論専用）
+        self.deleted_rq_ids: Set[str] = set()  # [削除]行のRQ-ID（未定義参照の判定で、削除した要件への言及を許すため）
         self.excluded_rq_ids: Set[str] = set()  # 設計書の「除外要件」節にある RQ-ID（承認済みの除外）
         self.design_rq_refs: Set[str] = set()  # 設計書（[削除] 行を除く）に現れる RQ-ID
         self.ds_ids: Set[str] = set()
@@ -105,7 +111,7 @@ class RQDSChecker:
                 line for line in content.splitlines() if '[削除]' not in line
             )
             self.rq_ids = self.extract_ids(active_content, RQ_PATTERN)
-            # [削除]行のRQ-IDは命名推論で廃止設計要素を認識するために別途保持する
+            # [削除]行のRQ-IDは、設計書が削除した要件に触れても未定義参照にしないために別途保持する
             deleted_content = '\n'.join(
                 line for line in content.splitlines() if '[削除]' in line
             )
@@ -137,43 +143,56 @@ class RQDSChecker:
             if not self.ds_ids:
                 self.issues.append("警告: detail_design.md から DS-* ID が検出されませんでした")
 
-            # 「除外要件」を含む見出しの節にある RQ-* を、承認済みの除外として集める
-            in_exclusion = False
-            exclusion_level = 0
+            # 見出しで節を区切り、「要件と設計の対応表」節の行と「除外要件」節の RQ-* を集める
+            mapping_lines: List[str] = []
+            found_mapping = False
+            in_mapping = in_exclusion = False
+            mapping_level = exclusion_level = 0
             for line in active_lines:
                 heading = HEADING_PATTERN.match(line)
                 if heading:
                     level = len(line.strip()) - len(line.strip().lstrip('#'))
-                    if EXCLUSION_HEADING in heading.group(1):
-                        in_exclusion, exclusion_level = True, level
-                        continue
+                    title = heading.group(1)
                     if in_exclusion and level <= exclusion_level:
                         in_exclusion = False
+                    if in_mapping and level <= mapping_level:
+                        in_mapping = False
+                    if EXCLUSION_HEADING in title:
+                        in_exclusion, exclusion_level = True, level
+                    elif MAPPING_HEADING in title:
+                        in_mapping, mapping_level, found_mapping = True, level, True
+                    continue
                 if in_exclusion:
                     self.excluded_rq_ids |= {m for m in RQ_PATTERN.findall(line) if _is_valid_id(m)}
+                elif in_mapping:
+                    mapping_lines.append(line)
 
-            # マークダウンテーブルの行ごとに DS-* と RQ-* の共起を検出（[削除]行はスキップ済み）
-            for line in active_lines:
+            if not found_mapping:
+                self.issues.append(
+                    f"⚠ 対応表の章が無い: 設計書に「{MAPPING_HEADING}」を含む見出しの節がありません"
+                    "（要件との対応はこの節の表だけに書く）"
+                )
+
+            # 対応表の節の表の行ごとに DS-* と RQ-* の共起を検出（[削除]行はスキップ済み）
+            mapped_ds: Set[str] = set()
+            for line in mapping_lines:
                 ds_in_line = {m for m in DS_PATTERN.findall(line) if _is_valid_id(m)}
                 rq_in_line = {m for m in RQ_PATTERN.findall(line) if _is_valid_id(m)}
+                mapped_ds |= ds_in_line
                 if ds_in_line and rq_in_line:
                     for ds_id in ds_in_line:
                         for rq_id in rq_in_line:
                             self.rq_to_ds[rq_id].add(ds_id)
                             self.ds_to_rq[ds_id].add(rq_id)
 
-            # フォールバック: 旧フォーマット "DS-XXX: RQ-YYY, RQ-ZZZ" の検出（[削除]行を除外済みのテキストから）
-            for ds_id in self.ds_ids:
-                if ds_id in self.ds_to_rq:
-                    continue  # 既にテーブル行から検出済み
-                escaped = re.escape(ds_id)
-                pattern = rf'\b{escaped}\b[:\s\-\(\)]*({RQ_PATTERN.pattern}(?:\s*,\s*{RQ_PATTERN.pattern})*)'
-                matches = re.findall(pattern, active_content)
-                if matches:
-                    rqs = [m for m in RQ_PATTERN.findall(matches[0]) if _is_valid_id(m)]
-                    for rq in rqs:
-                        self.rq_to_ds[rq].add(ds_id)
-                        self.ds_to_rq[ds_id].add(rq)
+            # ほかの章に現れるのに対応表の節に無い DS-*
+            if found_mapping:
+                missing = self.ds_ids - mapped_ds
+                if missing:
+                    self.issues.append(
+                        f"⚠ 対応表の章に無い: 以下の DS-* は設計書にありますが、「{MAPPING_HEADING}」の表にありません:\n"
+                        f"  {', '.join(sorted(missing))}"
+                    )
 
             return True
         except FileNotFoundError:
@@ -182,41 +201,6 @@ class RQDSChecker:
         except Exception as e:
             self.issues.append(f"エラー: detail_design.md の読み込みに失敗しました: {e}")
             return False
-
-    def _infer_mappings_from_naming(self):
-        """
-        DS-* ID のサフィックスからRQ-* ID を推定してマッピングに追加する。
-
-        isddの命名規則: DS-{type}-{component}-{RQ-suffix}
-        例: DS-CL-EQUIPMENT-SERVICE-FT-MANAGE-EQUIPMENT → RQ-FT-MANAGE-EQUIPMENT
-
-        アクティブなRQ-IDでマッチしない場合、削除済みRQ-IDもフォールバックとして使用する。
-        これにより、廃止設計要素一覧に記載されたDS-IDを「未マッピング」として誤検知しない。
-        """
-        # RQ-* サフィックス → RQ-ID のマップを構築（アクティブIDを優先し、削除済みIDを補完）
-        rq_suffixes: Dict[str, str] = {}
-        for rq_id in (*self.rq_ids, *self.deleted_rq_ids, *sorted(self.base_rq_ids)):
-            if _is_context_id(rq_id):
-                continue
-            parts = rq_id.split('-')
-            suffix = '-'.join(parts[1:])  # 'RQ' プレフィックスを除去
-            # 短すぎるサフィックス（1パーツ）は曖昧なためスキップ
-            # アクティブIDが優先されるため、削除済みIDは既存エントリを上書きしない
-            if len(parts) >= 3 and suffix not in rq_suffixes:
-                rq_suffixes[suffix] = rq_id
-
-        for ds_id in self.ds_ids:
-            if ds_id in self.ds_to_rq:
-                continue  # 既にマッピング済み
-            parts = ds_id.split('-')
-            # DS-* ID の各サフィックス候補を試す（長い順に試して最初にマッチしたものを採用）
-            for i in range(1, len(parts) - 1):  # 最低2パーツ以上のサフィックスを試す
-                suffix = '-'.join(parts[i:])
-                if suffix in rq_suffixes:
-                    rq_id = rq_suffixes[suffix]
-                    self.rq_to_ds[rq_id].add(ds_id)
-                    self.ds_to_rq[ds_id].add(rq_id)
-                    break
 
     def check_coverage(self):
         """RQ-* と DS-* の対応欠落をチェック"""
@@ -271,9 +255,6 @@ class RQDSChecker:
                 return False
             self.base_rq_ids = self.extract_ids(base, RQ_PATTERN)
             print(f"正本: {self.base_rq_file} の RQ-* {len(self.base_rq_ids)} 件を既存の要件として参照する")
-
-        # 命名規則からマッピングを推定
-        self._infer_mappings_from_naming()
 
         mappable_rq = sum(1 for rq in self.rq_ids if not _is_context_id(rq))
         print(f"検出: RQ-* ID 数: {len(self.rq_ids)} (コンテキストID除外後: {mappable_rq})")

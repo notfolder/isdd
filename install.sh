@@ -53,6 +53,13 @@ if [ -d ".agents/skills/isdd-common" ]; then
     rm -rf ".agents/skills/isdd-common"
     echo "    削除: .agents/skills/isdd-common（旧版の共通スキル）"
 fi
+# v2.0 系までのスキル。v2.1 で isdd-spec と isdd-build にまとめた
+for old in isdd-requirements isdd-change-req isdd-design isdd-change-design isdd-external-precheck isdd-external-research isdd-traceable-coding isdd-post-implementation-review; do
+    if [ -d ".agents/skills/$old" ]; then
+        rm -rf ".agents/skills/$old"
+        echo "    削除: .agents/skills/$old（v2.0 系のスキル。v2.1 で isdd-spec / isdd-build にまとめた）"
+    fi
+done
 
 # --------------------------------------------------
 # 2. .claude/skills → ../.agents/skills のシンボリックリンクを作成

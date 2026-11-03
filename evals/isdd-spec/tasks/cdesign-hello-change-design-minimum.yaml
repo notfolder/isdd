@@ -1,0 +1,112 @@
+id: "isdd-change-design-hello-001"
+name: "Hello World 時刻表示追加 変更設計"
+description: "変更要件定義書から変更設計書を作り、正本を書き換えずに進行中の変更（docs/active_change）として登録し、tasks.md を決まりどおりに作るかを検証する。"
+tags:
+  - "isdd"
+  - "change-design"
+  - "minimum"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+    変更要件定義書は .history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。
+    変更要件定義書は確定済みです。変更設計から進めてください。
+  follow_up_prompts:
+    - |
+      これ以上の情報はありません。
+      上記の情報をもとに今すぐ change_detail_design.md を作成してください。
+    - |
+      これ以上の情報はありません。
+      スキルの手順どおり、完了条件をすべて満たすまで進めてください。tasks.md も作成してください。
+    - |
+      これ以上の情報はありません。
+      今すぐ残りの手順を完了してください。
+  context:
+    task_type: "isdd-change-design-hello-001"
+    fixture: "fixtures/change-design"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "change_detail_design_generated"
+    type: "file"
+    config:
+      must_exist:
+        - ".history/20260508-add-timestamp-to-hello-world/change_detail_design.md"
+  - name: "change_design_ids_and_markers"
+    type: "file"
+    config:
+      content_patterns:
+        - path: ".history/20260508-add-timestamp-to-hello-world/change_detail_design.md"
+          must_match:
+            - "DS-[A-Z]{2}-[A-Z0-9-]*GET-CURRENT-TIME"
+            - "DS-[A-Z]{2}-[A-Z0-9-]*BUILD-TIMESTAMPED-MESSAGE"
+            - "DS-[A-Z]{2}-[A-Z0-9-]*PRINT-TIMESTAMPED-OUTPUT"
+            - "\\[追加\\]"
+            - "\\[削除\\]"
+  - name: "change_req_rq_integrity_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py .history/20260508-add-timestamp-to-hello-world/change_requirements.md"
+  - name: "change_docs_rq_ds_link_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_ds_link_checker.py .history/20260508-add-timestamp-to-hello-world/change_requirements.md .history/20260508-add-timestamp-to-hello-world/change_detail_design.md --base docs/requirements.md"
+  - name: "active_change_registered"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/active_change --re '^\\.history/20260508-add-timestamp-to-hello-world/?$'"
+  - name: "canonical_requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/requirements.md evals/isdd-spec/fixtures/change-design/docs/requirements.md"
+  - name: "canonical_design_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/detail_design.md evals/isdd-spec/fixtures/change-design/docs/detail_design.md"
+  - name: "history_change_requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged .history/20260508-add-timestamp-to-hello-world/change_requirements.md evals/isdd-spec/fixtures/change-design/.history/20260508-add-timestamp-to-hello-world/change_requirements.md"
+  - name: "tasks_md_rules"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/20260508-add-timestamp-to-hello-world/tasks.md' --re 'DS-[A-Z]{2}-[A-Z0-9]' --re '単体テスト|結合テスト' --re 'E2E' --re 'README' --re 'implementation_completeness_checker' --re 'isdd-setup|check\\.sh' --re 'trace_map' --re 'active_change'"

@@ -1,0 +1,52 @@
+id: "isdd-design-stop-001"
+name: "技術選定の承認前に止まる"
+description: "技術選定をまだ承認しないと答えたら、設計書の他の章へ進まずに止まるかを検証する。"
+tags:
+  - "isdd"
+  - "design"
+  - "stop"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+    要件定義書 docs/requirements.md は確定済みです。設計から進めてください。
+  follow_up_prompts:
+    - "まだ承認しません。候補の比較表と、インターネット調査ができたかどうかを示してください。承認するまで設計書の他の章は書かないでください。"
+  context:
+    task_type: "isdd-design-stop-001"
+    fixture: "fixtures/design-stop"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "no_other_chapters"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match 'docs/detail_design.md' --min-files 0 --not-re '^#+\\s*(第\\s*)?[2-9]' --not-re '^#+\\s*1[01]'"
+  - name: "stopped_for_approval"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。エージェントは技術選定の候補（比較表）か「インターネット調査ができない」旨を示し、ユーザーの承認を待って止まりましたか（承認前に詳細設計書の第 2 章以降を書き進めていないこと）。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

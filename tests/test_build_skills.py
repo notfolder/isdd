@@ -24,20 +24,20 @@ class BuildSkillsTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(code, 0, out)
 
     def test_edited_copy_is_detected(self):
-        target = self.tmp / "skills" / "isdd-design" / "references" / "document-rules.md"
+        target = self.tmp / "skills" / "isdd-spec" / "references" / "document-rules.md"
         target.write_text(target.read_text(encoding="utf-8") + "\n追記\n", encoding="utf-8")
         code, out = self.check()
         self.assertEqual(code, 1, out)
         self.assertIn("正本と違う", out)
 
     def test_extra_file_is_detected(self):
-        (self.tmp / "skills" / "isdd-design" / "references" / "extra.md").write_text("x", encoding="utf-8")
+        (self.tmp / "skills" / "isdd-spec" / "references" / "extra.md").write_text("x", encoding="utf-8")
         code, out = self.check()
         self.assertEqual(code, 1, out)
         self.assertIn("余分", out)
 
     def test_missing_copy_is_detected(self):
-        (self.tmp / "skills" / "isdd-design" / "scripts" / "rq_ds_link_checker.py").unlink()
+        (self.tmp / "skills" / "isdd-spec" / "scripts" / "rq_ds_link_checker.py").unlink()
         code, out = self.check()
         self.assertEqual(code, 1, out)
         self.assertIn("未複製", out)
@@ -57,7 +57,7 @@ class BuildSkillsTest(TempDirMixin, unittest.TestCase):
         self.assertIn("unused.md", out)
 
     def test_build_repairs_copies(self):
-        (self.tmp / "skills" / "isdd-design" / "scripts" / "rq_ds_link_checker.py").unlink()
+        (self.tmp / "skills" / "isdd-spec" / "scripts" / "rq_ds_link_checker.py").unlink()
         subprocess.run([sys.executable, str(self.tmp / "tools" / "build_skills.py")], check=True, capture_output=True)
         code, out = self.check()
         self.assertEqual(code, 0, out)

@@ -1,0 +1,51 @@
+id: "isdd-change-req-gate-external-001"
+name: "開始ゲート（外部連携あり）"
+description: "要件定義書と設計書があるプロジェクトで変更フローと判定し、外部連携が「ある」と答えたら、変更要件の本編に入らず業務の問題・業務課題の確定から始めるかを検証する。"
+tags:
+  - "isdd"
+  - "change-req"
+  - "gate"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+  follow_up_prompts:
+    - "選択肢A（外部連携あり）"
+  context:
+    task_type: "isdd-change-req-gate-external-001"
+    fixture: "fixtures/change-req"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "change_requirements_not_created"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/change_requirements.md' --min-files 0 --not-re '.'"
+  - name: "routes_to_isdd_external_precheck"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。エージェントは、既存の要件定義書があるので変更フローで進めることを示し、外部連携ありの回答を受けた後、機能・画面などの個別の変更要件の質問に入らず、今回の変更で解決する業務の問題や業務課題を確定する質問から始めましたか。外部連携の詳細（接続・認証など）を業務課題より先に聞いていないことも確かめてください。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

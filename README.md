@@ -36,7 +36,7 @@ gh skill install notfolder/isdd
 導入後は、エージェントの入力で次のように開始する。
 
 ```text
-/isdd-requirements [XXXアプリを作りたい]
+/isdd-spec [XXXアプリを作りたい]
 ```
 
 ---
@@ -45,72 +45,40 @@ gh skill install notfolder/isdd
 
 ### フロー運用原則
 
-- 設計スキル（`isdd-design` / `isdd-change-design`）で見つかった要件・設計差分は、起点要件定義へ直接反映する。
-- 正本（`docs/requirements.md`・`docs/detail_design.md`）は実装済みの仕様だけを持つ。変更設計が確定しても `isdd-change-design` は正本を書き換えず、変更のディレクトリを `docs/active_change` に登録する。実装中は、対応表チェックと実装スキルが変更設計書を正本に重ねて読む。`.history` 配下の変更要件定義書と変更設計書は変更の記録として残す。
-- 実装スキルで見つかった要件・設計差分提案は `docs/proposals.md` に一時集約する。
-- 正本の更新は実装の後に `isdd-post-implementation-review` だけが行う。変更フローの変更要件定義書・変更設計書の反映と、実装起因の差分の取り込みをまとめて行い、反映し終えたら `docs/active_change` を消す。
-- `docs/proposals.md` は一時ファイルとして扱い、`isdd-post-implementation-review` 完了時に削除する。
-- 変更要件定義、変更設計を使うのは、新たな要求が追加された場合のみとする。
-- 既存プロジェクトの初回 isdd 化は `isdd-reverse-engineering` が正本と対応表まで確定する。完了後の新たな要求は変更フローで扱う。
+- スキルは、人が確認・承認する区切りで分ける。仕様（要件と設計）を作る `isdd-spec`、実装と実装後レビューを行う `isdd-build`、既存コードを isdd 化する `isdd-reverse-engineering` の 3 本と、導入の道具の `isdd-setup` がある。
+- `isdd-spec` は、業務課題 → 外部連携（ある場合）→ 要件 → 技術選定と設計 → tasks.md の順に進め、終わりに要件定義書と設計書の承認を得る。設計中に見つかった要件の不足は、要件の文書を直してから設計に伝える。
+- 質問は、依存のある問いを 1 問ずつ、独立した問いを番号付きでまとめて出す。外部連携のヒアリングは連携先ごとに 1 回にまとめる。
+- 正本（`docs/requirements.md`・`docs/detail_design.md`）は実装済みの仕様だけを持つ。変更フローでは `isdd-spec` が `.history/[日付]-[タスク名]/` に変更要件定義書と変更設計書を作って `docs/active_change` に登録し、正本は書き換えない。実装中は、対応表チェックと `isdd-build` が変更設計書を正本に重ねて読む。
+- 正本の更新は、実装の後に `isdd-build` の実装後レビューだけが行う。変更の反映と、実装中に見つかった差分（`docs/proposals.md`）の取り込みをまとめて行い、終わったら `docs/active_change` と `docs/proposals.md` を消す。
+- 既存プロジェクトの初回 isdd 化は `isdd-reverse-engineering` が正本と対応表まで確定する。以後の新しい要求は `isdd-spec`（変更フロー）で扱う。
 
-### 新規開発フロー
+### 開発フロー
 
 ```mermaid
 graph TD
-    G1[開始ゲート\n業務課題確定・外部連携有無・既存コード有無を確認]
-    PRE[isdd-external-precheck\n外部連携事前確認]
+    G[isdd-spec 開始の判定\n新規 / 変更 / 既存コードあり]
     REV[isdd-reverse-engineering\n既存プロジェクトの仕様化]
-    REQ[isdd-requirements\n要件定義]
-    EX[isdd-external-research\n外部仕様整合確認]
-    DES[isdd-design\n詳細設計]
-    SET[isdd-setup\n対応表チェック導入（未導入時）]
-    COD[isdd-traceable-coding\n実装と対応表の作成]
-    PIR[isdd-post-implementation-review\n実装後逆引き整合]
-    FB[要件更新・ID伝播・再設計]
+    S1[業務の問題と業務課題]
+    S2[外部連携のヒアリング 1 回\n接続テストと調査]
+    S3[要件\n新規: docs/requirements.md\n変更: change_requirements.md]
+    S4[技術選定と設計\n新規: docs/detail_design.md\n変更: change_detail_design.md と docs/active_change]
+    OK1{仕様の承認}
+    B1[isdd-build 実装\n対応表の作成とチェック]
+    B2[isdd-build 実装後レビュー\n変更の正本への反映・未マッピングの解消]
+    OK2{実装と正本の承認}
 
-    G1 -->|外部連携あり| PRE
-    G1 -->|外部連携なし| REQ
-    G1 -->|既存コードあり かつ isdd未導入| REV
-    PRE --> REQ
-    REV --> END0[isdd 化完了\n以後の要求は変更フローへ]
-    REQ -->|外部連携あり| EX
-    REQ -->|外部連携なし| DES
-    EX --> DES
-    DES --> SET
-    SET --> COD
-    COD --> PIR
-    PIR -->|未整合あり| FB
-    FB --> DES
-    PIR -->|未整合なし| END1[完了]
-```
-
-### 新規要求追加時の変更フロー
-
-このフローは、新たな要求追加が発生した場合にのみ適用する。
-設計中に見つかった差分は `change_requirements.md` に直接反映する。正本への反映は、実装の後に `isdd-post-implementation-review` が行う。実装中に見つかった差分提案は `docs/proposals.md` に集約して扱う。
-
-```mermaid
-graph TD
-    G2[開始ゲート\n業務課題と外部連携有無を確認]
-    PRE[isdd-external-precheck\n外部連携事前確認]
-    CREQ[isdd-change-req\n変更要件定義]
-    EX[isdd-external-research\n外部仕様整合確認]
-    CDES[isdd-change-design\n変更詳細設計と進行中の変更の登録]
-    COD[isdd-traceable-coding\n実装と対応表の更新]
-    PIR[isdd-post-implementation-review\n正本への反映と実装後逆引き整合]
-    CFB[proposals取込・正本更新・ID伝播・再設計]
-
-    G2 -->|外部連携あり| PRE
-    G2 -->|外部連携なし| CREQ
-    PRE --> CREQ
-    CREQ -->|外部連携あり| EX
-    CREQ -->|外部連携なし| CDES
-    EX --> CDES
-    CDES --> COD
-    COD --> PIR
-    PIR -->|未整合あり| CFB
-    CFB --> CDES
-    PIR -->|未整合なし| END2[完了]
+    G -->|既存コードあり かつ isdd 未導入| REV
+    REV --> G
+    G --> S1
+    S1 -->|外部連携あり| S2
+    S1 -->|外部連携なし| S3
+    S2 --> S3
+    S3 --> S4
+    S4 --> OK1
+    OK1 --> B1
+    B1 --> B2
+    B2 --> OK2
+    OK2 --> END[完了\n次の要求は isdd-spec の変更フローへ]
 ```
 
 ### 既存プロジェクト適用フロー
@@ -136,16 +104,10 @@ graph TD
 
 | スキル名 | 役割 | 主な成果物 |
 |---|---|---|
-| isdd-requirements | インタビュー駆動で要件定義書を作成する | docs/requirements.md |
-| isdd-design | 要件定義書から詳細設計書と実装タスクを作成する | docs/detail_design.md、.history/[日付]-[タスク名]/tasks.md |
-| isdd-change-req | 新たな要求追加時に変更要件定義書を作成する | .history 配下の change_requirements.md |
-| isdd-change-design | 変更要件から変更詳細設計書と実装タスクを作成し、進行中の変更として登録する（正本は書き換えない）。必要時は変更要件を直接更新する | .history/[日付]-[タスク名]/change_detail_design.md、.history/[日付]-[タスク名]/tasks.md、docs/active_change、.history/[日付]-[タスク名]/change_requirements.md（更新時） |
-| isdd-external-precheck | 外部連携の接続可否・認証方式・主要制限を実接続で事前確認する | precheck_report.md |
-| isdd-external-research | 外部連携先の詳細仕様を調査し要件との整合を確認する | alignment_report.md、external 配下調査成果物 |
+| isdd-spec | インタビューで要件と設計を作る。新規は正本を、変更は変更要件定義書・変更設計書を作り、外部連携は実接続で確かめて要件と突き合わせる | docs/requirements.md・docs/detail_design.md（新規）、.history/[日付]-[タスク名]/change_requirements.md・change_detail_design.md・tasks.md、docs/active_change（変更）、external/[システム名]/docs/research.md・alignment_report.md・.env.example |
+| isdd-build | 設計どおりに実装して対応表を作り、実装後レビューで変更を正本へ反映し、要件・設計・対応表・コードの整合を確かめる | 実装ソース（外部連携ライブラリ・モック・E2E を含む）、docs/trace_map.md、正本（更新後）、未マッピング一覧 |
 | isdd-reverse-engineering | 既存コードから要件・設計を逆引きし、インタビューで補完して正本と対応表を確定する（初回 isdd 化） | docs/requirements.md、docs/detail_design.md、docs/trace_map.md |
 | isdd-setup | 対応表チェック（チェッカー複製・check.sh・pre-commit・AGENTS.md と CLAUDE.md の規則・実装完了チェックのプロファイル・エージェント自身のフック）をプロジェクトに導入する | scripts/isdd/（check.sh、completeness.json を含む）、.git/hooks/pre-commit、AGENTS.md、CLAUDE.md |
-| isdd-traceable-coding | 設計書にもとづいて実装し、設計 ID とコードの対応を対応表で管理する | 実装ソース、docs/trace_map.md |
-| isdd-post-implementation-review | 実装後に変更フローの変更を正本へ反映し、要件・設計・対応表・コードの逆引き整合を検証して正本を確定する | docs/requirements.md、docs/detail_design.md、docs/trace_map.md（更新後）、未マッピング一覧、整合レポート |
 
 ---
 
@@ -156,8 +118,7 @@ graph TD
 | 役割名 | 主な利用スキル | 役割 |
 |---|---|---|
 | コード構造解析 | isdd-reverse-engineering | 既存コードの構造（構成、言語、クラス・関数、依存、データモデル、外部連携、バッチ）を読み取ってまとめる |
-| 外部ライブラリ調査 | isdd-external-research | 外部連携ライブラリ候補をインターネットで調査し、7 項目で比較評価する |
-| 外部 DB スキーマ抽出 | isdd-external-research | `.env` の接続情報で外部 DB に接続し、スキーマ情報を抽出する |
+| 外部仕様とライブラリの調査 | isdd-spec | 外部システムの公式仕様を読み、連携ライブラリ候補をインターネットで調査して 7 項目で比較評価する |
 
 ---
 
@@ -182,24 +143,26 @@ graph LR
 
 | ファイル | 内容 | 複製先 |
 |---|---|---|
-| id-definitions.md | 要件 ID と設計 ID の定義 | 要件・設計・逆引き・外部調査・実装後レビュー |
-| document-rules.md | 仕様書・設計書の書き方と、作成後のレビュー | 要件・設計・逆引き・外部調査・実装後レビュー |
-| hearing-rules.md | ヒアリングの共通ルール（質問の出し方、複雑さの算定、用語の確定、システムの形態ごとの確認項目） | 要件・変更要件・逆引き・外部連携 2 本 |
-| requirements-chapters.md | 要件定義書の章構成 | 要件・変更要件・逆引き・外部調査 |
-| design-chapters.md | 詳細設計書の章構成と技術選定の手順 | 設計・変更設計・逆引き・外部調査 |
-| design-completeness.md | 設計網羅性のチェックリスト | 設計・変更設計・逆引き |
-| design-tasks-rules.md | 実装タスク化のルール | 設計・変更設計 |
-| requirement-exclusion.md | 最小設計の意味、要件除外ゲート（設計書 11-1 に記録）、設計から要件へのフィードバック | 設計・変更設計 |
-| trace-map-rules.md | 設計 ID とコードの対応表（docs/trace_map.md）の書式・粒度・チェック規則 | 設計・変更設計・逆引き・実装・実装後レビュー |
-| external-credentials.md | 接続情報（.env）の扱いと接続テスト | 外部連携 2 本 |
-| subagent-delegation.md | サブエージェントへの委譲のしかた | 逆引き・外部調査 |
+| spec-requirements.md / spec-external.md / spec-design.md | isdd-spec の段階ごとの手順（要件、外部連携、設計） | spec |
+| build-implement.md / build-review.md | isdd-build の段階ごとの手順（実装、実装後レビュー） | build |
+| id-definitions.md | 要件 ID と設計 ID の定義（設計 ID は `DS-[種類]-[要素名]`） | spec・build・逆引き |
+| document-rules.md | 仕様書・設計書の書き方と、作成後のレビュー | spec・build・逆引き |
+| hearing-rules.md | ヒアリングの共通ルール（問いのまとめ方、選択肢の表、複雑さの算定、用語の確定、形態ごとの確認項目） | spec・逆引き |
+| requirements-chapters.md | 要件定義書の章構成 | spec・逆引き |
+| design-chapters.md | 詳細設計書の章構成と技術選定の手順。要件との対応は第 11 章だけに書く | spec・逆引き |
+| design-completeness.md | 設計網羅性のチェックリスト | spec・逆引き |
+| design-tasks-rules.md | 実装タスク化のルール | spec |
+| requirement-exclusion.md | 最小設計の意味、要件除外ゲート（設計書 11-1 に記録）、設計から要件へのフィードバック | spec |
+| trace-map-rules.md | 設計 ID とコードの対応表（docs/trace_map.md）の書式・粒度・チェック規則 | spec・build・逆引き |
+| external-credentials.md | 接続情報（.env）の扱いと接続テスト | spec |
+| subagent-delegation.md | サブエージェントへの委譲のしかた | spec・逆引き |
 
 ### shared/scripts/
 
 | スクリプト | 用途 | 複製先と実行のしかた |
 | --- | --- | --- |
-| rq_integrity_checker.py | 要件定義書の RQ-* 内部整合性を検証（BK マッピング・フォーマット） | 要件・変更要件・変更設計・逆引き。各スキルの同梱版を実行する |
-| rq_ds_link_checker.py | 要件 ID（RQ-*）と設計 ID（DS-*）の対応欠落・不整合を検証。問題があれば終了コード 1 | 設計・変更設計・逆引き・実装・実装後レビュー。各スキルの同梱版を実行する |
+| rq_integrity_checker.py | 要件定義書の RQ-* 内部整合性を検証（BK マッピング・フォーマット） | spec・逆引き。各スキルの同梱版を実行する |
+| rq_ds_link_checker.py | 要件 ID（RQ-*）と設計 ID（DS-*）の対応を、設計書の「要件と設計の対応表」の章だけから検証。問題があれば終了コード 1 | spec・build・逆引き。各スキルの同梱版を実行する |
 | trace_map_checker.py | 詳細設計書・対応表・コードの 3 者を突合し、壊れた参照（エラー）と未登録（警告）を検出 | isdd-setup がプロジェクトの `scripts/isdd/` に複製し、`check.sh` から実行する |
 | implementation_completeness_checker.py | E2E・README・docs/trace_map.md の存在を機械確認。docker compose と「初期ユーザー」は completeness.json に応じて要求 | 同上（`python3 scripts/isdd/implementation_completeness_checker.py .`） |
 | isdd_setup.py | コード用チェッカーを scripts/isdd/ に複製して版を VERSION に記録し、check.sh・pre-commit・completeness.json を生成し、AGENTS.md と CLAUDE.md に規則を追記 | isdd-setup に同梱 |
@@ -208,7 +171,7 @@ graph LR
 
 ### 実装後逆引き整合の進め方
 
-`isdd-post-implementation-review` は専用のスクリプトを持たず、上の 2 つのチェッカー（`rq_ds_link_checker.py` と `scripts/isdd/check.sh`）の結果とコードの読み取りを組み合わせて、次の順に進める。
+`isdd-build` の実装後レビューは専用のスクリプトを持たず、上の 2 つのチェッカー（`rq_ds_link_checker.py` と `scripts/isdd/check.sh`）の結果とコードの読み取りを組み合わせて、次の順に進める。
 
 1. 実装差分の影響範囲をまとめる。
 2. `rq_ds_link_checker.py` で要件と設計の対応を、`check.sh` で対応表とコードのずれを確かめる。
@@ -229,7 +192,7 @@ graph LR
 - コードには要件 ID も設計 ID も書かない。対応表の 1 行が「設計 ID ↔ ファイル::クラス.関数」を表す。
 - `trace_map_checker.py` は、壊れた参照（対応表が指す関数が無い、設計書に無い ID）をエラー、未登録（コードにあって対応表に無い）を警告として報告する。
 - 強制は 3 層。`AGENTS.md` と `CLAUDE.md` の規則、エージェント自身が作る応答終了時のフック、git の pre-commit（エラーだけで止める）。
-- スキルを持たない人がコードを足しても止めない。そのずれは `isdd-post-implementation-review` が取り込む。
+- スキルを持たない人がコードを足しても止めない。そのずれは `isdd-build` の実装後レビューが取り込む。
 
 ---
 
@@ -277,22 +240,22 @@ gh skill install notfolder/isdd
 ### 1つのスキルを導入
 
 ```bash
-gh skill install notfolder/isdd isdd-requirements
+gh skill install notfolder/isdd isdd-spec
 ```
 
 ### バージョンを固定して導入
 
 ```bash
-gh skill install notfolder/isdd isdd-requirements@v2.0.1
+gh skill install notfolder/isdd isdd-spec@v2.1.0
 ```
 
 ### ユーザースコープへ導入
 
 ```bash
-gh skill install notfolder/isdd isdd-requirements --scope user
+gh skill install notfolder/isdd isdd-spec --scope user
 ```
 
-必要に応じて skill 名を isdd-design など他のスキル名に置き換えて導入する。
+必要に応じて skill 名を isdd-build など他のスキル名に置き換えて導入する。isdd-spec と isdd-build は組み合わせて使い、対応表チェックのために isdd-setup も要るので、ふつうは全スキルを入れる。
 
 ### このリポジトリの中で試す（install.sh）
 
@@ -303,9 +266,27 @@ bash install.sh
 ```
 
 - `build_skills.py --check` で複製が正本と一致するかを確かめ、不一致なら止まる。
-- `skills/` の各スキルを、このリポジトリの `.agents/skills/<スキル>/` に過不足なくコピーする（OpenCode・Codex・Copilot・Gemini CLI 向け）。旧版の `isdd-common` があれば消す。
+- `skills/` の各スキルを、このリポジトリの `.agents/skills/<スキル>/` に過不足なくコピーする（OpenCode・Codex・Copilot・Gemini CLI 向け）。旧版の `isdd-common` と、v2.0 系のスキル（v2.1 で isdd-spec・isdd-build にまとめた 8 本）があれば消す。
 - `.claude/skills` から `../.agents/skills` へのシンボリックリンクを作る（Claude Code 向け）。
 - コピーした `.agents/skills/isdd-*/` と `.claude/` は `.gitignore` で追跡しない。`.agents/skills/mermaid-syntax-skill/` は、このリポジトリで文書の mermaid 図を書くときのために外部（re2zero/deepin-skills）から入れたスキルで、isdd としては配布しない。
+
+### v2.0 系から更新する
+
+v2.1.0 で、要件定義・変更要件定義・外部連携の 2 本・設計・変更設計の 6 本を `isdd-spec` に、実装と実装後レビューの 2 本を `isdd-build` にまとめた。`gh skill update` は新しく増えたスキルを入れず、廃止したスキルも消さないので、全スキルを入れ直してから旧スキルを消す。
+
+```bash
+# 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
+gh skill install notfolder/isdd --all --force --agent claude-code
+# v2.0 系のスキルを消す（パスは導入先に合わせる。例は Claude Code のプロジェクトスコープ）
+rm -rf .claude/skills/isdd-requirements .claude/skills/isdd-change-req .claude/skills/isdd-design .claude/skills/isdd-change-design \
+       .claude/skills/isdd-external-precheck .claude/skills/isdd-external-research .claude/skills/isdd-traceable-coding .claude/skills/isdd-post-implementation-review
+```
+
+- 呼び出し方が変わる。`/isdd-requirements`・`/isdd-change-req`・`/isdd-design`・`/isdd-change-design`・外部連携の 2 本は `/isdd-spec`、`/isdd-traceable-coding`・`/isdd-post-implementation-review` は `/isdd-build` で呼ぶ。
+- v2.0 系で作った文書はそのまま使える。長い設計 ID（末尾に要件の略称を付けたもの）も有効で、書き換えなくてよい。要件と設計の対応は、設計書の「要件と設計の対応表」の章から読む（v2.0.0 から必須の章）。
+- 要件定義書に残っているモック方式の要件 ID（`RQ-EX-USE-*`）も有効なまま扱う。新しく作る設計では、モック方式を設計書の 8-4 に書く。
+- `scripts/isdd/VERSION` が古いと、`isdd-build` が `isdd-setup` の再実行を案内する。
+- `install.sh` で導入している場合は、リポジトリを最新にして `install.sh` を再実行する。旧スキルも消える。
 
 ### v1.0.14 以前から更新する
 
@@ -328,8 +309,8 @@ rm -rf .claude/skills/isdd-common
 コードに旧方式の ID コメントが残っていても、新しいスキルはそのまま使える。対応表のチェック（`scripts/isdd/check.sh`）はコメントを読まず、pre-commit もエラーだけで止めるため。
 
 1. `isdd-setup` を実行する。`scripts/isdd/` のチェッカー、`check.sh`、pre-commit、`AGENTS.md` と `CLAUDE.md` の規則が入る。
-2. 対応表 `docs/trace_map.md` を作る。`isdd-post-implementation-review` を使うか、次に `isdd-traceable-coding` で実装するときに作る。どちらも `check.sh --strict` の警告が 0 件になるまで、既存のファイル・クラス・公開関数を登録する。旧コメントに書いてある設計 ID が、登録の手がかりになる。
-3. 対応表ができたら、旧コメントの ID を消す。`isdd-traceable-coding` の完了条件に「コードに要件 ID・設計 ID を含むコメントが無い」があり、残っていると完了条件を満たさない。対応表と二重に管理すると、ずれる原因にもなる。
+2. 対応表 `docs/trace_map.md` を作る。`isdd-build` の実装後レビューを使うか、次に `isdd-build` で実装するときに作る。どちらも `check.sh --strict` の警告が 0 件になるまで、既存のファイル・クラス・公開関数を登録する。旧コメントに書いてある設計 ID が、登録の手がかりになる。
+3. 対応表ができたら、旧コメントの ID を消す。`isdd-build` の実装の完了条件に「コードに要件 ID・設計 ID を含むコメントが無い」があり、残っていると完了条件を満たさない。対応表と二重に管理すると、ずれる原因にもなる。
 
 ---
 
@@ -359,8 +340,8 @@ rm -rf .claude/skills/isdd-common
 ### 特定スキルのみ実行
 
 ```bash
-bash evals/run-all.sh real isdd-change-design
-bash evals/run-all.sh real isdd-requirements isdd-design
+bash evals/run-all.sh real isdd-spec
+bash evals/run-all.sh real isdd-spec isdd-build
 ```
 
 ### 全スキル一括実行
@@ -376,7 +357,7 @@ bash evals/run-all.sh real
 ```bash
 bash evals/install-copilot-cli.sh      # 初回のみ。新しい Copilot CLI を evals/.copilot-cli/ に入れる
 bash evals/run-all.sh claude
-bash evals/run-all.sh claude isdd-traceable-coding
+bash evals/run-all.sh claude isdd-build
 ```
 
 - waza 0.38.10 が同梱する Copilot ランタイム（1.0.85）は Haiku 5.5 に旧式の思考設定を送り 400 で落ちる。`install-copilot-cli.sh` で入れた新しい CLI（1.0.98 以降）を `run-all.sh claude` が `COPILOT_CLI_PATH` として自動で使う。別の CLI を使うときは `.env` の `COPILOT_CLI_PATH` に実行ファイルを書く。
@@ -386,7 +367,7 @@ bash evals/run-all.sh claude isdd-traceable-coding
 - 最後に「スキル / 1 回目 / 再試行」の表を出す。
 - transcript はモデルごとに `evals/<skill>/artifacts/transcripts/<model>/` に残る。
 - `.env` の読み込みは設定済みの環境変数を上書きしない。`WAZA_CLAUDE_MODEL=... bash evals/run-all.sh claude` のように一時指定できる。
-- 各 `eval.copilot.yaml` の `timeout_seconds` は Claude での実測の約 3 倍（600〜1200 秒）。外部連携の 2 スキルは接続テストを含むので 1200 秒で、`isdd-external-research` のタスクはタスク側で 1500 秒を指定している。実行基盤が固まったときに 1 時間単位で待たないための値。`local` モードは、eval ファイルとタスク側の値の両方に `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）を掛けた一時ファイル（eval のディレクトリの `.eval.local.<番号>.yaml` と `.tasks.local.<番号>/`）で実行するので、ローカルモデルでも従来どおりの長さで動く。
+- 各 `eval.copilot.yaml` の `timeout_seconds` は Claude での実測の約 3 倍（600〜1200 秒）。外部連携の接続テストを含むタスク（isdd-spec の precheck・research）はタスク側で 1200〜1500 秒を指定している。実行基盤が固まったときに 1 時間単位で待たないための値。`local` モードは、eval ファイルとタスク側の値の両方に `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）を掛けた一時ファイル（eval のディレクトリの `.eval.local.<番号>.yaml` と `.tasks.local.<番号>/`）で実行するので、ローカルモデルでも従来どおりの長さで動く。
 
 ### タスクと採点の作り
 
@@ -413,11 +394,11 @@ PATH 上の `python3`・`python3.X`、`/usr/bin/python3`、uv が管理する版
 
 ### mock モードとローカルモデルでの実行
 
-`mock` は `eval.mock.yaml` があるスキル（`isdd-setup`・`isdd-traceable-coding`・`isdd-post-implementation-review`）だけを実行する。モデルが作業しないので採点は全タスク不合格になり、終了コードも 1 になる。確かめられるのは、eval の YAML が読めることと、タスクの `files:` に挙げたファイルが揃っていることまで。`local` は LM Studio を先に起動してから実行する。
+`mock` は `eval.mock.yaml` があるスキル（`isdd-setup`・`isdd-build`）だけを実行する。モデルが作業しないので採点は全タスク不合格になり、終了コードも 1 になる。確かめられるのは、eval の YAML が読めることと、タスクの `files:` に挙げたファイルが揃っていることまで。`local` は LM Studio を先に起動してから実行する。
 
 ```bash
 bash evals/run-all.sh mock
-bash evals/run-all.sh local isdd-requirements
+bash evals/run-all.sh local isdd-spec
 ```
 
 ### 1 スキルだけ試す（デバッグ用）
@@ -438,6 +419,26 @@ bash evals/run-all.sh claude isdd-setup
 ---
 
 ## 変更履歴
+
+### v2.1.0
+
+#### 更新時の注意
+
+- スキルの構成が変わった。「v2.0 系から更新する」の手順で全スキルを入れ直し、旧スキル 8 本を消す。
+- v2.0 系で作った文書（長い設計 ID、`RQ-EX-USE-*`）はそのまま使える。
+
+#### 構成の変更
+
+- **スキルを、人が確認・承認する区切りでまとめた。** 要件定義・変更要件定義・外部連携の事前確認・外部連携の詳細調査・設計・変更設計の 6 本を `isdd-spec` に、実装と実装後レビューの 2 本を `isdd-build` にまとめた（10 本 → 4 本）。小さな変更のつもりでも大きな変更になりうるので、基本の流れ（業務課題 → 要件 → 設計 → 実装 → 実装後レビュー）は変えず、スキルをまたぐ手間だけを減らした。`isdd-spec` は段階の案内役の SKILL.md と、段階ごとの手順（`spec-requirements.md`・`spec-external.md`・`spec-design.md`）からなり、既存の成果物から途中再開できる。`isdd-build` には「実装だけ」「実装後レビューだけ」の入口がある。
+- **外部連携を段階の境界で分けた。** 要件の段階では、ヒアリングを連携先ごとに 1 回にまとめ、接続テスト・スキーマ取得・仕様の調査・要件との突き合わせだけを行う（調査レポートと整合確認レポート、`.env.example`）。連携ライブラリの採否とモック方式は設計の段階でユーザーの承認を得て決め、設計 ID を振る。連携ライブラリ・モック・E2E のコードは `isdd-build` が作り、対応表に載せる。v2.0 では設計の前にコードを作り、ライブラリ選定（設計の判断）を要件の段階で決め、モック方式を要件 ID（`RQ-EX-USE-*`）で表していた。
+- **独立した質問はまとめて出す。** `hearing-rules.md` を「依存のある問いは 1 問ずつ、独立した問いは番号を付けて 1 回の応答でまとめて出す。どちらも選択肢の表と推奨を付ける」に変えた。開始ゲートの 2 問もまとめて出す。
+
+#### 変更
+
+- **設計 ID を短くした。** 形を `DS-[種類]-[要素名]` にし、要件の略称を末尾に付けない。要件との対応は設計書の第 11 章「要件と設計の対応表」だけに書き、各章の表の「対応要件ID」列をやめた。要件を差し替えても中身の変わらない設計要素の ID は変えず、対応表の行だけを変える。v2.0 の長い ID も有効。
+- `rq_ds_link_checker.py` は、対応を「要件と設計の対応表」の章の表だけから読み、設計 ID の名前からの推定をやめた。設計書のほかの章に現れる設計 ID が対応表に無い場合と、対応表の章が無い場合を問題として報告する。
+- `install.sh` が v2.0 系のスキル 8 本を `.agents/skills/` から消す。
+- eval を `evals/isdd-spec/`（15 場面）と `evals/isdd-build/`（9 場面）に移した。開始ゲートの問いをまとめて出すか、外部連携のヒアリングを業務課題の後に 1 回で行うか、外部連携の段階でコードを作らないか、設計 ID が短いかを採点に足した。
 
 ### v2.0.1
 

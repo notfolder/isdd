@@ -9,7 +9,7 @@ description: >
 license: CC-BY-4.0
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.0.1"
+  version: "v2.1.0"
 ---
 
 # isdd-setup — 対応表チェック導入スキル
@@ -87,5 +87,5 @@ metadata:
 
 完了を報告するときに、次のスキルを提案する。
 
-- これから実装する場合: `isdd-traceable-coding` で設計書にもとづく実装と対応表の作成を行う
+- これから実装する場合: `isdd-build` で設計書にもとづく実装と対応表の作成を行う
 - 既存コードを isdd 化している途中の場合: `isdd-reverse-engineering` の残りの手順に戻る

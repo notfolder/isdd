@@ -25,8 +25,8 @@ fi
 
 usage() {
     echo "usage: $0 [mock|real|local|claude] [skill-name ...]" >&2
-    echo "example: $0 real isdd-traceable-coding isdd-design" >&2
-    echo "         $0 local isdd-requirements  # LM Studio (http://127.0.0.1:1234) を使用" >&2
+    echo "example: $0 real isdd-build isdd-spec" >&2
+    echo "         $0 local isdd-spec  # LM Studio (http://127.0.0.1:1234) を使用" >&2
     echo "         $0 claude                  # Anthropic API (BYOK)。Haiku で実行し、失敗分だけ同じモデルで 1 回再試行（昇格はしない）" >&2
     echo "  環境変数: WAZA_LOCAL_LM_STUDIO_URL (デフォルト: http://127.0.0.1:1234/v1)" >&2
     echo "            WAZA_LOCAL_MODEL        (デフォルト: gemma-4-e4b-it-mlx)" >&2
