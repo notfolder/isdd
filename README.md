@@ -17,7 +17,7 @@ isdd は、AI 実装で起こりやすい次の問題を抑制することを目
 そのため、isdd では要件と設計を先に確定し、実装では設計 ID とコードの対応表（`docs/trace_map.md`）でトレーサビリティを維持します。
 対応表はチェッカースクリプトで機械的に検証し、スキルが起動していない時も git の pre-commit とエージェントのフックで同じチェックが走ります。
 さらに実装後は逆引き整合チェックを必須化し、要件・設計・対応表へ差分を還流して整合状態を保ちます。
-言語・フレームワーク・DB に既定値は持たず、要件定義で集めた技術制約と要件を根拠に、設計スキルが公式情報を調べたうえで候補を比較してユーザー承認を取ります。
+言語・フレームワーク・DB に既定値は持たず、要件定義で集めた技術制約と要件を根拠に、設計の段階（isdd-spec）が公式情報を調べたうえで候補を比較してユーザー承認を取ります。
 
 ## かんたんな使い方
 
@@ -107,7 +107,7 @@ graph TD
 | isdd-spec | インタビューで要件と設計を作る。新規は正本を、変更は変更要件定義書・変更設計書を作り、外部連携は実接続で確かめて要件と突き合わせる | docs/requirements.md・docs/detail_design.md（新規）、.history/[日付]-[タスク名]/change_requirements.md・change_detail_design.md・tasks.md、docs/active_change（変更）、external/[システム名]/docs/research.md・alignment_report.md・.env.example |
 | isdd-build | 設計どおりに実装して対応表を作り、実装後レビューで変更を正本へ反映し、要件・設計・対応表・コードの整合を確かめる | 実装ソース（外部連携ライブラリ・モック・E2E を含む）、docs/trace_map.md、正本（更新後）、未マッピング一覧 |
 | isdd-reverse-engineering | 既存コードから要件・設計を逆引きし、インタビューで補完して正本と対応表を確定する（初回 isdd 化） | docs/requirements.md、docs/detail_design.md、docs/trace_map.md |
-| isdd-setup | 対応表チェック（チェッカー複製・check.sh・pre-commit・AGENTS.md と CLAUDE.md の規則・実装完了チェックのプロファイル・エージェント自身のフック）をプロジェクトに導入する | scripts/isdd/（check.sh、completeness.json を含む）、.git/hooks/pre-commit、AGENTS.md、CLAUDE.md |
+| isdd-setup | 対応表チェックと依存チェック（チェッカー複製・check.sh・pre-commit・AGENTS.md と CLAUDE.md の規則・実装完了チェックのプロファイル・依存の規則の書き写し・エージェント自身のフック）をプロジェクトに導入する | scripts/isdd/（check.sh、completeness.json、dependencies.json を含む）、.git/hooks/pre-commit、AGENTS.md、CLAUDE.md |
 
 ---
 
@@ -163,9 +163,10 @@ graph LR
 | --- | --- | --- |
 | rq_integrity_checker.py | 要件定義書の RQ-* 内部整合性を検証（BK マッピング・フォーマット） | spec・逆引き。各スキルの同梱版を実行する |
 | rq_ds_link_checker.py | 要件 ID（RQ-*）と設計 ID（DS-*）の対応を、設計書の「要件と設計の対応表」の章だけから検証。問題があれば終了コード 1 | spec・build・逆引き。各スキルの同梱版を実行する |
-| trace_map_checker.py | 詳細設計書・対応表・コードの 3 者を突合し、壊れた参照（エラー）と未登録（警告）を検出 | isdd-setup がプロジェクトの `scripts/isdd/` に複製し、`check.sh` から実行する |
+| trace_map_checker.py | 詳細設計書・対応表・コードの 3 者を突合し、壊れた参照（エラー）と未登録（警告）を検出。第 7 章の「実現する設計 ID」と 8-2 の E2E シナリオ（`DS-TS` → テスト関数）も確かめる。粒度は `function` / `class` | isdd-setup がプロジェクトの `scripts/isdd/` に複製し、`check.sh` から実行する |
+| dependency_checker.py | 設計書第 7 章の依存の規則（`scripts/isdd/dependencies.json`）に反する import を検出（Python・TypeScript / JavaScript・Java・Go） | 同上。`check.sh` が対応表チェックに続けて実行する |
 | implementation_completeness_checker.py | E2E・README・docs/trace_map.md の存在を機械確認。docker compose と「初期ユーザー」は completeness.json に応じて要求 | 同上（`python3 scripts/isdd/implementation_completeness_checker.py .`） |
-| isdd_setup.py | コード用チェッカーを scripts/isdd/ に複製して版を VERSION に記録し、check.sh・pre-commit・completeness.json を生成し、AGENTS.md と CLAUDE.md に規則を追記 | isdd-setup に同梱 |
+| isdd_setup.py | コード用チェッカーを scripts/isdd/ に複製して版を VERSION に記録し、check.sh・pre-commit・completeness.json・dependencies.json（雛形）を生成し、AGENTS.md と CLAUDE.md に規則を追記 | isdd-setup に同梱 |
 
 要件・設計のチェッカーは各スキルの同梱版を、コードのチェッカーはプロジェクトの `scripts/isdd/` の複製（pre-commit と同じもの）を使う。`scripts/isdd/VERSION` がスキルの版と違えば、スキルが `isdd-setup` の再実行を案内する。
 
@@ -187,10 +188,12 @@ graph LR
     RQ[docs/requirements.md] -->|rq_ds_link_checker| DS[docs/detail_design.md]
     DS -->|設計要素が全部あるか| MAP[docs/trace_map.md]
     MAP -->|修飾名がコードに実在するか / 公開要素が全部載っているか| CODE[ソースコード]
+    DS -->|8-2 の E2E シナリオがテスト関数に結ばれているか| E2E[e2e/]
+    DS -->|第 7 章の依存の規則に反する import が無いか| CODE
 ```
 
 - コードには要件 ID も設計 ID も書かない。対応表の 1 行が「設計 ID ↔ ファイル::クラス.関数」を表す。
-- `trace_map_checker.py` は、壊れた参照（対応表が指す関数が無い、設計書に無い ID）をエラー、未登録（コードにあって対応表に無い）を警告として報告する。
+- `trace_map_checker.py` は、壊れた参照（対応表が指す関数が無い、設計書に無い ID）をエラー、未登録（コードにあって対応表に無い）を警告として報告する。前向き（要件が実装されたか）は `RQ-TS` → `DS-TS` → テスト関数の線で、後ろ向き（設計に無いコードが無いか）は対応表で、設計の構造（依存の向き）は `dependency_checker.py` で見る。
 - 強制は 3 層。`AGENTS.md` と `CLAUDE.md` の規則、エージェント自身が作る応答終了時のフック、git の pre-commit（エラーだけで止める）。
 - スキルを持たない人がコードを足しても止めない。そのずれは `isdd-build` の実装後レビューが取り込む。
 
@@ -439,6 +442,10 @@ bash evals/run-all.sh claude isdd-setup
 - `rq_ds_link_checker.py` は、対応を「要件と設計の対応表」の章の表だけから読み、設計 ID の名前からの推定をやめた。設計書のほかの章に現れる設計 ID が対応表に無い場合と、対応表の章が無い場合を問題として報告する。
 - `install.sh` が v2.0 系のスキル 8 本を `.agents/skills/` から消す。
 - eval を `evals/isdd-spec/`（15 場面）と `evals/isdd-build/`（9 場面）に移した。開始ゲートの問いをまとめて出すか、外部連携のヒアリングを業務課題の後に 1 回で行うか、外部連携の段階でコードを作らないか、設計 ID が短いかを採点に足した。
+- **追跡の見方を 3 つに分けた。** 前向き（要件が実装されたか）は要件のテスト用利用シナリオ → 設計書 8-2 の `DS-TS` → `e2e/` のテスト関数の線で見る（対応表に `DS-TS` の行を書けるようにし、`e2e` があるのに 8-2 の `DS-TS` が無ければ警告）。後ろ向き（設計に無いコードが無いか）は対応表で見る（粒度を設計書第 7 章で `function` / `class` から選べるようにし、`class` では公開関数の登録を求めない）。設計の構造は新しい `dependency_checker.py` で見る（第 7 章の「依存の規則」を `scripts/isdd/dependencies.json` に書き写し、`check.sh` が import を確かめる。層の越境や、連携ライブラリを通さない外部 API の呼び出しをエラーにする）。
+- `trace_map_checker.py` は、設計書第 7 章で `DS-MD` と同じ行に書いた「実現する設計 ID」（`DS-IF`・`DS-BT`・`DS-EV`・`DS-SC`）が対応表に無ければ警告する。外部連携ラッパーの `DS-IF` が未実装でも気づけなかった穴を塞いだ。
+- 設計の承認を 2 回にまとめた（技術選定 → E2E の実行手段・連携ライブラリ・モック方式・要件の除外を 1 回で）。第 5 章の SOLID 適合表をやめ、責務を 1 文で書く。逆引きでは KPI と経営効果を「不明（理由）」で閉じてよい。
+- 文言の矛盾を直した: 別の変更が `docs/active_change` にあれば isdd-spec の開始時に止まる、外部連携の既存ライブラリ調査は言語が未定なら設計の技術選定後に行う、isdd-reverse-engineering も `scripts/isdd/VERSION` を比べる、「設計スキル」「実装スキル」の総称を段階名に置換、など。
 
 ### v2.0.1
 

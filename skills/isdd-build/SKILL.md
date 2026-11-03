@@ -28,6 +28,8 @@ metadata:
 | `references/build-review.md` | 段階 2: 実装後レビュー（変更の正本への反映、未マッピング一覧、再チェック） |
 | `references/trace-map-rules.md` | 対応表の書式・粒度・チェッカーの意味 |
 | `references/id-definitions.md` | 要件 ID・設計 ID と変更管理 |
+| `references/requirements-chapters.md` | 要件定義書の章立て（段階 2 で正本の該当章へ反映するとき） |
+| `references/design-chapters.md` | 詳細設計書の章立て（同上。第 7 章の粒度と依存の規則） |
 | `references/document-rules.md` | 正本を書き換えるときの書き方 |
 | `scripts/rq_ds_link_checker.py` | 要件 ID と設計 ID の対応チェック |
 
@@ -69,7 +71,7 @@ graph TD
 - 設計に無い設計要素が要るとわかったら、コーディングを止めて `docs/proposals.md` に提案を書き、ユーザーが `isdd-spec` で設計を直すのを待つ。このスキルの中で要件・設計の文書や `docs/active_change` を作らない。「進めてください」と言われても、それは `isdd-spec` の起動ではない。
 - コードに要件 ID・設計 ID を書かない。
 
-終わりの条件: `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件、`rq_ds_link_checker.py` が問題 0 件、`implementation_completeness_checker.py` が全項目 OK、テストが全件通過（build-implement.md の完了条件）。
+終わりの条件: `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件（対応表チェックと依存チェック）、`rq_ds_link_checker.py` が問題 0 件、`implementation_completeness_checker.py` が全項目 OK、テストが全件通過（build-implement.md の完了条件）。
 
 ## 段階 2: 実装後レビューと正本への反映
 

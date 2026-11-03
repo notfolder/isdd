@@ -5,10 +5,11 @@ isdd_setup.py
 isdd の対応表チェックをプロジェクトに組み込むセットアップスクリプト（isdd-setup スキルが実行する）。
 
 行うこと:
-  1. isdd-setup スキルに同梱したコード用チェッカー（trace_map_checker.py、implementation_completeness_checker.py）を
+  1. isdd-setup スキルに同梱したコード用チェッカー（trace_map_checker.py、dependency_checker.py、implementation_completeness_checker.py）を
      scripts/isdd/ に複製し、スキルの版を scripts/isdd/VERSION に記録する（git 管理対象。再実行で上書き更新）。
      要件・設計のチェッカー（rq_*.py）は各スキルが同梱版を直接実行するので複製しない。旧版の複製があれば削除する
-  2. scripts/isdd/check.sh を生成する（対応表チェックの唯一の入口。エージェントのフックも pre-commit もこれを呼ぶ）
+  2. scripts/isdd/check.sh を生成する（対応表チェックと依存チェックの唯一の入口。エージェントのフックも pre-commit もこれを呼ぶ）。
+     scripts/isdd/dependencies.json（依存の規則。詳細設計書 第 7 章の書き写し）の雛形を、無いときだけ作る
   3. scripts/isdd/pre-commit を生成し、.git/hooks/pre-commit に組み込む（.git が無い場合は組み込みを省略して報告する）
   4. AGENTS.md と CLAUDE.md に isdd のトレーサビリティ規則を追記する（マーカーで囲み、再実行時は置き換える）
   5. scripts/isdd/completeness.json（実装完了チェックのプロファイル）を生成する。
@@ -21,9 +22,11 @@ isdd の対応表チェックをプロジェクトに組み込むセットアッ
 使用方法:
   python3 .agents/skills/isdd-setup/scripts/isdd_setup.py --src src [--src another_dir]
       [--runtime container|cli|server|desktop|library|unspecified] [--auth|--no-auth] [--external|--no-external]
-      [--e2e-dir e2e] [--design docs/detail_design.md] [--map docs/trace_map.md] [--active-change docs/active_change]
+      [--e2e-dir e2e] [--granularity function|class] [--design docs/detail_design.md] [--map docs/trace_map.md]
+      [--active-change docs/active_change]
 
   --runtime、--auth、--external は詳細設計書の第 1 章（実行形態）、第 6 章（認証の有無）、第 4 章（外部連携の有無）から読み取って渡す。
+  --granularity は対応表の粒度（第 7 章に書いてあればそれ、無ければ function）。--e2e-dir は対応表チェックのテストディレクトリにもなる。
 
 終了コード:
   0: 完了（省略した項目があっても報告済みなら 0）
@@ -42,8 +45,16 @@ RUNTIMES = ("container", "cli", "server", "desktop", "library", "unspecified")
 
 CHECKER_FILES = (
     "trace_map_checker.py",
+    "dependency_checker.py",
     "implementation_completeness_checker.py",
 )
+GRANULARITIES = ("function", "class")
+DEPENDENCIES_TEMPLATE = {
+    "_comment": "詳細設計書 第 7 章「依存の規則」の書き写し。isdd-setup が雛形を作り、以後は手で保つ（再実行でも上書きしない）。"
+                "from: 規則を当てるディレクトリ / deny: 依存してはいけない先（プロジェクト内のパス、または外部モジュール名）/ "
+                "allow: 依存してよいプロジェクト内のディレクトリ（書くと from 自身と allow 以外は違反）/ reason: 理由",
+    "rules": [],
+}
 # 以前の版が scripts/isdd/ に複製していたファイル。今は各スキルの同梱版を使うので削除する
 OBSOLETE_FILES = (
     "rq_ds_link_checker.py",
@@ -55,15 +66,16 @@ MARK_END = "<!-- isdd-setup:end -->"
 HOOK_MARK = "# isdd-setup pre-commit"
 
 
-def rules_block(check_cmd: str, map_path: str, design_path: str, active_change: str) -> str:
+def rules_block(check_cmd: str, map_path: str, design_path: str, active_change: str, granularity: str = "function") -> str:
     """AGENTS.md / CLAUDE.md に追記する規則ブロックを返す"""
+    unit = "クラス・ソースファイル（公開関数はクラスかファイルの登録で足りる）" if granularity == "class" else "クラス・公開関数・ソースファイル"
     return f"""{MARK_BEGIN}
 ## isdd トレーサビリティ規則（isdd-setup が管理する。手で編集しない）
 
 - 仕様とコードの対応は `{map_path}`（対応表）で管理する。コードに要件 ID や設計 ID を書かない。
-- クラス・公開関数・ソースファイルを追加、改名、削除したら、同じ作業の中で `{map_path}` の行を更新する。
-- コードを変更した作業の終わりに `{check_cmd}` を実行する。エラーが出たら直してから作業を終える。警告は報告に含める。
-- 設計要素を増やす必要があれば、コードを書く前に `{design_path}` を更新する。設計 ID の採番は設計スキルの責務で、実装中に ID を作らない。
+- {unit}を追加、改名、削除したら、同じ作業の中で `{map_path}` の行を更新する。E2E テストは `DS-TS-*` の行でテスト関数に結ぶ。
+- コードを変更した作業の終わりに `{check_cmd}` を実行する（対応表と、`scripts/isdd/dependencies.json` の依存の規則を確かめる）。エラーが出たら直してから作業を終える。警告は報告に含める。
+- 設計要素を増やす必要があれば、コードを書く前に `{design_path}` を更新する。設計 ID の採番は `isdd-spec` の責務で、実装中に ID を作らない。
 - `{active_change}` がある間は変更の実装中。そこに書かれた変更のディレクトリの変更要件定義書・変更設計書を正本に重ねて読む。正本への反映は実装後に `isdd-build` の実装後レビューが行う。
 {MARK_END}
 """
@@ -116,7 +128,9 @@ def main() -> int:
     parser.add_argument("--external", dest="external", action="store_true", default=False,
                         help="外部連携がある（E2E を mock モードで回す前提）")
     parser.add_argument("--no-external", dest="external", action="store_false", help="外部連携が無い")
-    parser.add_argument("--e2e-dir", default="e2e", help="E2E テストの置き場所")
+    parser.add_argument("--e2e-dir", default="e2e", help="E2E テストの置き場所（対応表チェックのテストディレクトリにもなる）")
+    parser.add_argument("--granularity", choices=GRANULARITIES, default="function",
+                        help="対応表の粒度。function（既定）は公開関数まで、class はファイルとクラスまで登録を求める")
     args = parser.parse_args()
 
     root = Path(args.project_root).resolve()
@@ -152,18 +166,33 @@ def main() -> int:
     check_sh = dest / "check.sh"
     check_sh.write_text(
         "#!/usr/bin/env bash\n"
-        "# isdd 対応表チェックの入口（isdd-setup が生成。再実行で上書き）\n"
+        "# isdd のコードチェックの入口（isdd-setup が生成。再実行で上書き）\n"
         "# 使い方: bash scripts/isdd/check.sh [--strict]\n"
-        "#   --strict を付けると警告も失敗扱いにする（実装スキルの完了条件用）\n"
-        f"#   {args.active_change} があれば、そこに書かれた変更の change_detail_design.md を正本に重ねて判定する\n"
+        "#   1. 対応表チェック（trace_map_checker.py）。--strict を付けると警告も失敗扱いにする（isdd-build の完了条件用）\n"
+        f"#      {args.active_change} があれば、そこに書かれた変更の change_detail_design.md を正本に重ねて判定する\n"
+        "#   2. 依存チェック（dependency_checker.py）。scripts/isdd/dependencies.json の規則に反する import をエラーにする\n"
         "set -u\n"
         'cd "$(dirname "$0")/../.."\n'
-        f'exec python3 scripts/isdd/trace_map_checker.py "{args.design}" "{args.map}" {src_dirs} '
-        f'--active-change "{args.active_change}" "$@"\n',
+        f'python3 scripts/isdd/trace_map_checker.py "{args.design}" "{args.map}" {src_dirs} '
+        f'--active-change "{args.active_change}" --tests "{args.e2e_dir}" --granularity "{args.granularity}" "$@"\n'
+        "trace_status=$?\n"
+        "echo\n"
+        f'python3 scripts/isdd/dependency_checker.py scripts/isdd/dependencies.json {src_dirs}\n'
+        "dep_status=$?\n"
+        "[ $trace_status -ne 0 ] && exit $trace_status\n"
+        "exit $dep_status\n",
         encoding="utf-8",
     )
     make_executable(check_sh)
-    report.append(f"生成: {check_sh}")
+    report.append(f"生成: {check_sh}（対応表の粒度 {args.granularity} / テスト {args.e2e_dir}）")
+
+    # 2-2. 依存の規則の雛形（設計書第 7 章の書き写しは isdd-setup スキルが行う。再実行で上書きしない）
+    deps_path = dest / "dependencies.json"
+    if deps_path.exists():
+        report.append(f"保持: {deps_path}（既にあるので上書きしない。詳細設計書 第 7 章の依存の規則と合っているか確かめる）")
+    else:
+        deps_path.write_text(json.dumps(DEPENDENCIES_TEMPLATE, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        report.append(f"生成: {deps_path}（規則は空。詳細設計書 第 7 章に依存の規則があれば書き写す）")
 
     # 3. pre-commit の生成と組み込み
     pre_commit = dest / "pre-commit"
@@ -201,7 +230,7 @@ def main() -> int:
         report.append("省略: .git が無いため pre-commit は組み込んでいない（git init 後に再実行する）")
 
     # 4. AGENTS.md / CLAUDE.md への規則追記
-    block = rules_block("bash scripts/isdd/check.sh", args.map, args.design, args.active_change)
+    block = rules_block("bash scripts/isdd/check.sh", args.map, args.design, args.active_change, args.granularity)
     for name in ("AGENTS.md", "CLAUDE.md"):
         report.append(upsert_block(root / name, block))
 
