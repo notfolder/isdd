@@ -1,7 +1,7 @@
 # 対応表（docs/trace_map.md）のルール
 
 設計 ID（`DS-*`）とソースコードの対応は、コードにコメントを書かず、対応表 `docs/trace_map.md` で管理する。
-要件 ID（`RQ-*`）との対応は設計 ID の末尾略称で表すため、対応表には書かない。
+要件 ID（`RQ-*`）との対応は設計書の「要件と設計の対応表」の章で持つため、対応表には書かない。
 
 ---
 
@@ -11,10 +11,10 @@ Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固
 
 | DS-ID | 修飾名 | 備考 |
 |---|---|---|
-| `DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD` | `src/hello.py` | モジュール |
-| `DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter` | クラス |
-| `DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE` | `src/hello.py::HelloWorldPrinter.get_hello_message` | メソッド |
-| `DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter.print_hello_world` | メソッド |
+| `DS-MD-HELLO-MODULE` | `src/hello.py` | モジュール |
+| `DS-CL-HELLO-WORLD-PRINTER` | `src/hello.py::HelloWorldPrinter` | クラス |
+| `DS-FN-GET-HELLO-MESSAGE` | `src/hello.py::HelloWorldPrinter.get_hello_message` | メソッド |
+| `DS-FN-PRINT-HELLO-WORLD` | `src/hello.py::HelloWorldPrinter.print_hello_world` | メソッド |
 
 - 1 行に 1 対応。同じ DS-ID が複数行に現れてよい（1 つの設計要素を複数の関数で実現する場合）。
 - 同じ修飾名が複数行に現れてよい（1 つの関数が複数の設計要素を実現する場合）。
@@ -34,34 +34,38 @@ Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固
 ## 載せる粒度
 
 - ソースファイル（`DS-MD-*`）、クラス（`DS-CL-*`）、公開関数とメソッド（`DS-FN-*`。API の入口なら `DS-IF-*`、バッチの入口なら `DS-BT-*` でもよい）。
-- 次の設計 ID は、対応表に載せなくてよい（チェッカーも未登録の警告を出さない）。ソースディレクトリの中のクラスや関数として実装した場合は、載せてよい。
-  - `DS-SC-*`（データモデル）: DB のテーブル定義やファイル形式は修飾名で表せないため。データクラスとして実装した場合は、そのクラスを載せてよい
-  - `DS-TS-*`（テスト）: テストファイルは対応表に載せないため
+- 粒度は設計書第 7 章で決め、`isdd-setup` の `--granularity` で `check.sh` に渡す。
+  - `function`（既定）: ファイル・クラス・公開関数・メソッドのすべてを載せる。
+  - `class`: ファイルとクラスを載せる。公開関数とメソッドは、設計書に `DS-FN-*` があるものだけ載せる（設計書にある `DS-FN` は粒度にかかわらず対応表に要る）。クラスかファイルが登録済みなら、載せていない公開関数は未登録の警告にならない。
+- E2E シナリオ（`DS-TS-*`）は、テストディレクトリ（`e2e`）のテスト関数に結ぶ。修飾名は `e2e/test_order.py::test_cancel_order` の形（テストファイルそのものでもよい）。テストファイルを指せるのは `DS-TS` の行だけで、`DS-TS` の行はテスト以外を指せない。モック（`external/[システム名]/mock/`）の `DS-TS` は載せない。
+- 設計書第 7 章の「実現する設計 ID」列に書いた設計 ID（`DS-IF`・`DS-BT`・`DS-EV`、データクラスの `DS-SC` など）は、そのファイルのクラスや関数として載せる。チェッカーは、この列の ID が対応表に無ければ警告する。
+- 次の設計 ID は、第 7 章の「実現する設計 ID」に書いていなければ、対応表に載せなくてよい（チェッカーも未登録の警告を出さない）。
+  - `DS-SC-*`（データモデル）: DB のテーブル定義やファイル形式は修飾名で表せないため。データクラスとして実装した場合は、第 7 章に書いて載せる
   - `DS-OP-*`（運用）: compose ファイル、設定ファイル、運用手順などはソースコードではないため
   - `DS-EV-*`（イベント）: イベントを処理するクラスや関数を `DS-CL-*`・`DS-FN-*` で載せる
 - アンダースコア始まりの内部関数と、`__init__` などのダンダーメソッドは載せない。
-- テストファイル（`test_*.py`、`*_test.py`、`*.spec.ts`、`*.test.ts`、`*_test.go`、`*Test.java`、`*Tests.cs` など）は載せない。
+- テストファイル（`test_*.py`、`*_test.py`、`*.spec.ts`、`*.test.ts`、`*_test.go`、`*Test.java`、`*Tests.cs` など）とテストディレクトリの中のファイルは、`DS-TS` の行でだけ載せる。
 
 ## チェッカー
 
 `trace_map_checker.py` が、詳細設計書・対応表・コードの 3 者を突き合わせる。
 
 ```bash
-python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src [--strict] [--active-change docs/active_change]
+python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src [--strict] [--active-change docs/active_change] [--tests e2e] [--granularity function|class]
 ```
 
-`scripts/isdd/check.sh` は `--active-change docs/active_change` を付けて呼ぶ。
+`scripts/isdd/check.sh` は `--active-change docs/active_change`、`--tests`（E2E のディレクトリ）、`--granularity`（第 7 章の粒度）を付けて呼び、続けて依存チェック（下の「依存の規則」）も実行する。
 
 ### 進行中の変更（変更フロー）
 
-- `isdd-change-design` は正本を書き換えず、変更のディレクトリ（`.history/[YYYYMMDD]-[タスク名]/`）を `docs/active_change` の 1 行目に書く。
-- `docs/active_change` があれば、チェッカーはそのディレクトリの `change_detail_design.md` を正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書の [削除] 行の ID」。出力の冒頭に「進行中の変更」の行が出る。
-- 実装後に `isdd-post-implementation-review` が変更を正本へ反映し、`docs/active_change` を消す。以後は正本だけで判定する。
+- `isdd-spec` は変更フローで正本を書き換えず、変更のディレクトリ（`.history/[YYYYMMDD]-[タスク名]/`）を `docs/active_change` の 1 行目に書く。
+- `docs/active_change` があれば、チェッカーはそのディレクトリの `change_detail_design.md` を正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書で削除する ID」。削除する ID は「[削除] の行にだけ現れる ID」で、要件との対応だけを差し替える要素（第 11 章で同じ ID を [削除] と [追加] の 2 行に書くもの）や、「変更なし（既存）」の行にもある ID は削除とみなさない。[追加] と [削除] が同じ行にあると判定できないので警告になる（行を分ける）。出力の冒頭に「進行中の変更」の行が出る。
+- 実装後に `isdd-build` の実装後レビューが変更を正本へ反映し、`docs/active_change` を消す。以後は正本だけで判定する。
 
 | 区分 | 内容 | 扱い |
 |---|---|---|
-| エラー | 対応表の DS-ID が設計書に無い。対応表の修飾名がコードに無い（改名・削除の見落とし）。`DS-MD-*` と修飾名の形が合わない | 終了コード 1。pre-commit で止まる |
-| 警告 | コードのファイル・クラス・公開関数が対応表に無い。設計書の `DS-MD-*` `DS-CL-*` `DS-FN-*` が対応表に無い（未実装の可能性）。進行中の変更で [削除] にした DS-ID が対応表に残っている | 既定では終了コード 0。`--strict` で終了コード 1 |
+| エラー | 対応表の DS-ID が設計書に無い。対応表の修飾名がコードに無い（改名・削除の見落とし）。`DS-MD-*` と修飾名の形が合わない。テストファイルを `DS-TS` 以外の行が指している | 終了コード 1。pre-commit で止まる |
+| 警告 | コードのファイル・クラス・公開関数が対応表に無い（粒度 `class` では公開関数を緩める）。設計書の `DS-MD-*` `DS-CL-*` `DS-FN-*` と、第 7 章の「実現する設計 ID」が対応表に無い（未実装の可能性）。テストディレクトリがあるのに 8-2 の `DS-TS-*` が対応表に無い（テストが無い可能性）。進行中の変更で [削除] にした DS-ID が対応表に残っている | 既定では終了コード 0。`--strict` で終了コード 1 |
 | 確認対象外 | 記号を抽出できない言語のファイルを指す `::名前` の行。ファイルの存在だけ確認する | 件数を表示するだけ。終了コードに影響しない |
 
 ### 言語ごとの確認の深さ
@@ -73,13 +77,32 @@ python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.m
 | C#、Ruby、PHP、Kotlin、Swift、Rust、C / C++、Scala、Dart、Vue、Svelte、シェルなど | ファイルの存在だけ | `::名前` の行は「確認対象外」として数え、エラーにも警告にもしない。未登録ファイルの警告は出る |
 | 上記以外の拡張子 | 何も確認しない | 対応表の行は「ファイルが見つかりません」のエラーになる。必要なら `trace_map_checker.py` の `FILE_ONLY_LANGS` に拡張子を足す |
 
-- 実装スキル（`isdd-traceable-coding`）の完了条件は `--strict` で合格すること（エラーも警告も 0 件）。
-- pre-commit はエラーだけで止める。スキルを使わずにコードを変えた人が関数を足しても止まらない。その抜けは `isdd-post-implementation-review` で対応表と設計書に取り込む。
+- `isdd-build` の実装の段階の完了条件は `--strict` で合格すること（エラーも警告も 0 件）。
+- pre-commit はエラーだけで止める。スキルを使わずにコードを変えた人が関数を足しても止まらない。その抜けは `isdd-build` の実装後レビューで対応表と設計書に取り込む。
+
+## 依存の規則（dependency_checker.py）
+
+設計書第 7 章の「依存の規則」を `scripts/isdd/dependencies.json` に書き写し、`check.sh` が `dependency_checker.py` で import を確かめる。対応表は「設計要素がコードにあるか」を見るが、設計の構造（層の越境、連携ライブラリを通さない外部呼び出し）は見ないので、その穴を埋める。
+
+```json
+{
+  "rules": [
+    {"from": "src", "deny": ["external/crm/src", "requests"], "reason": "外部 API は連携ライブラリを通して呼ぶ"},
+    {"from": "external/crm/src", "deny": ["src"], "reason": "連携ライブラリに業務ロジックを入れない"},
+    {"from": "src/ui", "allow": ["src/service"], "reason": "画面層は業務層だけに依存する"}
+  ]
+}
+```
+
+- `from`: 規則を当てるディレクトリ。`deny`: 依存してはいけない先（プロジェクト内のパス、または外部モジュール名。先頭一致）。`allow`: 依存してよいプロジェクト内のディレクトリ（書くと `from` 自身と `allow` 以外への依存は違反。外部モジュールは `deny` でだけ制限する）。
+- 違反はエラー（終了コード 1、pre-commit で止まる）。規則が空なら合格。
+- import を読める言語は Python（ast）、TypeScript / JavaScript、Java、Go。それ以外は確認対象外として数える。
+- `isdd-setup` は雛形（規則なし）を無いときだけ作り、再実行でも上書きしない。設計を変えて規則が変わったら、`isdd-build` が第 7 章と同じ内容に書き直す。
 
 ## 外部連携ライブラリの扱い
 
-- `isdd-external-research` が作る `external/[システム名]/src/` はプロジェクトのコードなので、`isdd-setup` の `--src` に含めて対応表に載せる（例: `--src src --src external/foo/src`）。
-- `external/[システム名]/mock/` と `e2e/` はテスト資材なので載せない。
+- `isdd-build` が作る外部連携ライブラリ `external/[システム名]/src/` はプロジェクトのコードなので、`isdd-setup` の `--src` に含めて対応表に載せる（例: `--src src --src external/foo/src`）。
+- `external/[システム名]/mock/` は載せない。`e2e/` は `DS-TS` の行でだけ載せる。
 
 ## 更新のタイミング
 

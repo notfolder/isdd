@@ -1,0 +1,6 @@
+{
+  "runtime": "cli",
+  "auth": false,
+  "external": false,
+  "e2e_dir": "e2e"
+}

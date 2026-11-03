@@ -1,0 +1,57 @@
+id: "isdd-requirements-gate-legacy-001"
+name: "開始ゲート（既存コードあり・isdd 運用なし）"
+description: "質問 2 で既存ソースコードがあり isdd で運用していないと答えたら、isdd-reverse-engineering を先に案内するかを検証する。"
+tags:
+  - "isdd"
+  - "requirements"
+  - "gate"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+    対象システム: Hello World出力システム
+  follow_up_prompts:
+    - "1. B（外部連携なし） 2. C（既存ソースコードあり、isdd運用なし）"
+  context:
+    task_type: "isdd-requirements-gate-legacy-001"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "requirements_not_created"
+    type: "file"
+    config:
+      must_not_exist:
+        - "docs/requirements.md"
+  - name: "routes_to_isdd_reverse_engineering"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。
+        エージェントは開始ゲートの 2 問の回答を受けた後、要件ヒアリングの本編（業務課題・機能・画面・非機能などの質問）に入らず、既存コードからの逆引き（isdd-reverse-engineering）を先に行うよう案内したか、逆引きを始めましたか。
+        条件を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。
+  - name: "gate_questions_batched"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションでエージェントが最初に出した応答を確認してください。開始ゲートの 2 問（外部連携の有無、既存ソースコードと isdd の運用）を、番号を付けて 1 回の応答でまとめて出していますか。
+        まとめて出している場合は set_waza_grade_pass を、1 問ずつ別の応答で出している場合は set_waza_grade_fail を呼び出してください。

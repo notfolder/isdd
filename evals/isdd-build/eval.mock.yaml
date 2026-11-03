@@ -1,0 +1,17 @@
+name: isdd-build
+skill: isdd-build
+version: "1.0"
+description: |
+  isdd-build（実装と実装後レビュー）の評価。
+  対応表の作成とチェック、設計に無い要素で止まること、チェッカーの版の食い違い、
+  変更フローの重ね読みでの実装、実装後レビュー（変更の正本への反映、未マッピング一覧、proposals.md の取り込み）を検証する。
+
+config:
+  executor: mock
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 900
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

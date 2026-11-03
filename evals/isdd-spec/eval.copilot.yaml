@@ -1,0 +1,17 @@
+name: isdd-spec
+skill: isdd-spec
+version: "1.0"
+description: |
+  isdd-spec（要件定義・外部連携・設計）の評価。
+  開始ゲート、質問の出し方、要件定義書と設計書の作成、外部連携の接続テストと要件整合、
+  変更フローの変更要件定義書・変更設計書と docs/active_change の登録、途中からの再開を検証する。
+
+config:
+  executor: copilot-sdk
+  model: auto
+  trials_per_task: 1
+  timeout_seconds: 900
+  parallel: false
+
+tasks:
+  - tasks/*.yaml

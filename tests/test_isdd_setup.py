@@ -69,6 +69,41 @@ class IsddSetupTest(TempDirMixin, unittest.TestCase):
         self.assertIn("echo mine", (self.tmp / ".git" / "hooks" / "pre-commit").read_text(encoding="utf-8"))
         self.assertIn("省略", out)
 
+    def test_dependency_rules_template_created_and_kept(self):
+        code, out = self.setup()
+        self.assertEqual(code, 0, out)
+        isdd = self.tmp / "scripts" / "isdd"
+        self.assertTrue((isdd / "dependency_checker.py").exists())
+        deps = isdd / "dependencies.json"
+        self.assertEqual(json.loads(deps.read_text(encoding="utf-8"))["rules"], [])
+        deps.write_text('{"rules": [{"from": "src", "deny": ["requests"]}]}', encoding="utf-8")
+        code, out = self.setup()
+        self.assertIn("保持", out)
+        self.assertIn("requests", deps.read_text(encoding="utf-8"))
+
+    def test_check_sh_runs_both_checkers_with_tests_and_granularity(self):
+        self.setup("--granularity", "class", "--e2e-dir", "tests_e2e")
+        check_sh = (self.tmp / "scripts" / "isdd" / "check.sh").read_text(encoding="utf-8")
+        self.assertIn('--tests "tests_e2e"', check_sh)
+        self.assertIn('--granularity "class"', check_sh)
+        self.assertIn("dependency_checker.py scripts/isdd/dependencies.json", check_sh)
+        agents = (self.tmp / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("dependencies.json", agents)
+        self.assertIn("公開関数はクラスかファイルの登録で足りる", agents)
+
+    def test_check_sh_fails_on_dependency_violation(self):
+        write(self.tmp, "docs/detail_design.md", "| DS-ID |\n|---|\n| `DS-MD-HELLO` |\n")
+        write(self.tmp, "docs/trace_map.md", "| DS-ID | 修飾名 | 備考 |\n|---|---|---|\n| `DS-MD-HELLO` | `src/hello.py` | |\n")
+        write(self.tmp, "src/hello.py", "import requests\n")
+        self.setup("--granularity", "class")
+        (self.tmp / "scripts" / "isdd" / "dependencies.json").write_text('{"rules": [{"from": "src", "deny": ["requests"]}]}', encoding="utf-8")
+        proc = subprocess.run(["bash", "scripts/isdd/check.sh"], cwd=self.tmp, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+        self.assertIn("違反 1 件", proc.stdout)
+        (self.tmp / "scripts" / "isdd" / "dependencies.json").write_text('{"rules": []}', encoding="utf-8")
+        proc = subprocess.run(["bash", "scripts/isdd/check.sh", "--strict"], cwd=self.tmp, capture_output=True, text=True)
+        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

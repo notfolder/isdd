@@ -1,21 +1,21 @@
 # isdd tasks.md 作成ルール
 
-詳細設計スキル（isdd-design、isdd-change-design）が作る `tasks.md` のルール。実装スキル（isdd-traceable-coding）はこの tasks.md を上から順に実行する。
+isdd-spec の設計の段階が作る `tasks.md` のルール。isdd-build はこの tasks.md を上から順に実行する。
 
 ---
 
 ## tasks.md の配置先
 
-- isdd-design：`docs/detail_design.md` 保存後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
-- isdd-change-design：`change_detail_design.md` の保存と進行中の変更の登録（`docs/active_change`）の後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
+- 新規フロー：`docs/detail_design.md` 保存後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
+- 変更フロー：`change_detail_design.md` の保存と進行中の変更の登録（`docs/active_change`）の後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
 
 ---
 
 ## 必須記載項目
 
 - すべての実装タスクを書く
-- 各タスクに、実装する設計 ID を書く。実装スキルが対応表（`docs/trace_map.md`）に登録する行の手がかりになり、登録漏れを防ぐため
-- 各タスクに完了条件と、それを確かめる検証の手順を書く。完了条件が無いと、実装スキルが完了を判断できないため
+- 各タスクに、実装する設計 ID を書く。isdd-build が対応表（`docs/trace_map.md`）に登録する行の手がかりになり、登録漏れを防ぐため
+- 各タスクに完了条件と、それを確かめる検証の手順を書く。完了条件が無いと、isdd-build が完了を判断できないため
 - 最後に、すべての変更点を実装したかを確認するタスクを置く
 
 ### 実装開始前の必須固定タスク
@@ -23,14 +23,14 @@
 次のタスクを tasks.md の先頭に置く。
 
 0. **isdd-setup 導入確認タスク**
-   - `scripts/isdd/check.sh` が存在しなければ `isdd-setup` スキルを実行して対応表チェックを導入する。導入時は詳細設計書の実行形態・認証の有無・外部連携の有無を `isdd-setup` に渡す
+   - `scripts/isdd/check.sh` が存在しなければ `isdd-setup` スキルを実行して対応表チェックを導入する。導入時は詳細設計書の実行形態・認証の有無・外部連携の有無・対応表の粒度（第 7 章）を `isdd-setup` に渡し、第 7 章の依存の規則を `scripts/isdd/dependencies.json` に書き写す
    - 完了条件: `bash scripts/isdd/check.sh` が実行でき、`scripts/isdd/completeness.json` の実行形態・認証・外部連携が詳細設計書と一致していること
 
-isdd-change-design のみ、続けて次を含める。
+変更フローのみ、続けて次を含める。
 
 0-2. **進行中の変更の登録確認タスク**
-   - `docs/active_change` の 1 行目が、この tasks.md のある変更のディレクトリを指していることを確認する。正本（`docs/requirements.md`・`docs/detail_design.md`）には変更を反映しない。反映は実装後に `isdd-post-implementation-review` が行う
-   - 完了条件: `bash scripts/isdd/check.sh` の出力に「進行中の変更」の行があり、`rq_ds_link_checker.py [変更のディレクトリ]/change_requirements.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md`（isdd-traceable-coding に同梱）が合格すること。登録が無ければ実装を始めず `isdd-change-design` に戻る
+   - `docs/active_change` の 1 行目が、この tasks.md のある変更のディレクトリを指していることを確認する。正本（`docs/requirements.md`・`docs/detail_design.md`）には変更を反映しない。反映は実装後に `isdd-build` の実装後レビューが行う
+   - 完了条件: `bash scripts/isdd/check.sh` の出力に「進行中の変更」の行があり、`rq_ds_link_checker.py [変更のディレクトリ]/change_requirements.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md`（isdd-build に同梱）が合格すること。登録が無ければ実装を始めず `isdd-spec` に戻る
 
 ### 実装完了確認の必須固定タスク
 
@@ -51,6 +51,7 @@ isdd-change-design のみ、続けて次を含める。
 
 4. **E2E テスト全件通過タスク**
    - `e2e/` 配下のテストを全件実行し、全件通過を確認する。外部連携がある場合は mock モードで実行する
+   - 詳細設計書 8-2 の各 `DS-TS-*` を、対応表の `DS-TS` の行でテスト関数（`e2e/...::関数名`）に結ぶ
    - 実行コマンドは詳細設計書 8-4 に書いたものを使う
    - 完了条件: テスト結果に FAIL が 0 件であること。失敗した場合は修正と再実行を繰り返し全件通過まで継続する
 

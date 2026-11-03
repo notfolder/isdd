@@ -8,7 +8,7 @@ eval_metadata.json を読むため、このスクリプトで事前生成する�
 
 Usage:
     python3 tools/gen_eval_metadata.py
-    python3 tools/gen_eval_metadata.py --skill isdd-requirements
+    python3 tools/gen_eval_metadata.py --skill isdd-spec
     python3 tools/gen_eval_metadata.py --iteration 2
 """
 

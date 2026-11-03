@@ -1,0 +1,114 @@
+{
+  "skill_name": "isdd-build",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "isdd-buildを実行してください。\nsrc/hello.py は設計書どおりに実装済みです。対応表の作成とチェックを行ってください。",
+      "expected_output": "docs/trace_map.md に設計IDと src/hello.py のクラス・メソッドの対応が記録され、コードに ID コメントが無く、ロジックが保持されること",
+      "files": [
+        "evals/isdd-build/fixtures/traceable/docs/requirements.md",
+        "evals/isdd-build/fixtures/traceable/docs/detail_design.md",
+        "evals/isdd-build/fixtures/traceable/src/hello.py"
+      ],
+      "expectations": [
+        "docs/trace_map.md が作成され、DS-ID と修飾名の列を持つ表があること",
+        "対応表に DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD と src/hello.py の行があること",
+        "対応表に DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD と src/hello.py::HelloWorldPrinter の行があること",
+        "対応表に DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE と src/hello.py::HelloWorldPrinter.get_hello_message の行があること",
+        "対応表に DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD と src/hello.py::HelloWorldPrinter.print_hello_world の行があること",
+        "scripts/isdd/check.sh が存在すること（isdd-setup が実行されていること）",
+        "src/hello.py に 要件ID・設計ID・RQ-・DS- を含むコメントが無いこと",
+        "src/hello.py のロジックが保持されていること（class HelloWorldPrinter、get_hello_message、print_hello_world、return 'Hello, World!' が存在すること）",
+        "scripts/isdd/check.sh または trace_map_checker.py が bash ツールで実行されること"
+      ],
+      "eval_name": "traceable-coding-hello-world-trace-map"
+    },
+    {
+      "id": 2,
+      "prompt": "isdd-buildを実行してください。\n実装差分は case1-minimum/src/hello.py の内容を確認してください。\n要件定義書は case1-minimum/docs/requirements.md、詳細設計書は case1-minimum/docs/detail_design.md を参照してください。",
+      "expected_output": "整合性チェッカー実行・未整合ゼロの完了報告",
+      "files": [
+        "evals/isdd-build/fixtures/case1-minimum/docs/requirements.md",
+        "evals/isdd-build/fixtures/case1-minimum/docs/detail_design.md",
+        "evals/isdd-build/fixtures/case1-minimum/src/hello.py"
+      ],
+      "expectations": [
+        "整合性チェッカースクリプト（rq_ds_link_checker.py または rq_integrity_checker.py）が bash ツールで実行されること",
+        "最終報告に「未整合ゼロ」または「不整合なし」または「整合性に問題なし」という趣旨の完了報告が含まれること"
+      ],
+      "eval_name": "post-implementation-review-pir-minimum"
+    },
+    {
+      "id": 3,
+      "prompt": "isdd-buildを実行してください。\n実装差分は case2-proposals/src/hello.py の内容を確認してください。\n要件定義書は case2-proposals/docs/requirements.md、詳細設計書は case2-proposals/docs/detail_design.md を参照してください。\nproposals は case2-proposals/docs/proposals.md にあります。\n\nヒアリングへの回答は以下の通りです。\nインタビューが必要になった場合はこの回答を使用してください。\n\n- PROP-001 について: 要件定義書への追記は不要です。詳細設計書の記述で十分と判断してください。",
+      "expected_output": "proposals.mdを処理（「追記不要」確定）しファイルを削除",
+      "files": [
+        "evals/isdd-build/fixtures/case2-proposals/docs/requirements.md",
+        "evals/isdd-build/fixtures/case2-proposals/docs/detail_design.md",
+        "evals/isdd-build/fixtures/case2-proposals/docs/proposals.md",
+        "evals/isdd-build/fixtures/case2-proposals/src/hello.py"
+      ],
+      "expectations": [
+        "case2-proposals/docs/proposals.md が削除されること（処理完了後に存在しないこと）",
+        "エージェントが proposals.md の内容を読み込んで処理（正本への反映または「追記不要」の確定）を実施したこと"
+      ],
+      "eval_name": "post-implementation-review-pir-proposals"
+    },
+    {
+      "id": 4,
+      "prompt": "isdd-buildを実行してください。\n変更要件定義書は case3-change-req/.history/20260508-add-timestamp-to-hello-world/change_requirements.md にあります。\n実装差分は case3-change-req/src/hello.py の内容を確認してください。\n要件定義書は case3-change-req/docs/requirements.md、詳細設計書は case3-change-req/docs/detail_design.md を参照してください。",
+      "expected_output": "変更要件と整合するようrequirements.md・detail_design.mdが正本更新される",
+      "files": [
+        "evals/isdd-build/fixtures/case3-change-req/docs/requirements.md",
+        "evals/isdd-build/fixtures/case3-change-req/docs/detail_design.md",
+        "evals/isdd-build/fixtures/case3-change-req/.history/20260508-add-timestamp-to-hello-world/change_requirements.md",
+        "evals/isdd-build/fixtures/case3-change-req/src/hello.py"
+      ],
+      "expectations": [
+        "case3-change-req/docs/requirements.md に時刻表示関連のID（RQ-FT-GET-CURRENT-TIME または RQ-FT-BUILD-TIMESTAMPED-MESSAGE または RQ-FT-PRINT-TIMESTAMPED-OUTPUT）が追記されること",
+        "case3-change-req/docs/detail_design.md に時刻表示関連のDS-* IDが追記されること",
+        "change_requirements.md の要求意図（時刻表示追加）と正本更新結果が矛盾していないこと"
+      ],
+      "eval_name": "post-implementation-review-pir-change-req"
+    },
+    {
+      "id": 5,
+      "prompt": "isdd-buildを実行してください。\n実装差分は case4-unmapped/src/hello.py の内容を確認してください。\n要件定義書は case4-unmapped/docs/requirements.md、詳細設計書は case4-unmapped/docs/detail_design.md を参照してください。\n\nヒアリングへの回答は以下の通りです。\nインタビューが必要になった場合はこの回答を使用してください。\n\n- get_hello_message は仕様として必要なメソッドです。要件定義書に追加してください。\n- 機能名: 表示文字列取得\n- 対応業務課題ID: RQ-BK-ENV-VERIFICATION-UNGOVERNED\n- この機能が無いと何が困るか: 出力する文字列を生成できず検証が行えない",
+      "expected_output": "未マッピング検出→ヒアリング実施→RQ-FT-GET-HELLO-MESSAGEがrequirements.mdに追加",
+      "files": [
+        "evals/isdd-build/fixtures/case4-unmapped/docs/requirements.md",
+        "evals/isdd-build/fixtures/case4-unmapped/docs/detail_design.md",
+        "evals/isdd-build/fixtures/case4-unmapped/src/hello.py"
+      ],
+      "expectations": [
+        "case4-unmapped/docs/requirements.md に RQ-FT-GET-HELLO-MESSAGE が追加されること",
+        "エージェントが未マッピング一覧を提示してユーザーへのヒアリングを実施したこと"
+      ],
+      "eval_name": "post-implementation-review-pir-unmapped"
+    },
+    {
+      "id": 6,
+      "prompt": "isdd-buildを実行してください。\n変更フローの変更設計が終わったところです。変更設計どおりに src を直し（src/hello.py を src/greeting.py と src/main.py に分けます）、対応表を更新してください。\n今回は実装だけを行い、実装後レビュー（正本への反映）はまだ行わないでください。",
+      "expected_output": "対応だけを差し替えた設計 ID と、別のファイルへ移したクラスの対応表の行を消さずに、src/greeting.py と src/main.py を作って src/hello.py を消し、check.sh --strict（進行中の変更・E2E のディレクトリ・依存の規則を含む）が合格すること",
+      "files": [
+        "evals/isdd-build/fixtures/change-flow-remap/docs/requirements.md",
+        "evals/isdd-build/fixtures/change-flow-remap/docs/detail_design.md",
+        "evals/isdd-build/fixtures/change-flow-remap/docs/trace_map.md",
+        "evals/isdd-build/fixtures/change-flow-remap/docs/active_change",
+        "evals/isdd-build/fixtures/change-flow-remap/.history/20260509-split-entry-module/change_requirements.md",
+        "evals/isdd-build/fixtures/change-flow-remap/.history/20260509-split-entry-module/change_detail_design.md",
+        "evals/isdd-build/fixtures/change-flow-remap/src/hello.py",
+        "evals/isdd-build/fixtures/change-flow-remap/e2e/test_hello_e2e.py",
+        "evals/isdd-build/fixtures/change-flow-remap/scripts/isdd/check.sh",
+        "evals/isdd-build/fixtures/change-flow-remap/scripts/isdd/dependencies.json"
+      ],
+      "expectations": [
+        "src/hello.py が消え、src/greeting.py に HelloWorldPrinter、src/main.py に main があること",
+        "対応表に DS-MD-GREETING-MODULE・DS-MD-MAIN-MODULE・DS-FN-MAIN-ENTRY と、残る DS-FN-GET-HELLO-MESSAGE・DS-CL の行があり、src/hello.py の行が無いこと",
+        "bash scripts/isdd/check.sh --strict が合格すること（対応だけ差し替えた ID と移したクラスを削除扱いにしない）",
+        "docs/active_change と正本・変更設計書が書き換えられていないこと"
+      ],
+      "eval_name": "change-flow-remap"
+    }
+  ]
+}
