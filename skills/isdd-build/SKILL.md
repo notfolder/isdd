@@ -31,6 +31,7 @@ metadata:
 | `references/requirements-chapters.md` | 要件定義書の章立て（段階 2 で正本の該当章へ反映するとき） |
 | `references/design-chapters.md` | 詳細設計書の章立て（同上。第 7 章の粒度と依存の規則） |
 | `references/document-rules.md` | 正本を書き換えるときの書き方 |
+| `scripts/rq_integrity_checker.py` | 要件 ID の整合チェック（段階 2 で正本の要件定義書にかける） |
 | `scripts/rq_ds_link_checker.py` | 要件 ID と設計 ID の対応チェック |
 
 対応表チェックと実装完了チェックは、`isdd-setup` がプロジェクトに入れた `scripts/isdd/` のものを使う（pre-commit と同じものを動かすため）。

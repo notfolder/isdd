@@ -39,6 +39,7 @@ inputs:
     - path: .agents/skills/isdd-build/references/requirements-chapters.md
     - path: .agents/skills/isdd-build/references/design-chapters.md
     - path: .agents/skills/isdd-build/references/trace-map-rules.md
+    - path: .agents/skills/isdd-build/scripts/rq_integrity_checker.py
     - path: .agents/skills/isdd-build/scripts/rq_ds_link_checker.py
     - path: .agents/skills/isdd-setup/SKILL.md
     - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py

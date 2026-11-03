@@ -25,7 +25,9 @@ Trace Map Checker Script
 進行中の変更（変更フロー）:
   --active-change に渡したファイル（既定の運用では docs/active_change）があれば、その 1 行目を
   変更のディレクトリ（.history/[YYYYMMDD]-[タスク名]）とみなし、そこにある change_detail_design.md を
-  正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書の [削除] 行の ID」。
+  正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書で削除する ID」。
+  削除する ID は「[削除] の行にだけ現れる ID」（要件との対応だけを差し替える要素は、第 11 章で同じ ID が
+  [削除] と [追加] の両方の行に現れるので、削除とみなさない。[追加] と [削除] が同じ行にある行は警告にする）。
   正本への反映は実装後に isdd-build の実装後レビューが行い、反映が終わるとポインタファイルを消す。
   ポインタファイルが無ければ、正本だけで判定する。
 
@@ -277,6 +279,8 @@ class DesignIds:
         self.code_realized: Set[str] = set()
         # 8-2「E2E テストのシナリオ」の節にある DS-TS
         self.e2e_scenarios: Set[str] = set()
+        # 読み取り時の警告（変更設計書の書き方の問題）
+        self.parse_warnings: List[str] = []
 
     def merge(self, other: 'DesignIds') -> None:
         self.ids |= other.ids
@@ -311,21 +315,43 @@ def scan_design_lines(lines: List[str]) -> DesignIds:
 
 
 def parse_design(design_path: Path) -> DesignIds:
-    """詳細設計書から有効な設計 ID を抽出する（[削除] 行は除外）"""
-    lines = [ln for ln in design_path.read_text(encoding='utf-8').splitlines() if '[削除]' not in ln]
-    return scan_design_lines(lines)
+    """正本の詳細設計書から設計 ID を抽出する。
+
+    正本には [追加] [削除] の区分を書かない（isdd-build の実装後レビューが反映時に消す）ので、行を外さずに読む。
+    正本の行に「[削除]」の文字があっても（機能名などの内容）、その行の ID は有効とみなす。
+    """
+    return scan_design_lines(design_path.read_text(encoding='utf-8').splitlines())
 
 
 def parse_change_design(change_path: Path) -> Tuple[DesignIds, Set[str]]:
-    """変更設計書から (追加・参照する設計 ID, [削除] 行の DS-ID) を抽出する"""
+    """変更設計書から (追加・参照する設計 ID, 削除する DS-ID) を抽出する。
+
+    削除する DS-ID は「[削除] の行にだけ現れる ID」。要件との対応だけを差し替える設計要素は、
+    第 11 章に旧い対応の行を [削除]、新しい対応の行を [追加] で書くので、同じ ID が両方の行に現れる。
+    ファイルを消してクラスを別のファイルへ移す場合も、第 7 章の旧い行が [削除]、新しい行が [追加] になる。
+    [削除] 以外の行（[追加] の行、「変更なし（既存）」の行）に現れる ID はコードに残るので、削除とみなさない。
+    [追加] と [削除] が同じ行にある行は判定できないので、有効な行として扱い、警告を返す。
+    """
     active: List[str] = []
-    deleted: Set[str] = set()
-    for line in change_path.read_text(encoding='utf-8').splitlines():
-        if '[削除]' in line:
-            deleted |= {m for m in DS_PATTERN.findall(line) if _is_valid_ds(m)}
+    on_deleted: Set[str] = set()
+    on_active: Set[str] = set()
+    warnings: List[str] = []
+    for lineno, line in enumerate(change_path.read_text(encoding='utf-8').splitlines(), 1):
+        ids = {m for m in DS_PATTERN.findall(line) if _is_valid_ds(m)}
+        if '[削除]' in line and '[追加]' in line:
+            if ids:
+                warnings.append(f"変更設計書 {lineno} 行目: [追加] と [削除] が同じ行にあるため、削除する ID を判定できません"
+                                f"（旧い行を [削除]、新しい行を [追加] に分ける）: {', '.join(sorted(ids))}")
+            active.append(line)
+            on_active |= ids
+        elif '[削除]' in line:
+            on_deleted |= ids
         else:
             active.append(line)
-    return scan_design_lines(active), deleted
+            on_active |= ids
+    design = scan_design_lines(active)
+    design.parse_warnings = warnings
+    return design, on_deleted - on_active
 
 
 def resolve_active_change(pointer: Optional[Path]) -> Optional[Path]:
@@ -412,6 +438,7 @@ class TraceMapChecker:
                                    "（ポインタファイルの 1 行目に変更のディレクトリを書く。変更が終わっていればポインタファイルを消す）")
                 return
             added, deleted_ids = parse_change_design(self.active_change)
+            self.warnings.extend(added.parse_warnings)
             design.merge(added)
             design.remove(deleted_ids)
         design_ids = design.ids

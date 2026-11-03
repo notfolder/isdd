@@ -79,9 +79,20 @@ class RqDsLinkCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertIn("未定義参照", out)
         self.assertIn("RQ-FT-GHOST", out)
 
-    def test_deleted_lines_are_ignored(self):
-        design = DESIGN + "| `DS-FN-OLD-FT-OLD` | `RQ-FT-OLD` | [削除] |\n"
-        code, out = self.run_checker(REQ, design)
+    def test_deleted_lines_are_ignored_in_change_documents(self):
+        # [追加] を含む変更設計書では [削除] の行を読まない。[追加] が無い正本では「[削除]」の文字があっても行を読む
+        change_design = DESIGN.replace("| `RQ-FT-PRINT-HELLO` |", "| `RQ-FT-PRINT-HELLO` [追加] |", 1) + \
+            "| `DS-FN-OLD-FT-OLD` | `RQ-FT-OLD` | [削除] |\n"
+        code, out = self.run_checker(REQ, change_design)
+        self.assertEqual(code, 0, out)
+        canonical = DESIGN + "| `DS-FN-OLD-FT-OLD` | `RQ-FT-OLD` | [削除] |\n"
+        code, out = self.run_checker(REQ, canonical)
+        self.assertEqual(code, 1, out)
+        self.assertIn("RQ-FT-OLD", out)
+
+    def test_mixed_tag_line_is_read_as_active(self):
+        change_design = DESIGN.replace("| `RQ-FT-PRINT-HELLO` |", "| `RQ-FT-PRINT-HELLO` [削除] 旧 / [追加] 新 |", 1)
+        code, out = self.run_checker(REQ, change_design)
         self.assertEqual(code, 0, out)
 
     def test_base_requirements_resolve_existing_references(self):

@@ -34,6 +34,7 @@
         "document-rules.md"
       ],
       "scripts": [
+        "rq_integrity_checker.py",
         "rq_ds_link_checker.py"
       ]
     },

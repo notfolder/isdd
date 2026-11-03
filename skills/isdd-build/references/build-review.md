@@ -68,13 +68,13 @@
 7. 未マッピングを 1 件ずつユーザーに聞き、「削除」「修正」「分割」「統合」「追加」のどれにするかを決める。
 8. 決めた内容を `docs/requirements.md` に反映する。反映後は手順 5 と同じく全章を通読し、旧仕様を前提にした本文を書き換える。
 9. 更新した要件 ID を設計書へ伝え、設計を直す。新しい設計 ID に対応するコードを `docs/trace_map.md` に登録する。
-10. `rq_ds_link_checker.py` と `bash scripts/isdd/check.sh --strict` をもう一度実行し、出力で未整合ゼロ（エラー 0 件・警告 0 件）を確かめる。変更フローでは `docs/active_change` を消した後に実行し、出力に「進行中の変更」の行が無い（正本だけで判定した）ことも確かめる。未整合が残れば手順 6 に戻る。
+10. `python3 .agents/skills/isdd-build/scripts/rq_integrity_checker.py docs/requirements.md`、`rq_ds_link_checker.py` と `bash scripts/isdd/check.sh --strict` をもう一度実行し、出力で未整合ゼロ（エラー 0 件・警告 0 件）を確かめる。正本の要件定義書に整合チェックをかけるのは、変更で要件をすべて消した業務課題（対応する要件が無い `RQ-BK`）が変更要件定義書だけでは分からないため。変更フローでは `docs/active_change` を消した後に実行し、出力に「進行中の変更」の行が無い（正本だけで判定した）ことも確かめる。未整合が残れば手順 6 に戻る。
 11. `docs/proposals.md` があれば削除する。
 
 
 ## 完了条件
 
-- `rq_ds_link_checker.py` と `bash scripts/isdd/check.sh --strict` の実行ログを応答に載せ、未整合がゼロ（対応表のエラー 0 件・警告 0 件を含む）
+- `rq_integrity_checker.py`（正本の要件定義書）、`rq_ds_link_checker.py` と `bash scripts/isdd/check.sh --strict` の実行ログを応答に載せ、未整合がゼロ（対応表のエラー 0 件・警告 0 件を含む）
 - Markdown の見出し `### 未マッピング一覧` と、手順 6 の 6 列（列名は省略しない）の表を応答に載せた（該当なしの場合も）
 - 要件の更新が必要だった場合、1 件ずつ聞き直して反映し、設計 ID と対応表に伝えた
 - `docs/proposals.md` が無い

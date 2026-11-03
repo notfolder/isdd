@@ -16,6 +16,7 @@
 
 ## スキルの設計上の決まり
 
+- **チェッカーのテストは文書の規則から書く。`shared/references/` の規則を足したり変えたりしたら、`tests/README.md` の対応表に行を足してテストを書く**（2026-11-03。規則だけ変えてチェッカーの読み方を確かめなかった見逃しがあったため）。
 - **CI は持たない。チェッカーは標準ライブラリだけで Python 3.9 以上に対応させ、変更したら `bash tools/test_pythons.sh` で手元の複数の版の単体テストを通す**（2026-11-03）。
 - **共通ファイルの正本は `shared/`。`skills/<スキル>/references/` と `scripts/` は `python3 tools/build_skills.py` が作る複製なので手で編集しない。複製もコミットする**（2026-10-18）。`gh skill publish` と `install.sh` が同じ中身を配るため。
 - **コードに ID を書かない。設計 ID とコードの対応は `docs/trace_map.md` で管理し、`scripts/isdd/check.sh` で検証する**（2026-10-17）。

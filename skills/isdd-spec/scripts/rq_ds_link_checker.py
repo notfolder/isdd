@@ -63,6 +63,21 @@ MAPPING_HEADING = '要件と設計の対応表'
 EXCLUSION_HEADING = '除外要件'
 
 
+def _split_deleted_lines(content: str):
+    """(有効な行, [削除] の行) に分ける。
+
+    [追加] を含む文書を変更文書とみなし、[削除] だけを含む行を削除済みとして外す。[追加] と [削除] が同じ行にある行は
+    判定できないので有効な行として残す（isdd-build の対応表チェッカーと同じ扱い）。
+    [追加] が無い文書は正本なので、「[削除]」の文字があっても内容として読み、行を外さない。
+    """
+    lines = content.splitlines()
+    if not any('[追加]' in line for line in lines):
+        return lines, []
+    active = [line for line in lines if '[削除]' not in line or '[追加]' in line]
+    deleted = [line for line in lines if '[削除]' in line and '[追加]' not in line]
+    return active, deleted
+
+
 def _is_valid_id(id_str: str) -> bool:
     """ヘッダーラベル・短すぎるID・業務コンテキストIDを除外する"""
     # テーブルヘッダー列ラベル除外
@@ -106,16 +121,12 @@ class RQDSChecker:
         try:
             with open(self.rq_file, 'r', encoding='utf-8') as f:
                 content = f.read()
-            # [削除]行は変更設計書における削除済み要件のため、マッピング対象から除外する
-            active_content = '\n'.join(
-                line for line in content.splitlines() if '[削除]' not in line
-            )
-            self.rq_ids = self.extract_ids(active_content, RQ_PATTERN)
+            # 変更要件定義書（[追加] を含む文書）では [削除] 行を削除済み要件としてマッピング対象から除外する。
+            # 正本には区分を書かないので、正本の行に「[削除]」の文字があっても内容として読む
+            active_lines, deleted_lines = _split_deleted_lines(content)
+            self.rq_ids = self.extract_ids('\n'.join(active_lines), RQ_PATTERN)
             # [削除]行のRQ-IDは、設計書が削除した要件に触れても未定義参照にしないために別途保持する
-            deleted_content = '\n'.join(
-                line for line in content.splitlines() if '[削除]' in line
-            )
-            self.deleted_rq_ids = self.extract_ids(deleted_content, RQ_PATTERN)
+            self.deleted_rq_ids = self.extract_ids('\n'.join(deleted_lines), RQ_PATTERN)
             if not self.rq_ids:
                 self.issues.append("警告: requirements.md から RQ-* ID が検出されませんでした")
                 return False
@@ -133,8 +144,8 @@ class RQDSChecker:
             with open(self.ds_file, 'r', encoding='utf-8') as f:
                 content = f.read()
 
-            # [削除]行は変更設計書における削除済みエントリのため、ID抽出・マッピング対象から除外する
-            active_lines = [line for line in content.splitlines() if '[削除]' not in line]
+            # 変更設計書（[追加] を含む文書）では [削除] 行を削除済みエントリとして ID 抽出・マッピング対象から除外する
+            active_lines, _ = _split_deleted_lines(content)
             active_content = '\n'.join(active_lines)
 
             # DS-* ID を抽出（[削除]行を除外済みのテキストから）

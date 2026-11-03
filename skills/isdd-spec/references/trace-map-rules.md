@@ -59,7 +59,7 @@ python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.m
 ### 進行中の変更（変更フロー）
 
 - `isdd-spec` は変更フローで正本を書き換えず、変更のディレクトリ（`.history/[YYYYMMDD]-[タスク名]/`）を `docs/active_change` の 1 行目に書く。
-- `docs/active_change` があれば、チェッカーはそのディレクトリの `change_detail_design.md` を正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書の [削除] 行の ID」。出力の冒頭に「進行中の変更」の行が出る。
+- `docs/active_change` があれば、チェッカーはそのディレクトリの `change_detail_design.md` を正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書で削除する ID」。削除する ID は「[削除] の行にだけ現れる ID」で、要件との対応だけを差し替える要素（第 11 章で同じ ID を [削除] と [追加] の 2 行に書くもの）や、「変更なし（既存）」の行にもある ID は削除とみなさない。[追加] と [削除] が同じ行にあると判定できないので警告になる（行を分ける）。出力の冒頭に「進行中の変更」の行が出る。
 - 実装後に `isdd-build` の実装後レビューが変更を正本へ反映し、`docs/active_change` を消す。以後は正本だけで判定する。
 
 | 区分 | 内容 | 扱い |

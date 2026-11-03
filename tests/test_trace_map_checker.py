@@ -185,6 +185,36 @@ class TraceMapCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("DS-FN-PRINT-HELLO-FT-PRINT-HELLO", out)
 
+    def test_mapping_only_change_is_not_a_deletion(self):
+        # 第 11 章で同じ ID を [削除]（旧い対応）と [追加]（新しい対応）の 2 行に書いても、要素は残るので警告しない
+        change = ("| DS-ID | 対応要件ID | 区分 |\n|---|---|---|\n"
+                  "| `DS-FN-PRINT-HELLO-FT-PRINT-HELLO` | `RQ-FT-PRINT-HELLO` | [削除] |\n"
+                  "| `DS-FN-PRINT-HELLO-FT-PRINT-HELLO` | `RQ-FT-PRINT-GREETING` | [追加] |\n")
+        code, out = self.run_with_change(MAP, change, strict=True)
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("削除する設計 ID が残っています", out)
+        self.assertIn("削除する設計 ID 0 件", out)
+
+    def test_id_on_unchanged_row_is_not_a_deletion_and_mixed_row_warns(self):
+        # [削除] の行にある ID でも、「変更なし（既存）」の行に現れれば残る。[追加] と [削除] が同じ行なら警告
+        change = ("| DS-ID | 対応要件ID | 区分 |\n|---|---|---|\n"
+                  "| `DS-FN-PRINT-HELLO-FT-PRINT-HELLO` | `RQ-FT-PRINT-HELLO` | [削除] |\n"
+                  "| `DS-FN-PRINT-HELLO-FT-PRINT-HELLO` | `RQ-FT-PRINT-GREETING` | 変更なし（既存） |\n")
+        code, out = self.run_with_change(MAP, change, strict=True)
+        self.assertEqual(code, 0, out)
+        mixed = ("| DS-ID | 区分 |\n|---|---|\n"
+                 "| `DS-CL-HELLO-PRINTER-FT-PRINT-HELLO` | [削除] 旧 / [追加] 新 |\n")
+        code, out = self.run_with_change(MAP, mixed, strict=True)
+        self.assertEqual(code, 1, out)
+        self.assertIn("同じ行にある", out)
+        self.assertNotIn("削除する設計 ID が残っています", out)
+
+    def test_canonical_line_with_literal_deleted_word_is_kept(self):
+        # 正本の行に「[削除]」の文字があっても（機能名など）、その行の ID は有効
+        write(self.tmp, "docs/detail_design.md", DESIGN.replace("| メソッド |", "| [削除]処理のメソッド |"))
+        code, out = self.run_checker(MAP)
+        self.assertEqual(code, 0, out)
+
 
 if __name__ == "__main__":
     unittest.main()

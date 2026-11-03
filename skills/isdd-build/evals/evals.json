@@ -85,6 +85,30 @@
         "エージェントが未マッピング一覧を提示してユーザーへのヒアリングを実施したこと"
       ],
       "eval_name": "post-implementation-review-pir-unmapped"
+    },
+    {
+      "id": 6,
+      "prompt": "isdd-buildを実行してください。\n変更フローの変更設計が終わったところです。変更設計どおりに src を直し（src/hello.py を src/greeting.py と src/main.py に分けます）、対応表を更新してください。\n今回は実装だけを行い、実装後レビュー（正本への反映）はまだ行わないでください。",
+      "expected_output": "対応だけを差し替えた設計 ID と、別のファイルへ移したクラスの対応表の行を消さずに、src/greeting.py と src/main.py を作って src/hello.py を消し、check.sh --strict（進行中の変更・E2E のディレクトリ・依存の規則を含む）が合格すること",
+      "files": [
+        "evals/isdd-build/fixtures/change-flow-remap/docs/requirements.md",
+        "evals/isdd-build/fixtures/change-flow-remap/docs/detail_design.md",
+        "evals/isdd-build/fixtures/change-flow-remap/docs/trace_map.md",
+        "evals/isdd-build/fixtures/change-flow-remap/docs/active_change",
+        "evals/isdd-build/fixtures/change-flow-remap/.history/20260509-split-entry-module/change_requirements.md",
+        "evals/isdd-build/fixtures/change-flow-remap/.history/20260509-split-entry-module/change_detail_design.md",
+        "evals/isdd-build/fixtures/change-flow-remap/src/hello.py",
+        "evals/isdd-build/fixtures/change-flow-remap/e2e/test_hello_e2e.py",
+        "evals/isdd-build/fixtures/change-flow-remap/scripts/isdd/check.sh",
+        "evals/isdd-build/fixtures/change-flow-remap/scripts/isdd/dependencies.json"
+      ],
+      "expectations": [
+        "src/hello.py が消え、src/greeting.py に HelloWorldPrinter、src/main.py に main があること",
+        "対応表に DS-MD-GREETING-MODULE・DS-MD-MAIN-MODULE・DS-FN-MAIN-ENTRY と、残る DS-FN-GET-HELLO-MESSAGE・DS-CL の行があり、src/hello.py の行が無いこと",
+        "bash scripts/isdd/check.sh --strict が合格すること（対応だけ差し替えた ID と移したクラスを削除扱いにしない）",
+        "docs/active_change と正本・変更設計書が書き換えられていないこと"
+      ],
+      "eval_name": "change-flow-remap"
     }
   ]
 }
