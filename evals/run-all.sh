@@ -34,6 +34,7 @@ usage() {
     echo "            ANTHROPIC_API_KEY       (claude モードで必須)" >&2
     echo "            WAZA_CLAUDE_MODEL       (デフォルト: claude-haiku-5-5)" >&2
     echo "            WAZA_BIN                (デフォルト: waza。フォーク版を使うときに指定)" >&2
+    echo "            WAZA_TASKS              (場面の絞り込み。場面名か ID のグロブをカンマ区切りで。例: WAZA_TASKS='ヒアリングの作法*,*要件定義' 。未指定なら全場面)" >&2
     echo "            COPILOT_CLI_PATH            (claude モード。未指定なら evals/.copilot-cli/ の CLI を自動使用)" >&2
 }
 
@@ -77,6 +78,16 @@ case "$mode" in
 esac
 
 waza_bin="${WAZA_BIN:-waza}"
+# 場面の絞り込み（差分評価用）。waza run --task に 1 つずつ渡す。未指定なら全場面を回す
+task_flags=()
+if [[ -n "${WAZA_TASKS:-}" ]]; then
+  IFS=',' read -r -a _tasks <<< "$WAZA_TASKS"
+  for _t in "${_tasks[@]}"; do
+    _t="${_t#"${_t%%[![:space:]]*}"}"; _t="${_t%"${_t##*[![:space:]]}"}"
+    [[ -n "$_t" ]] && task_flags+=(--task "$_t")
+  done
+  echo "[tasks] 場面を絞って実行: ${_tasks[*]}（WAZA_TASKS）"
+fi
 
 shift
 selected_skills=("$@")
@@ -321,11 +332,11 @@ run_one() {
       return 3
     fi
 
-    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_to_run" ${model_flag[@]+"${model_flag[@]}"} --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
+    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_to_run" ${model_flag[@]+"${model_flag[@]}"} ${task_flags[@]+"${task_flags[@]}"} --context-dir "$temp_context_dir" --transcript-dir "$transcript_dir" --keep-workspace -v
     exit_code=$?
     rm -rf "$temp_context_dir"
   else
-    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_to_run" ${model_flag[@]+"${model_flag[@]}"} --transcript-dir "$transcript_dir" --keep-workspace -v
+    ${run_env[@]+"${run_env[@]}"} "$waza_bin" run "$eval_to_run" ${model_flag[@]+"${model_flag[@]}"} ${task_flags[@]+"${task_flags[@]}"} --transcript-dir "$transcript_dir" --keep-workspace -v
     exit_code=$?
   fi
   [[ -n "$tmp_eval" ]] && rm -f "$tmp_eval"
