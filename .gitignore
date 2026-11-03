@@ -137,3 +137,4 @@ evals/.copilot-cli/
 # install.sh が展開する isdd のスキル（skills/ の複製なので追跡しない）
 .agents/skills/isdd-*/
 measure/.venv
+measure/results/*/snapshot-stage*/

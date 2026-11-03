@@ -3,7 +3,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from support.ui import click_with_dialog, equipment_row, field_error, login, messages
+from support.ui import expect_url, click_with_dialog, equipment_row, field_error, login, messages
 
 STAFF = {"number": "000001", "name": "担当太郎", "staff": True}
 STAFF_Y = {"number": "000003", "name": "担当次郎", "staff": True}
@@ -21,7 +21,7 @@ def fill_equipment(page, number, name):
 def test_equipment_create(app, page):
     app.seed({"accounts": [STAFF], "equipment": [{"number": "PC-001", "name": "ノートパソコン"}]})
     login(page, app.base_url, "000001")
-    page.get_by_role("button", name="備品を登録").click()
+    page.goto(f"{app.base_url}/equipment/new/")
     cases = [
         ("ＰＣ－００２", "ノートパソコン", "id_equipment_number", FORMAT_MESSAGE),
         ("A" * 21, "ノートパソコン", "id_equipment_number", FORMAT_MESSAGE),
@@ -34,7 +34,7 @@ def test_equipment_create(app, page):
         expect(page.locator("#id_equipment_number")).to_have_value(number)
         expect(page.locator("#id_name")).to_have_value(name)
     fill_equipment(page, "PC-002", "ノートパソコン")
-    expect(page).to_have_url(f"{app.base_url}/")
+    expect_url(page, app.base_url, "/")
     expect(equipment_row(page, "PC-002")).to_contain_text("空き")
 
 
@@ -84,7 +84,7 @@ def test_stale_equipment_update(app, page, new_page):
     for p in (page, page_y):
         equipment_row(p, "PC-001").get_by_role("button", name="修正").click()
     fill_equipment(page, "PC-001", "X が直した名前")
-    expect(page).to_have_url(f"{app.base_url}/")
+    expect_url(page, app.base_url, "/")
     fill_equipment(page_y, "PC-001", "Y が直した名前")
     stale = "他の担当者が先にこの備品を更新しました。貸出状況の画面から開き直してください"
     expect(page_y.locator(".error")).to_have_text([stale])

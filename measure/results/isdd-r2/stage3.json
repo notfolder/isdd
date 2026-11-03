@@ -1,0 +1,40 @@
+{
+  "stage": 3,
+  "app": "/private/tmp/claude-501/-Users-notfolder-Documents-isdd/49090259-0412-4808-99fc-5bedf53f2f86/scratchpad/work/isdd-r2",
+  "tests": {
+    "test_employee_restrictions[chromium]": "pass",
+    "test_staff_role_change[chromium]": "fail",
+    "test_password_reset[chromium]": "pass",
+    "test_account_delete[chromium]": "fail",
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_stale_equipment_update[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "fail",
+    "test_lending[chromium]": "pass",
+    "test_concurrent_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_duplicate_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "pass"
+  },
+  "passed": 18,
+  "total": 21,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "nge[chromium] _______________________\n\napp = <conftest.AppServer object at 0x10b6639b0>\npage = <Page url='http://127.0.0.1:51438/accounts/'>\nnew_page = <function new_page.<locals>.make at 0x1108100e0>\n\n    @pytest.mark.stage3\n    def test_staff_role_change(app, page, new_page):\n        app.seed({\"accounts\": [STAFF, EMPLOYEE_A]})\n        login(page, app.base_url, \"000001\")\n        page.get_by_role(\"link\", name=\"アカウントの一覧\").click()\n        click_with_dialog(page, account_row(page, \"000001\").get_by_role(\"button\", name=\"担当者から外す\"), accept=True)\n>       expect(messages(page)).to_have_text([LAST_STAFF])\nE       AssertionError: Locator expected to have text '['担当者が 1 人もいなくなるため、この操作はできません']'\nE       Actual value: [] \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".message\") with timeout 5000ms\nE         - waiting for locator(\".message\")\nE           14 × locator resolved to 0 elements\n\ntest_access.py:43: AssertionError\n________________________ test_account_delete[chromium] _________________________\n\napp = <conftest.AppServer object at 0x10b6613a0>\npage = <Page url='http://127.0.0.1:51488/accounts/'>\nnew_page = <function new_page.<locals>.make at 0x110853100>\n\n    @pytest.mark.stage3\n    def test_account_delete(app, page, new_page):\n        app.seed({\n            \"accounts\": [STAFF, EMPLOYEE_A, EMPLOYEE_B],\n            \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}, {\"number\": \"PC-002\", \"name\": \"モニター\"}],\n            \"lendings\": [{\"equipment\": \"PC-001\", \"borrower\": \"000002\", \"lent_on\": \"2026-10-01\"}],\n        })\n        login(page, app.base_url, \"000001\")\n        page.get_by_role(\"link\", name=\"アカウントの一覧\").click()\n        click_with_dialog(page, account_row(page, \"000003\").get_by_role(\"button\", name=\"削除\"), accept=True)\n        expect(account_row(page, \"000003\")).to_have_count(0)\n        click_with_dialog(page, account_row(page, \"000002\").get_by_role(\"button\", name=\"削除\"), accept=True)\n>       expect(messages(page)).to_have_text([\"この社員は備品を借りているため削除できません。先に返却を処理してください\"])\nE       AssertionError: Locator expected to have text '['この社員は備品を借りているため削除できません。先に返却を処理してください']'\nE       Actual value: [] \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".message\") with timeout 5000ms\nE         - waiting for locator(\".message\")\nE           14 × locator resolved to 0 elements\n\ntest_access.py:87: AssertionError\n_________________ test_equipment_delete_rejects_lent[chromium] _________________\n\napp = <conftest.AppServer object at 0x1108bde80>\npage = <Page url='http://127.0.0.1:51770/'>\n\n    @pytest.mark.stage2\n    def test_equipment_delete_rejects_lent(app, page):\n        app.seed({\n            \"accounts\": [STAFF, EMPLOYEE],\n            \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}, {\"number\": \"PC-002\", \"name\": \"ノートパソコン\"}],\n            \"lendings\": [{\"equipment\": \"PC-001\", \"borrower\": \"000002\", \"lent_on\": \"2026-10-01\"}],\n        })\n        login(page, app.base_url, \"000001\")\n        click_with_dialog(page, equipment_row(page, \"PC-002\").get_by_role(\"button\", name=\"削除\"), accept=True)\n        expect(equipment_row(page, \"PC-002\")).to_have_count(0)\n        click_with_dialog(page, equipment_row(page, \"PC-001\").get_by_role(\"button\", name=\"削除\"), accept=True)\n>       expect(messages(page)).to_have_text([\"この備品は貸出中のため削除できません。先に返却を処理してください\"])\nE       AssertionError: Locator expected to have text '['この備品は貸出中のため削除できません。先に返却を処理してください']'\nE       Actual value: [] \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".message\") with timeout 5000ms\nE         - waiting for locator(\".message\")\nE           14 × locator resolved to 0 elements\n\ntest_equipment.py:116: AssertionError\n=========================== short test summary info ============================\nFAILED test_access.py::test_staff_role_change[chromium] - AssertionError: Loc...\nFAILED test_access.py::test_account_delete[chromium] - AssertionError: Locato...\nFAILED test_equipment.py::test_equipment_delete_rejects_lent[chromium] - Asse...\n3 failed, 18 passed in 162.19s (0:02:42)\n",
+  "overbuild": {
+    "source_files": 11,
+    "lines": 1516,
+    "public_functions": 41,
+    "classes": 2,
+    "templates": 0
+  },
+  "duration_sec": 162.4
+}

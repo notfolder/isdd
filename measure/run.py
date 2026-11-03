@@ -115,7 +115,7 @@ def main() -> int:
             dest = workdir / ".claude" / "skills"
             dest.mkdir(parents=True)
             for skill in (REPO / "skills").iterdir():
-                if skill.is_dir():
+                if skill.is_dir() and not skill.name.endswith("-workspace"):
                     shutil.copytree(skill, dest / skill.name, ignore=shutil.ignore_patterns("evals"))
             shutil.copyfile(HERE / "answers.md", workdir / "ANSWERS.md")
     shutil.copyfile(HERE / "contract.md", workdir / "contract.md")

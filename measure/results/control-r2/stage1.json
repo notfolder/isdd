@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/private/tmp/claude-501/-Users-notfolder-Documents-isdd/49090259-0412-4808-99fc-5bedf53f2f86/scratchpad/work/control-r2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass"
+  },
+  "passed": 8,
+  "total": 8,
+  "setup_ok": null,
+  "error": null,
+  "pytest_tail": "........                                                                 [100%]\n8 passed, 13 deselected in 18.79s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 913,
+    "public_functions": 51,
+    "classes": 2,
+    "templates": 0
+  },
+  "duration_sec": 19.0
+}

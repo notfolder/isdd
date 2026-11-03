@@ -1,0 +1,40 @@
+{
+  "stage": 3,
+  "app": "/private/tmp/claude-501/-Users-notfolder-Documents-isdd/49090259-0412-4808-99fc-5bedf53f2f86/scratchpad/work/isdd-r1",
+  "tests": {
+    "test_employee_restrictions[chromium]": "pass",
+    "test_staff_role_change[chromium]": "pass",
+    "test_password_reset[chromium]": "pass",
+    "test_account_delete[chromium]": "pass",
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_stale_equipment_update[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "pass",
+    "test_lending[chromium]": "pass",
+    "test_concurrent_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_duplicate_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "pass"
+  },
+  "passed": 21,
+  "total": 21,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": ".....................                                                    [100%]\n21 passed in 154.37s (0:02:34)\n",
+  "overbuild": {
+    "source_files": 11,
+    "lines": 901,
+    "public_functions": 40,
+    "classes": 2,
+    "templates": 7
+  },
+  "duration_sec": 155.4
+}

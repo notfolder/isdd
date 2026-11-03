@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/private/tmp/claude-501/-Users-notfolder-Documents-isdd/49090259-0412-4808-99fc-5bedf53f2f86/scratchpad/work/control-r2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "fail",
+    "test_account_registration[chromium]": "fail",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "fail",
+    "test_equipment_create[chromium]": "fail",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass"
+  },
+  "passed": 4,
+  "total": 8,
+  "setup_ok": null,
+  "error": null,
+  "pytest_tail": "        - paragraph: この操作は担当者だけが行えます\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状態 借りている社員 貸出日 操作\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状態\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE               - columnheader \"操作\"\nE           - rowgroup:\nE             - row \"PC-001 ノートパソコン 空き\":\nE               - cell \"PC-001\"\nE               - cell \"ノートパソコン\"\nE               - cell \"空き\"\nE               - cell\nE               - cell\nE               - cell\n\ntest_accounts.py:91: AssertionError\n_______________________ test_equipment_create[chromium] ________________________\n\napp = <conftest.AppServer object at 0x109b18ad0>\npage = <Page url='http://127.0.0.1:53050/?msg=saved'>\n\n    @pytest.mark.stage1\n    def test_equipment_create(app, page):\n        app.seed({\"accounts\": [STAFF], \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}]})\n        login(page, app.base_url, \"000001\")\n        page.goto(f\"{app.base_url}/equipment/new/\")\n        cases = [\n            (\"ＰＣ－００２\", \"ノートパソコン\", \"id_equipment_number\", FORMAT_MESSAGE),\n            (\"A\" * 21, \"ノートパソコン\", \"id_equipment_number\", FORMAT_MESSAGE),\n            (\"PC-001\", \"ノートパソコン\", \"id_equipment_number\", \"この管理番号は既に使われています\"),\n            (\"PC-002\", \"あ\" * 51, \"id_name\", \"備品名は 50 文字以内で入力してください\"),\n        ]\n        for number, name, input_id, message in cases:\n            fill_equipment(page, number, name)\n            expect(field_error(page, input_id)).to_have_text(message)\n            expect(page.locator(\"#id_equipment_number\")).to_have_value(number)\n            expect(page.locator(\"#id_name\")).to_have_value(name)\n        fill_equipment(page, \"PC-002\", \"ノートパソコン\")\n>       expect(page).to_have_url(f\"{app.base_url}/\")\nE       AssertionError: Page URL expected to be 'http://127.0.0.1:53050/'\nE       Actual value: http://127.0.0.1:53050/?msg=saved \nE       Call log:\nE         - Expect \"to_have_url\" with timeout 5000ms\nE           14 × locator resolved to <html lang=\"ja\">…</html>\nE              - unexpected value \"http://127.0.0.1:53050/?msg=saved\"\nE       \nE       Aria snapshot:\nE       - banner:\nE         - navigation:\nE           - link \"貸出状況\":\nE             - /url: /\nE           - text: 担当太郎\nE           - link \"備品の登録\":\nE             - /url: /equipment/new/\nE           - link \"アカウントの一覧\":\nE             - /url: /accounts/\nE           - button \"ログアウト\"\nE       - main:\nE         - heading \"貸出状況\" [level=1]\nE         - paragraph: 保存しました\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状態 借りている社員 貸出日 操作\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状態\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE               - columnheader \"操作\"\nE           - rowgroup:\nE             - row \"PC-001 ノートパソコン 空き 修正 削除 貸出\":\nE               - cell \"PC-001\"\nE               - cell \"ノートパソコン\"\nE               - cell \"空き\"\nE               - cell\nE               - cell\nE               - cell \"修正 削除 貸出\":\nE                 - button \"修正\"\nE                 - button \"削除\"\nE                 - button \"貸出\"\nE             - row \"PC-002 ノートパソコン 空き 修正 削除 貸出\":\nE               - cell \"PC-002\"\nE               - cell \"ノートパソコン\"\nE               - cell \"空き\"\nE               - cell\nE               - cell\nE               - cell \"修正 削除 貸出\":\nE                 - button \"修正\"\nE                 - button \"削除\"\nE                 - button \"貸出\"\n\ntest_equipment.py:37: AssertionError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_first_account_becomes_staff[chromium] - Asserti...\nFAILED test_accounts.py::test_account_registration[chromium] - AssertionError...\nFAILED test_accounts.py::test_employee_cannot_manage_equipment[chromium] - As...\nFAILED test_equipment.py::test_equipment_create[chromium] - AssertionError: P...\n4 failed, 4 passed, 13 deselected in 38.86s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 913,
+    "public_functions": 51,
+    "classes": 2,
+    "templates": 0
+  },
+  "duration_sec": 39.0
+}

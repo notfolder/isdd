@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 import pytest
 from playwright.sync_api import expect
 
-from support.ui import click_with_dialog, equipment_row, field_error, login, messages
+from support.ui import expect_url, click_with_dialog, equipment_row, field_error, login, messages
 
 STAFF = {"number": "000001", "name": "担当太郎", "staff": True}
 STAFF_Y = {"number": "000003", "name": "担当次郎", "staff": True}
@@ -42,7 +42,7 @@ def test_lending(app, page):
     submit_lending(page, "社員花子（000002）", today() + datetime.timedelta(days=1))
     expect(field_error(page, "id_lent_on")).to_have_text("貸出日に未来の日付は入力できません")
     submit_lending(page, "社員花子（000002）", today())
-    expect(page).to_have_url(f"{app.base_url}/")
+    expect_url(page, app.base_url, "/")
     past = today() - datetime.timedelta(days=30)
     equipment_row(page, "PC-002").get_by_role("button", name="貸出").click()
     submit_lending(page, "社員花子（000002）", past)
@@ -66,7 +66,7 @@ def test_concurrent_lending(app, page, new_page):
     for p in (page, page_y):
         equipment_row(p, "PC-001").get_by_role("button", name="貸出").click()
     submit_lending(page, "社員花子（000002）", None)
-    expect(page).to_have_url(f"{app.base_url}/")
+    expect_url(page, app.base_url, "/")
     submit_lending(page_y, "社員三郎（000004）", None)
     expect(messages(page_y)).to_have_text(["この備品は既に貸出中です"])
     expect(equipment_row(page_y, "PC-001")).to_contain_text("社員花子")

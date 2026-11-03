@@ -1,0 +1,33 @@
+{
+  "stage": 2,
+  "app": "/private/tmp/claude-501/-Users-notfolder-Documents-isdd/49090259-0412-4808-99fc-5bedf53f2f86/scratchpad/work/isdd-r2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "fail",
+    "test_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "pass"
+  },
+  "passed": 13,
+  "total": 14,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "........F.....                                                           [100%]\n=================================== FAILURES ===================================\n_________________ test_equipment_delete_rejects_lent[chromium] _________________\n\napp = <conftest.AppServer object at 0x109ed24e0>\npage = <Page url='http://127.0.0.1:60774/'>\n\n    @pytest.mark.stage2\n    def test_equipment_delete_rejects_lent(app, page):\n        app.seed({\n            \"accounts\": [STAFF, EMPLOYEE],\n            \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}, {\"number\": \"PC-002\", \"name\": \"ノートパソコン\"}],\n            \"lendings\": [{\"equipment\": \"PC-001\", \"borrower\": \"000002\", \"lent_on\": \"2026-10-01\"}],\n        })\n        login(page, app.base_url, \"000001\")\n        click_with_dialog(page, equipment_row(page, \"PC-002\").get_by_role(\"button\", name=\"削除\"), accept=True)\n        expect(equipment_row(page, \"PC-002\")).to_have_count(0)\n        click_with_dialog(page, equipment_row(page, \"PC-001\").get_by_role(\"button\", name=\"削除\"), accept=True)\n>       expect(messages(page)).to_have_text([\"この備品は貸出中のため削除できません。先に返却を処理してください\"])\nE       AssertionError: Locator expected to have text '['この備品は貸出中のため削除できません。先に返却を処理してください']'\nE       Actual value: [] \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".message\") with timeout 5000ms\nE         - waiting for locator(\".message\")\nE           14 × locator resolved to 0 elements\n\ntest_equipment.py:116: AssertionError\n=========================== short test summary info ============================\nFAILED test_equipment.py::test_equipment_delete_rejects_lent[chromium] - Asse...\n1 failed, 13 passed, 7 deselected in 141.91s (0:02:21)\n",
+  "overbuild": {
+    "source_files": 11,
+    "lines": 1516,
+    "public_functions": 41,
+    "classes": 2,
+    "templates": 0
+  },
+  "duration_sec": 142.1
+}

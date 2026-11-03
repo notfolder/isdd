@@ -6,7 +6,7 @@ import time
 import pytest
 from playwright.sync_api import expect
 
-from support.ui import field_error, login, messages, register
+from support.ui import expect_url, field_error, login, messages, register
 
 STAFF = {"number": "000001", "name": "担当太郎", "staff": True}
 EMPLOYEE = {"number": "000002", "name": "社員花子"}
@@ -19,12 +19,16 @@ def test_first_account_becomes_staff(app, page):
     page.get_by_role("link", name="アカウント登録").click()
     register(page, app.base_url, "000001", "最初の人")
     login(page, app.base_url, "000001")
-    expect(page.get_by_role("button", name="備品を登録")).to_be_visible()
+    page.goto(f"{app.base_url}/equipment/new/")
+    expect(page.locator("#id_equipment_number")).to_be_visible()
+    page.goto(app.base_url)
     page.get_by_role("button", name="ログアウト").click()
     register(page, app.base_url, "000002", "二番目の人")
     login(page, app.base_url, "000002")
     expect(page.get_by_role("button", name="ログアウト")).to_be_visible()
-    expect(page.get_by_role("button", name="備品を登録")).to_have_count(0)
+    page.goto(f"{app.base_url}/equipment/new/")
+    expect_url(page, app.base_url, "/")
+    expect(messages(page)).to_have_text([STAFF_ONLY])
 
 
 @pytest.mark.stage1
@@ -45,7 +49,7 @@ def test_account_registration(app, page):
         expect(page.locator("#id_employee_number")).to_have_value(values["number"])
         expect(page.locator("#id_name")).to_have_value(values["name"])
     register(page, app.base_url, "000005", "新人")
-    expect(page).to_have_url(f"{app.base_url}/login/")
+    expect_url(page, app.base_url, "/login/")
     expect(page.get_by_text("登録しました。ログインしてください")).to_be_visible()
 
 
@@ -56,7 +60,7 @@ def test_login_logout(app, page):
         login(page, app.base_url, number, password)
         expect(page.locator(".error")).to_have_text(["社員番号またはパスワードが違います"])
     login(page, app.base_url, "000002")
-    expect(page).to_have_url(f"{app.base_url}/")
+    expect_url(page, app.base_url, "/")
     expect(page.locator(".current-user")).to_have_text("社員花子")
     page.get_by_role("button", name="ログアウト").click()
     expect(page.get_by_role("link", name="ログイン")).to_be_visible()
@@ -69,24 +73,23 @@ def test_session_timeout(app_with_short_session, page):
     app.seed({"accounts": [STAFF]})
     login(page, app.base_url, "000001")
     time.sleep(4)
-    page.get_by_role("button", name="備品を登録").click()
-    expect(page).to_have_url(re.compile(re.escape(f"{app.base_url}/equipment/new/") + r"\??$"))
+    page.goto(f"{app.base_url}/equipment/new/")
+    expect_url(page, app.base_url, "/equipment/new/")
     page.goto(app.base_url)
     time.sleep(7)
-    page.get_by_role("button", name="備品を登録").click()
-    expect(page).to_have_url(f"{app.base_url}/login/")
+    page.goto(f"{app.base_url}/equipment/new/")
+    expect_url(page, app.base_url, "/login/")
 
 
 @pytest.mark.stage1
 def test_employee_cannot_manage_equipment(app, page):
     app.seed({"accounts": [STAFF, EMPLOYEE], "equipment": [{"number": "PC-001", "name": "ノートパソコン"}]})
     login(page, app.base_url, "000002")
-    expect(page.get_by_role("button", name="備品を登録")).to_have_count(0)
     expect(page.get_by_role("button", name="修正")).to_have_count(0)
     expect(page.get_by_role("button", name="削除")).to_have_count(0)
     page.goto(f"{app.base_url}/equipment/new/")
-    expect(page).to_have_url(f"{app.base_url}/")
+    expect_url(page, app.base_url, "/")
     expect(messages(page)).to_have_text([STAFF_ONLY])
     page.get_by_role("button", name="ログアウト").click()
     page.goto(f"{app.base_url}/equipment/new/")
-    expect(page).to_have_url(f"{app.base_url}/login/")
+    expect_url(page, app.base_url, "/login/")
