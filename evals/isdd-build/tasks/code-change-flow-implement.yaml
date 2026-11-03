@@ -35,6 +35,8 @@ inputs:
     - path: .agents/skills/isdd-setup/scripts/implementation_completeness_checker.py
     - path: .agents/skills/isdd-setup/scripts/isdd_setup.py
     - path: .agents/skills/isdd-setup/scripts/trace_map_checker.py
+    - path: .agents/skills/isdd-setup/scripts/acceptance_checker.py
+    - path: .agents/skills/isdd-setup/scripts/unittest_junit.py
     - path: .agents/skills/isdd-setup/scripts/dependency_checker.py
 expected:
   outcomes:
