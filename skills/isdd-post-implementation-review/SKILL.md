@@ -8,6 +8,7 @@ description: >
   「proposals.md を正本に反映して」といった依頼や、isdd-traceable-coding の完了後に使う。
   設計スキルの途中で見つかった要件の不足は対象にしない（設計スキル自身が扱う）。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---

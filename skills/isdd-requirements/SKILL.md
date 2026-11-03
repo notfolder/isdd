@@ -6,6 +6,7 @@ description: >
   「仕様を決めたい」「業務要件・機能要件・非機能要件を整理したい」といった、まだ要件定義書が無い段階の依頼で使う。
   既存の docs/requirements.md に対する変更は isdd-change-req、既存コードからの要件の書き起こしは isdd-reverse-engineering が扱う。
 license: CC-BY-4.0
+compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
   version: "v2.0.1"
 ---
