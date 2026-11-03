@@ -9,7 +9,7 @@ description: >
 license: CC-BY-4.0
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.1.0"
+  version: "v2.2.0"
 ---
 
 # isdd-setup — 対応表チェック導入スキル
@@ -31,9 +31,10 @@ metadata:
 
 | 成果物 | 役割 |
 |---|---|
-| `scripts/isdd/trace_map_checker.py`、`dependency_checker.py`、`implementation_completeness_checker.py` | コード用チェッカーの複製。スキルを持たない人や CI でも動くよう git 管理対象にする |
+| `scripts/isdd/trace_map_checker.py`、`dependency_checker.py`、`acceptance_checker.py`、`implementation_completeness_checker.py` | コード用チェッカーの複製。スキルを持たない人や CI でも動くよう git 管理対象にする |
 | `scripts/isdd/VERSION` | 複製したチェッカーの isdd の版。各スキルはこれと自分の版を比べ、違えばこのスキルの再実行を案内する |
-| `scripts/isdd/check.sh` | 対応表チェックと依存チェックの入口。エージェントのフックも pre-commit もこれを呼ぶ。`docs/active_change`（変更の実装中だけある）があれば、変更設計書を正本に重ねて判定する。対応表の粒度（`--granularity`）と E2E のディレクトリ（`--tests`）もここに固定する |
+| `scripts/isdd/check.sh` | 対応表チェック、依存チェック、受け入れ判定の入口。エージェントのフックも pre-commit もこれを呼ぶ。`docs/active_change`（変更の実装中だけある）があれば、変更設計書を正本に重ねて判定する。対応表の粒度（`--granularity`）、E2E のディレクトリ（`--tests`）、E2E の結果の置き場所（`--junit "<E2E ディレクトリ>/results/*.xml"`）もここに固定する。受け入れ判定は既定では警告だけで、`--strict` のときに不合格・未実行・要再実行を失敗扱いにする |
+| `.gitignore` の `<E2E ディレクトリ>/results/` | E2E の結果（JUnit XML）は git 管理外。スクリプトが無いときだけ足す |
 | `scripts/isdd/dependencies.json` | 依存の規則（設計書第 7 章の書き写し）。スクリプトは規則が空の雛形を無いときだけ作り、このスキルが第 7 章の内容を書き写す。再実行でも上書きしない |
 | `scripts/isdd/pre-commit` と `.git/hooks/pre-commit` | 対応表の壊れた参照（エラー）だけでコミットを止める。未登録（警告）は表示だけ |
 | `AGENTS.md` と `CLAUDE.md` の規則ブロック | スキルが起動していない時でも、エージェントが対応表を更新しチェックを実行するようにする |

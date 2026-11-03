@@ -10,7 +10,7 @@ description: >
 license: CC-BY-4.0
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.1.0"
+  version: "v2.2.0"
 ---
 
 # isdd-build — トレーサブル実装と実装後レビューのスキル
@@ -33,6 +33,8 @@ metadata:
 | `references/document-rules.md` | 正本を書き換えるときの書き方 |
 | `scripts/rq_integrity_checker.py` | 要件 ID の整合チェック（段階 2 で正本の要件定義書にかける） |
 | `scripts/rq_ds_link_checker.py` | 要件 ID と設計 ID の対応チェック |
+
+受け入れ判定（`scripts/isdd/acceptance_checker.py`。E2E の結果の JUnit XML を対応表の `DS-TS` 行と突き合わせ、要件ごとの実装済み判定の表を出す）は `check.sh` が呼ぶ。
 
 対応表チェックと実装完了チェックは、`isdd-setup` がプロジェクトに入れた `scripts/isdd/` のものを使う（pre-commit と同じものを動かすため）。
 
@@ -73,7 +75,7 @@ graph TD
 - 設計に無い設計要素が要るとわかったら、コーディングを止めて `docs/proposals.md` に提案を書き、ユーザーが `isdd-spec` で設計を直すのを待つ。このスキルの中で要件・設計の文書や `docs/active_change` を作らない。「進めてください」と言われても、それは `isdd-spec` の起動ではない。
 - コードに要件 ID・設計 ID を書かない。
 
-終わりの条件: `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件（対応表チェックと依存チェック）、`rq_ds_link_checker.py` が問題 0 件、`implementation_completeness_checker.py` が全項目 OK、テストが全件通過（build-implement.md の完了条件）。
+終わりの条件: `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件（対応表チェック、依存チェック、受け入れ判定。受け入れ判定は 8-4 の実行コマンドで E2E を回して `e2e/results/` に JUnit XML を出してから実行する）、`rq_ds_link_checker.py` が問題 0 件、`implementation_completeness_checker.py` が全項目 OK、テストが全件通過（build-implement.md の完了条件）。
 
 ## 段階 2: 実装後レビューと正本への反映
 
@@ -90,9 +92,15 @@ graph TD
 | 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
 |---|---|---|---|---|---|
 | 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件
 ```
 
-終わりの条件: build-review.md の完了条件（未整合ゼロ、未マッピング一覧の表、`docs/proposals.md` と `docs/active_change` が無い）。
+状態「要件なし（作りすぎ）」は、対応表に無く、設計書にも無く、どの要件にも結びつかない実装要素。表の下に件数（公開関数・クラス・ファイル）を書く。
+
+要件ごとの実装済み判定も、最終報告に `### 要件ごとの実装済み判定` の見出し（`#` 3 つ）で出し、その直下に `bash scripts/isdd/check.sh --strict` の受け入れ判定が出した表（列: RQ-ID、RQ-TS、DS-TS、テスト、結果）をそのまま載せる。
+
+終わりの条件: build-review.md の完了条件（未整合ゼロ、未マッピング一覧の表と作りすぎの件数、要件ごとの実装済み判定の表、`docs/proposals.md` と `docs/active_change` が無い）。
 
 ## 守ること
 
@@ -105,7 +113,9 @@ graph TD
 完了したら、次を報告し、実装と正本の確定の承認を求める。
 
 - 段階 1: 実装したファイル・クラス・関数、対応表、各チェッカーとテストの実行ログ、`scripts/isdd/VERSION` と `metadata.version` を比べた結果
-- 段階 2: build-review.md の「報告」の項目（正本へ反映した ID、未整合ゼロかどうか、未マッピング一覧、要件の更新結果）。未マッピング一覧の見出しは `### 未マッピング一覧`（`#` 3 つの Markdown 見出し。太字にしない）
+- 段階 2: build-review.md の「報告」の項目（正本へ反映した ID、未整合ゼロかどうか、未マッピング一覧と作りすぎの件数、要件ごとの実装済み判定、要件の更新結果）。見出しは `### 未マッピング一覧` と `### 要件ごとの実装済み判定`（`#` 3 つの Markdown 見出し。太字にしない）
 - `isdd-setup` を途中で実行した場合は、その結果もここにまとめる（セットアップの報告だけで応答を終えない）
 
 新しい要求や仕様の誤りは `isdd-spec` から始める（要件定義書があるので変更フローになる）。
+
+段階の区切り（実装の完了、実装後レビューの完了）では、新しいセッションに切り替えて成果物から再開することを勧める。長いセッションでは初期の制約を忘れやすいため。再開に要るものは正本（`docs/requirements.md`・`docs/detail_design.md`・`docs/trace_map.md`）とコード、変更フローなら `docs/active_change` が指すディレクトリの文書と `tasks.md` だけで、途中の会話は要らない。

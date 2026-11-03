@@ -5,7 +5,7 @@ isdd_setup.py
 isdd の対応表チェックをプロジェクトに組み込むセットアップスクリプト（isdd-setup スキルが実行する）。
 
 行うこと:
-  1. isdd-setup スキルに同梱したコード用チェッカー（trace_map_checker.py、dependency_checker.py、implementation_completeness_checker.py）を
+  1. isdd-setup スキルに同梱したコード用チェッカー（trace_map_checker.py、dependency_checker.py、acceptance_checker.py、implementation_completeness_checker.py）を
      scripts/isdd/ に複製し、スキルの版を scripts/isdd/VERSION に記録する（git 管理対象。再実行で上書き更新）。
      要件・設計のチェッカー（rq_*.py）は各スキルが同梱版を直接実行するので複製しない。旧版の複製があれば削除する
   2. scripts/isdd/check.sh を生成する（対応表チェックと依存チェックの唯一の入口。エージェントのフックも pre-commit もこれを呼ぶ）。
@@ -46,8 +46,12 @@ RUNTIMES = ("container", "cli", "server", "desktop", "library", "unspecified")
 CHECKER_FILES = (
     "trace_map_checker.py",
     "dependency_checker.py",
+    "acceptance_checker.py",
+    "unittest_junit.py",
     "implementation_completeness_checker.py",
 )
+# E2E の結果（JUnit XML）の置き場所。git 管理外にする
+RESULTS_IGNORE_LINE = "{e2e_dir}/results/"
 GRANULARITIES = ("function", "class")
 DEPENDENCIES_TEMPLATE = {
     "_comment": "詳細設計書 第 7 章「依存の規則」の書き写し。isdd-setup が雛形を作り、以後は手で保つ（再実行でも上書きしない）。"
@@ -115,6 +119,7 @@ def make_executable(path: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="isdd 対応表チェックのセットアップ")
     parser.add_argument("--src", action="append", required=True, help="ソースディレクトリ（複数指定可）")
+    parser.add_argument("--requirements", default="docs/requirements.md")
     parser.add_argument("--design", default="docs/detail_design.md")
     parser.add_argument("--map", default="docs/trace_map.md")
     parser.add_argument("--active-change", default="docs/active_change",
@@ -171,6 +176,8 @@ def main() -> int:
         "#   1. 対応表チェック（trace_map_checker.py）。--strict を付けると警告も失敗扱いにする（isdd-build の完了条件用）\n"
         f"#      {args.active_change} があれば、そこに書かれた変更の change_detail_design.md を正本に重ねて判定する\n"
         "#   2. 依存チェック（dependency_checker.py）。scripts/isdd/dependencies.json の規則に反する import をエラーにする\n"
+        f"#   3. 受け入れ判定（acceptance_checker.py）。{args.e2e_dir}/results/ の JUnit XML を対応表の DS-TS 行と突き合わせ、\n"
+        "#      要件ごとの実装済み判定の表を出す。--strict では不合格・未実行・要再実行を失敗扱いにする\n"
         "set -u\n"
         'cd "$(dirname "$0")/../.."\n'
         f'python3 scripts/isdd/trace_map_checker.py "{args.design}" "{args.map}" {src_dirs} '
@@ -179,12 +186,29 @@ def main() -> int:
         "echo\n"
         f'python3 scripts/isdd/dependency_checker.py scripts/isdd/dependencies.json {src_dirs}\n'
         "dep_status=$?\n"
+        "echo\n"
+        f'python3 scripts/isdd/acceptance_checker.py "{args.requirements}" "{args.design}" "{args.map}" '
+        f'--junit "{args.e2e_dir}/results/*.xml" --active-change "{args.active_change}" --tests "{args.e2e_dir}" '
+        + " ".join(f'--src "{s}"' for s in args.src) + ' "$@"\n'
+        "acc_status=$?\n"
         "[ $trace_status -ne 0 ] && exit $trace_status\n"
-        "exit $dep_status\n",
+        "[ $dep_status -ne 0 ] && exit $dep_status\n"
+        "exit $acc_status\n",
         encoding="utf-8",
     )
     make_executable(check_sh)
-    report.append(f"生成: {check_sh}（対応表の粒度 {args.granularity} / テスト {args.e2e_dir}）")
+    report.append(f"生成: {check_sh}（対応表の粒度 {args.granularity} / テスト {args.e2e_dir} / 受け入れ判定 {args.e2e_dir}/results/*.xml）")
+
+    # 2-1. E2E の結果の置き場所を git 管理外にする（既にあれば足さない）
+    gitignore = root / ".gitignore"
+    ignore_line = RESULTS_IGNORE_LINE.format(e2e_dir=args.e2e_dir)
+    existing = gitignore.read_text(encoding="utf-8") if gitignore.exists() else ""
+    if ignore_line in [l.strip() for l in existing.splitlines()]:
+        report.append(f"保持: {gitignore}（{ignore_line} は既にある）")
+    else:
+        sep = "" if (not existing or existing.endswith("\n")) else "\n"
+        gitignore.write_text(existing + sep + f"# isdd: E2E の結果（JUnit XML）。acceptance_checker.py が読む\n{ignore_line}\n", encoding="utf-8")
+        report.append(f"追記: {gitignore}（{ignore_line}）")
 
     # 2-2. 依存の規則の雛形（設計書第 7 章の書き写しは isdd-setup スキルが行う。再実行で上書きしない）
     deps_path = dest / "dependencies.json"

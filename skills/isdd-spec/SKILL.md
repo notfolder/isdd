@@ -11,7 +11,7 @@ description: >
 license: CC-BY-4.0
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.1.0"
+  version: "v2.2.0"
 ---
 
 # isdd-spec — インタビュー駆動 仕様スキル
@@ -97,7 +97,7 @@ graph TD
 
 終わりの条件:
 
-- `rq_integrity_checker.py` が問題 0 件（実行ログを応答に載せる）
+- `rq_integrity_checker.py` が問題 0 件（実行ログを応答に載せる）。第 7 章の各シナリオに「検証する要件ID」列があり、すべての `RQ-FT`・`RQ-UI`・`RQ-EX` がいずれかのシナリオに現れる（チェッカーが確かめる）
 - 外部連携がある場合、整合確認レポートで未解消の不整合が無い
 - 網羅性チェックとレビューが終わっている
 
@@ -143,3 +143,5 @@ graph TD
 - 残っている確認事項（あれば）
 
 承認を得たら、`isdd-build` で実装と実装後レビュー（正本への反映）を行うよう案内する。
+
+段階の区切り（要件の確定、設計の承認）では、新しいセッションに切り替えて成果物から再開することを勧める。長いセッションでは初期の制約を忘れやすいため。再開に要るものは文書だけ（新規フローは `docs/requirements.md`・`docs/detail_design.md`、変更フローは `docs/active_change` が指すディレクトリの変更要件定義書・変更設計書・`tasks.md`）で、途中の会話は要らない。

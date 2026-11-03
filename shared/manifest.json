@@ -44,6 +44,8 @@
         "isdd_setup.py",
         "trace_map_checker.py",
         "dependency_checker.py",
+        "acceptance_checker.py",
+        "unittest_junit.py",
         "implementation_completeness_checker.py"
       ]
     },

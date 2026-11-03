@@ -54,7 +54,7 @@ Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固
 python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src [--strict] [--active-change docs/active_change] [--tests e2e] [--granularity function|class]
 ```
 
-`scripts/isdd/check.sh` は `--active-change docs/active_change`、`--tests`（E2E のディレクトリ）、`--granularity`（第 7 章の粒度）を付けて呼び、続けて依存チェック（下の「依存の規則」）も実行する。
+`scripts/isdd/check.sh` は `--active-change docs/active_change`、`--tests`（E2E のディレクトリ）、`--granularity`（第 7 章の粒度）を付けて呼び、続けて依存チェック（下の「依存の規則」）と受け入れ判定（下の「受け入れ判定」）も実行する。
 
 ### 進行中の変更（変更フロー）
 
@@ -79,6 +79,21 @@ python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.m
 
 - `isdd-build` の実装の段階の完了条件は `--strict` で合格すること（エラーも警告も 0 件）。
 - pre-commit はエラーだけで止める。スキルを使わずにコードを変えた人が関数を足しても止まらない。その抜けは `isdd-build` の実装後レビューで対応表と設計書に取り込む。
+
+## 受け入れ判定（acceptance_checker.py）
+
+対応表は「テストがあるか」までしか見ない。「要件が実装されたか」は E2E の結果で見る。`check.sh` は `acceptance_checker.py` を次の形で呼ぶ。
+
+```bash
+python3 scripts/isdd/acceptance_checker.py docs/requirements.md docs/detail_design.md docs/trace_map.md --junit "e2e/results/*.xml" [--strict] [--active-change docs/active_change] [--tests e2e] [--src src]
+```
+
+- 読むもの: 要件定義書 第 7 章の「検証する要件ID」（`RQ-FT`・`RQ-UI`・`RQ-EX`・`RQ-NF` → `RQ-TS`）、設計書 第 11 章（`DS-TS` → `RQ-TS`、または `RQ-NF` へ直接）と 11-1（除外要件）、対応表の `DS-TS` 行、JUnit XML の testcase。`docs/active_change` があれば変更要件定義書と変更設計書の [追加] の行を重ね、[削除] の行は読まない。
+- `DS-TS` ごとの判定: 合格（結んだ testcase が全部通った）、不合格（1 件以上失敗・エラー）、未実行（結べる testcase が無い、または skipped だけ）、要再実行（XML の timestamp が `--src`・`--tests` の最新の更新時刻より古い）。
+- 照合: 対応表の `e2e/test_x.py::test_y` は、testcase の名前（pytest のパラメータ `[...]`、go のサブテスト `/...` を除いた部分）が `test_y` で、ファイルが分かる形式（pytest の classname、`file` 属性）ならファイルも一致するもの。`e2e/.../OrderTest.java::OrderTest.testCancel` は classname の末尾のクラス名とメソッド名。テストファイルだけを指す行は、そのファイルの testcase 全部。jest 系はファイル単位の行で結ぶ。
+- 要件ごとの判定: `RQ-FT`・`RQ-UI`・`RQ-EX`（と「検証する要件ID」か第 11 章に現れる `RQ-NF`）ごとに、それを確かめる `RQ-TS` → `DS-TS` の結果をまとめ、全部合格なら「実装済み」、1 件でも不合格なら「不合格」、1 件も実行されていなければ「未検証」。除外要件（11-1）は対象外。Markdown の表で出す（`isdd-build` の実装後レビューはこの表を応答に載せる）。
+- E2E の実行コマンド（8-4）は JUnit XML を `e2e/results/` に出す。pytest が無い Python なら、`isdd-setup` が複製する `scripts/isdd/unittest_junit.py`（標準ライブラリだけで unittest を実行して XML を書く）を使う。テストディレクトリが無いときは判定を省く（E2E の有無は `implementation_completeness_checker.py` が確かめる）。
+- 終了コード: 既定では警告だけで 0。`--strict` では、不合格・未実行・要再実行の `DS-TS` か、未検証・不合格の要件が 1 件でもあれば 1。XML が 1 つも無ければ「未実行」として扱う。pre-commit は `--strict` を付けないので止まらない。
 
 ## 依存の規則（dependency_checker.py）
 

@@ -85,10 +85,10 @@
 
 ## 7. テスト用利用シナリオ
 
-| RQ-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 対応業務課題ID（RQ-BK-*） | 区分 |
-|---|---|---|---|---|---|---|
-| `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT`（deprecated） | "Hello, World!" の表示の確認 | スクリプトが配置されている | 引数なしで実行する | "Hello, World!" が 1 行 | `RQ-BK-OUTPUT-TIMESTAMP` | [削除] |
-| `RQ-TS-VERIFY-TIMESTAMPED-OUTPUT` | 時刻付きの表示の確認 | スクリプトが配置されている | 引数なしで実行する | "Hello, World! (HH:MM:SS)" が 1 行表示され、終了コード 0 で終わる | `RQ-BK-SHARED-VERIFICATION-SCRIPT`, `RQ-BK-OUTPUT-TIMESTAMP` | [追加] |
+| RQ-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 検証する要件ID | 対応業務課題ID（RQ-BK-*） | 区分 |
+|---|---|---|---|---|---|---|---|
+| `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT`（deprecated） | "Hello, World!" の表示の確認 | スクリプトが配置されている | 引数なしで実行する | "Hello, World!" が 1 行 | `RQ-FT-GET-HELLO-MESSAGE`, `RQ-FT-PRINT-HELLO-WORLD`, `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-BK-OUTPUT-TIMESTAMP` | [削除] |
+| `RQ-TS-VERIFY-TIMESTAMPED-OUTPUT` | 時刻付きの表示の確認 | スクリプトが配置されている | 引数なしで実行する | "Hello, World! (HH:MM:SS)" が 1 行表示され、終了コード 0 で終わる | `RQ-FT-BUILD-TIMESTAMPED-MESSAGE`, `RQ-FT-GET-CURRENT-TIME`, `RQ-FT-PRINT-TIMESTAMPED-OUTPUT`, `RQ-FT-TIME-FORMAT-RULE`, `RQ-UI-TIMESTAMPED-STDOUT-OUTPUT` | `RQ-BK-SHARED-VERIFICATION-SCRIPT`, `RQ-BK-OUTPUT-TIMESTAMP` | [追加] |
 
 ## 8. 業務課題と要件の対応表（変更後）
 
