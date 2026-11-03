@@ -52,8 +52,10 @@ graph TD
    cat scripts/isdd/VERSION
    ```
 
+   ほかの作業（テスト、対応表、コードの読み書き）より先に、ここで版を比べ終える。古いチェッカーで作業を進めると、規則の変更を見落としたまま結果を出すため。
+
    - ファイルが無い場合は、`isdd-setup` を実行してから進める。導入時は詳細設計書の実行形態・認証の有無・外部連携の有無を渡す。チェッカーが無いと完了条件を確かめられないため。
-   - 版を比べる。`cat scripts/isdd/VERSION` の出力と、この SKILL.md の先頭（frontmatter）にある `metadata.version` の値（`v` で始まる版番号）を、1 文字ずつ同じか比べる。同じなら次へ進む。VERSION が無いか違う場合は、「scripts/isdd/VERSION（読んだ値）とスキルの版（metadata.version の値）が違うため、isdd-setup を再実行します」と報告し、`isdd-setup` を再実行してから進める。古いチェッカーで判定すると、規則の変更を見落とすため。比べた結果（両方の値と、再実行したか）を最終報告に書く。
+   - 版を比べる。`cat scripts/isdd/VERSION` の出力と、この SKILL.md の先頭（frontmatter）にある `metadata.version` の値（`v` で始まる版番号）を、1 文字ずつ同じか比べる。同じなら次へ進む。VERSION が無いか違う場合は、「scripts/isdd/VERSION（読んだ値）とスキルの版（metadata.version の値）が違うため、isdd-setup を再実行します」と報告し、`isdd-setup` を再実行してから進める。古いチェッカーで判定すると、規則の変更を見落とすため。比べた結果（両方の値、一致したか、再実行したか）は、最初の応答と最終報告の両方に書く。
 2. 入口を決める。
    - 実装から（既定）: `docs/requirements.md` と `docs/detail_design.md`（変更フローでは `docs/active_change` が指す変更文書も）があり、整合チェックに合格すること。無い、または合格しない場合は、`isdd-spec` で仕様を作るよう案内して止まる。
    - 実装後レビューだけ: ユーザーが「レビューだけ」「実装差分を反映して」などと頼んだ場合や、スキルを使わずに直されたコードを取り込む場合は、段階 2 から始める。
@@ -70,6 +72,8 @@ graph TD
 終わりの条件: `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件、`rq_ds_link_checker.py` が問題 0 件、`implementation_completeness_checker.py` が全項目 OK、テストが全件通過（build-implement.md の完了条件）。
 
 ## 段階 2: 実装後レビューと正本への反映
+
+段階 1 の後に進む前に、ユーザーが「実装だけ」「実装後レビュー（正本への反映）はまだ」と頼んでいないかを確かめる。頼まれていれば、段階 2 に入らずに止まる。正本の書き換え、`docs/active_change` の削除をしない。段階 1 の結果を報告し、次に実装後レビューを行うよう案内する。
 
 `references/build-review.md` に従う。変更フローでは、変更要件定義書と変更設計書を正本へ反映し、`docs/active_change` を消す。未マッピングは 1 件ずつユーザーに聞いて決める。
 
