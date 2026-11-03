@@ -2,10 +2,10 @@
 
 - セッション: `34d7b069-ca61-430f-93b4-ce1616c2430a`
 - cwd: `/Users/notfolder/Documents/isdd`（branch: main）
-- 期間: 2026-10-25 18:52 〜 2026-11-03 14:04
+- 期間: 2026-10-25 18:52 〜 2026-11-03 23:40
 - Claude Code: 2.1.310
-- 発言: ユーザー 34 / Claude 30 / ツール呼び出し 384
-- 書き出し: 2026-11-03 14:05 JST
+- 発言: ユーザー 60 / Claude 53 / ツール呼び出し 602
+- 書き出し: 2026-11-03 23:40 JST
 
 > ユーザー発言と Claude の本文は逐語。ツール呼び出しは `🔧` の 1 行に要約し、ツール結果・思考ブロックは含まない。
 
@@ -2629,3 +2629,1409 @@ Now remove the old 8 v2.0.1 skills after checking they're only the isdd ones.
 > 🔧 `Skill`
 
 > 🔧 `Bash` Read backlog, history dirs, and time
+
+> 🔧 `Bash` Export session transcript and scan for secrets
+
+> 🔧 `Bash` Scan for IPs and hostnames, preview export
+
+> 🔧 `Bash` List all user messages in the export
+
+引き継ぎ記録を書いています。セッションのログを書き出したので、次は summary.md とバックログを書きます。
+
+> 🔧 `Bash` Show later user messages briefly
+
+> 🔧 `Bash` Show content of remaining user messages
+
+> 🔧 `Bash` Read LLM research and investigation conclusions
+
+> 🔧 `Bash` Check whether the LLM report was delivered
+
+> 🔧 `Write` /Users/notfolder/Documents/isdd/.history/2026-11-03-1404-正本反映時期とスキル再構成/summary.md
+
+> 🔧 `Bash` List branches and backlog history
+
+summary.md を書き終えました。次はバックログを、未完の作業、完了した作業の記録、アイデアの 3 ファイルに分けます。
+
+> 🔧 `Write` /Users/notfolder/Documents/isdd/.history/BACKLOG.md
+
+> 🔧 `Bash` Split old backlog into archive and ideas files
+
+> 🔧 `Bash` Annotate superseded decisions and view CLAUDE.md head
+
+> 🔧 `Bash` Update CLAUDE.md location and add CI rule
+
+> 🔧 `Bash` Commit handover files and push branch
+
+引き継ぎの記録を書き、コミット `e63d742` をブランチ `v2.1.0-restructure` に push しました。このブランチは PR #9 の元なので、引き継ぎの記録も PR #9 に入ります。
+
+## 書いたファイル
+
+| ファイル | 中身 |
+|---|---|
+| `.history/2026-11-03-1404-正本反映時期とスキル再構成/summary.md` | 2026-10-25〜11-03 の作業、決定事項、次にやること |
+| `.history/2026-11-03-1404-正本反映時期とスキル再構成/session.md` | セッションの逐語ログ（ユーザー 34 発言、Claude 30 応答）。トークン・パスワード・IP は見つからなかった |
+| `.history/BACKLOG.md` | 未完の作業だけにした（15 件） |
+| `.history/BACKLOG-archive.md`（新規） | 完了と見送りの項目を、消さずにここへ移した |
+| `.history/IDEAS.md`（新規） | 2026-10-17 の決定事項と検証の前提を移した。ローカル LLM での eval の案（承認待ちのまま）も入れた |
+| `CLAUDE.md` | 最新の引き継ぎへのリンクを差し替えた。決まりを 1 行足した（CI は持たず、`tools/test_pythons.sh` で複数の Python の版を確かめる）。今 28 行 |
+
+## バックログの整理
+
+- **増やした作業:** v2.1.0 の試用とマージ、公開と入れ直し、外部連携の設計の段階の eval 場面、マージ済みブランチ 2 本の削除、古い eval 記録の削除。
+- **完了にした作業:** ローカルブランチ `notfolder/release-v2-0-0` を消す作業。すでに無くなっていました。
+- **件数:** 未完は全体で 30 件、1 テーマで 10 件の上限を超えていません。
+- **動きの無い項目:** 引き継ぎの記録はまだ 2 回分しかないので、確かめる対象はありません。
+
+## 確認事項
+
+1 と 2 は独立しているので、「1A, 2A」のようにまとめて答えてください。
+
+**1. 新しい項目に付けた重要度の案**
+
+| 項目 | 付けた案 |
+|---|---|
+| v2.1.0 を実プロジェクトで試してから PR #9 をマージする | 高 |
+| v2.1.0 を公開し、ユーザーグローバルを入れ直す | 高 |
+| 外部連携の設計の段階に eval 場面を足す | 高 |
+| マージ済みブランチ 2 本を消す | 低 |
+| 古い eval 記録を消す | 低 |
+| 前からある検証 D など 8 件（今回、重要度の印を付けた） | すべて低 |
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | このままにする | 起動時の一覧で、v2.1.0 の 3 件が上に出る |
+| B | 直す（どれをどう直すかを書いてください） | 一覧の並びが変わる |
+
+おすすめ: **A**。試用、マージ、公開、そしてずらした外部連携の責務の確認が、今いちばん先にやることだからです。
+
+**2. マージ済みのブランチ 2 本を消すか**
+
+`fix-external-research-change-flow`（PR #7）と `restore-post-impl-canonical`（PR #8）は、どちらもマージ済みです。手元にも GitHub にも残っています。
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | 手元と GitHub の両方から消す | ブランチの一覧が片付く。中身は main に入っているので失うものは無い |
+| B | 残す | 一覧に残るだけで、害は無い |
+
+おすすめ: **A**。どちらもマージ済みで、main に無いコミットはありません。以前のブランチ 2 本も同じように片付けています。
+
+## 65. ユーザー（2026-11-03 20:03）
+
+（コマンド: /model fable）
+
+## 66. ユーザー（2026-11-03 20:05）
+
+1 A
+2 A
+今のスキルの文言と構成を見直して問題がないか指摘して下さい。また、ゼロベースで評価して今の作りが妥当か、isddの型があるのがどこか、IDを付けてコードの漏れや設計の崩れを防ぐ発想以外のあり方はあるかなど、けんとして報告して下さい
+
+## 67. Claude
+
+> 🔧 `Bash` Delete the two merged branches locally and on GitHub
+
+> 🔧 `Bash` Prune remote refs and list skill file sizes
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/skills/isdd-reverse-engineering/SKILL.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/skills/isdd-setup/SKILL.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/spec-requirements.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/build-implement.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/build-review.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/hearing-rules.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/id-definitions.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/design-chapters.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/requirements-chapters.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/trace-map-rules.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/design-completeness.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/design-tasks-rules.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/requirement-exclusion.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/document-rules.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/external-credentials.md
+
+> 🔧 `Read` /Users/notfolder/Documents/isdd/shared/references/subagent-delegation.md
+
+> 🔧 `Bash` Show manifest and checker structure
+
+> 🔧 `Bash` Grep for leftover generic skill names, checker warn prefixes, AA mentions
+
+> 🔧 `ToolSearch` select:WebSearch
+
+> 🔧 `WebSearch` spec-driven development comparison Kiro spec-kit OpenSpec Tessl 2026 traceability
+
+> 🔧 `WebSearch` requirements traceability matrix alternatives executable specifications living documentation BDD acceptance tests coverage
+
+> 🔧 `WebSearch` AI coding agents spec drift design drift detection architecture fitness functions ArchUnit dependency-cruiser
+
+> 🔧 `WebSearch` "spec-driven development" criticism problems 2026 agent context too long specs
+
+> 🔧 `Bash` Show the rules block that isdd-setup writes into AGENTS.md
+
+ブランチ 2 本（`fix-external-research-change-flow`・`restore-post-impl-canonical`）は手元から消しました。GitHub 側はマージ時に自動で消えていて、すでにありませんでした。どちらも main に無いコミットは 0 件でした。
+
+以下は検討の報告です。ファイルは変えていません。
+
+## 1. 文言と構成の指摘
+
+4 本の SKILL.md と `shared/references/` の 16 本を通読しました。直すなら `shared/` を直して `tools/build_skills.py` で複製を作り直します。
+
+### 1-1. 矛盾・食い違い（直す価値が高い）
+
+| # | 場所 | 内容 | 安全に直せるか | 効果 |
+|---|---|---|---|---|
+| A1 | `skills/isdd-reverse-engineering/SKILL.md:95` | 「hearing-rules.md に従って **1 問ずつ**確認する」。v2.1.0 の hearing-rules は「独立した問いは番号付きでまとめる」なので矛盾している | 安全（1 文） | 中。逆引きのインタビューだけ往復が多いままになる |
+| A2 | `spec-design.md:94`（8-2） | 別の変更が `docs/active_change` に登録済みかを、**段階 5（最後）**で初めて確かめる。そこで止まると、段階 1〜4 のヒアリングと設計が無駄になる。isdd-spec の「開始の判定」で確かめるべき | 安全（判定を前に移すだけ） | 大。変更フローで 2 件目の変更を始めたときに効く |
+| A3 | `spec-design.md:51` | 「確認が要るのは、技術選定・連携ライブラリ・モック方式の承認と、要件レベルの不足**だけ**」。しかし同ファイル §1 の要件の除外（承認が要る）と、`design-chapters.md:161` の E2E ツール選定（第 1 章と同じ手順でユーザー承認）が抜けている | 安全 | 中。「だけ」を読んだエージェントが除外や E2E ツールを承認なしで決めるおそれ |
+| A4 | `spec-external.md:26,48`（§1 の 6 と §3） | 既存ライブラリの調査は「プロジェクトの言語」向けに行うが、言語は設計の段階（`spec-design.md` §2）で決める。「未定なら未定でよい」と書いてあるが、未定のときに調査レポート §7（ライブラリ候補の比較表）をどう書くかが無く、設計 §3 はその表を前提にしている | 安全（「言語が未定なら、技術選定の後に候補言語ごとに調べる」と足す） | 中。新規フローで外部連携があると必ず当たる |
+| A5 | `CLAUDE.md`、`spec-requirements.md:10`、`build-review.md:4` | 「正本は実装済みの仕様だけを持つ」は**変更フローだけで成り立つ**。新規フローでは isdd-spec が `docs/requirements.md`・`docs/detail_design.md` を実装前に直接書く。原則の文が実態と違う | 安全（「正本に、実装していない変更を重ねない」のように言い換える） | 中。新規フローの実装後レビューで、エージェントが「正本に反映するものが無い」と迷う元になる |
+| A6 | `skills/isdd-reverse-engineering/SKILL.md:138` | `check.sh` の**有無**だけ見て isdd-setup を呼ぶ。isdd-build のように `VERSION` と自分の版を比べない。isdd-setup の description は「他の isdd スキルが版が違うと判断したとき」と書くが、判断するのは isdd-build だけ | 安全（isdd-build の手順を写す） | 中。古いチェッカーのまま対応表を作る |
+| A7 | `trace-map-rules.md:36` と `trace_map_checker.py:393` | 対応表の行に `DS-IF-*`・`DS-BT-*` を使ってよいとあるが、チェッカーが「設計書にあって対応表に無い」と警告するのは `DS-MD`・`DS-CL`・`DS-FN` だけ。外部連携ラッパーの公開メソッドは `DS-IF-*`（`spec-design.md:32`）なので、**未実装でも警告が出ない** | 要検討（画面や API の `DS-IF` はコードに 1 対 1 で対応しないので、単純に警告対象へ足せない） | 中。v2.1.0 で isdd-build に移した外部連携コードの抜けを、チェッカーが拾えない |
+
+### 1-2. 用語の残り・冗長（直すのは軽い）
+
+| # | 場所 | 内容 | 安全に直せるか | 効果 |
+|---|---|---|---|---|
+| B1 | `requirements-chapters.md:31,32,113,146`、`design-chapters.md:146,169`、`design-tasks-rules.md:17,18`、`design-completeness.md:47`、`README.md:20` | 「設計スキル」「実装スキル」という総称が残っている。v2.1.0 では「設計の段階（isdd-spec）」「isdd-build」。エージェントが `isdd-design` という名前のスキルを探すおそれ | 安全（置換） | 小〜中 |
+| B2 | `id-definitions.md:118-124` | 「スキル固有ID一覧（現在は無い）」という空の節の下に、廃止したモック方式の注記がぶら下がっている | 安全 | 小 |
+| B3 | `skills/isdd-build/SKILL.md:62` と `:76-77` | 「実装だけ」で止まる判定が入口と段階 2 の冒頭に二重に書いてある。eval を通すために足したもので、矛盾はしていない | 安全だが、直すと eval を回し直す必要がある | 小。残してよい |
+| B4 | `skills/isdd-spec/SKILL.md:119` | 「コードを書かない」。段階 2 の接続テストは使い捨てのスクリプトを書くので、「成果物としてのコード（連携ライブラリ・モック・E2E）を書かない」のほうが正確 | 安全 | 小 |
+| B5 | `shared/manifest.json` の isdd-build | 実装後レビューは [追加] 要件を「該当章へ足す」が、isdd-build には `requirements-chapters.md`・`design-chapters.md` が同梱されていない。既存の正本から章立ては読めるので致命的ではない | 安全（manifest に 2 行） | 小〜中 |
+| B6 | `design-chapters.md:91,132` | 「AA モックアップ」「ディレクトリ構成（AA）」。`document-rules.md` は図を mermaid にする方針で、ここだけアスキーアート | 安全だが、画面モックは AA のほうが書きやすい面もある | 小。判断はユーザー次第 |
+| B7 | `hearing-rules.md:19` | Claude Code の `AskUserQuestion` は 1 回に 4 問・各 4 択まで。番号付きでまとめた問いがそれを超えたときにテキストに戻す、と書いていない | 安全 | 小 |
+
+## 2. ゼロベースの評価
+
+### 2-1. isdd の「型」はどこにあるか
+
+他の仕様駆動ツール（Kiro・Spec Kit・OpenSpec・Tessl）と並べて見ると、isdd にしか無いものは次の 4 つです。
+
+| 型 | 内容 | 似たものが他にあるか |
+|---|---|---|
+| **業務課題起点の最小化** | 要件は必ず `RQ-BK`（業務課題）に結びつけ、「この要件が無いと何が困るか」を書けないものは削る。推奨より複雑な案を選んだ理由を、ユーザーの言葉のまま残す | 他ツールは「要件→設計→タスク」の順序は持つが、要件を削る圧力の仕組みは持たない。ここが isdd の核 |
+| **文書をデータとして機械検査する** | ID を表の専用列に置き、「同じ行にある」ことを対応の根拠にする。チェッカーは標準ライブラリだけで、スキルを持たない人も CI も動かせる | Kiro は要件→タスクの追跡を IDE が持つ。isdd は Markdown だけで同じことを決定的にやる |
+| **正本と差分の分離** | 正本は有効な仕様だけ、変更は `.history/` の差分と `docs/active_change`、実装後に合流 | OpenSpec の ADDED/REMOVED と archive がほぼ同じ発想。isdd はそこに ID の追跡を足している |
+| **コードに ID を書かない対応表** | コードは汚さず、`docs/trace_map.md` で設計 ID と修飾名を結ぶ | 一般の RTM（要件トレーサビリティマトリクス）はテストや課題管理ツールに結びつける。コードの修飾名に結ぶのは珍しい |
+
+価値があるのは、**業務の言葉で要件を絞り込むところ**と、**仕様と実装のずれを人の目に頼らず検出するところ**です。章立てや手順の多さ自体は価値ではなく、この 2 つを支える道具です。
+
+### 2-2. 今の作りの妥当性（気になる点）
+
+| 論点 | 現状 | 評価 |
+|---|---|---|
+| 新規と変更の非対称 | 新規は正本を直接書き、変更は差分→合流 | 原則の文（A5）が崩れる以外は実害が少ない。新規も `.history/` に書いて isdd-build が昇格させる形にすれば対称になるが、流れが 1 段増える。今は言い換えで足りる |
+| 文書の重さが規模によらず一定 | 11 章の設計書、SOLID 適合表（第 5 章）、全エンティティの CRUD、非機能の全項目を、小さな CLI でも書く | 「小さな変更向けの近道は作らない」は流れの話で、文書の分量の話とは別。「該当なし」の節が多い文書は読まれなくなる。章は固定のまま、**小さい案件では節を「無い」の 1 行で閉じてよい**ことは既に書いてあるので、SOLID 表のような埋め草になりやすい表だけを見直す余地がある |
+| 設計での承認の回数 | 技術選定 → E2E ツール → ライブラリ採否・モック方式 → 除外要件、で最大 4 往復 | E2E ツールは技術選定に依存するが、ライブラリ・モック・除外は独立なので、技術選定の後に**1 回でまとめて**聞ける。v2.1.0 の「まとめて聞く」をここにも当てると往復が減る |
+| 外部連携の薄いラッパーを必ず作る | 既存ライブラリを採用しても、さらに 1 対 1 のラッパーで包む（`build-implement.md:32`） | モックへの切り替えが目的なら、DI か HTTP 層のモックで足りる場合が多い。公式 SDK を二重に包むのは、対応表に載せるための設計になっている面がある |
+| 逆引きでも業務課題・KPI・経営効果を必須にする | 既存コードから 2-1 の問題（KPI のギャップ）や 2-3 の経営効果を起こす | 後付けで作らされ、創作になりやすい。逆引きでは「不明（既存システムのため）」を許すほうが正直な文書になる |
+| 追跡の深さが言語で変わる | Python は構文木、TS/Java/Go は正規表現、他はファイルの有無だけ | 対応表の価値は、記号を取れる言語でしか出ない。ファイルだけの言語では `DS-MD` 単位の粗い追跡になることを README で明示したほうがよい |
+
+### 2-3. 「ID でコードの漏れ・設計の崩れを防ぐ」以外のあり方
+
+調べた範囲では、仕様と実装のずれを防ぐ考え方は次の 5 系統に分かれます。
+
+| 系統 | 考え方 | 何を防げるか | 防げないもの | 例 |
+|---|---|---|---|---|
+| **ID と対応表**（今の isdd） | 要件→設計→コードを ID で結び、表を機械検査する | 要件の未実装（前向き）と、要件の無いコード（後ろ向き）の両方 | 対応表に載っていても中身が違うこと | isdd、Kiro、規制業種の RTM |
+| **実行可能な仕様（テストが追跡になる）** | 受け入れテストを要件に結びつけ、通れば実装済みとみなす。テスト結果から「生きた文書」を生成する | 要件の未実装・実装の誤り（前向き） | 要件の無いコード、設計構造のずれ | BDD の living documentation、Cucumber + Serenity、Xray |
+| **構造の適合度関数** | 依存の向き・層・循環をルールにして、違反を機械検査する。エージェントが越えてはいけない境界を守らせる | 設計構造の崩れ | 要件の抜け | ArchUnit、dependency-cruiser、archfit |
+| **仕様からコードを生成する** | 仕様が正本で、コードは生成物。ずれが原理的に起きない | 全部（理論上） | 生成が非決定的で、まだ実用でない | Tessl |
+| **差分仕様と合流** | 変更を差分で書き、実装後に正本へ合流させる | 仕様の古さ | コードの漏れそのもの | OpenSpec、isdd の変更フロー |
+
+isdd は 1 番目と 5 番目を組み合わせた作りで、前向きと後ろ向きの両方を決定的に検査できるのは 1 番目だけです。「要件の無いコードを見つける」ことを価値と考えるなら、ID と対応表の発想は残すのが妥当です。
+
+一方で、isdd が既に持っている `RQ-TS`（テスト用利用シナリオ）→ `DS-TS`（E2E）→ `e2e/` の線は、2 番目の「テストが追跡になる」そのものです。ここを活かすと、次の組み合わせが考えられます。
+
+- **前向き（要件が実装されたか）はテストで見る:** `RQ-FT`・`RQ-UI` などの要件は、対応する `RQ-TS` の E2E が通ったかで判定する。チェッカーが「E2E の結果ファイルに `DS-TS-*` の通過があるか」を読む。
+- **後ろ向き（設計に無いコードが無いか）は対応表で見る:** 今のまま。ただし粒度を `DS-MD`（ファイル）と `DS-CL`（クラス）に落とし、関数単位の `DS-FN` は任意にする。関数ごとの行は書く量に対して得られるものが少なく、正規表現で近似している言語では精度も低いため。
+- **設計構造の崩れは適合度関数で見る:** 設計書第 7 章のディレクトリ構成から依存ルール（例: `external/*/src` を業務ロジックが直接呼ばない）を生成し、`check.sh` に足す。今は「ラッパーを通して呼ぶ設計にする」と文書で書くだけで、検査していない。
+
+この組み合わせにすると、対応表の行数が減り、代わりに E2E の結果と依存ルールが検査対象になります。「ID を付ける発想を捨てる」のではなく、**ID で見るものと、テスト・構造で見るものを分ける**方向です。
+
+批判側の指摘（仕様が長いほどエージェントの精度が落ちる、仕様どうしの矛盾をエージェントが拾ってしまう）は、isdd では「段階ごとの参照ファイルを分ける」「正本を 1 つにする」で既に対処しています。残っているのは文書の分量で、2-2 の「文書の重さ」と同じ論点です。
+
+## 出典
+
+- [6 Best Spec-Driven Development Tools for AI Coding in 2026](https://www.augmentcode.com/tools/best-spec-driven-development-tools)
+- [Spec-Driven Development in 2026: What It Is, the Tooling, and How Teams Actually Use It](https://dev.to/krlz/spec-driven-development-in-2026-what-it-is-the-tooling-and-how-teams-actually-use-it-2fk2)
+- [Kiro vs OpenSpec (2026)](https://codemyspec.com/blog/kiro-vs-openspec)
+- [spec-compare（ツール比較）](https://github.com/cameronsjo/spec-compare)
+- [Spec-driven development（Wikipedia）](https://en.wikipedia.org/wiki/Spec-driven_development)
+- [BDD in Action, 2nd ed. ch.15 Living documentation](https://livebook.manning.com/book/bdd-in-action-second-edition/chapter-15/v-12)
+- [Requirements traceability without Excel（IIBA）](https://production.iiba.org/iiba-business-analysis-member-articles/requirements-traceability-without-excel-building-live-links-that-actually-get-maintained/)
+- [Living documentation with BDD, Cucumber and Serenity（lastminute.com）](https://technology.lastminute.com/living-doc-bdd-cucumber-serenity/)
+- [Requirements → Test Coverage Mapper](https://smithery.ai/skills/jaktestowac/requirements-test-coverage-mapper)
+- [archfit（アーキテクチャ適合度関数）](https://pkg.go.dev/github.com/alexei-led/archfit@v0.13.0)
+- [Why spec-driven development isn't enough](https://briefhq.ai/blog/why-spec-driven-development-isnt-enough/)
+- [Your AI agent doesn't have a code problem, it has a specs problem](https://dev.to/theodordiaconu/your-ai-agent-doesnt-have-a-code-problem-it-has-a-specs-problem-3hk)
+- [Thoughtworks Radar: GitHub Spec Kit](https://www.thoughtworks.com/en-au/radar/languages-and-frameworks/github-spec-kit)
+- [Spec-driven development doesn't kill ambiguity（Waracle）](https://waracle.com/insights/artificial-intelligence/spec-driven-development-doesnt-kill-ambiguity/)
+- [Spec-driven development limits（The Serverless Edge）](https://theserverlessedge.com/spec-driven-development-limits/)
+- [Spec-Driven Development in 2026: Waterfall 2.0?](https://alexcloudstar.com/blog/spec-driven-development-2026/)
+
+## 確認事項
+
+1 と 2 は独立しているので、「1A, 2C」のようにまとめて答えてください。
+
+**1. 文言の指摘（1-1・1-2）をいつ直すか**
+
+直す場合は `shared/` を直して複製を作り直し、関係するスキルの eval を Haiku で回します。A2・A3・A6 は手順が変わるので eval の回し直しが要り、B 群は置換だけです。
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | 試用の前に、A1〜A6 と B1〜B5・B7 を `v2.1.0-restructure` で直す（A7・B6 は今回見送り） | 試用で矛盾に当たらずに済む。作業は 1〜1.5 時間（eval 込み）。試用の開始が遅れる |
+| B | 試用を先に始め、試用で見つかった問題と一緒に直す | すぐ試せる。A2（2 件目の変更で最後に止まる）と A4（外部連携の言語未定）には試用で当たる可能性がある |
+| C | 置換だけの B 群を今直し、A 群は試用の結果と一緒に直す | eval を回さずに済む分だけ速い（15 分ほど）。A 群の矛盾は残る |
+
+おすすめ: **A**。A2 と A4 は実プロジェクトで当たると、ヒアリングのやり直しになります。試用の前に潰しておくほうが、試用の結果を構成の評価に使えます。
+
+**2. ゼロベースの検討（2-2・2-3）の扱い**
+
+今回は説明だけです。進める場合も v2.1.0 には入れず、別の版になります。
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | 2-3 の組み合わせ（前向きはテスト、後ろ向きは対応表、構造は依存ルール）を v2.2 の候補として `IDEAS.md` に書く。設計はまだ | 方向だけ記録する。試用の結果を見てから着手を決められる |
+| B | 2-2 の軽いもの（設計の承認を 1 回にまとめる、SOLID 表の見直し、逆引きの KPI を「不明」で許す）だけを v2.1.x の候補にする | 小さく効く。発想の見直しはしない |
+| C | A と B の両方を記録する | ― |
+| D | 記録しない。今の作りで進める | ― |
+
+おすすめ: **C**。B は v2.1.0 の「まとめて聞く」の延長で、試用中に効きます。A は試用で対応表の手間がどれだけ重いかを見てから判断するのがよく、今は記録だけで足ります。
+
+## 68. ユーザー（2026-11-03 21:06）
+
+1 A7は対処方法はないですか？
+2 C v2.1.0に入れたい。
+
+## 69. Claude
+
+> 🔧 `Bash` Read estimate log rules and checker design-parsing code
+
+## 1. A7（外部連携ラッパーの `DS-IF` が未実装でも警告が出ない）の対処
+
+対処はあります。2 案です。
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | **設計書第 7 章の行を根拠にする。** 第 7 章のファイル一覧は「`DS-MD-*` の行に、そのファイルで実現するほかの設計 ID も書く」決まり（`design-chapters.md:133`）。チェッカーが、`DS-MD-*` と同じ行に並ぶ `DS-*`（`DS-TS` を除く）を「コードで実現する要素」として集め、対応表に無ければ警告する。今の `DS-MD`・`DS-CL`・`DS-FN` の接頭辞による警告は残す | `DS-IF` だけでなく、`DS-BT`・`DS-EV`・データクラスの `DS-SC` も同じ仕組みで拾える。「何がコードになるか」を設計書自身が宣言する形で、isdd の「文書をデータとして検査する」型に沿う。変更は `trace_map_checker.py` の設計書の読み取り 1 か所と単体テスト 2 本、`trace-map-rules.md` の説明 1 段落 |
+| B | **ラッパーの公開メソッドを `DS-FN-*` にする。** `DS-IF-*` は外部 API の契約そのものに付け、メソッドは `DS-FN` にする。チェッカーは変えない | 文書の書き換えだけで済む（`spec-design.md`・`design-chapters.md` 4-1・`build-implement.md` の 3 か所）。ただし画面以外の `DS-IF`・`DS-BT` の抜けは引き続き拾えない |
+
+おすすめ: **A**。B は外部連携だけの穴埋めで、A は同じ種類の穴をまとめて塞ぎます。A のほうが変更は多いですが、チェッカーの改修は 20 行ほどです。
+
+## 2. v2.1.0 に入れる範囲
+
+2-3 の組み合わせを 3 つに分けると、v2.1.0 に入る大きさのものと、別の版にすべきものに分かれます。
+
+| 項目 | 内容 | v2.1.0 に入るか |
+|---|---|---|
+| B-1 設計の承認を 1 回に | 技術選定の承認の後、連携ライブラリの採否・モック方式・E2E ツール・除外要件を番号付きで 1 回に出す | 入る。`spec-design.md`・`design-chapters.md` 8-3・isdd-spec の段階 4 の文言 |
+| B-2 SOLID 表の見直し | 第 5 章の「SOLID 適合状況の表」を外し、「責務が 1 つか、依存の向きが第 7 章の構成と合うか」の 2 項目にする | 入る。`design-chapters.md`・`design-completeness.md` |
+| B-3 逆引きで「不明」を許す | 2-1 の KPI と 2-3 の経営効果を、既存システムでは「不明（理由）」で閉じてよい。`RQ-BK` は今までどおり要る | 入る。isdd-reverse-engineering のステップ 3〜5 |
+| A-a 前向きはテストで見る | 対応表に `DS-TS-*` → `e2e/...::テスト関数` の行を書けるようにし（テストファイルの行は `DS-TS` だけ許す）、設計書の `DS-TS` が対応表に無ければ警告する。`RQ-TS` → `DS-TS` → テスト関数の線が機械検査できる | 入る。チェッカーの改修（テストファイルの扱い 1 か所、警告 1 行）、単体テスト 2 本、`trace-map-rules.md`。E2E が**通ったか**の読み取り（JUnit XML など）は入れない。全件通過は isdd-build の完了条件で既に求めているため |
+| A-b `DS-FN` を任意にする | `completeness.json` に対応表の粒度（`function` / `class`）を持ち、`class` では「公開関数が対応表に無い」警告を、クラスかファイルが登録済みなら出さない。既定は `function`（今と同じ） | 入る。`isdd_setup.py`・`check.sh`・`trace_map_checker.py`・単体テスト 2 本・`trace-map-rules.md`・isdd-setup の手順 |
+| A-c 依存ルールの検査 | 第 7 章の構成から依存の向きのルールを作り、import を解析して検査する | **入れない。** 言語ごとの import 解析を持つ新しいチェッカーで、isdd-setup の導入物も増える。v2.2 で設計から始める |
+
+A-a・A-b を v2.1.0 に入れると、試用で「構成の変更」と「対応表の方式の変更」を同時に評価することになります。切り分けにくくなる点は承知のうえで、A-b は既定が今と同じなので試用の邪魔はしません。
+
+## 見積もり
+
+| 単位 | O / M / P（分） | 期待値 |
+|---|---|---|
+| 実装: A7 案 A（チェッカー＋テスト＋文書） | 15 / 25 / 50 | 28 |
+| 実装: 指摘 A1〜A6・B1〜B5・B7 の文言 | 15 / 25 / 45 | 27 |
+| 実装: B-1〜B-3 | 15 / 25 / 45 | 27 |
+| 実装: A-a | 15 / 30 / 60 | 33 |
+| 実装: A-b | 20 / 35 / 70 | 38 |
+| 実行: 単体テスト 5 版 ＋ eval 4 スキル 1 周（spec 15 場面 約 20 分、build 9 場面 約 15 分、他 5 分） | 40 / 50 / 70 | 52 |
+| 手戻り: eval の回し直し 1〜2 回 | 10 / 20 / 40 | 22 |
+
+実装の合計 153 分に、直近 2 件の比（0.35・0.51）で ×0.45 を掛けて約 70 分。実行 52 分、手戻り 22 分を足して**約 2.4 時間**。A-a・A-b を外すと約 1.6 時間です。着手したら終了見込みを時計で出します。
+
+## 確認事項
+
+1 と 2 は独立しているので、「1A, 2A」のようにまとめて答えてください。答えをもらったら実装に入ります。
+
+**1. A7 の対処**
+
+| 案 | 内容 |
+|---|---|
+| A | 第 7 章の行を根拠にチェッカーで拾う（上の案 A） |
+| B | ラッパーのメソッドを `DS-FN` にする（上の案 B） |
+
+おすすめ: **A**（理由は上のとおり）。
+
+**2. v2.1.0 に入れる範囲**
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | B-1〜B-3 と A-a・A-b を入れ、A-c は v2.2 の候補として `IDEAS.md` に書く | 約 2.4 時間。試用で対応表の粒度（`class`）も試せる |
+| B | B-1〜B-3 だけ入れ、A-a〜A-c は `IDEAS.md` に書く | 約 1.6 時間。対応表の方式は今のまま試用する |
+| C | A-c も含めて全部入れる | 依存ルールの設計から始めるので 2 倍以上かかり、試用の開始が明日になる |
+
+おすすめ: **A**。A-a と A-b はチェッカーの小さな拡張で、既定の動きを変えません。A-c は別の版に分けるのが安全です。
+
+## 70. ユーザー（2026-11-03 21:09）
+
+1 A
+2 C 今日直せるものは全てなおしたい
+
+## 71. Claude
+
+> 🔧 `Bash` Check time, tests, and read isdd_setup.py
+
+> 🔧 `Bash` Read the rest of trace_map_checker.py
+
+> 🔧 `Bash` Read test helpers and existing checker tests
+
+> 🔧 `Bash` List eval tasks/fixtures and grader references to setup outputs
+
+> 🔧 `Bash` Find related wording spots and README skill section
+
+> 🔧 `Bash` Check fixtures for DS-TS/e2e and which tasks list setup scripts
+
+> 🔧 `Bash` Inspect a build fixture's chapter 7 and DS-TS usage
+
+> 🔧 `Bash` Read e2e completeness check and a fixture's chapter 7
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Write` /Users/notfolder/Documents/isdd/shared/scripts/dependency_checker.py
+
+> 🔧 `Bash` Run existing unit tests after checker refactor
+
+> 🔧 `Bash` Show the failing test details
+
+> 🔧 `Bash` Find the parse_design traceback cause
+
+The checker refactor is in; the test failures are a missing `HEADING_PATTERN` constant and the manifest not yet listing the new checker. Fixing both now.
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/manifest.json
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/manifest.json
+
+> 🔧 `Bash` Rebuild skill copies and rerun the unit tests
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/isdd_setup.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/isdd_setup.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/isdd_setup.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/isdd_setup.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/isdd_setup.py
+
+> 🔧 `Bash` Read isdd_setup docstring header to update
+
+> 🔧 `Bash` Inspect the rules_block definition text
+
+> 🔧 `Bash` Apply isdd_setup docstring and rules block edits via script
+
+> 🔧 `Write` /Users/notfolder/Documents/isdd/tests/test_dependency_checker.py
+
+> 🔧 `Bash` Read the tail of the trace map checker tests to append new ones
+
+> 🔧 `Bash` Append new unit tests for checker, setup; rebuild and run
+
+> 🔧 `Bash` Show the single failing test
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/dependency_checker.py
+
+> 🔧 `Bash` Rebuild, run unit tests on all local Python versions
+
+> 🔧 `Bash` Add new skill files to eval task file lists
+
+> 🔧 `Bash` Locate README sections to update
+
+> 🔧 `Bash` Apply wording fixes A1-A6, B1-B7, B-1, B-3 across skill docs
+
+> 🔧 `Bash` Show design-chapters chapters 5, 7, 8-3/8-4 for the next edits
+
+> 🔧 `Bash` Apply design-chapters, trace-map-rules, build-implement, isdd-build/setup SKILL edits
+
+> 🔧 `Bash` Show README skill/script tables and setup eval must_exist block
+
+> 🔧 `Write` /private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/scratchpad/edit_docs2.py
+
+> 🔧 `Bash` Apply second doc edit batch, rebuild copies, run tests
+
+> 🔧 `Bash` Diff stat, publish dry-run, and the time
+
+> 🔧 `Bash` Validate eval file lists with the mock runner
+
+> 🔧 `Bash` Check setup fixture scripts dir and grader references
+
+Edits are all applied and tests pass (70/70, dry-run OK). Committing now, then launching the Haiku evals for all 4 skills in the background.
+
+> 🔧 `Bash` Commit the v2.1.0 tracking and wording changes
+
+> 🔧 `Bash` Run Haiku evals for all 4 skills in the background
+
+> 🔧 `Bash` Wake after 2 minutes to check the eval started cleanly
+
+コミット `e38a81b` を作り、4 スキルの eval（Haiku）を 21:25 に始めました。**終了見込みは 22:10 ごろ**（前回の実測: spec 15 場面 約 20 分、build 9 場面 約 15 分、setup と逆引き 約 5 分）。2 分後に起動を確かめ、その後は 30 分以内の間隔で進捗を報告します。
+
+実装と文書は 21:09〜21:23 の約 14 分で終わり、見積もり（約 90 分）より大幅に早く進んでいます。
+
+## 72. ユーザー（2026-11-03 21:25）
+
+<task-notification>
+<task-id>b2bmazj4f</task-id>
+<tool-use-id>toolu_017gcy1Z1G65FSrD8vodFXLw</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/b2bmazj4f.output</output-file>
+<status>completed</status>
+<summary>Background command "Wake after 2 minutes to check the eval started cleanly" completed (exit code 0)</summary>
+</task-notification>
+
+## 73. Claude
+
+> 🔧 `Bash` Check the eval log after 2 minutes
+
+> 🔧 `Bash` Wake in 25 minutes to check eval progress
+
+> 🔧 `Bash` List eval results so far
+
+> 🔧 `Bash` List test progress lines from the eval log
+
+> 🔧 `Bash` Show eval progress lines
+
+> 🔧 `Bash` Print the head of the eval log
+
+> 🔧 `Bash` Count tests started and list pass/fail lines
+
+The eval is still in its first minutes (21:25). I'll stop polling and wait for the 25-minute wake-up notification.
+
+## 74. ユーザー（2026-11-03 21:28）
+
+「仕様と実装のずれを人の目に頼らず検出するところ」が価値と言っていましたが、現在のllmの性能があれば、仕様と実装のずれが少ない様に感じます。機械的に検出することの必要性はどれくらいあるでしょうか？また、isdd使用の効果を定量的、無理であれば定性的に比較する方法を検討してみてください。
+
+## 75. Claude
+
+> 🔧 `WebSearch` LLM coding agent spec compliance drift study measured requirements implemented incorrectly long tasks 2026
+
+> 🔧 `WebSearch` METR developer productivity AI study 2025 2026 results controlled experiment time
+
+## 1. 機械的に検出する必要はどれくらいあるか
+
+結論から言うと、**1 回のセッションで仕様どおりに作る力**は、今のモデルなら十分高く、そこでの「ずれ」を機械で拾う価値は小さくなっています。機械検出の価値が残るのは、別の 3 つの場面です。
+
+| 場面 | ずれが起きる理由 | LLM の性能で減るか | 機械検出の効き方 |
+|---|---|---|---|
+| A. 1 回のセッションで仕様どおりに作る | 読み落とし、推測で埋める | **減る。** 今はほとんど起きない | 小。チェッカーが拾うのは ID の有無だけで、中身の違いはテストでしか分からない |
+| B. 長いセッション、少しずつ増える仕様 | 文脈が埋まるほど初期の制約を忘れる | 減りにくい。仕様が約 60 回に分けて届く状況で忠実さが落ちることを測った研究（Purdue の SLUMP）や、Claude Code のセッション記録から「ユーザーが指定した制約を忘れる」ドリフトを検出する研究がある | 中。チェッカーより「段階ごとに参照ファイルを分けて文脈を短く保つ」「完了条件を機械の出力で定義する」ほうが効く。isdd はここを既にやっている |
+| C. 時間を置いた変更の積み重ね、別の人・別のエージェント、スキルを使わない変更 | 前の判断の文脈が無い。仕様を読まずにコードを直す | **減らない。** モデルの性能の問題ではなく、文脈が渡っていない問題 | **大。** 正本・対応表・依存の規則は、文脈を持たない次の作業者（人でもエージェントでも）に対する「ここを守れ」の宣言で、チェッカーはその宣言を強制する唯一の手段 |
+| D. 「作りすぎ」と「言わなかったこと」 | エージェントは頼まれていない機能やヘルパーを足す。ユーザーが言い忘れた要件は作られない | 作りすぎは減っていない（むしろ賢いほど足す） | 中。「要件に結びつかない公開関数」は対応表の後ろ向きチェックでしか見つからない。言い忘れは業務課題起点のヒアリングで減らす |
+
+もう 1 つ、検出そのものとは別の価値があります。**検証を LLM の自己申告に任せると、実態と申告がずれる**ことが測られています（手順の遵守率が実測 0% なのに自己申告は 90% 以上、という報告）。今回の eval でも、Haiku が通ったのは「`check.sh --strict` がエラー 0 件」のように完了条件を機械の出力で定義しているからで、「仕様どおりか自分で確かめて」では通りません。つまりチェッカーの主な役目は「人の代わりにずれを見つける」ことより、**エージェントに終わりの条件を与え、ユーザーが目視せずに済む根拠を残す**ことに移っています。
+
+正直に言うと、今の isdd のチェッカーで機械的に分かるのは「ID の存在」「構造」「依存の向き」までで、「中身が仕様と違う」ずれは拾えません。中身を見るのは `RQ-TS` → E2E の線です。**仕様と実装のずれの検出の主役は受け入れテストで、対応表と依存チェックは「次の作業者への宣言」と「作りすぎの検出」**、と捉え直すのが今の性能に合った位置づけだと思います。
+
+必要性の大小で言えば、使い捨ての小物や 1 セッションで終わる作業には要りません。寿命が長く、変更を重ね、複数の人やエージェントが触るプロジェクトには要ります。isdd の対象は後者なので、価値は残りますが、「ずれを人の目に頼らず検出する」という私の言い方は強すぎました。
+
+## 2. isdd の効果を比較する方法
+
+体感で測らないことが前提です。METR の無作為化試験では、経験のある開発者が AI で 19% 遅くなったのに本人は 20% 速くなったと感じていました（2025 年。METR 自身が「今のツールには当てはまらない」と注記し、2026 年の追試は選択バイアスで結論が出ていません）。方向はともかく、**体感と実測は逆にもなる**ので、作った物を測ります。
+
+### 定量（A/B 比較）
+
+同じ題材・同じヒアリング回答で、(A) isdd あり、(B) スキルなしの素のエージェント（同じモデル、同じ回答を固定入力）の 2 本を作り、次を測ります。評価基盤（waza、Haiku、固定の follow-up 回答）は既にあるので、題材を 1 つ決めれば回せます。
+
+| 指標 | 測り方 | 何が分かるか |
+|---|---|---|
+| 要件の実装率 | 要件定義書から**独立に**（実装を見ずに）作った受け入れテストを両方に当て、通過率を比べる。テストは別セッションのエージェントに作らせる（ブラインド） | 仕様どおりに作れたか。本質の指標 |
+| 作りすぎ | 公開関数・画面のうち、要件に結びつかないものの数 | D の「作りすぎ」をどれだけ抑えたか |
+| 変更に強いか | 変更要求を 3 回続けて当て、3 回目の後に受け入れテストと「要件外コード」をもう一度測る。別セッション（文脈なし）で変更させる | C の場面での差。isdd の価値はここに出るはず |
+| 引き継ぎ可能性 | 変更の 1 回を、仕様書とコードだけ渡した別のモデル（例: Haiku）に実装させ、通過率を比べる | 文書が「次の作業者」に効いているか |
+| コスト | トークン数、壁時計時間、ユーザーへの質問の往復数 | isdd の手間の代償 |
+| 再現性 | 同じ入力で 3 回作り、通過率と作りすぎの分散を比べる | 手順が結果を安定させているか |
+
+このリポジトリには、同じ備品管理の題材を Copilot・Kiro・Claude・OpenCode で作った過去のブランチ（`feature-dev-asset-management-*`、`v.1.0.9-*`、`v.1.0.10-*`）が残っています。当時の isdd と素のツールの比較素材として、受け入れテストを後から当てれば使えるかもしれません（版が古いので、今の isdd の評価にはならない点は注意です）。
+
+### 定性
+
+定量で取りにくいものは、評価者を固定して観察します。
+
+- 変更 3 回後の要件定義書・設計書を読んで、**今の実装を説明できているか**（正本が実装済みの仕様だけを持つ方式の効果）
+- ヒアリングの質: 業務課題に結びつかない要件がどれだけ出たか、ユーザーが「聞かれて初めて気づいた」要件が何件あったか
+- 「頼んでいないもの」をユーザーが発見した回数
+- レビューにかかった時間と、レビューで見つかった仕様違反の数（isdd ありでゼロに近いなら、チェッカーと完了条件が効いている）
+
+### 最初にやるなら
+
+変更 3 回後のブラインド受け入れテストの通過率だけを、isdd あり・なしで比べる 1 本が、いちばん少ない手間で核心を測れます。1 回のセッションの出来では差が出ない（出ないことを確かめる意味はある）、差が出るとすれば変更の積み重ねと文脈の断絶のところ、という仮説を直接確かめられるからです。
+
+## 出典
+
+- [Specification Drift and SLUMP: Why Codex CLI Loses Faithfulness in Long-Horizon Sessions](https://codex.danielvaughan.com/2026/05/02/specification-drift-slump-codex-cli-faithfulness-long-horizon-sessions/)（Purdue の研究の二次情報）
+- [Asymmetric Goal Drift in Coding Agents Under Value Conflict（arXiv）](https://arxiv.org/pdf/2603.03456)
+- [Nautilus Compass: 制約の忘却ドリフトの検出（arXiv）](https://arxiv.org/html/2601.04170v1)
+- [A Deterministic Control Plane for LLM Coding Agents（arXiv）](https://arxiv.org/pdf/2606.26924)
+- [Agent compliance drift: What it is and how to control it](https://datanorth.ai/blog/agent-compliance-drift-what-it-is-and-how-to-control-it)
+- [METR 2025 試験の報道（TechCrunch）](https://techcrunch.com/2025/07/11/ai-coding-tools-may-not-speed-up-every-developer-study-shows)
+- [METR の実験設計の変更](https://conffab.com/?p=10163)
+- [2026 年の追試の報告（birchtree）](https://birchtree.me/blog/an-update-from-the-study-that-said-devs-were-actually-slower-with-coding-agents/)
+- [AI coding productivity 2x not 10x（METR 2026 の解説）](https://blog.codercops.com/blog/ai-coding-productivity-2x-not-10x-metr-2026)
+
+## 確認事項
+
+**1. 比較の実験を残作業にするか**
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | 「変更 3 回後のブラインド受け入れテスト」の 1 本を `IDEAS.md` に書く。題材と手順の設計はまだ | v2.1.0 の試用が終わってから判断できる |
+| B | 今回の作業の後に、題材と手順を設計して `.history/` に案を書く | 今日中には着手しない。設計に 30 分ほど |
+| C | 残さない | ― |
+
+おすすめ: **A**。試用で「対応表の手間」の実感が出てから、何を測るかを決めるほうが無駄がありません。
+
+eval は 21:25 に始めた分が走っています（終了見込み 22:10 ごろ）。次の起床で進捗を報告します。
+
+## 76. ユーザー（2026-11-03 21:34）
+
+1 A IDEAS.mdではなく、バックログの優先度高で入れたいが、もう少し検討してから。
+1. 機械的に検出する必要はどれくらいあるか
+この分析を受けて、今のisddをどのようにしたら良いか検討して提案して
+
+## 77. ユーザー（2026-11-03 21:35）
+
+1 A IDEAS.mdではなく、バックログの優先度高で入れたいが、もう少し検討してから。
+1. 機械的に検出する必要はどれくらいあるか
+この分析を受けて、今のisddをどのようにしたら良いか検討して提案して
+2. isdd の効果を比較する方法
+isddの作り始めのモチーフでは、備品管理アプリを用いたが、このような仕様書ドリブンの性能評価をできるような題材がないか調査して。定量的に評価できる様なものがあればなお良い。
+
+## 78. Claude
+
+> 🔧 `WebSearch` benchmark LLM agent build full application from requirements specification PRD hidden tests DevBench Commit0 WebApp1K NoCode-bench
+
+> 🔧 `WebSearch` spec-driven development benchmark 2026 evaluate agents specification to code incremental feature requests long-horizon
+
+> 🔧 `WebSearch` 公開 要件定義書 サンプル システム 演習 題材 データセット 日本語 仕様書 評価 コード生成
+
+> 🔧 `WebSearch` WebGen-Bench 101 web application generation tasks functional requirements UI agent test evaluation
+
+> 🔧 `WebSearch` Uvik SDD benchmark Spec Kit Kiro BMAD OpenSpec 50 tickets methodology merge rate
+
+> 🔧 `WebSearch` FeatureBench OR "SWE-Dev" OR "NoCode-bench" feature development benchmark natural language feature description tests repository
+
+> 🔧 `WebSearch` DevBench PRD UML software design benchmark LLM end-to-end software development evaluation OR ProjectEval OR "ProjDevBench"
+
+## 1. 分析を受けて、isdd をどうするか
+
+前提にする判断は 3 つです。(1) 1 セッションの忠実さはモデルが担うので、チェッカーに「中身のずれ」を期待しない。(2) 残る価値は「文脈を持たない次の作業者への宣言と強制」「作りすぎの検出」「エージェントに機械的な終わりの条件を与えること」。(3) 中身を見るのは受け入れテスト。
+
+この前提で、isdd を次のように変えることを提案します。今日の実装（追跡を 3 つに分けた）はこの方向の最初の一歩で、残りは v2.2 以降の候補です。
+
+| # | 提案 | 内容 | 変わること | 大きさ |
+|---|---|---|---|---|
+| P1 | **受け入れテストを整合の主役にする** | 要件の「テスト用利用シナリオ」（`RQ-TS`）を、機能要件（`RQ-FT`・`RQ-UI`・`RQ-EX`）ごとに 1 本以上対応させることをチェッカーで求める（今は「利用フローを 100% 網羅」と文章で言うだけ）。実装後レビューは E2E の**結果**（JUnit XML など）を読み、8-2 の `DS-TS` ごとに通過を確かめる | 「要件が実装されたか」が、対応表の有無ではなくテストの通過で決まる。今日入れた `DS-TS` → テスト関数の線が生きる | 中。`rq_integrity_checker` に 1 条件、`trace_map_checker` に `--junit`、文書 3 か所 |
+| P2 | **対応表の既定の粒度を `class` にする** | 関数単位の行は、強いモデルでは帳簿付けの手間が大きく、後ろ向き検出（設計に無いコード）はファイル・クラス単位でほぼ足りる。設計書に `DS-FN` を書いた要素だけ関数単位で追う | 対応表の行数が減る。関数の「作りすぎ」は見えなくなるが、クラスの中の関数の作りすぎは実害が小さい | 小。既定値の変更と文書。**試用で手間を見てから決める** |
+| P3 | **isdd を「次の作業者への契約」と位置づけ直す** | README の価値の説明を「ずれを人の目に頼らず検出」から「正本・対応表・依存の規則・受け入れテストは、文脈を持たない次の作業者（別セッション、別の人、スキルを持たないエージェント）に対する宣言で、チェッカーはその宣言を強制する」に改める。あわせて「isdd を使わないほうがよい場合」（使い捨て、1 セッションで終わる小物）を明記する | 価値の主張が実態と合う。向かない案件に使わせない | 小。README と CLAUDE.md |
+| P4 | **段階の区切りでセッションを切る運用を勧める** | 長いセッションで初期の制約を忘れる研究があるので、isdd-spec の「要件の確定」「設計の承認」、isdd-build の「実装の完了」で新しいセッションに切り替え、成果物から再開することを README と各 SKILL.md の「報告と引き渡し」に書く（途中再開は既に実装済み） | 文脈の長さによる忠実さの低下を、手順で避ける | 小。文言だけ |
+| P5 | **「作りすぎ一覧」を実装後レビューに出す** | 未マッピング一覧の「状態」に「要件なし（作りすぎ）」を明示し、要件に結びつかない公開関数・画面・設定項目を数で報告する。削るか要件に足すかをユーザーが決める | D の「作りすぎ」を可視化する。今は未マッピング一覧に混ざっている | 小。build-review の表の列と文言 |
+| P6 | **pre-commit で止める範囲を広げない** | 依存の規則への違反はエラー（今日入れた）だが、未登録の警告は今までどおり止めない。スキルを持たない人の変更を止めると、isdd の外で直す動機になり、ずれが隠れるため | 変更なし（確認） | ― |
+| P7 | **効果を測る仕組みを isdd に同梱する** | 下の 2 で選ぶ題材と手順を `evals/` と同じ基盤（waza、固定回答）に載せ、版を上げるたびに「isdd あり・なし」の差を出せるようにする | 「isdd に価値があるか」を版ごとに数字で言える | 大。2 の結論しだい |
+
+やらないほうがよいと考えるもの: **関数単位の追跡をやめて ID をテストだけに結ぶ**こと。後ろ向き（設計に無いコード）が見えなくなり、作りすぎを検出する手段を失うためです。
+
+おすすめは **P3・P4・P5 を v2.1.x（文言だけ）、P1 を v2.2、P2 は試用の結果で判断、P7 は 2 の題材が決まってから**です。
+
+## 2. 仕様書ドリブンの性能評価に使える題材
+
+公開ベンチマークと、isdd の評価に使えるかを調べました。isdd の評価に必要なのは「要件（または変更要求）→ 実装」を、**隠しテストで採点できる**題材で、できれば変更を重ねられるものです。
+
+| 題材 | 中身 | 採点 | isdd の評価に使えるか |
+|---|---|---|---|
+| [Uvik SDD Benchmark](https://uvik.net/blog/spec-driven-development-benchmark/)（2026-10） | 本番の Python チケット 50 件を、Spec Kit・Kiro・BMAD・OpenSpec・仕様なし（対照）の 5 本で同じモデル（claude-sonnet-5）で実装 | マージ率、レビュー指摘数。OpenSpec 42/50、対照 36/50。機能追加では仕様あり 90% 対 対照 60%、1〜2 ファイルの修正では差なし | **設計がいちばん近い**（isdd あり・なしの A/B と同じ形）。ただしチケットは Uvik の本番で非公開。手順と指標を借りる |
+| [WebGen-Bench](https://neurips.cc/virtual/2025/poster/121451)（NeurIPS 2025、[GitHub](https://github.com/mnluzimu/WebGen-Bench)） | 自然言語の指示から Web アプリをゼロから作る。101 件の指示、647 件のテストケース | テストケースごとに「操作と期待結果」があり、ブラウザ操作エージェントが採点。最高 27.8% | **新規フローの定量評価に使える。** 指示が短いので、isdd のヒアリングは固定回答で埋める形になる。採点がブラウザ操作エージェントなので、実行基盤が要る |
+| [ProjDevBench](https://arxiv.org/abs/2602.01655v2)（2026-02） | プロジェクト単位の要件から全リポジトリを作る 20 問・8 分類 | オンラインジャッジ型の実行テスト ＋ LLM によるコードレビュー。受理率 27% | 新規フローに使える。件数が少なく、要件が整っているので isdd の「要件を絞る」価値は出にくい |
+| [FeatureBench](https://arxiv.org/abs/2602.10975v1)（ICLR 2026） | 24 リポジトリから 200 件。既存リポジトリに機能を 1 つゼロから足す（機能の定義・import・関連ロジックを取り除いた状態から） | 単体テスト。最高 11% | **変更フロー（既存コードへの追加）に使える。** 難しすぎて Haiku では差が出ないおそれ |
+| [SWE-Dev](https://arxiv.org/html/2505.16975v2)（NeurIPS 2025） | 機能の説明 ＋ コードベース ＋ 開発者が書いた単体テスト。テスト 500 件 | 単体テスト（Pass@3 で 22%） | 変更フローに使える。機能の説明（PRD）が LLM 生成で曖昧、という指摘あり |
+| [DevBench / DevEval](https://arxiv.org/abs/2403.08604v2)（2024） | PRD → UML 設計 → 環境構築 → 実装 → 受け入れ・単体テスト。22 リポジトリ・4 言語 | 設計は LLM 判定、実装はテスト | **要件 → 設計 → 実装の全段階を持つ唯一のもの**で isdd の流れに近いが、古く、設計の採点が LLM 判定 |
+| [Commit0](https://arxiv.org/pdf/2511.13998)（LoCoBench の比較表から） | 文書と高カバレッジのテストからライブラリを再構築 | テスト | 関数の中身を埋める問題で、仕様駆動の評価には向かない |
+| [OpenHarmony Bench](https://arxiv.org/html/2608.16022v1) | 要件の段階的追加、仕様駆動、バグ修正の 3 種 | ビルド成功率、タスク完了率 | **段階的な追加**を持つ数少ない例だが、OpenHarmony 専用 |
+| 日本語の要件定義書のデータセット | 見つからなかった（総務省の演習資料、情処の要求仕様の記述ルール研究はあるが、採点できる形ではない） | ― | 無し |
+
+### 所見
+
+- **「変更を 3 回重ねて、文脈を切り替える」題材は公開されていません。** どのベンチマークも 1 回の指示 → 1 回の実装です。isdd の価値が出るはずの場面（C）を測るには自作が要ります。
+- 公開ベンチマークの指示は短い自然言語で、isdd のヒアリング（業務課題から要件を絞る）の価値は測れません。測れるのは「要件が与えられた後の設計 → 実装 → 整合」の部分です。
+- Haiku で回すと、FeatureBench（最高 11%）のような難しい題材は isdd あり・なしとも 0 に近く、差が出ません。WebGen-Bench（27.8%）か ProjDevBench（27%）の水準が、差を見るのに向きます。
+
+### 提案する組み合わせ
+
+| 段 | 題材 | 測るもの |
+|---|---|---|
+| 1. 新規フロー | WebGen-Bench から 10 件ほど（UI 操作の採点が動く環境が要るので、CLI・API 寄りの件を選ぶか、ProjDevBench の 20 問にする） | テストケース通過率、作りすぎ（要件に無い画面・関数）、トークン |
+| 2. 変更フロー | SWE-Dev の test split から、Haiku でも手が届く易しめの 10〜20 件 | 単体テスト通過率、正本の更新の正しさ |
+| 3. 変更の積み重ね（自作） | 備品管理アプリを起点に、変更要求 3 件を順に当てる。各回は新しいセッション、仕様書とコードだけを渡す。受け入れテストは要件定義書から別セッションのエージェントが実装を見ずに作る（ブラインド） | 3 回目の後の受け入れテスト通過率、作りすぎ、正本と実装の矛盾の数、引き継ぎ可能性（Haiku に 1 回やらせる） |
+
+3 だけが isdd の核心（文脈の断絶と積み重ね）を測ります。1・2 は「isdd が足を引っ張っていないか」の確認で、Uvik の結果（小さな修正では差なし、機能追加で差あり）と同じ傾向が出るかを見るものです。
+
+### 出典
+
+- [Uvik: Spec-driven development benchmark](https://uvik.net/blog/spec-driven-development-benchmark/)
+- [WebGen-Bench（NeurIPS 2025）](https://neurips.cc/virtual/2025/poster/121451)、[alphaxiv の要約](https://alphaxiv.org/benchmarks/the-chinese-university-of-hong-kong/webgen-bench)
+- [TDDev: Multi-Agent TDD for Full-Stack Web Apps from Requirements（arXiv）](https://arxiv.org/pdf/2605.17242)
+- [ProjDevBench（arXiv）](https://arxiv.org/abs/2602.01655v2)
+- [FeatureBench（arXiv / ICLR 2026）](https://arxiv.org/abs/2602.10975v1)
+- [SWE-Dev（arXiv / NeurIPS 2025）](https://arxiv.org/html/2505.16975v2)
+- [DevBench / DevEval（arXiv）](https://arxiv.org/abs/2403.08604v2)
+- [OpenHarmony Bench（arXiv）](https://arxiv.org/html/2608.16022v1)
+- [LoCoBench-Agent（arXiv）](https://arxiv.org/pdf/2511.13998)
+- [Vals.ai Vibe Code Bench 等の一覧](https://benchlm.ai/benchmarks)
+- [総務省: 仕様書作成演習のシラバス](https://www.soumu.go.jp/main_content/000221271.pdf)、[情処: 日本語要求仕様の記述ルール](https://ipsj.ixsq.nii.ac.jp/records/186592/export/bibtex)
+
+## 確認事項
+
+1 と 2 は独立しているので、まとめて答えてください。どちらも今日の作業には入れず、答えを `BACKLOG.md`（重要 高）か `IDEAS.md` に書くだけです。
+
+**1. 提案 P1〜P7 のうち、残作業にするもの**
+
+| 案 | 内容 |
+|---|---|
+| A | おすすめのとおり: P3・P4・P5 を v2.1.x、P1 を v2.2、P2 は試用後に判断、P7 は 2 の結論しだい |
+| B | 文言だけの P3・P4・P5 を今日の v2.1.0 に含める（30 分ほど。eval の回し直しは要らない見込み） |
+| C | 別の組み合わせ（番号で指定してください） |
+
+おすすめ: **A**。今日の eval が走っている間は `skills/` を触れず、終わった後に文言を足すと eval をもう 1 周回すことになるためです。
+
+**2. 比較の題材**
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | 3（備品管理アプリに変更 3 件を重ねる自作）から始め、1・2 は後回し | 核心を先に測れる。題材の設計（変更 3 件、ブラインドの受け入れテストの作り方）に半日 |
+| B | 2（SWE-Dev の易しめ 10〜20 件）から始める | 公開データで客観性が高い。isdd の核心は測れない |
+| C | 1（WebGen-Bench か ProjDevBench）から始める | 新規フローの定量評価。採点環境の構築が要る |
+
+おすすめ: **A**。Uvik の結果から「1 回の実装では大差が出ない」ことは予想でき、isdd の価値が出るかどうかは積み重ねの場面で決まるためです。
+
+eval は 21:25 から走っています（終了見込み 22:10 ごろ）。次の起床で進捗を報告します。
+
+## 79. ユーザー（2026-11-03 21:48）
+
+1 P1は是非ともやりたい
+  P2は既定は公開関数としておきたい。対応表の行数が減ると何か良いことがあるか？
+  P3位置付けは良いと思う。具体的にはどう変更するのか？
+  P4良いと思う
+  P5良いと思う
+  P7良いと思う
+3をWebGen-BenchやSWE-Devを起点にすることは検討できないか？FeatureBenchの要件を変更を重ねることでHaikuで実装できる様にするとか。これはこれで別の価値になりそうですが。
+
+## 80. ユーザー（2026-11-03 21:49）
+
+1 P1は是非ともやりたい
+  P2は既定は公開関数としておきたい。対応表の行数が減ると何か良いことがあるか？
+  P3位置付けは良いと思う。具体的にはどう変更するのか？
+  P4良いと思う
+  P5良いと思う
+  P7良いと思う
+2. 仕様書ドリブンの性能評価に使える題材
+3 変更の積み重ね
+WebGen-BenchやSWE-Devを起点にすることは検討できないか？FeatureBenchの要件を変更を重ねることでHaikuで実装できる様にするとか。これはこれで別の価値になりそうです。
+上記でもう一度整理してください
+
+## 81. Claude
+
+## 1. 提案の整理（回答を受けて）
+
+| # | 扱い | 内容 |
+|---|---|---|
+| P1 | **やる（v2.2 の中心）** | 下に具体案 |
+| P2 | **やらない。既定は公開関数のまま**（今日入れた `class` は選べるだけにする） | 行数が減ることの利点は 3 つだけです。(a) 実装時の帳簿付けのトークンと時間が減る、(b) ヘルパー関数を足すたびに警告が出て対応表を直す往復が減る、(c) スキルを持たない人が触るときの規則が軽くなる。代わりに失うのは、関数単位の「作りすぎ」の検出と、関数単位の引き継ぎ情報です。利点はどれも手間の話で、追跡の価値そのものは増えません。ご指摘どおり既定は公開関数で、手間が重いプロジェクトだけ `class` を選べば足ります |
+| P3 | **やる（文言）** | 下に具体案 |
+| P4 | やる（文言） | README と各 SKILL.md の「報告と引き渡し」に、区切りでセッションを切り替えて再開することを書く |
+| P5 | やる（文言） | 未マッピング一覧の「状態」に「要件なし（作りすぎ）」を足し、件数を報告させる |
+| P6 | 変更なし | ― |
+| P7 | やる（2 の題材が決まってから） | ― |
+
+### P1 の具体案（受け入れテストを整合の主役にする）
+
+| 変更 | 内容 | 理由 |
+|---|---|---|
+| 要件定義書 第 7 章の表に「検証する要件ID」列を足す | `RQ-TS` の行に、そのシナリオが確かめる `RQ-FT`・`RQ-UI`・`RQ-EX`（必要なら `RQ-NF`）を書く | 今は「利用フローを 100% 網羅」と文章で言うだけで、どの要件がどのシナリオで確かめられるかを機械で読めない |
+| `rq_integrity_checker.py` に前向きの網羅チェックを足す | `RQ-FT`・`RQ-UI`・`RQ-EX` のそれぞれが、1 本以上の `RQ-TS` の行に現れることを求める。現れない要件を「受け入れテストの無い要件」として報告 | 要件 → シナリオの線を、要件定義の段階で閉じる |
+| `trace_map_checker.py` に `--junit <パスかグロブ>` を足す | JUnit XML（pytest・jest・go test・JUnit が出せる共通形式）を読み、対応表の `DS-TS` 行の修飾名（`e2e/test_x.py::test_y`）と突き合わせる。結果が無い `DS-TS` は「未実行」、失敗は「不合格」として報告。`--strict` で両方とも失敗扱い | 「テストがある」だけでなく「通った」ことを機械で確かめる。通ったテストの `DS-TS` → 第 11 章 → `RQ-TS` → 第 7 章の「検証する要件ID」とたどれば、**要件ごとの実装済み判定**が出せる |
+| 設計書 8-4 に「E2E は JUnit XML を `e2e/results/` に出す」ことを書く。`isdd-setup` が `check.sh` に `--junit "e2e/results/*.xml"` を固定する | 結果の置き場所を決めないと読めない | ― |
+| isdd-build の実装後レビューの報告に「要件ごとの実装済み判定」の表を足す | 列: `RQ-ID`、確かめた `RQ-TS`、`DS-TS`、テスト関数、結果 | ユーザーが「どの要件が本当に動いたか」を一覧で見られる |
+
+未マッピング一覧（後ろ向き）と対になる、前向きの表ができます。大きさは、チェッカー 2 本の改修と単体テスト 6 本ほど、文書 5 か所、eval の場面 1〜2 本で、今日の作業と同じくらい（実装 20 分、eval 40 分）です。
+
+### P3 の具体案（位置づけの書き換え）
+
+| 場所 | 今 | 変更後の案 |
+|---|---|---|
+| README「背景と目的」 | 仕様駆動でずれを防ぐ、という趣旨 | 「isdd は、文脈を持たない次の作業者（別のセッション、別の人、スキルを持たないエージェント）に向けて、要件・設計・対応表・依存の規則・受け入れテストを『守るべき契約』として残し、チェッカーでその契約を強制する開発方式。1 回のセッションで仕様どおりに作ることはモデルに任せ、isdd が担うのは、要件を業務課題から絞ること、変更を重ねても正本と実装がずれないこと、作りすぎを見つけること、エージェントに機械的な完了条件を与えること」 |
+| README に節を足す「isdd が向く案件・向かない案件」 | 無い | 向く: 寿命が長い、変更を重ねる、複数の人やエージェントが触る、要件を業務の言葉で絞りたい。向かない: 使い捨て、1 セッションで終わる小物、要件が既に完全な形で与えられている（ヒアリングの価値が無い）。Uvik の結果（1〜2 ファイルの修正では仕様の手順に利点が無い）も引く |
+| README「対応表による追跡」 | 「壊れた参照をエラー、未登録を警告」の説明 | 「3 つの追跡」（今日書いた前向き・後ろ向き・構造）の説明に、「中身が仕様どおりかは受け入れテストでしか分からない。対応表と依存の規則は、次の作業者への宣言と作りすぎの検出のためにある」を足す |
+| CLAUDE.md | 「コードに ID を書かない…check.sh で検証する」 | 1 行足す: 「チェッカーに『中身のずれ』の検出を期待しない。中身は受け入れテストで確かめ、チェッカーは契約の強制と作りすぎの検出に使う」 |
+| 各 SKILL.md の description | 変更なし | 呼び出しの判定文なので触らない |
+
+## 2. 題材の再整理（公開ベンチマークを起点に、変更を重ねる形へ）
+
+ご指摘の「ベンチマークの 1 課題を、要件の段階的追加に分割する」は、公開データの客観性と isdd の核心（積み重ね）を両立できます。しかも **隠しテストを段階ごとに分ければ、段階 k で通ったテストが段階 k+1 で落ちる「退行」を直接数えられます。** これが「仕様と実装のずれの蓄積」の定量指標になります。
+
+### 共通の手順
+
+1. 1 課題の隠しテストを、機能のまとまりで 3 つに分ける（テスト名と説明から機械的に、または人が一度決めて固定）。
+2. 段階 1: 分け目 1 の機能だけを要件として与え、新しいセッションで作る。
+3. 段階 2・3: 残りを変更要求として与える。**毎回新しいセッションで、前の段階の成果物（仕様書・コード）だけを渡す**（文脈の断絶を作る）。
+4. 対照群: 同じ分割・同じ順序の指示を、スキルなしのエージェントに与える。モデルは両群とも Haiku。
+5. 測るもの: 最終の通過率、段階ごとの通過率、**退行数**（前段階で通ったテストが後で落ちた数）、作りすぎ（要件に無い公開要素の数）、トークンと往復数。
+
+### 題材ごとの向き不向き
+
+| 題材 | isdd のどの流れを測るか | 分割のしやすさ | 採点 | Haiku で差が出るか | 別の価値 |
+|---|---|---|---|---|---|
+| **SWE-Dev**（機能説明 ＋ 既存コード ＋ 単体テスト 500 件） | 逆引き → 変更フロー × 3 | 単体テストが関数単位なので分けやすい | 単体テスト。環境が付属 | 易しい split なら出る見込み | ― |
+| **FeatureBench**（既存リポジトリに機能を 1 つ足す 200 件、最高 11%） | 逆引き → 変更フロー × n | 依存グラフから切り出した機能なので、サブ機能に分けやすい | 単体テスト、実行環境 3,825 件が付属 | 1 回では 0 に近い。**要件を分けて段階的に積めば Haiku でも解けるか**、が独立した問い | **大。** 「仕様の分割で難しい機能を小さなモデルが作れるか」は isdd の価値とは別の、手法としての価値 |
+| **WebGen-Bench**（指示 → Web アプリ、テストケース 647 件） | 新規フロー → 変更フロー × 2 | テストケースが機能ごとに書かれているので分けやすい | ブラウザ操作エージェントによる採点（実行環境を作る必要がある） | 最高 27.8% なので出る見込み | 新規フローのヒアリングの価値（要件を絞る）は測れないが、「作りすぎ」は測れる |
+| 備品管理（自作） | 全部 | 自由 | 自作のブラインド受け入れテスト | 出る | 客観性が低い。**採点の仕組みを整える試運転**には最適 |
+
+### 提案する順序
+
+| 順 | 題材 | 目的 |
+|---|---|---|
+| 1 | 備品管理（自作）で 1 課題だけ | 分割・セッション切り替え・退行の数え方・対照群の走らせ方を、全部手元で制御できる題材で整える。半日 |
+| 2 | **SWE-Dev の易しい split から 10〜20 件** | 公開データで isdd あり・なしの差（最終通過率と退行数）を出す。逆引きスキルの評価も兼ねる |
+| 3 | **FeatureBench から 5〜10 件** | 「要件を分けて積めば Haiku で解けるか」を試す。isdd ありだけでも意味がある（対照群は 1 回で 0 に近いため） |
+| 4 | WebGen-Bench | 採点環境（ブラウザ操作）ができたら。新規フローの作りすぎを測る |
+
+順序 2 を先にするのは、SWE-Dev の方が易しく、単体テストで採点でき、環境が付属するためです。FeatureBench は「isdd の評価」と「仕様の分割という手法の評価」の 2 つを兼ねるので、別の残作業として立てると後で混ざりません。
+
+### 注意点
+
+- SWE-Dev・FeatureBench の既存リポジトリは実在の OSS で大きい。逆引きの段階でコード全体を読むとコストが高いので、「変更に関わるディレクトリだけ逆引きする」入口が isdd-reverse-engineering に要るかもしれません（今は全体を読む前提）。これは試して分かることです。
+- ベンチマークの要件は与えられたものなので、isdd のヒアリングは固定回答（今の eval の `follow_up_prompts` と同じ）で埋めます。ヒアリングの価値は測れない、と明記して結果を読む必要があります。
+- 退行の数え方は、段階ごとに隠しテストを全部回して記録すれば済みます（前段階のテストを後段階でも回す）。
+
+## 確認事項
+
+1 と 2 は独立しているので、まとめて答えてください。答えは `BACKLOG.md` に重要 高で書きます（今日の作業の後）。
+
+**1. P1 の着手時期**
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | v2.1.0 の試用と並行して、別ブランチ（v2.2）で P1 を実装する | 試用の結果を待たずに進む。試用で v2.1.0 を直す必要が出たら、2 本のブランチを合わせる手間が要る |
+| B | PR #9 のマージ・公開の後に v2.2 として着手する | 順序が単純。P1 が使えるのは公開の後 |
+
+おすすめ: **B**。P1 は要件定義書の章立て（第 7 章の列）を変えるので、v2.1.0 の試用結果と一緒に入れるより、区切ってから入れるほうが混ざりません。
+
+**2. 題材の順序**
+
+| 案 | 内容 |
+|---|---|
+| A | 上の順序（備品管理で試運転 → SWE-Dev → FeatureBench → WebGen-Bench） |
+| B | 試運転を飛ばして SWE-Dev から |
+| C | FeatureBench を先に（手法としての価値を優先） |
+
+おすすめ: **A**。採点の仕組み（分割、セッション切り替え、退行の計数、対照群）を、環境構築の要らない題材で先に固めるほうが、公開データでの試行の失敗が減ります。
+
+eval は引き続き走っています（21:25 開始、終了見込み 22:10 ごろ）。次の起床で結果を報告します。
+
+## 82. ユーザー（2026-11-03 21:51）
+
+<task-notification>
+<task-id>b38168vpd</task-id>
+<tool-use-id>toolu_017Gw8VM3fZfFXsDz6rGkF9T</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/b38168vpd.output</output-file>
+<status>completed</status>
+<summary>Background command "Wake in 25 minutes to check eval progress" completed (exit code 0)</summary>
+</task-notification>
+
+## 83. Claude
+
+> 🔧 `Bash` Check eval progress after 25 minutes
+
+> 🔧 `Bash` List progress, and any failed graders
+
+> 🔧 `Bash` Wake in 20 minutes for the next progress check
+
+> 🔧 `Bash` Read the failing isdd-build scene 5 from attempt 1
+
+> 🔧 `Bash` Read the scene 5 task definition and fixture layout
+
+> 🔧 `Bash` Extract responses and failed graders for scene 5 in both attempts
+
+> 🔧 `Bash` Check whether scene 5 has follow-up prompts
+
+> 🔧 `Bash` Compare follow-up prompt setup across review scenes
+
+Nothing more to request right now: the only remaining steps (edit the two SKILL.md passages, rebuild, rerun isdd-build) depend on the current eval finishing, because `skills/` must not change while run-all is copying from it. Findings so far:
+
+- Scene 5 (change-flow post-implementation review) has no follow-up prompts, so the agent must finish in one turn. On attempt 1 Haiku ran isdd-setup (now a longer procedure: `dependencies.json` transcription was added today) and ended its turn with the setup report instead of continuing into the review. On attempt 2 it did the review but wrote `**未マッピング一覧**` in bold instead of `### 未マッピング一覧`.
+- Both are instruction weaknesses in `skills/isdd-build/SKILL.md`; I'll fix them after the run ends (around 22:12) and rerun isdd-build only.
+
+## 84. ユーザー（2026-11-03 21:55）
+
+1 B
+2 A
+バックログに記録しておいてください
+
+## 85. Claude
+
+> 🔧 `Bash` Record the v2.2 proposals and measurement plan in the backlog
+
+> 🔧 `Bash` Mark the branch-deletion backlog item done
+
+`.history/BACKLOG.md` に書きました（eval の実行中でも `.history/` は触ってよいので、今のうちに入れています）。
+
+| 見出し | 入れた項目 | 重要度 |
+|---|---|---|
+| v2.2（受け入れテストを整合の主役に、位置づけの書き換え） | P1（要件定義書第 7 章の「検証する要件ID」列、`rq_integrity_checker` の前向き網羅、`trace_map_checker --junit`、要件ごとの実装済み判定の表）、P3（README の「背景と目的」「向く案件・向かない案件」「対応表による追跡」、CLAUDE.md の 1 行）、P4（段階の区切りでセッションを切り替える運用）、P5（「要件なし（作りすぎ）」の状態と件数） | すべて高。着手は PR #9 のマージと公開の後 |
+| 同上 | P2（既定の粒度を `class` に）は見送り `[-]` として理由つきで記録 | ― |
+| isdd の効果の計測 | 考え方（隠しテストを 3 段に分け、毎回新しいセッションで積む。退行数を数える）と、順序: 計測 1 備品管理で試運転 → 計測 2 SWE-Dev → 計測 3 FeatureBench（仕様の分割という手法の評価を兼ねる）→ 計測 4 WebGen-Bench、P7（計測を `evals/` の基盤に載せる） | 計測 1〜3 と P7 は高、計測 4 は低（採点環境が先） |
+
+あわせて、今日消したマージ済みブランチ 2 本の項目を完了にしました。
+
+eval はまだ走っています（isdd-spec の途中。終了見込み 22:12 ごろ）。終わったら isdd-build の 2 か所（isdd-setup の後で止まらない、未マッピング一覧の見出しを太字にしない）を直し、isdd-build だけ回し直します。
+
+## 86. ユーザー（2026-11-03 22:03）
+
+evelの進捗を確認して、全部の終了見込みを教えて
+
+## 87. Claude
+
+> 🔧 `Bash` Check isdd-spec eval progress and timing
+
+> 🔧 `Bash` Inspect the failed isdd-spec gate scene and its task definition
+
+22:03 時点の進捗です（21:23 開始）。
+
+| スキル | 結果 | 1 回目で落ちた場面 | 原因（ログから） |
+|---|---|---|---|
+| isdd-build | 1 回目 8/9、再試行 8/9（別の場面が落ちた） | 場面 5「変更フロー後の実装後レビュー」 | 1 回目: isdd-setup を実行した後、その報告で応答を終えてレビューに進まなかった（今日 isdd-setup の手順が長くなった影響）。再試行: 未マッピング一覧の見出しを `###` でなく太字で書いた |
+| isdd-reverse-engineering | 1 回目で合格 | ― | ― |
+| isdd-setup | 1 回目で合格 | ― | ― |
+| isdd-spec | 1 回目の途中（9/15 まで進み、8 合格・1 不合格） | 場面 3「開始ゲート（外部連携あり）」 | ゲートで「外部連携あり」と答えた直後に、業務課題を決める前に「連携先のシステム名」と「変更内容」を同じ問いに入れた（今日入れた「独立した問いはまとめる」に引きずられた） |
+
+どちらも SKILL.md の指示の弱さなので、規則どおり SKILL.md を直してから回し直します。
+
+## 全体の終了見込み
+
+| 区切り | 時刻の見込み | 根拠 |
+|---|---|---|
+| isdd-spec の 1 回目が終わる | **22:12 ごろ** | 残り 6 場面 × 約 1.5 分 |
+| そこで実行を止めて、isdd-build と isdd-spec の SKILL.md を直す（3 か所） | 22:20 ごろ | 再試行（20 分）は、どうせ SKILL.md を直すので待たずに止める |
+| isdd-build と isdd-spec を回し直す（24 場面） | **23:05 ごろ**（1 回目で全部通った場合） | build 約 15 分 ＋ spec 約 22 分 |
+| 1 回目で落ちた場面があれば、再試行と直し | **23:40 ごろ**（最悪） | 再試行 1 周 ＋ 直し 10 分 |
+
+その後、コミット・push・引き継ぎ記録の更新に 10 分ほどです。**全体では 23:15 ごろ、遅くとも 23:50 ごろ**の見込みです。22:11 に起きて isdd-spec の 1 回目の残りを確かめます。
+
+## 88. ユーザー（2026-11-03 22:11）
+
+<task-notification>
+<task-id>b1fsmkb7w</task-id>
+<tool-use-id>toolu_01LhUYekYLowqK7jfPX8LXGj</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/b1fsmkb7w.output</output-file>
+<status>completed</status>
+<summary>Background command "Wake in 20 minutes for the next progress check" completed (exit code 0)</summary>
+</task-notification>
+
+## 89. Claude
+
+> 🔧 `Bash` Check whether isdd-spec attempt 1 has finished
+
+> 🔧 `Bash` Check scene 13 result and any failed graders
+
+> 🔧 `Bash` Wait 2.5 minutes for the last isdd-spec scene to finish
+
+> 🔧 `ToolSearch` select:TaskStop
+
+Nothing else to request until the last isdd-spec scene finishes (the 2.5-minute wait is already running); after that I'll stop the run before its retry, edit the three SKILL.md passages, and rerun isdd-build and isdd-spec.
+
+## 90. ユーザー（2026-11-03 22:14）
+
+<task-notification>
+<task-id>bnakiwqqn</task-id>
+<tool-use-id>toolu_01TYh2pGot3jrebeztKjEAym</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/bnakiwqqn.output</output-file>
+<status>completed</status>
+<summary>Background command "Wait 2.5 minutes for the last isdd-spec scene to finish" completed (exit code 0)</summary>
+</task-notification>
+
+## 91. Claude
+
+> 🔧 `Bash` Check whether the 15th scene finished and the retry started
+
+Attempt 1 of isdd-spec finished 14/15; the retry has just begun, so I'll stop it and make the three SKILL.md fixes.
+
+> 🔧 `TaskStop`
+
+> 🔧 `Bash` Make sure no eval process is still running
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/skills/isdd-build/SKILL.md
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/skills/isdd-build/SKILL.md
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/skills/isdd-build/SKILL.md
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/skills/isdd-spec/SKILL.md
+
+> 🔧 `Bash` Verify copies, commit the SKILL.md fixes
+
+> 🔧 `Bash` Rerun Haiku evals for isdd-build and isdd-spec in the background
+
+> 🔧 `Bash` Wake in 18 minutes when isdd-build should be finished
+
+1 回目の結果が出そろったので、再試行を待たずに止めて直し、回し直しを 22:14 に始めました。
+
+| スキル | 1 回目の結果 | 直したこと（コミット `5918beb`） |
+|---|---|---|
+| isdd-build | 8/9 | isdd-setup を実行しても、その報告で応答を終えずに同じ応答で続ける。未マッピング一覧の見出しは `#` 3 つの Markdown 見出しにし、太字・別の階層・番号付きは見出しとみなされないと明記 |
+| isdd-spec | 14/15 | ゲートの答えを受けた次の応答は段階 1 の最初の問いだけ。連携先の名前・種類は段階 2、機能や変更内容は業務課題の確定後 |
+| isdd-reverse-engineering | 1/1 | ― |
+| isdd-setup | 1/1 | ― |
+
+回し直しは isdd-build（9 場面）と isdd-spec（15 場面）だけで、**終了見込みは 22:55 ごろ**（build 約 15 分 ＋ spec 約 22 分。1 回目で全部通った場合）。落ちた場面があれば再試行で 23:30 ごろまで延びます。18 分後（22:32 ごろ）に isdd-build の結果を確かめます。
+
+## 92. ユーザー（2026-11-03 22:23）
+
+isdd-spec の書き方の指定どおりに、変更設計の 11 章に「対応だけを差し替えた設計 ID」を [削除]・[追加] の 2 行で書きました。ところが trace_map_checker.py（v2.1.0）は、[削除] の行に出る ID をすべて「削除する設計 ID」とみなします。そのため、実装中は残すべき行に警告が 13 件出ました。今回は正本に反映した時点で消えましたが、次の変更でも同じことが起きます。
+
+## 93. Claude
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Bash` Add a regression test and update the rule text
+
+> 🔧 `Bash` Show the failing test's error
+
+> 🔧 `Bash` Run the full unit test suite with the proper test root
+
+> 🔧 `Bash` Show the failing test details
+
+> 🔧 `Bash` Check whether eval fixtures have IDs on both deleted and added lines
+
+ご指摘のとおりバグです。原因と直しは次のとおりで、`shared/`（正本）と単体テストまで直しました。複製（`skills/`）への反映は、今走っている eval が終わってから `build_skills.py` で行います（実行中は `skills/` を触らない決まりのため）。
+
+| 項目 | 内容 |
+|---|---|
+| 原因 | `trace_map_checker.py` の `parse_change_design` が、`[削除]` の行に出る DS-ID をすべて「削除する設計 ID」にしていた。第 11 章で対応だけを差し替える要素は、同じ ID を `[削除]`（旧い対応）と `[追加]`（新しい対応）の 2 行に書く決まりなので、コードに残る要素まで削除扱いになり「削除する設計 ID が残っています」の警告が出た |
+| 直し | 削除する ID を「`[削除]` の行にあり、`[追加]` の行には無い ID」に変えた（`shared/scripts/trace_map_checker.py`）。有効な設計 ID の説明も `trace-map-rules.md` とスクリプトの先頭で同じ文に改めた |
+| 検証 | 同じ ID を `[削除]` と `[追加]` の 2 行に書いた変更設計書で、`--strict` が警告 0 件で通る単体テストを 1 本足した（71 本、合格）。eval の fixture 2 本には「両方の行にある ID」が無いので、eval の結果は変わらない |
+| 影響する範囲 | 変更フローの実装中だけ（正本に反映して `docs/active_change` を消せば、今回のように消える） |
+
+試用中のプロジェクトに届けるには、この後のコミットで `gh skill install … --pin <新しいコミット>` で入れ直し、そのプロジェクトで `isdd-setup` を再実行（`scripts/isdd/trace_map_checker.py` の複製を更新）する必要があります。eval が終わって push したら、コマンドを添えて報告します。
+
+eval は 22:14 から回し直し中で、22:32 ごろに isdd-build の結果を確かめます。
+
+## 94. ユーザー（2026-11-03 22:25）
+
+テストで検出できなかった理由は？他にも同様の見逃しはありませんか？
+
+## 95. Claude
+
+> 🔧 `Bash` Check how the requirement checkers treat [削除]/[追加] rows and what tests cover
+
+> 🔧 `Bash` Read how rq_integrity_checker treats deleted rows and BK mapping
+
+> 🔧 `Bash` List document patterns involving unchanged/existing rows and fixture examples
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/scripts/trace_map_checker.py
+
+> 🔧 `Bash` Add a second regression test, update rule text, run tests
+
+## テストで検出できなかった理由
+
+| 理由 | 内容 |
+|---|---|
+| テストがチェッカーの定義から書かれていた | `trace_map_checker.py` の `--active-change` は v2.0.1 で入れ、そのときの定義「`[削除]` の行の ID ＝ 削除する ID」をそのまま単体テストにしていた。テストは「旧要素を `[削除]`、新要素を `[追加]`」の 1 パターンだけ |
+| 文書の規則を v2.1.0 で変えたのに、チェッカーのテストを足さなかった | 「対応だけを差し替える要素は第 11 章で同じ ID を `[削除]` と `[追加]` の 2 行に書く」は、v2.1.0 で `id-definitions.md` の変更管理ルールと `design-chapters.md` 第 11 章に足した文書の規則。文書の規則が増えるたびにチェッカーの読み方を確かめる手順が無かった |
+| eval の fixture も同じ 1 パターン | 変更フローの fixture 2 本は、どちらも「要素の中身が変わる」変更で、`[削除]` の行の ID 7 件はどれも `[追加]` の行に現れない。Haiku の eval でも当たらない |
+
+根本は、**文書の規則を正とし、チェッカーはその読み手であるのに、テストが文書の規則ではなくチェッカーの実装から書かれていた**ことです。
+
+## 同様の見逃しを探した結果
+
+文書の規則（変更フローの書き方、第 7・8・11 章）と 3 本のチェッカーの読み方を突き合わせました。
+
+| # | 文書の規則 | チェッカーの読み方 | 結果 | 対処 |
+|---|---|---|---|---|
+| 1 | 対応だけを差し替える要素は第 11 章で `[削除]` と `[追加]` の 2 行 | `[削除]` の行の ID をすべて削除扱い | **誤警告**（ご報告のもの） | 直した。削除する ID を「`[削除]` の行にだけ現れる ID」にした |
+| 2 | ファイルを消してクラスを別のファイルへ移す（第 7 章の旧い行が `[削除]`、新しい行が `[追加]`） | 旧い行に並ぶクラスの ID も削除扱い | **誤警告**（1 と同じ原因。クラスは残るのに「削除する設計 ID が残っています」） | 1 の直しで同時に解消。単体テストに含めた |
+| 3 | 変更しない既存の設計 ID でも変更要件を受けるものは「変更なし（既存）」の行で書く | 1 の最初の直し（`[追加]` の行だけを「残る」とみなす）では、`[削除]` ＋「変更なし（既存）」の組み合わせがまだ削除扱いになる | **誤警告の可能性** | 「`[削除]` 以外の行に現れる ID は残る」に広げた。単体テスト追加 |
+| 4 | 旧要素を `[削除]`、新要素を `[追加]` に**分けて**書く | `[追加]` と `[削除]` が同じ行にあると、その行ごと削除扱いになり、`[追加]` の中身が消える（fixture の変更要件定義書には箇条書きでこの書き方が 1 行ある） | 判定できない行を黙って削除扱いにしていた | `trace_map_checker` は有効な行として扱い、「行を分ける」警告を出すようにした。`rq_ds_link_checker` はその行を読み飛ばすので、`[追加]` の対応が無いとして**はっきり不合格になる**（黙って通らないので、そのまま） |
+| 5 | `[削除]` 要件には不要になる `RQ-BK` を書く | `rq_integrity_checker` は `[削除]` の行からも `RQ-BK` との対応を拾う | 要件を全部消した業務課題が「対応する要件が無い `RQ-BK`」として報告されない（**見逃す側**の穴。害は小さい） | 今回は直していない。残作業の候補 |
+| 6 | 正本には `[追加]` `[削除]` を書かない | 正本の行に文字列 `[削除]` があると、その行ごと読み飛ばす（例: 機能名を「[削除]処理」と書いた表の行） | 正本の設計 ID が「設計書に無い」エラーになりうる | 文書の規則で禁じているので、今回は直していない |
+| 7 | 第 7 章の「実現する設計 ID」、8-2 の `DS-TS` → テスト関数、依存の規則、粒度 `class`（今日足したもの） | 単体テストはあるが、**eval の fixture に 1 つも無い** | Haiku が実際にどう書くかを確かめていない | 残作業: fixture と場面を足す |
+
+直した 1〜4 は `shared/` と単体テスト（72 本中、複製の不一致 1 件を除いて合格）まで済んでいます。複製（`skills/`）への反映とコミットは、走っている eval が終わってから行います。
+
+## 再発を防ぐ仕組み（提案、未実施）
+
+- **文書の規則とチェッカーのテストの対応表を持つ。** `design-chapters.md`「変更フローで足すこと」と `id-definitions.md`「変更管理ルール」の各項目に対して、どの単体テストがその書き方を通すかを `tests/` の一覧に書く。規則を足すときはその行も足す。
+- **変更フローの fixture を 1 本増やす。** 「対応だけの差し替え」「ファイルを消してクラスを移す」「変更なし（既存）」の 3 つを含む変更設計書で、isdd-build の実装（`--active-change` で `--strict` 合格）を Haiku に通させる。
+
+この 2 つは `BACKLOG.md` に足しておきます（重要 高）。eval は 22:14 から回し直し中で、22:32 ごろに isdd-build の結果を確かめ、終わり次第、複製の作り直し → コミット → isdd-build の回し直し（チェッカーが変わったため）→ push の順で進めます。
+
+## 96. ユーザー（2026-11-03 22:31）
+
+上記2つを今直したい。これを直すのであればevalからやり直した方が良いのでは？
+
+## 97. Claude
+
+> 🔧 `Bash` Read current rerun results before stopping it
+
+> 🔧 `TaskStop`
+
+> 🔧 `TaskStop`
+
+> 🔧 `Bash` Stop leftover eval processes and show why scene 5 failed this time
+
+> 🔧 `Bash` Read the existing change-flow fixture and task to base the new one on
+
+> 🔧 `Bash` List fixtures with checker copies, their versions, and the metadata tool usage
+
+> 🔧 `Bash` Read the change-flow fixture's canonical docs to derive the new fixture
+
+> 🔧 `Bash` List grader commands available for the new task
+
+> 🔧 `Bash` Read rq_ds_link_checker's deleted-line handling to adjust it
+
+> 🔧 `Bash` Apply the canonical-vs-change-doc fix to both checkers and add a trace map test
+
+> 🔧 `Bash` Apply checker fixes for literal [削除] in canonical docs, add tests, run suite
+
+> 🔧 `Bash` Read canonical design chapters 7/11 and the change requirements format for the new fixture
+
+> 🔧 `Bash` Read grader strict-trace, and change_requirements/design chapters to mirror in the new fixture
+
+> 🔧 `Bash` Create the change-flow-remap fixture (mapping-only change, moved class, unchanged rows, e2e, dependency rule)
+
+> 🔧 `Write` /Users/notfolder/Documents/isdd/evals/isdd-build/tasks/code-change-flow-remap.yaml
+
+> 🔧 `Write` /Users/notfolder/Documents/isdd/tests/README.md
+
+> 🔧 `Bash` Edit isdd-setup SKILL.md, build-review.md and CLAUDE.md
+
+> 🔧 `Bash` Bundle rq_integrity_checker in isdd-build, rebuild copies, regenerate fixture checker copies
+
+> 🔧 `Bash` Validate the new fixture: solved state passes strictly, change docs are consistent, pre-state warns only as expected
+
+> 🔧 `Bash` Confirm the solved fixture passes strictly, regenerate eval metadata, run multi-version tests, dry-run, and file-list check
+
+All checks passed (solved fixture strict-OK, 5 Python versions OK, dry-run OK). Now confirming the eval metadata output landed in the right place, then committing and launching the full 4-skill eval.
+
+> 🔧 `Bash` Check untracked outputs and evals.json update
+
+> 🔧 `Bash` Register the new scene in evals.json and commit everything
+
+> 🔧 `Bash` Run Haiku evals for all 4 skills from scratch in the background
+
+> 🔧 `Bash` Wake after 2 minutes to confirm the eval started cleanly
+
+「同様の見逃しの対処も同時に」を含めて直し、コミット `6c70079` にして、4 スキルの eval を 22:38 に最初から回し始めました。
+
+## 直したこと（コミット `6c70079`）
+
+| # | 対処 | 中身 |
+|---|---|---|
+| 1〜3 | チェッカーの削除判定 | 削除する ID は「`[削除]` の行にだけ現れる ID」。対応だけ差し替えた要素、別ファイルへ移したクラス、「変更なし（既存）」の行にある ID は残る |
+| 4 | 同じ行に両方の区分 | `trace_map_checker` は有効な行として扱い「行を分ける」警告。`rq_ds_link_checker` も同じ行は有効として読む |
+| 5 | 要件を全部消した業務課題 | isdd-build に `rq_integrity_checker.py` を同梱し、実装後レビューの再チェック（手順 10）で正本の要件定義書にもかける |
+| 6 | 正本の「[削除]」の文字 | `[追加]` を含まない文書は正本とみなし、行を外さない（両チェッカー） |
+| 7 | eval の fixture | `change-flow-remap`（対応の差し替え、`src/hello.py` を `greeting.py` と `main.py` に分割、変更なし（既存）の行、`e2e/` と `DS-TS` の行、依存の規則 1 件）と場面 `code-change-flow-remap` を追加。解いた状態で `check.sh --strict` が合格し、実装前は本当に消すべき 1 件だけが警告になることを確かめた。古いチェッカーの複製が入っていた fixture 3 本も今の isdd-setup で作り直した |
+| 再発防止 | `tests/README.md` | 文書の規則 → チェッカー → テストの対応表（4 群 30 行）と、分かっている限界。CLAUDE.md に「規則を変えたらこの表とテストを足す」を 1 行 |
+| ほか | isdd-setup SKILL.md | 他のスキルの途中で呼ばれたら、報告で応答を終えずに呼び出し元の作業に戻る（場面 5 が 2 回とも 1 回目で止まった対策） |
+
+単体テストは 75 本が Python 3.9〜3.15 で合格、公開の dry-run も通っています。
+
+## 終了見込み
+
+| 区切り | 見込み |
+|---|---|
+| 4 スキル 27 場面の 1 回目 | **23:25 ごろ**（前回の実測: setup・逆引き 5 分、build 9 場面 15 分、spec 15 場面 22 分。build が 10 場面に増えた） |
+| 1 回目で落ちた場面があれば、直して回し直し | 23:55 ごろ |
+| push、引き継ぎ記録とバックログの更新 | その後 10 分 |
+
+2 分後に起動を確かめ、その後は 25 分おきに進捗を報告します。
+
+## 98. ユーザー（2026-11-03 22:40）
+
+<task-notification>
+<task-id>b78r5fvmi</task-id>
+<tool-use-id>toolu_01RaeR8VCp3xGAHxojsNPvvW</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/b78r5fvmi.output</output-file>
+<status>completed</status>
+<summary>Background command "Wake after 2 minutes to confirm the eval started cleanly" completed (exit code 0)</summary>
+</task-notification>
+
+## 99. Claude
+
+> 🔧 `Bash` Confirm the eval started cleanly
+
+> 🔧 `Bash` Wake in 25 minutes for the next progress check
+
+> 🔧 `Bash` Confirm the new remap scene's result line
+
+The run started cleanly at 22:38: isdd-build is first, and the new remap scene (対応の差し替えとファイルの分割) passed on its first attempt, as did scenes 1 and 3. Nothing else to request until the 25-minute wake-up (around 23:05); every remaining step (reading results, any SKILL.md fix, push, backlog) depends on the run finishing.
+
+## 100. ユーザー（2026-11-03 23:05）
+
+<task-notification>
+<task-id>bt5630g2v</task-id>
+<tool-use-id>toolu_018qCisf3uNDVeQW5M2e6EcZ</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/bt5630g2v.output</output-file>
+<status>completed</status>
+<summary>Background command "Wake in 25 minutes for the next progress check" completed (exit code 0)</summary>
+</task-notification>
+
+## 101. Claude
+
+> 🔧 `Bash` Check progress and any failed graders after 25 minutes
+
+> 🔧 `Bash` Wake in 20 minutes when isdd-spec should be finished
+
+23:06 の進捗: isdd-build は 10/10（前回落ちた場面 5 も、新しい場面も 1 回目で合格）、isdd-reverse-engineering・isdd-setup も合格、isdd-spec は 4/15 まで進んで全部合格（前回落ちた開始ゲートの場面も通りました）。落ちた採点は 0 件です。
+
+終了見込みは **23:25 ごろ**。20 分後に起きて結果を確かめ、全部通っていれば push と引き継ぎ記録の更新に進みます。
+
+## 102. ユーザー（2026-11-03 23:25）
+
+進捗を教えて
+
+## 103. Claude
+
+> 🔧 `Bash` Show current eval progress
+
+> 🔧 `Bash` List spec results and the two failed graders
+
+> 🔧 `TaskStop`
+
+> 🔧 `TaskStop`
+
+> 🔧 `Bash` Stop the eval retry and locate the hearing rule passages to strengthen
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/shared/references/hearing-rules.md
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/skills/isdd-spec/SKILL.md
+
+> 🔧 `Bash` Rebuild copies and commit the hearing-rule fixes
+
+> 🔧 `Bash` Rerun isdd-spec and isdd-reverse-engineering evals in the background
+
+> 🔧 `Bash` Wake in 24 minutes when the spec rerun should be done
+
+23:26 の進捗です。
+
+| スキル | 1 回目の結果 | 備考 |
+|---|---|---|
+| isdd-build | **10/10** | 前回落ちた場面 5（isdd-setup の後で止まる、見出しが太字）も、新しい「対応の差し替えとファイルの分割」の場面も通った |
+| isdd-reverse-engineering | 1/1 | ― |
+| isdd-setup | 1/1 | ― |
+| isdd-spec | **14/15** | 場面 13「ヒアリングの作法」だけ落ちた。前回落ちた開始ゲートの場面は通った |
+
+場面 13 の落ちた内容と直し（コミット `6789d8d`）:
+
+| 落ちた採点 | 何が起きたか | 直したこと |
+|---|---|---|
+| 問いのまとめ方 | CUI の 3 問（書式、失敗時の扱い、終了コード）を 1 回にまとめたが、終了コードは失敗時の扱いで決まる依存のある問いだった | `hearing-rules.md` に「まとめる前に、問いごとに他の答えで選択肢が変わるかを確かめ、変わる問いは次の応答に回す」と、出力先 → 書式、失敗時の扱い → 終了コードの例を足した。isdd-spec の SKILL.md にも同じ 1 行 |
+| 複雑な案の理由の記録 | 理由を述べずに複雑な案が選ばれたのに、要件定義書に「ユーザーの選択（理由は特に無い）」の文言が無かった | isdd-spec の SKILL.md の「守ること」に、理由の有無ごとの文言をそのまま書く規則を足した |
+
+再試行を待たずに止め、isdd-spec と（`hearing-rules.md` を共有する）isdd-reverse-engineering を 23:27 から回し直しています。**終了見込みは 23:52 ごろ**。落ちなければ、その後 push と引き継ぎ記録の更新で **0:05 ごろ**に終わります。24 分後に起きて確かめます。
+
+## 104. ユーザー（2026-11-03 23:27）
+
+毎回全て評価し直している様ですが、必要なのですか？
+
+## 105. Claude
+
+> 🔧 `Bash` Check whether waza or run-all can run a single scene
+
+必要ではありません。今夜は回しすぎでした。
+
+## 今夜の 4 回の実行と、本当に要った範囲
+
+| 回 | 回したもの | 直前に変えたもの | 本当に要った範囲 |
+|---|---|---|---|
+| 1 | 4 スキル全部（27 場面、約 45 分） | チェッカー 2 本、共通文書 10 本、SKILL.md 4 本 | 全部。妥当 |
+| 2 | build ＋ spec | build と spec の SKILL.md | 妥当（ただし落ちた場面だけで足りた） |
+| 3 | 4 スキル全部 | チェッカー 2 本、共通文書 1 本、isdd-setup の SKILL.md、build の fixture 3 本と場面 1 本 | **spec と逆引きは要らなかった。** 変わったのは spec が同梱するチェッカー 1 本と共通文書 1 本だけで、チェッカーは単体テストで確かめ済み。build は新しい場面と変えた fixture の 4 場面、setup は 1 場面で足りた |
+| 4 | spec ＋ 逆引き | `hearing-rules.md`（共有）、spec の SKILL.md | spec の落ちた場面 13 と、ゲート・要件定義の数場面で足りた。逆引きは 2 分なので許容 |
+
+回した理由は、リポジトリの決まり「1 回目で落ちたら SKILL.md を直す」を機械的に「スキルの同梱ファイルが 1 つでも変わったら、そのスキルの全場面を回す」と解釈していたためです。`run-all.sh` がスキル単位でしか回せないことも理由ですが、`waza run` 自体は `--task <名前のグロブ>` で場面を絞れるので、`run-all.sh` に渡す仕組みを足せば場面単位で回せます。
+
+## 提案する決まり（未実施）
+
+| 変えたもの | 回す範囲 | 根拠 |
+|---|---|---|
+| SKILL.md や参照文書の**指示の中身** | そのスキルのうち、変えた指示に関わる場面だけ（落ちた場面 ＋ 同じ手順を通る場面）。公開前に 1 回だけ全場面 | eval はエージェントの振る舞いを見るもの。関係ない場面は結果が変わらない |
+| チェッカーやスクリプトだけ | 回さない。単体テストと、保存してある前回の成果物に採点だけをかけ直す（`waza grade`、モデルを動かさない） | チェッカーは決定的で、単体テストで守れる。採点がチェッカーを呼ぶ場面は、採点のやり直しで分かる |
+| fixture や場面の定義 | その場面だけ | ― |
+| 公開の直前 | 全スキル 1 回 | 版の最終確認 |
+
+これで、今夜のような夜間作業は 4 回 × 20〜45 分が、1 回の全体 ＋ 数分の部分実行で済みます。
+
+## 今の実行の扱い
+
+23:27 に始めた spec ＋ 逆引き（16 場面、約 25 分）は、場面 13 の直しの確認に要るものです。止めて場面 13 だけ回し直すこともできますが、`run-all.sh` に場面の絞り込みがまだ無く、作る間に今の実行が終わるので、**このまま走らせて 23:52 ごろに結果を見ます**。
+
+## 確認事項
+
+**1. 場面を絞る仕組みと上の決まりを入れるか**
+
+| 案 | 内容 | 影響 |
+|---|---|---|
+| A | `run-all.sh` に環境変数 `WAZA_TASKS`（場面名のグロブ、複数可）を足して `waza run --task` に渡し、上の決まりを `CLAUDE.md` の eval の運用に書く。今夜の eval が終わってから 15 分ほど | 次の版から部分実行できる。eval 中は `evals/` を触れないので、終わってから |
+| B | 決まりだけ `CLAUDE.md` に書き、仕組みは後日 | 決まりは残るが、スキル単位でしか回せない状態が続く |
+| C | 今のまま | ― |
+
+おすすめ: **A**。仕組みは `run-all.sh` に数行で、今夜の残りの待ち時間で入れられます。
+
+## 106. ユーザー（2026-11-03 23:30）
+
+1 A 今後も差分評価はやると思うので直してください
+直したら止めて必要なところだけやり直して
+
+## 107. Claude
+
+> 🔧 `Bash` See how far the current rerun got before stopping it
+
+> 🔧 `TaskStop`
+
+> 🔧 `TaskStop`
+
+> 🔧 `Bash` Stop eval processes and locate the waza invocation in run-all.sh
+
+> 🔧 `Bash` Read the waza invocation block in run-all.sh
+
+> 🔧 `Bash` Add WAZA_TASKS scene filter to run-all.sh and the differential-eval rule to CLAUDE.md
+
+> 🔧 `Bash` Commit the scene filter and the differential-eval rule
+
+> 🔧 `Bash` Run only the two affected isdd-spec scenes in the background
+
+> 🔧 `Bash` Wake after 90 seconds to confirm the filter works
+
+`run-all.sh` に `WAZA_TASKS` を足し（コミット `c53fb85`）、走っていた全場面の実行を止めて、必要な 2 場面だけを 23:32 から回しています。
+
+| 項目 | 内容 |
+|---|---|
+| 仕組み | `WAZA_TASKS='場面名のグロブ,…' bash evals/run-all.sh claude <スキル>` で、`waza run --task` に 1 つずつ渡す。未指定なら今までどおり全場面 |
+| 決まり | `CLAUDE.md` の eval の運用に「差分で回す」を追加。指示を変えたら関わる場面だけ、チェッカーだけなら単体テストで、fixture を変えたらその場面だけ、全場面は公開の直前に 1 回 |
+| 止めた実行 | 逆引き（1 場面）は合格済み。spec は始まったばかりだったので止めた |
+| 回し直し | isdd-spec の「ヒアリングの作法」と「Hello World 要件定義」の 2 場面だけ（直した 2 つの指示が関わる場面）。約 5 分の見込み |
+
+90 秒後に絞り込みが効いているかを確かめ、通っていれば push と引き継ぎ記録の更新に進みます（**23:50 ごろ**に終わる見込み）。
+
+## 108. ユーザー（2026-11-03 23:32）
+
+<task-notification>
+<task-id>b99rt7emo</task-id>
+<tool-use-id>toolu_01BJLsuhwFku8whzLpTTLwji</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/b99rt7emo.output</output-file>
+<status>completed</status>
+<summary>Background command "Wake after 90 seconds to confirm the filter works" completed (exit code 0)</summary>
+</task-notification>
+
+## 109. Claude
+
+> 🔧 `Bash` Confirm the task filter applied and see progress
+
+> 🔧 `Bash` Read why the hearing-manner scene failed again and its task definition
+
+> 🔧 `Bash` Read the full grader verdict and the grader's criteria
+
+> 🔧 `Bash` Check whether the filtered run has finished
+
+> 🔧 `Bash` Wait for the second filtered scene to finish before stopping the retry
+
+絞り込みは効きました（2 場面だけ実行）。「ヒアリングの作法」は、前回落ちた基準 1（問いの依存）は通りましたが、今度は基準 2 で落ちました: 出力先の選択肢の表に「根拠（効いている評価軸）」列が無く、案ごとの複雑さも明示していませんでした。
+
+2 場面目（Hello World 要件定義）が走り終わるのを 100 秒待ってから実行を止め、isdd-spec の SKILL.md に「選択肢の表は 6 列（案・内容・メリット・デメリット・複雑さ・根拠）を省かない」を足して、この 1 場面だけ回し直します。eval 実行中は `skills/` を触れないので、今は待つしかありません。
+
+## 110. ユーザー（2026-11-03 23:34）
+
+全体の項目とそれぞれの終了見込み時間を教えて
+
+## 111. Claude
+
+> 🔧 `Bash` Check the filtered run's state for the timeline
+
+> 🔧 `TaskStop`
+
+> 🔧 `Bash` Stop the retry so skills/ can be edited
+
+> 🔧 `Edit` /Users/notfolder/Documents/isdd/skills/isdd-spec/SKILL.md
+
+> 🔧 `Bash` Commit the fix and launch the single hearing-manner scene
+
+> 🔧 `Bash` Wake in 4 minutes when the single scene should be done
+
+23:35 時点の全体の項目と見込みです。
+
+| # | 項目 | 状態 | 終了見込み |
+|---|---|---|---|
+| 1 | 文言の矛盾 A1〜A7・B 群、B-1〜B-3、追跡の 3 分割（DS-TS → テスト、粒度、依存の規則）、チェッカー 2 本の直しと fixture の追加、`tests/README.md` | 済み（コミット 5 本、単体テスト 75 本合格） | ― |
+| 2 | eval: isdd-build 10 場面、isdd-setup、isdd-reverse-engineering | **1 回目で全部合格**（22:38 からの全体実行と、23:27 の逆引き） | ― |
+| 3 | eval: isdd-spec 15 場面 | 14 場面は 1 回目で合格。「ヒアリングの作法」だけ、直すたびに別の基準で落ちた（依存のある問い → 表の列の省略）。表の 6 列を省かない指示を足して（`5f8f63e`）、その 1 場面だけ 23:35 に回し直し中 | **23:39 ごろ**（1 場面 2〜3 分）。落ちたら直してもう 1 回で 23:45 ごろ |
+| 4 | push（`v2.1.0-restructure`、PR #9 に載る） | 3 が通ってから | 23:41 ごろ |
+| 5 | 試用中のプロジェクトへの反映手順の報告（`gh skill install --pin <コミット>` と isdd-setup の再実行） | 4 の後 | 23:42 ごろ |
+| 6 | 引き継ぎ記録（summary.md の追記、BACKLOG.md の整理: #5・#6 の対処済み、fixture の残り、推定 vs 実績）、`~/.claude/estimate-log.md` への 1 行 | 4 の後 | **23:55 ごろ** |
+
+全体では **23:55 ごろ**、ヒアリングの場面がもう 1 回落ちても **0:05 ごろ**に終わる見込みです。4 分後に起きて 3 の結果を確かめます。
+
+## 112. ユーザー（2026-11-03 23:39）
+
+<task-notification>
+<task-id>bmyiq6ggq</task-id>
+<tool-use-id>toolu_01FFYLX3kehMJj1WVEubmaTk</tool-use-id>
+<output-file>/private/tmp/claude-501/-Users-notfolder-Documents-isdd/34d7b069-ca61-430f-93b4-ce1616c2430a/tasks/bmyiq6ggq.output</output-file>
+<status>completed</status>
+<summary>Background command "Wake in 4 minutes when the single scene should be done" completed (exit code 0)</summary>
+</task-notification>
+
+## 113. Claude
+
+> 🔧 `Bash` Check the result of the single hearing-manner scene
+
+> 🔧 `Bash` Push the branch and confirm PR #9 picked up the commits
+
+> 🔧 `Bash` Append the estimate-vs-actual row to the estimate log
+
+> 🔧 `Bash` Update the handover summary and backlog, commit and push
