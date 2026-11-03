@@ -9,7 +9,12 @@ RQ-DS Link Checker Script
   （1 つの DS-* が複数の RQ-* に対応することは isdd では正常な設計表現なので、重複は検出しません）
 
 使用方法:
-  python3 rq_ds_link_checker.py <requirements.md> <detail_design.md>
+  python3 rq_ds_link_checker.py <requirements.md> <detail_design.md> [--base <docs/requirements.md>]
+
+変更フロー:
+  変更要件定義書と変更設計書を渡すときは、--base に正本の要件定義書を渡す。
+  変更設計書が既存の要件（変更要件定義書に無い RQ-*）を参照していても、正本にあれば未定義参照にしない。
+  対応欠落の判定は、渡した変更要件定義書の要件だけで行う。
 
 除外要件:
   設計書の「除外要件」を含む見出しの節に書かれた RQ-* は、ユーザーの承認を得て設計から外した要件として扱い、
@@ -33,7 +38,7 @@ import re
 import sys
 from pathlib import Path
 from collections import defaultdict
-from typing import Set, Dict, List
+from typing import Set, Dict, List, Optional
 
 # ハイフン区切りの複合IDにマッチする正規表現
 # 例: RQ-FT-LOGIN, RQ-NF-PASSWORD-HASH-STORAGE
@@ -72,9 +77,11 @@ def _is_context_id(rq_id: str) -> bool:
 class RQDSChecker:
     """RQ-* と DS-* の対応関係チェッカー"""
 
-    def __init__(self, rq_file: Path, ds_file: Path):
+    def __init__(self, rq_file: Path, ds_file: Path, base_rq_file: Optional[Path] = None):
         self.rq_file = rq_file
         self.ds_file = ds_file
+        self.base_rq_file = base_rq_file
+        self.base_rq_ids: Set[str] = set()  # 正本の要件定義書の RQ-ID（変更フローで未定義参照の判定にだけ使う）
         self.rq_ids: Set[str] = set()
         self.deleted_rq_ids: Set[str] = set()  # [削除]行のRQ-ID（命名推論専用）
         self.excluded_rq_ids: Set[str] = set()  # 設計書の「除外要件」節にある RQ-ID（承認済みの除外）
@@ -188,7 +195,7 @@ class RQDSChecker:
         """
         # RQ-* サフィックス → RQ-ID のマップを構築（アクティブIDを優先し、削除済みIDを補完）
         rq_suffixes: Dict[str, str] = {}
-        for rq_id in (*self.rq_ids, *self.deleted_rq_ids):
+        for rq_id in (*self.rq_ids, *self.deleted_rq_ids, *sorted(self.base_rq_ids)):
             if _is_context_id(rq_id):
                 continue
             parts = rq_id.split('-')
@@ -232,7 +239,7 @@ class RQDSChecker:
 
     def check_undefined_refs(self):
         """設計書が参照しているのに要件定義書に無い RQ-* を検出する"""
-        undefined = self.design_rq_refs - self.rq_ids - self.deleted_rq_ids
+        undefined = self.design_rq_refs - self.rq_ids - self.deleted_rq_ids - self.base_rq_ids
         if undefined:
             self.issues.append(
                 f"⚠ 未定義参照: 以下の RQ-* は設計書が参照していますが、要件定義書にありません:\n"
@@ -256,6 +263,14 @@ class RQDSChecker:
             return False
         if not self.parse_design():
             return False
+        if self.base_rq_file is not None:
+            try:
+                base = self.base_rq_file.read_text(encoding='utf-8')
+            except FileNotFoundError:
+                self.issues.append(f"エラー: {self.base_rq_file} が見つかりません")
+                return False
+            self.base_rq_ids = self.extract_ids(base, RQ_PATTERN)
+            print(f"正本: {self.base_rq_file} の RQ-* {len(self.base_rq_ids)} 件を既存の要件として参照する")
 
         # 命名規則からマッピングを推定
         self._infer_mappings_from_naming()
@@ -302,14 +317,24 @@ class RQDSChecker:
 
 def main():
     """メイン処理"""
-    if len(sys.argv) < 3:
-        print("使用方法: python3 rq_ds_link_checker.py <requirements.md> <detail_design.md>")
+    usage = "使用方法: python3 rq_ds_link_checker.py <requirements.md> <detail_design.md> [--base <docs/requirements.md>]"
+    args = sys.argv[1:]
+    base_rq_file = None
+    if "--base" in args:
+        i = args.index("--base")
+        if i + 1 >= len(args):
+            print(usage)
+            sys.exit(1)
+        base_rq_file = Path(args[i + 1])
+        del args[i:i + 2]
+    if len(args) < 2:
+        print(usage)
         sys.exit(1)
 
-    rq_file = Path(sys.argv[1])
-    ds_file = Path(sys.argv[2])
+    rq_file = Path(args[0])
+    ds_file = Path(args[1])
 
-    checker = RQDSChecker(rq_file, ds_file)
+    checker = RQDSChecker(rq_file, ds_file, base_rq_file)
     if not checker.run():
         for issue in checker.issues:
             print(issue)

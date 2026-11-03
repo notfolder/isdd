@@ -7,7 +7,7 @@
 ## tasks.md の配置先
 
 - isdd-design：`docs/detail_design.md` 保存後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
-- isdd-change-design：`change_detail_design.md` 保存と正本への反映の後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
+- isdd-change-design：`change_detail_design.md` の保存と進行中の変更の登録（`docs/active_change`）の後、`.history/[YYYYMMDD]-[タスク名]/tasks.md` を作成
 
 ---
 
@@ -28,9 +28,9 @@
 
 isdd-change-design のみ、続けて次を含める。
 
-0-2. **正本反映の確認タスク**
-   - `isdd-change-design` が変更要件定義書と変更設計書を `docs/requirements.md` と `docs/detail_design.md` に反映済みであることを確認する。変更要件の全 [追加] RQ-ID と変更設計の全 [追加] DS-ID が正本にあり、[削除] の ID が正本に無いこと
-   - 完了条件: `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`（isdd-traceable-coding に同梱）が合格すること。未反映があれば実装を始めず `isdd-change-design` に戻る
+0-2. **進行中の変更の登録確認タスク**
+   - `docs/active_change` の 1 行目が、この tasks.md のある変更のディレクトリを指していることを確認する。正本（`docs/requirements.md`・`docs/detail_design.md`）には変更を反映しない。反映は実装後に `isdd-post-implementation-review` が行う
+   - 完了条件: `bash scripts/isdd/check.sh` の出力に「進行中の変更」の行があり、`rq_ds_link_checker.py [変更のディレクトリ]/change_requirements.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md`（isdd-traceable-coding に同梱）が合格すること。登録が無ければ実装を始めず `isdd-change-design` に戻る
 
 ### 実装完了確認の必須固定タスク
 

@@ -46,9 +46,9 @@ gh skill install notfolder/isdd
 ### フロー運用原則
 
 - 設計スキル（`isdd-design` / `isdd-change-design`）で見つかった要件・設計差分は、起点要件定義へ直接反映する。
-- 変更設計が確定したら、`isdd-change-design` が変更要件定義書と変更設計書の内容を正本（`docs/requirements.md`・`docs/detail_design.md`）へ反映する。対応表チェックは正本の設計書だけを読むため、実装前に正本が最新になっている必要がある。`.history` 配下の変更要件定義書と変更設計書は変更の記録として残す。
+- 正本（`docs/requirements.md`・`docs/detail_design.md`）は実装済みの仕様だけを持つ。変更設計が確定しても `isdd-change-design` は正本を書き換えず、変更のディレクトリを `docs/active_change` に登録する。実装中は、対応表チェックと実装スキルが変更設計書を正本に重ねて読む。`.history` 配下の変更要件定義書と変更設計書は変更の記録として残す。
 - 実装スキルで見つかった要件・設計差分提案は `docs/proposals.md` に一時集約する。
-- 実装起因の正本更新は `isdd-post-implementation-review` で実施し、`docs/requirements.md` と `docs/detail_design.md` を最新状態へ更新する。変更設計の反映漏れも同スキルが安全網として拾う。
+- 正本の更新は実装の後に `isdd-post-implementation-review` だけが行う。変更フローの変更要件定義書・変更設計書の反映と、実装起因の差分の取り込みをまとめて行い、反映し終えたら `docs/active_change` を消す。
 - `docs/proposals.md` は一時ファイルとして扱い、`isdd-post-implementation-review` 完了時に削除する。
 - 変更要件定義、変更設計を使うのは、新たな要求が追加された場合のみとする。
 - 既存プロジェクトの初回 isdd 化は `isdd-reverse-engineering` が正本と対応表まで確定する。完了後の新たな要求は変更フローで扱う。
@@ -87,7 +87,7 @@ graph TD
 ### 新規要求追加時の変更フロー
 
 このフローは、新たな要求追加が発生した場合にのみ適用する。
-設計中に見つかった差分は `change_requirements.md` に直接反映し、変更設計の確定時に正本へ反映する。実装中に見つかった差分提案は `docs/proposals.md` に集約して扱う。
+設計中に見つかった差分は `change_requirements.md` に直接反映する。正本への反映は、実装の後に `isdd-post-implementation-review` が行う。実装中に見つかった差分提案は `docs/proposals.md` に集約して扱う。
 
 ```mermaid
 graph TD
@@ -95,9 +95,9 @@ graph TD
     PRE[isdd-external-precheck\n外部連携事前確認]
     CREQ[isdd-change-req\n変更要件定義]
     EX[isdd-external-research\n外部仕様整合確認]
-    CDES[isdd-change-design\n変更詳細設計と正本への反映]
+    CDES[isdd-change-design\n変更詳細設計と進行中の変更の登録]
     COD[isdd-traceable-coding\n実装と対応表の更新]
-    PIR[isdd-post-implementation-review\n実装後逆引き整合]
+    PIR[isdd-post-implementation-review\n正本への反映と実装後逆引き整合]
     CFB[proposals取込・正本更新・ID伝播・再設計]
 
     G2 -->|外部連携あり| PRE
@@ -139,13 +139,13 @@ graph TD
 | isdd-requirements | インタビュー駆動で要件定義書を作成する | docs/requirements.md |
 | isdd-design | 要件定義書から詳細設計書と実装タスクを作成する | docs/detail_design.md、.history/[日付]-[タスク名]/tasks.md |
 | isdd-change-req | 新たな要求追加時に変更要件定義書を作成する | .history 配下の change_requirements.md |
-| isdd-change-design | 変更要件から変更詳細設計書と実装タスクを作成し、確定時に正本へ反映する。必要時は変更要件を直接更新する | .history/[日付]-[タスク名]/change_detail_design.md、.history/[日付]-[タスク名]/tasks.md、docs/requirements.md・docs/detail_design.md（反映後）、.history/[日付]-[タスク名]/change_requirements.md（更新時） |
+| isdd-change-design | 変更要件から変更詳細設計書と実装タスクを作成し、進行中の変更として登録する（正本は書き換えない）。必要時は変更要件を直接更新する | .history/[日付]-[タスク名]/change_detail_design.md、.history/[日付]-[タスク名]/tasks.md、docs/active_change、.history/[日付]-[タスク名]/change_requirements.md（更新時） |
 | isdd-external-precheck | 外部連携の接続可否・認証方式・主要制限を実接続で事前確認する | precheck_report.md |
 | isdd-external-research | 外部連携先の詳細仕様を調査し要件との整合を確認する | alignment_report.md、external 配下調査成果物 |
 | isdd-reverse-engineering | 既存コードから要件・設計を逆引きし、インタビューで補完して正本と対応表を確定する（初回 isdd 化） | docs/requirements.md、docs/detail_design.md、docs/trace_map.md |
 | isdd-setup | 対応表チェック（チェッカー複製・check.sh・pre-commit・AGENTS.md と CLAUDE.md の規則・実装完了チェックのプロファイル・エージェント自身のフック）をプロジェクトに導入する | scripts/isdd/（check.sh、completeness.json を含む）、.git/hooks/pre-commit、AGENTS.md、CLAUDE.md |
 | isdd-traceable-coding | 設計書にもとづいて実装し、設計 ID とコードの対応を対応表で管理する | 実装ソース、docs/trace_map.md |
-| isdd-post-implementation-review | 実装後に実装起因の要件・設計・対応表・コードの逆引き整合を検証し正本を確定する | docs/requirements.md、docs/detail_design.md、docs/trace_map.md（更新後）、未マッピング一覧、整合レポート |
+| isdd-post-implementation-review | 実装後に変更フローの変更を正本へ反映し、要件・設計・対応表・コードの逆引き整合を検証して正本を確定する | docs/requirements.md、docs/detail_design.md、docs/trace_map.md（更新後）、未マッピング一覧、整合レポート |
 
 ---
 
@@ -212,7 +212,7 @@ graph LR
 
 1. 実装差分の影響範囲をまとめる。
 2. `rq_ds_link_checker.py` で要件と設計の対応を、`check.sh` で対応表とコードのずれを確かめる。
-3. 変更フローでは、変更要件定義書・`docs/proposals.md`・実装差分を突き合わせ、正本への反映漏れを拾う。
+3. 変更フローでは、変更要件定義書・変更設計書・`docs/proposals.md`・実装差分を突き合わせ、変更設計どおりに実装されていることを確かめてから、変更を正本へ反映して `docs/active_change` を消す。
 4. 実装の全関数から逆にたどり、未マッピング一覧（要件未定義・設計未定義・対応表未登録）を表で出す。
 5. 未マッピングを 1 件ずつユーザーに確かめて要件定義書へ反映し、更新した要件 ID を設計書と対応表へ伝える。
 6. 両チェッカーを再実行し、未整合ゼロ（`check.sh --strict` のエラー・警告とも 0 件）を確かめてから `docs/proposals.md` を削除する。
@@ -259,7 +259,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v2.0.0
+gh skill publish ./skills --tag v2.0.1
 ```
 
 ---
@@ -283,7 +283,7 @@ gh skill install notfolder/isdd isdd-requirements
 ### バージョンを固定して導入
 
 ```bash
-gh skill install notfolder/isdd isdd-requirements@v2.0.0
+gh skill install notfolder/isdd isdd-requirements@v2.0.1
 ```
 
 ### ユーザースコープへ導入
@@ -430,6 +430,21 @@ bash evals/run-all.sh claude isdd-setup
 ---
 
 ## 変更履歴
+
+### v2.0.1
+
+#### 更新時の注意
+
+- 変更フローの正本への反映を、変更設計の確定時から実装の後に戻した。v2.0.0 の `isdd-change-design` で正本へ反映済みの変更は、`isdd-post-implementation-review` が二重に反映しない。
+- `scripts/isdd/check.sh` の中身が変わるので、`isdd-setup` を再実行する（各スキルが `scripts/isdd/VERSION` の食い違いを見つけて案内する）。
+
+#### 変更
+
+- **正本は実装済みの仕様だけを持つ方式に戻した。** v2.0.0 では変更設計の確定時に正本を書き換えていたため、実装をやめたり途中で止まったりすると、作っていない仕様が正本に残った。`isdd-change-design` は正本を書き換えず、変更のディレクトリを `docs/active_change` に書く。`isdd-post-implementation-review` が実装の後に変更要件定義書と変更設計書を正本へ反映し、`docs/active_change` を消す。
+- `trace_map_checker.py` に `--active-change` を追加。ポインタファイルがあれば、そこに書かれた変更の `change_detail_design.md` を正本に重ねて判定する（有効な設計 ID は「正本 ＋ 変更設計書 − [削除]」）。[削除] にした設計 ID が対応表に残っていれば警告にする。`isdd-setup` が生成する `check.sh` はこのオプションを付けて呼び、`AGENTS.md`・`CLAUDE.md` の規則ブロックにも進行中の変更の読み方を足した。
+- `rq_ds_link_checker.py` に `--base` を追加。変更要件定義書と変更設計書を検査するとき、変更設計書が参照する既存の要件（変更要件定義書に無い `RQ-*`）を正本で解決し、未定義参照にしない。
+- `design-tasks-rules.md` の変更設計固有の固定タスクを「正本反映の確認タスク」から「進行中の変更の登録確認タスク」に変更。
+- `isdd-external-research` の要件整合チェックで、変更フローの反映先を変更要件定義書と明記（正本を書き換えると読めたため）。
 
 ### v2.0.0
 

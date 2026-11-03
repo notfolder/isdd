@@ -9,6 +9,14 @@ Trace Map Checker Script
 
 使用方法:
   python3 trace_map_checker.py <detail_design.md> <trace_map.md> <source_dir> [<source_dir> ...] [--strict]
+      [--active-change <ポインタファイル>]
+
+進行中の変更（変更フロー）:
+  --active-change に渡したファイル（既定の運用では docs/active_change）があれば、その 1 行目を
+  変更のディレクトリ（.history/[YYYYMMDD]-[タスク名]）とみなし、そこにある change_detail_design.md を
+  正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書の [削除] 行の ID」。
+  正本への反映は実装後に isdd-post-implementation-review が行い、反映が終わるとポインタファイルを消す。
+  ポインタファイルが無ければ、正本だけで判定する。
 
 対応表の形式（Markdown の表。列名は「DS-ID」「修飾名」「備考」）:
   | DS-ID | 修飾名 | 備考 |
@@ -31,6 +39,7 @@ Trace Map Checker Script
   警告（既定では終了コード 0。--strict 指定時は終了コード 1）
     - コードにあるクラス・公開関数・ファイルが対応表に未登録
     - 詳細設計書の DS-MD / DS-CL / DS-FN が対応表に未登録（未実装の可能性）
+    - 進行中の変更設計書で [削除] にした設計 ID が対応表に残っている（コードと対応表の行の消し忘れ）
 
 公開要素の定義:
   アンダースコア始まりの名前（_private、__dunder__）は対象外。
@@ -235,6 +244,29 @@ def parse_design(design_path: Path) -> Set[str]:
     return {m for m in DS_PATTERN.findall(active) if _is_valid_ds(m)}
 
 
+def parse_change_design(change_path: Path) -> Tuple[Set[str], Set[str]]:
+    """変更設計書から (追加・参照する DS-ID, [削除] 行の DS-ID) を抽出する"""
+    added: Set[str] = set()
+    deleted: Set[str] = set()
+    for line in change_path.read_text(encoding='utf-8').splitlines():
+        ids = {m for m in DS_PATTERN.findall(line) if _is_valid_ds(m)}
+        if '[削除]' in line:
+            deleted |= ids
+        else:
+            added |= ids
+    return added, deleted
+
+
+def resolve_active_change(pointer: Optional[Path]) -> Optional[Path]:
+    """ポインタファイルの 1 行目（変更のディレクトリ）から change_detail_design.md のパスを返す。ポインタが無ければ None"""
+    if pointer is None or not pointer.exists():
+        return None
+    lines = [ln.strip() for ln in pointer.read_text(encoding='utf-8').splitlines() if ln.strip()]
+    if not lines:
+        return None
+    return Path(lines[0].rstrip('/')) / 'change_detail_design.md'
+
+
 def parse_trace_map(map_path: Path) -> Tuple[List[Tuple[str, str, int]], List[str]]:
     """対応表を読み、(DS-ID, 修飾名, 行番号) の一覧と書式エラーを返す"""
     rows: List[Tuple[str, str, int]] = []
@@ -279,8 +311,10 @@ def parse_trace_map(map_path: Path) -> Tuple[List[Tuple[str, str, int]], List[st
 
 
 class TraceMapChecker:
-    def __init__(self, design: Path, trace_map: Path, source_dirs: List[Path], root: Path):
+    def __init__(self, design: Path, trace_map: Path, source_dirs: List[Path], root: Path,
+                 active_change: Optional[Path] = None):
         self.design = design
+        self.active_change = active_change
         self.trace_map = trace_map
         self.source_dirs = source_dirs
         self.root = root
@@ -297,6 +331,14 @@ class TraceMapChecker:
             return
 
         design_ids = parse_design(self.design)
+        deleted_ids: Set[str] = set()
+        if self.active_change is not None:
+            if not self.active_change.exists():
+                self.errors.append(f"進行中の変更の変更設計書が見つかりません: {self.active_change}"
+                                   "（ポインタファイルの 1 行目に変更のディレクトリを書く。変更が終わっていればポインタファイルを消す）")
+                return
+            added_ids, deleted_ids = parse_change_design(self.active_change)
+            design_ids = (design_ids | added_ids) - deleted_ids
         rows, format_errors = parse_trace_map(self.trace_map)
         self.errors.extend(format_errors)
         code = collect_code(self.root, self.source_dirs)
@@ -306,7 +348,10 @@ class TraceMapChecker:
         for ds_id, qualified, lineno in rows:
             mapped_ids.add(ds_id)
             mapped_names.add(qualified)
-            if ds_id not in design_ids:
+            if ds_id in deleted_ids:
+                self.warnings.append(f"対応表 {lineno} 行目: 進行中の変更で削除する設計 ID が残っています"
+                                     f"（コードと対応表の行を消す）: {ds_id}")
+            elif ds_id not in design_ids:
                 self.errors.append(f"対応表 {lineno} 行目: DS-ID が詳細設計書に存在しません: {ds_id}")
             is_file_level = '::' not in qualified
             if ds_id.startswith('DS-MD-') and not is_file_level:
@@ -349,6 +394,7 @@ class TraceMapChecker:
                 self.warnings.append(f"詳細設計書の設計要素が対応表に未登録（未実装の可能性）: {ds_id}")
 
         self.summary = {
+            'deleted_ids': len(deleted_ids),
             'design_ids': len(design_ids),
             'rows': len(rows),
             'files': len(code.files),
@@ -359,6 +405,9 @@ class TraceMapChecker:
     def report(self, strict: bool) -> int:
         print("Trace Map Checker\n" + "=" * 50)
         print(f"詳細設計書: {self.design}")
+        if self.active_change is not None:
+            deleted = self.summary['deleted_ids'] if hasattr(self, 'summary') else 0
+            print(f"進行中の変更: {self.active_change}（正本に重ねて判定。削除する設計 ID {deleted} 件）")
         print(f"対応表: {self.trace_map}")
         print(f"ソース: {', '.join(str(s) for s in self.source_dirs)}")
         if hasattr(self, 'summary'):
@@ -391,14 +440,37 @@ class TraceMapChecker:
         return 1
 
 
+USAGE = ("使用方法: python3 trace_map_checker.py <detail_design.md> <trace_map.md> <source_dir> [<source_dir> ...]"
+         " [--strict] [--active-change <ポインタファイル>]")
+
+
 def main() -> None:
-    args = [a for a in sys.argv[1:] if not a.startswith('--')]
-    strict = '--strict' in sys.argv[1:]
+    args: List[str] = []
+    strict = False
+    pointer: Optional[Path] = None
+    argv = sys.argv[1:]
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        if a == '--strict':
+            strict = True
+        elif a == '--active-change':
+            if i + 1 >= len(argv):
+                print(USAGE)
+                sys.exit(2)
+            i += 1
+            pointer = Path(argv[i])
+        elif a.startswith('--active-change='):
+            pointer = Path(a.split('=', 1)[1])
+        elif not a.startswith('--'):
+            args.append(a)
+        i += 1
     if len(args) < 3:
-        print("使用方法: python3 trace_map_checker.py <detail_design.md> <trace_map.md> <source_dir> [<source_dir> ...] [--strict]")
+        print(USAGE)
         sys.exit(2)
     root = Path.cwd().resolve()
-    checker = TraceMapChecker(Path(args[0]), Path(args[1]), [Path(a) for a in args[2:]], root)
+    checker = TraceMapChecker(Path(args[0]), Path(args[1]), [Path(a) for a in args[2:]], root,
+                              resolve_active_change(pointer))
     checker.run()
     sys.exit(checker.report(strict))
 

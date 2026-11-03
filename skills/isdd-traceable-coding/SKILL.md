@@ -1,18 +1,20 @@
 ---
 name: isdd-traceable-coding
 description: >
-  要件定義書と詳細設計書（docs/requirements.md・docs/detail_design.md）にもとづいて実装し、
+  要件定義書と詳細設計書（docs/requirements.md・docs/detail_design.md。変更フローでは docs/active_change が指す変更要件定義書・変更設計書を重ねる）にもとづいて実装し、
   設計 ID とコードの対応を対応表（docs/trace_map.md）に記録して、チェッカーで整合を確かめる。コードには ID を書かない。
   「実装して」「設計書どおりに実装して」「tasks.md を進めて」「対応表を更新して」「isdd の実装ルールを適用して」といった依頼で使う。
   設計書に無い設計要素が必要になったときは実装を止め、設計スキル（isdd-design / isdd-change-design）に戻す。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-traceable-coding — トレーサブル実装スキル
 
 詳細設計書の設計要素を 1 対 1 でコードに落とし、設計 ID とコードの対応を対応表 `docs/trace_map.md` に記録する。
+
+`docs/active_change` があれば変更フローの実装中で、その 1 行目が変更のディレクトリ（`.history/[YYYYMMDD]-[タスク名]/`）を指す。正本には変更がまだ反映されていないので、そのディレクトリの `change_requirements.md` と `change_detail_design.md` を正本に重ねて読む（有効な設計は「正本 ＋ [追加] − [削除]」）。`scripts/isdd/check.sh` も同じように重ねて判定する。
 
 ## このスキルのファイル
 
@@ -39,14 +41,14 @@ cat scripts/isdd/VERSION
   - 同じなら次へ進む。
   - VERSION が無いか、違う場合は、作業を始める前に「scripts/isdd/VERSION（読んだ値）とスキルの版（metadata.version の値）が違うため、isdd-setup を再実行します」と報告し、`isdd-setup` を再実行してから進める。古いチェッカーで判定すると、規則の変更を見落とすため。`isdd-setup` は何度実行しても同じ状態になる。
   - 比べた結果（両方の値と、再実行したか）を最終報告に書く。
-- `docs/requirements.md` と `docs/detail_design.md` があり、`rq_ds_link_checker.py` が問題 0 件であること。
+- `docs/requirements.md` と `docs/detail_design.md` があり、`rq_ds_link_checker.py` が問題 0 件であること。変更フローでは、変更要件定義書と変更設計書の組み合わせ（手順 5 のコマンド）も問題 0 件であること。
 
 ## 守ること
 
-- 要件 ID と設計 ID の正本は `docs/requirements.md` と `docs/detail_design.md` だけ。
+- 要件 ID と設計 ID の正本は `docs/requirements.md` と `docs/detail_design.md` だけ。変更フローの実装中は、これに変更要件定義書と変更設計書を重ねたものを設計として扱う。
 - コードに要件 ID・設計 ID を書かない。コメントは言語の流儀に従った通常のドキュメントコメント（処理の説明、引数、戻り値）だけにする。対応は対応表で持つので、コードに書くと二重管理になり、ずれるため。
 - ID を採番しない。設計書に無い設計要素が要るとわかったら、コーディングを止めて `docs/proposals.md` に提案を書き、`isdd-design` か `isdd-change-design` で設計を直してから再開する。採番を設計スキルに限ると、設計書と対応表の ID が常に一致するため。
-- 正本（`docs/requirements.md`・`docs/detail_design.md`）は書き換えない。実装中に見つけた要件・設計の不足や矛盾は `docs/proposals.md` に書く。正本への反映は `isdd-post-implementation-review` が行い、完了時に `docs/proposals.md` を削除する。
+- 正本（`docs/requirements.md`・`docs/detail_design.md`）と、変更要件定義書・変更設計書は書き換えない。`docs/active_change` も消さない。実装中に見つけた要件・設計の不足や矛盾は `docs/proposals.md` に書く。正本への反映は `isdd-post-implementation-review` が行い、完了時に `docs/proposals.md` を削除する。
 - 削除された要件・設計に対応するコードは削除し、対応表の行も削除する。
 - 既存コードがある場合、設計の範囲外のロジックは変えない。
 
@@ -63,7 +65,7 @@ cat scripts/isdd/VERSION
 
 tasks.md がある場合は、そのタスクを上から順に進める。無い場合は次の順に進める。
 
-1. `docs/requirements.md` と `docs/detail_design.md` を読み、要件 ID と設計 ID をすべて把握する。
+1. `docs/requirements.md` と `docs/detail_design.md` を読み、要件 ID と設計 ID をすべて把握する。`docs/active_change` があれば、変更要件定義書と変更設計書も読み、[追加] の要素を実装し、[削除] の要素に対応するコードと対応表の行を消す。
 2. 設計要素（DS-MD、DS-CL、DS-FN、DS-IF、DS-BT、DS-EV）ごとに実装する。
 3. 実装したファイル・クラス・公開関数を `docs/trace_map.md` に登録する。対応がわからない要素はユーザーに確認する。
 4. 対応表の整合を確かめる。エラーも警告も 0 件になるまで、コードか対応表を直す。
@@ -76,6 +78,12 @@ tasks.md がある場合は、そのタスクを上から順に進める。無�
 
    ```bash
    python3 .agents/skills/isdd-traceable-coding/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md
+   ```
+
+   変更フローでは、変更要件定義書と変更設計書の組み合わせも確かめる（`[変更のディレクトリ]` は `docs/active_change` の 1 行目）。
+
+   ```bash
+   python3 .agents/skills/isdd-traceable-coding/scripts/rq_ds_link_checker.py [変更のディレクトリ]/change_requirements.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md
    ```
 
 6. 実装完了の条件を確かめる。要求される項目は `scripts/isdd/completeness.json`（詳細設計書の実行形態・認証・外部連携から生成）で決まる。
@@ -109,4 +117,4 @@ tasks.md がある場合は、そのタスクを上から順に進める。無�
 
 ## 次のステップ
 
-完了を報告するときに、`isdd-post-implementation-review` で実装後の逆引き整合チェックを行い、要件・設計・対応表の正本を確定するよう提案する。
+完了を報告するときに、`isdd-post-implementation-review` で実装後の逆引き整合チェックを行い、要件・設計・対応表の正本を確定するよう提案する。変更フローでは、変更要件定義書と変更設計書の正本への反映も同スキルが行う。

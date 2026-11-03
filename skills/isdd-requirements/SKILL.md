@@ -7,7 +7,7 @@ description: >
   既存の docs/requirements.md に対する変更は isdd-change-req、既存コードからの要件の書き起こしは isdd-reverse-engineering が扱う。
 license: CC-BY-4.0
 metadata:
-  version: "v2.0.0"
+  version: "v2.0.1"
 ---
 
 # isdd-requirements — インタビュー駆動 要件定義スキル
