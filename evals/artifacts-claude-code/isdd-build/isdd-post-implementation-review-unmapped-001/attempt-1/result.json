@@ -1,0 +1,36 @@
+{
+  "task_id": "isdd-post-implementation-review-unmapped-001",
+  "name": "Hello World 未マッピング要件検出・ヒアリング確認",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-hf3csz1r",
+  "session_id": "1e8f42a0-807f-499a-8604-8fd8f8295751",
+  "started": "2026-11-04T10:19:59",
+  "finished": "2026-11-04T10:21:40",
+  "pass": true,
+  "grades": [
+    {
+      "name": "get_hello_message_added",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "rq_ds_link_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_ds_link_checker.py が合格:\n====================================\n検出: RQ-* ID 数: 7 (コンテキストID除外後: 5)\n検出: DS-* ID 数: 8\nマッピング: RQ-DS 対応数: 8\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 7\n  - DS-* 総数: 8\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-NO-PERSISTENCE-DT-DB-NOT-REQUIRED\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE\n  RQ-FT-PRINT-HELLO-WORLD → DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD, DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD, DS-OP-CLI-RUN-FT-PRINT-HELLO-WORLD\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-IF-CLI-ENTRY-UI-HELLO-STDOUT-OUTPUT"
+    },
+    {
+      "name": "trace_map_strict_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "check.sh --strict が合格:\nst_hello_output.py` | 実装済み |\n| `RQ-FT-PRINT-HELLO-WORLD` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 3）\n✓ 受け入れ判定に合格しました"
+    },
+    {
+      "name": "unmapped_table_presented",
+      "type": "prompt",
+      "pass": true,
+      "detail": "該当する応答に条件を満たす表がある。最初の報告（rq_ds_link_checker の不合格後）と最終報告の両方に、行頭 `###` の見出し「未マッピング一覧」の直下に、列「実装要素（修飾名）」「対応表の DS-ID」「設計書に DS-ID があるか」「対応する RQ-ID」「要件定義書に RQ-ID があるか」「状態」の 6 列の表がある。最初の報告の行は状態「要件未定義」、最終報告の行は状態「整合」で、最終報告には「要件なし（作りすぎ）: 0 件」も書かれている。"
+    }
+  ]
+}

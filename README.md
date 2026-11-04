@@ -398,6 +398,22 @@ bash evals/run-all.sh claude isdd-build
 - `.env` の読み込みは設定済みの環境変数を上書きしない。`WAZA_CLAUDE_MODEL=... bash evals/run-all.sh claude` のように一時指定できる。
 - 各 `eval.copilot.yaml` の `timeout_seconds` は Claude での実測の約 3 倍（600〜1200 秒）。外部連携の接続テストを含むタスク（isdd-spec の precheck・research）はタスク側で 1200〜1500 秒を指定している。実行基盤が固まったときに 1 時間単位で待たないための値。`local` モードは、eval ファイルとタスク側の値の両方に `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）を掛けた一時ファイル（eval のディレクトリの `.eval.local.<番号>.yaml` と `.tasks.local.<番号>/`）で実行するので、ローカルモデルでも従来どおりの長さで動く。
 
+### Claude Code のログインで実行する（API キーなし）
+
+Anthropic API の上限に達したときや API キーを使いたくないときは、`evals/run-claude-code.py` が同じ場面定義を Claude Code のヘッドレス実行（`claude -p`）で回す。Claude Code のログイン（定額契約）で動き、`ANTHROPIC_API_KEY` は要らない。
+
+```bash
+pip install pyyaml                      # 初回のみ
+python3 evals/run-claude-code.py isdd-build isdd-spec --task 'Hello World 未マッピング*' --task 'ヒアリングの作法*'
+python3 evals/run-claude-code.py isdd-setup   # スキルの全場面
+```
+
+- 場面ごとに fixture と `skills/` を一時の作業場所（`.claude/skills/`）に置き、依頼と追い打ち依頼（`follow_up_prompts`）を `--resume` で同じセッションに送る。採点は `file`・`program` の基準をそのまま実行し、`prompt` の基準は同じセッションを分岐して開いて会話とツール履歴を見た判定を JSON で受け取る（waza の `continue_session: true` と同じ扱い）。
+- モデルは `--model`（既定 `claude-haiku-5-5`）。失敗したら同じモデルで 1 回だけ再試行する（`--attempts`）。
+- 権限は `--permission-mode acceptEdits` と許可ツールの列挙（`--allowed-tools`）で渡す。対話の確認は無く、許可されていないツール呼び出しは失敗として扱われる。
+- 結果は `evals/artifacts-claude-code/<スキル>/<場面 ID>/attempt-N/` の `result.json`（判定）と `transcript.json`（応答。git 管理外）に残る。作業場所は消さない。
+- 実行基盤が Copilot CLI ではなく Claude Code なので、`run-all.sh claude` の結果とは別物として扱う（ツールの種類や手順の運び方が違う）。v2.2.0 の公開前の最後の 3 場面はこの方式で確かめた（2026-11-04）。
+
 ### タスクと採点の作り
 
 - 1 つのスキルに複数のケースを置くときは、`evals/<skill>/fixtures/<ケース名>/` に入力をまとめ、タスクの `inputs.context.fixture: fixtures/<ケース名>` で作業場所の直下に展開する。スキルの本文が書くとおりの `docs/...` のパスで試せる。

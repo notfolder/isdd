@@ -1,0 +1,48 @@
+{
+  "task_id": "isdd-external-precheck-crm-001",
+  "name": "外部連携の接続テスト（CRM の SQLite）",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-gnx4linu",
+  "session_id": "77f0e2b8-02b9-4a22-a949-b3b241d38a9d",
+  "started": "2026-11-04T10:21:41",
+  "finished": "2026-11-04T10:23:42",
+  "pass": true,
+  "grades": [
+    {
+      "name": "research_connection_sections",
+      "type": "program",
+      "pass": true,
+      "detail": "external/crm/docs/research.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "secret_not_leaked",
+      "type": "program",
+      "pass": true,
+      "detail": "秘密の値は .env 以外に無い"
+    },
+    {
+      "name": "gitignore_checked",
+      "type": "prompt",
+      "pass": true,
+      "detail": "セッション全体で、エージェントは .gitignore に .env が無いことに気づき、段階 2 の応答でユーザーに「.gitignore に .env が入っていないようです。接続テストは止めませんが、.env が Git に入らないように追加してよいですか」と確認した。.gitignore を自分で書き換えた操作は無く、書き込みは .env.example と external/crm/docs/research.md だけだった。ただし、その後の応答ではこの確認を繰り返しておらず、ユーザーの回答も得ていないため、追加はまだ未解決のまま残っている。"
+    },
+    {
+      "name": "real_connection_tested",
+      "type": "prompt",
+      "pass": true,
+      "detail": "ツール呼び出し履歴に、python3 の sqlite3 で CRM_DB_PATH の SQLite ファイルへ接続するコマンドが 2 回あり、どちらも実行されて結果が返っています。1 回目はスキーマ取得（テーブル一覧: customers, orders）、2 回目は接続可否、integrity_check、テーブル一覧、読み取り専用の確認を行いました。接続とテーブル一覧は推測ではなく実行結果に基づいています。"
+    },
+    {
+      "name": "env_example_has_names_only",
+      "type": "program",
+      "pass": true,
+      "detail": "external/crm/.env.example: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "external_hearing_after_business",
+      "type": "prompt",
+      "pass": true,
+      "detail": "1. 外部連携の詳細（接続・認証・オペレーション・制限など）は、業務の問題と業務課題（RQ-BZ-01、RQ-BK-01）を確定した後の応答で初めて聞いている。2. 外部連携の質問（基本情報、接続と認証、オペレーション、制限、データ構造、技術、既存ライブラリ）は、番号 1〜7 を付けて 1 回の応答にまとめて出している。その後は、答えの無かった CLI 仕様の項目を聞き直しただけで、外部連携の項目を 1 問ずつの往復にはしていない。"
+    }
+  ]
+}

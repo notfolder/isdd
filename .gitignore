@@ -117,6 +117,7 @@ apm_modules/
 
 # Waza / eval artifacts
 evals/**/artifacts/transcripts/
+evals/artifacts-claude-code/**/transcript.json
 # run-all.sh local が作る一時ファイル（途中で止まったときに残ることがある）
 evals/*/.eval.local.*.yaml
 evals/*/.tasks.local.*/
