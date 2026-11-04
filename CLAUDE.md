@@ -5,7 +5,7 @@
 
 ## 場所
 
-- 残作業: `.history/BACKLOG.md`（完了は `BACKLOG-archive.md`、案は `IDEAS.md`）。最新の引き継ぎ: `.history/2026-11-03-1404-正本反映時期とスキル再構成/summary.md`
+- 残作業: `.history/BACKLOG.md`（完了は `BACKLOG-archive.md`、案は `IDEAS.md`）。最新の引き継ぎ: `.history/2026-11-04-1031-v2.2.0公開と計測1試運転/summary.md`
 - 2026-10-19〜24 の作業（PR #5 のマージ、v2.0.0 の出し直し、README の更新手順）は引き継ぎ記録が無い。経緯は `.history/BACKLOG-archive.md` とコミット履歴にある。
 
 ## eval の運用（強い指示）
