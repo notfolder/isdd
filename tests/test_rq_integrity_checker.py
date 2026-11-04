@@ -5,6 +5,10 @@ import unittest
 from helpers import TempDirMixin, run_script, write
 
 GOOD = """
+### 1-2. 依頼に無く自分で決めた項目（必須）
+
+無し
+
 | RQ-BZ-ID | 業務名 |
 |---|---|
 | `RQ-BZ-HELLO-CHECK` | 動作確認 |
@@ -33,6 +37,13 @@ class RqIntegrityCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertIn("全てのチェックに合格しました", out)
 
+    def test_missing_decided_items_section_fails(self):
+        without = GOOD.replace("### 1-2. 依頼に無く自分で決めた項目（必須）\n\n無し\n", "")
+        path = write(self.tmp, "req.md", without)
+        code, out = run_script("rq_integrity_checker.py", [str(path)])
+        self.assertEqual(code, 1, out)
+        self.assertIn("決めた項目", out)
+
     def test_requirement_without_bk_fails(self):
         path = write(self.tmp, "req.md", GOOD + "\n| `RQ-NF-RESPONSE-1S` | 応答 1 秒 | |\n")
         code, out = run_script("rq_integrity_checker.py", [str(path)])
@@ -60,6 +71,10 @@ class RqIntegrityCheckerTest(TempDirMixin, unittest.TestCase):
 
     def test_change_document_does_not_require_bz(self):
         text = """
+        ### 1-2. 依頼に無く自分で決めた項目（必須）
+        
+        無し
+        
         | RQ-ID | 区分 | 内容 | 対応業務課題ID |
         |---|---|---|---|
         | `RQ-BK-ADD-TIMESTAMP` | [追加] | 時刻を付ける | |
@@ -129,6 +144,10 @@ class RqIntegrityCheckerTest(TempDirMixin, unittest.TestCase):
     # 変更要件定義書: [追加] の RQ-FT にだけ RQ-TS を求める。既存の要件への参照には求めない。[削除] のシナリオは数えない
     def test_change_document_requires_scenario_for_added_features_only(self):
         base = """
+        ### 1-2. 依頼に無く自分で決めた項目（必須）
+        
+        無し
+        
         | RQ-ID | 区分 | 内容 | 対応業務課題ID |
         |---|---|---|---|
         | `RQ-BK-ADD-TIMESTAMP` | [追加] | 時刻を付ける | |

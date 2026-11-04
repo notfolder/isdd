@@ -20,6 +20,12 @@
 | `docs/active_change` が無ければ正本だけで判定する。指す先に変更設計書が無ければエラー | trace_map_checker | `test_absent_pointer_checks_canonical_only`、`test_active_change_pointer_to_missing_design_is_error` |
 | 要件の意味が変わる場合は旧 ID を `deprecated`（[削除]）にし、新 ID を [追加] する | rq_integrity_checker | `test_change_document_skips_bz_check`（区分の検出） |
 
+## 要件定義書の章立て（requirements-chapters.md、hearing-rules.md「依頼文に無い決め事」）
+
+| 規則 | チェッカー | テスト |
+|---|---|---|
+| 「1-2. 依頼に無く自分で決めた項目」の節を必ず置く（無ければ「無し」）。変更要件定義書も同じ | rq_integrity_checker | `test_missing_decided_items_section_fails`、`test_valid_document_passes` |
+
 ## 対応表の書式と粒度（trace-map-rules.md）
 
 | 規則 | チェッカー | テスト |

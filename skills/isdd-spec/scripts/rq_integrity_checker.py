@@ -199,6 +199,15 @@ class RQIntegrityChecker:
                         self.bk_to_reqs[bk].add(req)
                         self.req_to_bks[req].add(bk)
 
+    def check_decided_items_section(self):
+        """「1-2. 依頼に無く自分で決めた項目」の節があるか（requirements-chapters.md の規則。無い決め事は「無し」と書く）"""
+        pattern = re.compile(r'^\s*#{2,4}\s+.*依頼に無く.*決めた項目')
+        if not any(pattern.match(line) for line in self.content_lines):
+            self.issues.append(
+                "✗ 節の欠落: 「1-2. 依頼に無く自分で決めた項目」の節がありません"
+                "（エージェントが決めたことを表で書く。無ければ「無し」と書く。requirements-chapters.md）"
+            )
+
     def check_format(self):
         """IDフォーマットと有効カテゴリを検証する"""
         invalid = []
@@ -321,6 +330,7 @@ class RQIntegrityChecker:
         print()
 
         self.check_format()
+        self.check_decided_items_section()
         self.check_required_categories()
         self.check_bk_mapping()
         self.check_undefined_verify_refs()
