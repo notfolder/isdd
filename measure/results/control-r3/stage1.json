@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/control-r3/snapshot-stage1",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "fail",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "fail",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass"
+  },
+  "passed": 6,
+  "total": 8,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": " values = {\"number\": emp(\"5\"), \"name\": \"新人\", \"password\": \"password1\", **override}\n            register(page, app.base_url, values[\"number\"], values[\"name\"], values[\"password\"])\n>           expect(field_error(page, input_id)).to_have_text(message)\nE           AssertionError: Locator expected to have text '名前は 30 文字以内で入力してください'\nE           Actual value: None\nE           Error: element(s) not found \nE           Call log:\nE             - Expect \"to_have_text\" locator(\".field\").filter(has=locator(\"#id_name\")).locator(\".field-error\") with timeout 5000ms\nE             - waiting for locator(\".field\").filter(has=locator(\"#id_name\")).locator(\".field-error\")\nE           \nE           Aria snapshot:\nE           - navigation:\nE             - link \"ログイン\":\nE               - /url: /login/\nE             - link \"アカウント登録\":\nE               - /url: /accounts/register/\nE           - heading \"ログイン\" [level=1]\nE           - text: 登録しました。ログインしてください 社員番号\nE           - textbox\nE           - text: パスワード\nE           - textbox\nE           - button \"ログイン\"\n\ntest_accounts.py:48: AssertionError\n_______________________ test_equipment_create[chromium] ________________________\n\napp = <conftest.AppServer object at 0x10b6303e0>\npage = <Page url='http://127.0.0.1:59982/'>\n\n    @pytest.mark.stage1\n    def test_equipment_create(app, page):\n        app.seed({\"accounts\": [STAFF], \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}]})\n        login(page, app.base_url, emp(\"1\"))\n        page.goto(f\"{app.base_url}/equipment/new/\")\n        cases = [\n            (\"ＰＣ－００２\", \"ノートパソコン\", \"id_equipment_number\", FORMAT_MESSAGE),\n            (\"A\" * 21, \"ノートパソコン\", \"id_equipment_number\", FORMAT_MESSAGE),\n            (\"PC-001\", \"ノートパソコン\", \"id_equipment_number\", \"この管理番号は既に使われています\"),\n            (\"PC-002\", \"あ\" * 51, \"id_name\", \"備品名は 50 文字以内で入力してください\"),\n        ]\n        for number, name, input_id, message in cases:\n            fill_equipment(page, number, name)\n>           expect(field_error(page, input_id)).to_have_text(message)\nE           AssertionError: Locator expected to have text '管理番号は半角の英数字とハイフンで 20 文字以内で入力してください'\nE           Actual value: None\nE           Error: element(s) not found \nE           Call log:\nE             - Expect \"to_have_text\" locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\") with timeout 5000ms\nE             - waiting for locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\")\nE           \nE           Aria snapshot:\nE           - navigation:\nE             - text: 担当太郎\nE             - link \"備品を登録\":\nE               - /url: /equipment/new/\nE             - button \"ログアウト\"\nE           - heading \"貸出状況\" [level=1]\nE           - table:\nE             - rowgroup:\nE               - row \"管理番号 備品名 状態 借りている社員 貸出日 操作\":\nE                 - columnheader \"管理番号\"\nE                 - columnheader \"備品名\"\nE                 - columnheader \"状態\"\nE                 - columnheader \"借りている社員\"\nE                 - columnheader \"貸出日\"\nE                 - columnheader \"操作\"\nE             - rowgroup:\nE               - row \"AAAAAAAAAAAAAAAAAAAA ノートパソコン 空き 修正 削除\":\nE                 - cell \"AAAAAAAAAAAAAAAAAAAA\"\nE                 - cell \"ノートパソコン\"\nE                 - cell \"空き\"\nE                 - cell\nE                 - cell\nE                 - cell \"修正 削除\":\nE                   - button \"修正\"\nE                   - button \"削除\"\nE               - row \"PC-001 ノートパソコン 空き 修正 削除\":\nE                 - cell \"PC-001\"\nE                 - cell \"ノートパソコン\"\nE                 - cell \"空き\"\nE                 - cell\nE                 - cell\nE                 - cell \"修正 削除\":\nE                   - button \"修正\"\nE                   - button \"削除\"\n\ntest_equipment.py:34: AssertionError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_account_registration[chromium] - AssertionError...\nFAILED test_equipment.py::test_equipment_create[chromium] - AssertionError: L...\n2 failed, 6 passed, 15 deselected in 33.81s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 700,
+    "public_functions": 26,
+    "classes": 1,
+    "templates": 0
+  },
+  "duration_sec": 34.0
+}

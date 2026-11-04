@@ -1,0 +1,58 @@
+STAGE_DONE 2026-11-05
+
+Wheel of Fortune（景品抽選サイト）: isdd-spec → isdd-build（実装・実装後レビュー）まで完了。
+
+■ 起動
+  bash setup.sh
+  PORT=任意 bash run.sh   （DATA_DIR 既定 ./data。空なら景品 8 件とサンプル記録 3 件を投入）
+  画面: /（Spin the Wheel）、/#/prizes（Prize List）、/#/winnings（My Winnings）
+
+■ 作ったもの
+  - 名前を入れてホイールを回す。景品は重み（1〜100）に比例した確率で決まり、当選が記録される
+  - 景品一覧（景品名と確率）
+  - 名前で絞った自分の当選記録（新しい順、最大 100 件）
+  - 全画面共通の上部メニュー、英語の画面、背景は薄い灰色、部品は濃い赤
+  - 技術: Node.js 24（組み込み http、node:sqlite）。外部パッケージ無し
+
+■ isdd の成果物
+  - docs/requirements.md（要件定義書。整合チェック合格）
+  - docs/detail_design.md（詳細設計書。要件と設計の対応チェック合格）
+  - .history/20261105-wheel-of-fortune/tasks.md（実装タスク）
+  - docs/trace_map.md（設計 ID と関数・ファイルの対応）
+  - scripts/isdd/（isdd-setup v2.2.0 で導入。isdd-build と版が一致）
+  - e2e/（E2E 6 本、JUnit XML は e2e/results/e2e.xml）、tests/unit/（単体 10 件）
+  - .claude/settings.json（応答終了時に scripts/isdd/check.sh を実行するフック）
+
+■ 検証結果（実行ログ）
+  - bash scripts/isdd/check.sh --strict: エラー 0・警告 0、受け入れ判定 合格（DS-TS 6/6、要件 実装済み 10/10）
+  - rq_integrity_checker.py docs/requirements.md: 問題 0
+  - rq_ds_link_checker.py docs/requirements.md docs/detail_design.md: 問題 0
+  - implementation_completeness_checker.py: 4/4 項目 OK
+  - 単体テスト 10/10、E2E 6 ファイル全件合格
+  - run.sh を PORT=8777 で起動し、/・/api/prizes・POST /api/spin が 200/201。Chrome のヘッドレス表示で 3 画面を確認
+  - 起動したプロセスは PID で停止済み。docs/proposals.md・docs/active_change は無い（正本は確定）
+
+■ 要件ごとの実装済み判定
+  RQ-FT-NAME-REQUIRED / RQ-FT-RECORD-WINNING / RQ-FT-SPIN-WHEEL / RQ-FT-VIEW-OWN-WINNINGS / RQ-FT-VIEW-PRIZE-LIST / RQ-FT-WEIGHTED-DRAW
+  RQ-UI-MY-WINNINGS-SCREEN / RQ-UI-NAVIGATION-MENU / RQ-UI-PRIZE-LIST-SCREEN / RQ-UI-SPIN-SCREEN
+  すべて「実装済み」。
+
+■ 未マッピング一覧（isdd-build の実装後レビュー）
+  | 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+  | src 配下の公開関数 14 件・モジュール 4 件 | 全件登録 | あり | 全件あり | あり | 整合 |
+  | src/routes.js::_sendJson、_readJsonBody、src/server.js::_isMainModule | 対象外（内部関数） | ― | ― | ― | 対象外 |
+  | public/app.js の関数（setMessage、api、loadPrizes など） | 対象外（静的ファイル。対応表の範囲外） | DS-IF-* の画面に含まれる | RQ-UI-*、RQ-FT-* | あり | 設計未定義（個別 ID なし） |
+  要件なし（作りすぎ）: 0 件
+
+■ 依頼に無く自分で決めた項目（要件定義書 1-2。ANSWERS.md の承認指示により承認済み扱い）
+  名前は 1〜30 文字で区別（ログイン無し）、景品の初期データ 8 件とサンプル記録 3 件、景品の管理画面は作らない、
+  「はずれ」は置かない、扇形は等分（確率は重みで決まる）、景品が無いときは 409、記録の表示は新しい順 100 件まで、
+  名前は localStorage に保存。
+
+■ 残っている注意点
+  - 技術選定の公式情報の調査は、検索ツールの権限が得られず未実施（出典は「未調査（ユーザー承認: 2026-11-05）」と記録）。
+    node:sqlite が警告を出す可能性は未確認（ローカルの Node 24.19.0 では動作を確認）
+  - ブラウザでの操作（ボタンを押して回す動き）は実機で確認していない。API と HTML/CSS/JS の配置、表示は確認済み
+  - My Winnings は名前を入力するまで空。サンプルは名前 "Sample Player" で確認できる
+  - app.js の内部関数は設計の個別 ID を持たず、DS-IF の画面仕様に含めている（対応表の対象外）
+  - Git にはコミットしていない（ユーザーの指示が無いため）

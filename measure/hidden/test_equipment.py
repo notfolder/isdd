@@ -4,10 +4,11 @@ import pytest
 from playwright.sync_api import expect
 
 from support.ui import expect_url, click_with_dialog, equipment_row, field_error, login, messages
+from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF, EMP_FORMAT_MSG, LAST_STAFF, OLD_ROLE, ROLE, STAFF_ONLY, emp
 
-STAFF = {"number": "000001", "name": "担当太郎", "staff": True}
-STAFF_Y = {"number": "000003", "name": "担当次郎", "staff": True}
-EMPLOYEE = {"number": "000002", "name": "社員花子"}
+STAFF = {"number": emp("1"), "name": "担当太郎", "staff": True}
+STAFF_Y = {"number": emp("3"), "name": "担当次郎", "staff": True}
+EMPLOYEE = {"number": emp("2"), "name": "社員花子"}
 FORMAT_MESSAGE = "管理番号は半角の英数字とハイフンで 20 文字以内で入力してください"
 
 
@@ -20,7 +21,7 @@ def fill_equipment(page, number, name):
 @pytest.mark.stage1
 def test_equipment_create(app, page):
     app.seed({"accounts": [STAFF], "equipment": [{"number": "PC-001", "name": "ノートパソコン"}]})
-    login(page, app.base_url, "000001")
+    login(page, app.base_url, emp("1"))
     page.goto(f"{app.base_url}/equipment/new/")
     cases = [
         ("ＰＣ－００２", "ノートパソコン", "id_equipment_number", FORMAT_MESSAGE),
@@ -41,7 +42,7 @@ def test_equipment_create(app, page):
 @pytest.mark.stage1
 def test_equipment_update_and_delete_without_lending(app, page):
     app.seed({"accounts": [STAFF], "equipment": [{"number": "PC-001", "name": "ノートパソコン"}, {"number": "PC-002", "name": "モニター"}]})
-    login(page, app.base_url, "000001")
+    login(page, app.base_url, emp("1"))
     equipment_row(page, "PC-001").get_by_role("button", name="修正").click()
     fill_equipment(page, "PC-101", "ノートパソコン（新）")
     expect(equipment_row(page, "PC-101")).to_contain_text("ノートパソコン（新）")
@@ -61,9 +62,9 @@ def test_equipment_update_keeps_lending(app, page):
     app.seed({
         "accounts": [STAFF, EMPLOYEE],
         "equipment": [{"number": "PC-001", "name": "ノートパソコン"}, {"number": "PC-002", "name": "ノートパソコン"}],
-        "lendings": [{"equipment": "PC-001", "borrower": "000002", "lent_on": "2026-10-01"}],
+        "lendings": [{"equipment": "PC-001", "borrower": emp("2"), "lent_on": "2026-10-01"}],
     })
-    login(page, app.base_url, "000001")
+    login(page, app.base_url, emp("1"))
     equipment_row(page, "PC-001").get_by_role("button", name="修正").click()
     fill_equipment(page, "PC-101", "ノートパソコン（新）")
     row = equipment_row(page, "PC-101")
@@ -79,14 +80,14 @@ def test_stale_equipment_update(app, page, new_page):
         "equipment": [{"number": "PC-001", "name": "ノートパソコン"}, {"number": "PC-002", "name": "モニター"}],
     })
     page_y = new_page()
-    login(page, app.base_url, "000001")
-    login(page_y, app.base_url, "000003")
+    login(page, app.base_url, emp("1"))
+    login(page_y, app.base_url, emp("3"))
     for p in (page, page_y):
         equipment_row(p, "PC-001").get_by_role("button", name="修正").click()
     fill_equipment(page, "PC-001", "X が直した名前")
     expect_url(page, app.base_url, "/")
     fill_equipment(page_y, "PC-001", "Y が直した名前")
-    stale = "他の担当者が先にこの備品を更新しました。貸出状況の画面から開き直してください"
+    stale = f"他の{ROLE}が先にこの備品を更新しました。貸出状況の画面から開き直してください"
     expect(page_y.locator(".error")).to_have_text([stale])
     page.reload()
     expect(equipment_row(page, "PC-001")).to_contain_text("X が直した名前")
@@ -107,9 +108,9 @@ def test_equipment_delete_rejects_lent(app, page):
     app.seed({
         "accounts": [STAFF, EMPLOYEE],
         "equipment": [{"number": "PC-001", "name": "ノートパソコン"}, {"number": "PC-002", "name": "ノートパソコン"}],
-        "lendings": [{"equipment": "PC-001", "borrower": "000002", "lent_on": "2026-10-01"}],
+        "lendings": [{"equipment": "PC-001", "borrower": emp("2"), "lent_on": "2026-10-01"}],
     })
-    login(page, app.base_url, "000001")
+    login(page, app.base_url, emp("1"))
     click_with_dialog(page, equipment_row(page, "PC-002").get_by_role("button", name="削除"), accept=True)
     expect(equipment_row(page, "PC-002")).to_have_count(0)
     click_with_dialog(page, equipment_row(page, "PC-001").get_by_role("button", name="削除"), accept=True)

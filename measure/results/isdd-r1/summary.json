@@ -2,109 +2,78 @@
   "arm": "isdd",
   "run": 1,
   "model": "claude-haiku-5-5",
-  "runner": "Agent tool",
   "stages": {
     "1": {
       "done": true,
-      "wall_sec": 833.0,
-      "agent_tokens": 286557,
-      "tool_uses": 52,
-      "note": "Agent ツール（haiku）",
-      "passed": 8,
-      "total": 8,
-      "tests": {
-        "test_first_account_becomes_staff[chromium]": "pass",
-        "test_account_registration[chromium]": "pass",
-        "test_login_logout[chromium]": "pass",
-        "test_session_timeout[chromium]": "pass",
-        "test_employee_cannot_manage_equipment[chromium]": "pass",
-        "test_equipment_create[chromium]": "pass",
-        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
-        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      "wall_sec": 601.6,
+      "started": "2026-11-05T02:58:19",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 63,
+      "tool_names": {
+        "Bash": 32,
+        "ToolSearch": 1,
+        "WebSearch": 3,
+        "Agent": 1,
+        "WebFetch": 1,
+        "Write": 17,
+        "Edit": 8
       },
-      "overbuild": {
-        "source_files": 9,
-        "lines": 554,
-        "public_functions": 26,
-        "classes": 0,
-        "templates": 5
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 72,
+        "output_tokens": 145916,
+        "cache_creation_input_tokens": 258606,
+        "cache_read_input_tokens": 6100771,
+        "total_tokens": 6505365
       },
-      "score_error": null
+      "cost_usd": 0.8525,
+      "turns": 63,
+      "rounds": 1
     },
     "2": {
       "done": true,
-      "wall_sec": 991.0,
-      "agent_tokens": 392154,
-      "tool_uses": 66,
-      "note": "Agent ツール（haiku）",
-      "passed": 14,
-      "total": 14,
-      "tests": {
-        "test_first_account_becomes_staff[chromium]": "pass",
-        "test_account_registration[chromium]": "pass",
-        "test_login_logout[chromium]": "pass",
-        "test_session_timeout[chromium]": "pass",
-        "test_employee_cannot_manage_equipment[chromium]": "pass",
-        "test_equipment_create[chromium]": "pass",
-        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
-        "test_equipment_update_keeps_lending[chromium]": "pass",
-        "test_equipment_delete_rejects_lent[chromium]": "pass",
-        "test_lending[chromium]": "pass",
-        "test_return[chromium]": "pass",
-        "test_lending_status_without_login[chromium]": "pass",
-        "test_lending_status_empty_and_sorted[chromium]": "pass",
-        "test_response_time[chromium]": "pass"
+      "wall_sec": 957.1,
+      "started": "2026-11-05T03:08:20",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 76,
+      "tool_names": {
+        "Bash": 64,
+        "Read": 2,
+        "Write": 7,
+        "Edit": 3
       },
-      "overbuild": {
-        "source_files": 10,
-        "lines": 810,
-        "public_functions": 32,
-        "classes": 0,
-        "templates": 6
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 138,
+        "output_tokens": 219525,
+        "cache_creation_input_tokens": 379816,
+        "cache_read_input_tokens": 16937379,
+        "total_tokens": 17536858
       },
-      "score_error": null,
-      "regressions": []
-    },
-    "3": {
-      "done": true,
-      "wall_sec": 1900.0,
-      "agent_tokens": 249097,
-      "tool_uses": null,
-      "note": "Agent ツール（haiku）。API 上限で中断（11:48）し 15:04 に再開、再開後 113 秒で完了。所要は中断までの見込み（最大 31 分）＋再開分、ツール呼び出し数は再開後の 10 回だけが判明",
-      "passed": 21,
-      "total": 21,
-      "tests": {
-        "test_employee_restrictions[chromium]": "pass",
-        "test_staff_role_change[chromium]": "pass",
-        "test_password_reset[chromium]": "pass",
-        "test_account_delete[chromium]": "pass",
-        "test_first_account_becomes_staff[chromium]": "pass",
-        "test_account_registration[chromium]": "pass",
-        "test_login_logout[chromium]": "pass",
-        "test_session_timeout[chromium]": "pass",
-        "test_employee_cannot_manage_equipment[chromium]": "pass",
-        "test_equipment_create[chromium]": "pass",
-        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
-        "test_equipment_update_keeps_lending[chromium]": "pass",
-        "test_stale_equipment_update[chromium]": "pass",
-        "test_equipment_delete_rejects_lent[chromium]": "pass",
-        "test_lending[chromium]": "pass",
-        "test_concurrent_lending[chromium]": "pass",
-        "test_return[chromium]": "pass",
-        "test_duplicate_return[chromium]": "pass",
-        "test_lending_status_without_login[chromium]": "pass",
-        "test_lending_status_empty_and_sorted[chromium]": "pass",
-        "test_response_time[chromium]": "pass"
-      },
-      "overbuild": {
-        "source_files": 10,
-        "lines": 1017,
-        "public_functions": 42,
-        "classes": 0,
-        "templates": 7
-      },
-      "score_error": null,
-      "regressions": []
+      "cost_usd": 1.6924,
+      "turns": 77,
+      "rounds": 1
     }
-  }
+  },
+  "runner": "claude -p"
 }

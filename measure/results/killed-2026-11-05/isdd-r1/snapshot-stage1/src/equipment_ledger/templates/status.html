@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>貸出状況</h1>
+{% if equipment %}
+<table>
+  <thead>
+    <tr>
+      <th>管理番号</th><th>備品名</th><th>状況</th><th>借りている社員</th><th>貸出日</th>
+      {% if is_manager %}<th>操作</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in equipment %}
+    <tr data-equipment-number="{{ item['equipment_number'] }}">
+      <td>{{ item['equipment_number'] }}</td>
+      <td>{{ item['name'] }}</td>
+      <td>{{ item['status'] }}</td>
+      <td>{{ item['borrower'] or '' }}</td>
+      <td>{{ item['lent_on'] or '' }}</td>
+      {% if is_manager %}
+      <td class="row-actions">
+        <form method="get" action="{{ url_for('ledger.edit_equipment', equipment_number=item['equipment_number']) }}" class="inline">
+          <button type="submit">修正</button>
+        </form>
+        <form method="post" action="{{ url_for('ledger.delete_equipment', equipment_number=item['equipment_number']) }}" class="inline">
+          <button type="submit" onclick="return window.confirm('この備品を削除します。よろしいですか？');">削除</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">備品は登録されていません</p>
+{% endif %}
+{% endblock %}

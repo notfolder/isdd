@@ -42,3 +42,7 @@
 - [ ] `.env` の旧変数 3 行（`WAZA_CLAUDE_MODEL_PRIMARY`・`WAZA_CLAUDE_MODEL_SECONDARY`・`WAZA_CLAUDE_ESCALATE`）を削除する（ユーザー作業。残っていても動作に影響なし）（追加 2026-10-18、重要 低）
 - [ ] 実行基盤の固まり（2026-10-18 の eval で 2 回。Copilot CLI がモデル応答待ちのまま 22〜40 分停止、転記ファイル未作成）が再発したら、Copilot CLI の更新か検証 D を優先する。2026-11-03 までの eval では再発なし（追加 2026-10-18、重要 低）
 - [ ] ローカルブランチ `feature-equipment-lending-management`（2026-10-19、main に無いコミット 7 件。備品管理・貸出管理アプリを題材に、最新のスキルで要件定義・詳細設計・実装まで通した記録とみられる）の扱いを決める。残すなら目的をここに書き、不要なら削除する（追加 2026-10-25、重要 低）
+
+## 計測のやり直し（2026-11-05 未明、途中）
+
+- [ ] 再開手順（私の利用上限で 03:50 に中断。背景の実行は動き続けている）: 段階 2（お題 1）は対照群 5 回と isdd r3・r5 が完了、isdd r1・r2・r4 は `bash measure/batch.sh 3 /tmp/isdd-measure/jobs-m1-redo.txt` でやり直し中（04:30 ごろ終了見込み。途中で止まった原因は不明。SIGTERM）。段階 3（Web サイト 5 課題 × 2 群 × 3 回）は `/tmp/isdd-measure/jobs-m4-part-aa〜af` を `bash measure/batch2.sh 4 <一覧>` で順に回す（aa は 1 本ずつ実行中。済んだ実行は drive.py が飛ばすので一覧をそのまま再投入してよい）。段階 4（計測 5）は `/tmp/isdd-measure/jobs-m5-part-aa〜ac` を同じく回し、終わったら `/tmp/isdd-measure/master.sh` の末尾の判定ループ（`measure/ledger_judge.py`）を実行する。結果表は `python3 measure/report.py`、`python3 measure/webgen/webgen.py report`。報告書（段階 5）は `measure/results/REPORT.md` を書き直す（追加 2026-11-05、重要 高）

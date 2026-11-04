@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "名前 Tester を入れて Spin を押すとホイールが回転し、ポインタ下の Gift Card 500 の区画で止まり「You won: Gift Card 500」と表示された。ページのエラー・コンソールエラーは無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "Prizes 画面に 6 件（Coffee Voucher, Gift Card 500, Free Dessert, Movie Ticket, Tote Bag, Mystery Gift）が説明付きで表示され、ホイールの 6 区画と一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "スピン後に My Records で Tester を検索すると「11/5/2026, 1:11:02 AM / Gift Card 500」の行が表示され、直前の当選賞品と日時が記録に反映されていた。"},
+  "000010-4": {"verdict": "YES", "reason": "body 背景 rgb(230,230,230) は light gray (211,211,211) と各成分差 40 以内。ヘッダー背景・Spin ボタン背景・見出し h2 文字色がいずれも rgb(139,0,0) で dark red と一致し、背景と部品 3 種類がすべて合った。"}
+}

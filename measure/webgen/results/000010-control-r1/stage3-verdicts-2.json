@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the canvas rotated (transform changed mid-spin), stopped with the pointer on 'Free Coffee' and showed 'Alice won: Free Coffee — ...' with no JS errors; an empty name showed 'Please enter your name before spinning.' and the wheel did not rotate."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List shows 8 rewards (name, description, chance), exactly matching the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "My Winning Records for 'Alice' lists the new win with player 'Alice', the reward (e.g. Better Luck Next Time) and the date/time (Nov 5, 2026, 03:09 AM)."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240) (ivory); the header rgb(0,100,0), the primary button rgb(0,100,0) and the h1 text rgb(0,100,0) all match dark green within 40 per channel."},
+  "000010-rename": {"verdict": "YES", "reason": "No visible text on the spin, reward list or records pages contains 'prize' (it appears only in an HTML class name); navigation, headings, buttons and messages use 'Reward', and every page worked."}
+}

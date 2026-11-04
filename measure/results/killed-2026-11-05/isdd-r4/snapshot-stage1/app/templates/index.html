@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>貸出状況</h2>
+{% if rows %}
+<table>
+  <thead>
+    <tr>
+      <th>管理番号</th><th>備品名</th><th>状態</th><th>借りている社員の名前</th><th>貸出日</th>
+      {% if is_manager %}<th>操作</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr data-equipment-number="{{ row.equipment_number }}">
+      <td>{{ row.equipment_number }}</td>
+      <td>{{ row.name }}</td>
+      <td>{{ row.status }}</td>
+      <td>{{ row.borrower_name }}</td>
+      <td>{{ row.loan_date }}</td>
+      {% if is_manager %}
+      <td>
+        <form method="get" action="{{ url_for('main.equipment_edit_page', equipment_number=row.equipment_number) }}" class="inline">
+          <button type="submit">修正</button>
+        </form>
+        <form method="post" action="{{ url_for('main.equipment_delete_action', equipment_number=row.equipment_number) }}" class="inline" onsubmit="return window.confirm('この備品を削除しますか？');">
+          <button type="submit">削除</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>備品は登録されていません</p>
+{% endif %}
+{% endblock %}

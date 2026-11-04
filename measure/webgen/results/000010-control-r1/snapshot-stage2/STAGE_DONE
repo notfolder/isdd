@@ -1,0 +1,22 @@
+REQUEST.md change request 1 — done.
+
+1. Colour theme
+   - Background is ivory (#fffff0) in static/style.css (--bg).
+   - Component colour is dark green (#006400, CSS "darkgreen"): header, nav active item, h1 headings, panels' top border, buttons, table headers, focus rings, footer.
+   - Light-gray panel/border/row colours and dark-red colours are replaced everywhere, including the wheel segments, hub, pointer and the "No prizes yet" wheel in static/app.js.
+   - Panels are white so they stand out on the ivory background. Error text uses #b3261e (a clearer red) so validation messages stay distinguishable; this is my judgement call.
+
+2. Name required for spinning
+   - A "Player name *" field sits next to the Spin button, with `required` and a hint line.
+   - Spinning with an empty or whitespace-only name shows "Please enter your name before spinning." and does not spin. The server also rejects it with a 400 response.
+   - The win message now includes the name: "<name> won: <prize> — <description>".
+   - Records table (My Winning Records) has a Player column, so each row shows player, prize and date/time.
+
+Unchanged: prize list, sample prizes, records lookup, navigation, server endpoints and the DB schema (server.py is untouched).
+
+Verification
+- node --check static/app.js passes.
+- bash setup.sh succeeds. PORT=8765 DATA_DIR=<temp> bash run.sh serves / and /style.css with 200.
+- POST /api/spin with a blank name returns 400. With "Alex" it returns 200 and a record. GET /api/records?name=alex returns the record with user_name "Alex".
+- The server was stopped by its PID. Temp data was removed. No other processes were touched.
+- Not verified: a real browser run of the visuals and the spin animation. I checked the code and the API only.

@@ -36,8 +36,7 @@ def prepare(args) -> int:
                     shutil.copytree(skill, dest / skill.name, ignore=shutil.ignore_patterns("evals"))
     if args.arm == "isdd":
         shutil.copyfile(HERE / "answers" / f"stage{args.stage}.md", workdir / "ANSWERS.md")
-    parts = [(HERE / "contracts" / f"stage{i}.md").read_text(encoding="utf-8").rstrip() for i in range(1, args.stage + 1)]
-    (workdir / "contract.md").write_text("\n\n---\n\n".join(parts) + "\n", encoding="utf-8")
+    (workdir / "contract.md").write_text((HERE / "contracts" / f"stage{args.stage}.md").read_text(encoding="utf-8"), encoding="utf-8")
     shutil.copyfile(HERE / "stages" / f"stage{args.stage}.md", workdir / "REQUEST.md")
     flag = workdir / "STAGE_DONE"
     if flag.exists():

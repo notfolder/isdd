@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>備品台帳</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a href="{{ url_for('ledger.status') }}" class="site-title">備品台帳</a>
+    <nav class="site-nav">
+      {% if user %}
+        <span class="current-user">{{ user.name }}</span>
+        <form method="post" action="{{ url_for('ledger.logout') }}" class="inline-form">
+          <button type="submit">ログアウト</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('ledger.login') }}">ログイン</a>
+        <a href="{{ url_for('ledger.register') }}">アカウント登録</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% for message in get_flashed_messages(category_filter=['message']) %}
+      <p class="message">{{ message }}</p>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

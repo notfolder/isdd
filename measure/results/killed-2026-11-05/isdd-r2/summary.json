@@ -1,0 +1,77 @@
+{
+  "arm": "isdd",
+  "run": 2,
+  "model": "claude-haiku-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 951.4,
+      "started": "2026-11-05T01:24:30",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 85,
+      "tool_names": {
+        "Bash": 50,
+        "ToolSearch": 1,
+        "WebSearch": 2,
+        "Write": 18,
+        "Edit": 7,
+        "Grep": 7
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": false,
+      "validity_note": "isdd のスキル呼び出し無し",
+      "usage": {
+        "input_tokens": 124,
+        "output_tokens": 141458,
+        "cache_creation_input_tokens": 264911,
+        "cache_read_input_tokens": 11621120,
+        "total_tokens": 12027613
+      },
+      "cost_usd": 1.1181,
+      "turns": 86,
+      "rounds": 1
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 1540.1,
+      "started": "2026-11-05T01:40:21",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 70,
+      "tool_names": {
+        "Bash": 63,
+        "Read": 3,
+        "Write": 2,
+        "Edit": 1,
+        "ReportFindings": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": false,
+      "validity_note": "isdd のスキル呼び出し無し",
+      "usage": {
+        "input_tokens": 4,
+        "output_tokens": 177,
+        "cache_creation_input_tokens": 705,
+        "cache_read_input_tokens": 359428,
+        "total_tokens": 360314
+      },
+      "cost_usd": 1.5451,
+      "turns": 1,
+      "rounds": 1
+    }
+  },
+  "runner": "claude -p"
+}

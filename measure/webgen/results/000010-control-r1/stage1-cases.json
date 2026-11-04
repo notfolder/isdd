@@ -1,0 +1,29 @@
+{
+  "base_url": "http://127.0.0.1:56896",
+  "cases": [
+    {
+      "id": "000010-1",
+      "category": "Functional Testing",
+      "task": "Spin the wheel to initiate a gameplay session.",
+      "expected": "The wheel spins, stops at a segment, and displays the prize won without any errors."
+    },
+    {
+      "id": "000010-2",
+      "category": "Data Display Testing",
+      "task": "View the list of available prizes before spinning the wheel.",
+      "expected": "A complete and accurate list of prizes is displayed, matching the set prizes available on the wheel."
+    },
+    {
+      "id": "000010-3",
+      "category": "Data Display Testing",
+      "task": "After spinning the wheel, navigate to the section displaying user winning records.",
+      "expected": "The user's winning record is updated to include the latest prize won, with correct details on date and prize."
+    },
+    {
+      "id": "000010-4",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'light gray' as the background color and 'dark red' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'light gray' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark red', accurately reflecting the design instruction."
+    }
+  ]
+}

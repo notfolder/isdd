@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel canvas rotated (transform changed over ~5s, then stopped), the pointer landed on a segment and 'Alice won: Sticker Pack — ...' was shown with no page errors. With an empty name the message 'Please enter your name before spinning.' appeared and the wheel transform stayed unchanged."},
+  "000010-2": {"verdict": "YES", "reason": "Reward List page shows 8 rewards with description and chance, and these match the 8 segments drawn on the wheel (Grand Reward, Movie Tickets, Free Coffee, 20% Off Coupon, Free Shipping, Mystery Gift Box, Sticker Pack, Better Luck Next Time)."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winning Records for 'Alice' showed a row with Player 'Alice', the reward won (Free Coffee) and date/time 'Nov 5, 2026, 03:07 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "body background rgb(255,255,240) = ivory; header rgb(0,100,0), primary button rgb(0,74,0) and h1 text rgb(0,100,0) are all within 40 per channel of dark green (0,100,0)."},
+  "000010-rename": {"verdict": "YES", "reason": "Visible text, titles, aria-labels and placeholders on the spin, reward list and records pages contain no 'prize'/'prizes'; nav, headings, and messages use 'Reward' (e.g. 'Reward List', 'Grand Reward'), and all three pages worked."}
+}

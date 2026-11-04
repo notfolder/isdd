@@ -1,0 +1,7 @@
+{% macro field(id, label, name, type="text", value="", error=None) -%}
+<div class="field">
+  <label for="{{ id }}">{{ label }}</label>
+  <input id="{{ id }}" name="{{ name }}" type="{{ type }}" value="{{ value }}">
+  {% if error %}<span class="field-error">{{ error }}</span>{% endif %}
+</div>
+{%- endmacro %}

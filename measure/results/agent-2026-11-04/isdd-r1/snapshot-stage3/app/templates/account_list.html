@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}アカウントの一覧{% endblock %}
+{% block content %}
+<h1>アカウントの一覧</h1>
+<table>
+  <thead>
+    <tr>
+      <th>社員番号</th>
+      <th>名前</th>
+      <th>役割</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for account in accounts %}
+    <tr data-employee-number="{{ account.employee_number }}">
+      <td>{{ account.employee_number }}</td>
+      <td>{{ account.name }}</td>
+      <td>{% if account.role == 'manager' %}担当者{% else %}社員{% endif %}</td>
+      <td>
+        {% if account.role == 'manager' %}
+        <form method="post" action="{{ url_for('web.account_role', employee_number=account.employee_number) }}" class="inline" onsubmit="return confirm('この人を担当者から外しますか？');">
+          <input type="hidden" name="role" value="member">
+          <button type="submit">担当者から外す</button>
+        </form>
+        {% else %}
+        <form method="post" action="{{ url_for('web.account_role', employee_number=account.employee_number) }}" class="inline" onsubmit="return confirm('この人を担当者にしますか？');">
+          <input type="hidden" name="role" value="manager">
+          <button type="submit">担当者にする</button>
+        </form>
+        {% endif %}
+        {% if reset_employee == account.employee_number %}
+        <form method="post" action="{{ url_for('web.account_password', employee_number=account.employee_number) }}" class="inline">
+          <div class="field">
+            <input name="new_password" type="password" aria-label="新しいパスワード">
+            {% if reset_errors.password %}<span class="field-error">{{ reset_errors.password }}</span>{% endif %}
+          </div>
+          <button type="submit">確定</button>
+        </form>
+        {% else %}
+        <form method="get" action="{{ url_for('web.account_password', employee_number=account.employee_number) }}" class="inline">
+          <button type="submit">パスワード再設定</button>
+        </form>
+        {% endif %}
+        <form method="post" action="{{ url_for('web.account_delete', employee_number=account.employee_number) }}" class="inline" onsubmit="return confirm('このアカウントを削除しますか？');">
+          <button type="submit">削除</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

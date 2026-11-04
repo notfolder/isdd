@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "名前 Tester を入れて Spin を押すとホイールが回転し（途中は「Spinning...」表示）、指針の位置の Free Coffee で止まり、「Congratulations, Tester! You won: Free Coffee.」と賞品が表示された。ページエラー・コンソールエラーは無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "Prize List ページに、ホイールの 7 区画（10% Off Coupon、Free Coffee、Movie Ticket、Mystery Gift、T-Shirt、$50 Gift Card、Try Again）と同じ賞品が漏れなく並び、それぞれに説明と当選確率が付いていた。"},
+  "000010-3": {"verdict": "YES", "reason": "回した直後に My Winnings を開くと「2 wins for Tester」の表の先頭に、今回当たった Free Coffee が日付（Nov 5, 2026, 1:10 AM）と賞品名の列付きで載っていた。"},
+  "000010-4": {"verdict": "YES", "reason": "body の背景は rgb(228,228,228) で light gray (211,211,211) との差が各成分 40 以内。ヘッダー背景・Spin ボタン背景・見出し h1/h2 の文字色はすべて rgb(139,0,0) で dark red と一致し、背景と部品 3 種類がすべて合った。"}
+}

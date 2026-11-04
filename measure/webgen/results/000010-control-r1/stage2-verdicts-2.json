@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Entering 'Alice' and spinning showed 'Spinning…', then the wheel stopped with the pointer on a segment and the page displayed 'Alice won: Better Luck Next Time — …' with no errors. Spinning with an empty name showed 'Please enter your name before spinning.' and no spin started."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 8 prizes with a description and chance for each, and these match the 8 segments on the wheel (Grand Prize, Movie Tickets, Free Coffee, 20% Off, Free Shipping, Mystery Gift Box, Sticker Pack, Better Luck Next Time)."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records shows the new win as a row with Player 'Alice', Prize 'Better Luck Next Time' and Date 'Nov 5, 2026, 03:05 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background, Spin button background and h1 text are all rgb(0,100,0), which is dark green, so the background and all three components match."}
+}

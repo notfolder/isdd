@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}備品台帳{% endblock %}</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; color: #222; }
+    header { display: flex; gap: 1em; align-items: center; padding: 0.6em 1em; background: #eef2f7; }
+    header .spacer { flex: 1; }
+    main { padding: 1em; max-width: 60em; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #bbb; padding: 0.4em 0.6em; text-align: left; }
+    .field { margin: 0.8em 0; }
+    .field label { display: block; margin-bottom: 0.2em; }
+    .field-error { color: #b00020; display: block; margin-top: 0.2em; }
+    .error { color: #b00020; margin: 0.8em 0; }
+    .message { background: #e8f5e9; border: 1px solid #81c784; padding: 0.5em 0.8em; margin: 0.8em 0; }
+    form.inline { display: inline; }
+    button, .button { padding: 0.3em 0.8em; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="{{ url_for('web.loan_status') }}">備品の貸出状況</a>
+    <span class="spacer"></span>
+    {% if g.account %}
+      <span class="current-user">{{ g.account.name }}</span>
+      <form method="post" action="{{ url_for('web.logout') }}" class="inline">
+        <button type="submit">ログアウト</button>
+      </form>
+    {% elif guest_links %}
+      <a href="{{ url_for('web.login') }}">ログイン</a>
+      <a href="{{ url_for('web.register_account') }}">アカウント登録</a>
+    {% endif %}
+  </header>
+  <main>
+    {% for message in get_flashed_messages() %}
+      <div class="message">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

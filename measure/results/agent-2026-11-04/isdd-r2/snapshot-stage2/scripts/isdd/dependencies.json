@@ -1,0 +1,15 @@
+{
+  "_comment": "詳細設計書 第 7 章「依存の規則」の書き写し。isdd-setup が雛形を作り、以後は手で保つ（再実行でも上書きしない）。from: 規則を当てるディレクトリ / deny: 依存してはいけない先（プロジェクト内のパス、または外部モジュール名）/ allow: 依存してよいプロジェクト内のディレクトリ（書くと from 自身と allow 以外は違反）/ reason: 理由",
+  "rules": [
+    {
+      "from": "equipment_ledger/core",
+      "deny": ["equipment_ledger/app.py", "equipment_ledger/views.py", "equipment_ledger/auth.py", "flask"],
+      "reason": "業務ロジックを Web の層から独立させ、画面を変えても業務の規則を保つため"
+    },
+    {
+      "from": "equipment_ledger/auth.py",
+      "deny": ["equipment_ledger/views.py", "equipment_ledger/app.py"],
+      "reason": "認証は画面の層から呼ぶ部品にするため"
+    }
+  ]
+}

@@ -30,19 +30,30 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
-ALLOWED_TOOLS = ["Bash", "Read", "Write", "Edit", "MultiEdit", "Glob", "Grep", "LS", "Skill", "Agent", "TodoWrite", "NotebookEdit"]
+sys.path.insert(0, str(HERE))
+from agentrun import ISDD_SKILLS, RESPONDER_PROMPT, ask_responder, run_claude, run_claude_retry  # noqa: E402
 SNAPSHOT_IGNORE = shutil.ignore_patterns(".venv", "venv", "node_modules", "__pycache__", ".git", "data", ".pytest_cache", "results")
 
 FIRST_PROMPT_ISDD = """REQUEST.md の依頼を、isdd-spec と isdd-build のスキル（.claude/skills/ にある）を使って、要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください。
-ユーザーは不在です。質問や承認が要るときは、ユーザーに聞かずに ANSWERS.md の回答に従って自分で答え、承認はすべて与えられたものとして進めてください。
+他のプロセスを `pkill`・`killall`・`kill -9 -1` などで止めないでください（同じマシンで別の作業が動いています）。自分が起動したサーバーは、その PID だけを止めてください。ユーザーは不在です。質問や承認が要るときは、ユーザーに聞かずに ANSWERS.md の回答に従って自分で答え、承認はすべて与えられたものとして進めてください。
 採点の契約は contract.md にあります（起動方法、URL、画面の要素の id、文言）。必ず守ってください。
 {change_note}
 完了条件（isdd-build の実装後レビューまで）を満たしたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"""
 
-FIRST_PROMPT_CONTROL = """REQUEST.md の依頼を最後まで実装してください。
-ユーザーは不在です。不明な点は依頼の文章と contract.md から最も単純な案で決めて進め、質問で止まらないでください。
+FIRST_PROMPT_CONTROL = """REQUEST.md の依頼を最後まで実装してください。Skill ツールは使わないでください。
+他のプロセスを `pkill`・`killall`・`kill -9 -1` などで止めないでください（同じマシンで別の作業が動いています）。自分が起動したサーバーは、その PID だけを止めてください。ユーザーは不在です。不明な点は依頼の文章と contract.md から最も単純な案で決めて進め、質問で止まらないでください。
 採点の契約は contract.md にあります（起動方法、URL、画面の要素の id、文言）。必ず守ってください。
 {change_note}
+実装が動くことを確かめたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"""
+
+FIRST_PROMPT_ISDD_Q = """REQUEST.md の依頼を、isdd-spec と isdd-build のスキル（.claude/skills/ にある）を使って、要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください。
+他のプロセスを `pkill`・`killall` などで止めないでください（同じマシンで別の作業が動いています）。自分が起動したサーバーは、その PID だけを止めてください。依頼者は応答を読んで答えます。分からないことや承認が要ることは、応答の中で依頼者に質問してください（質問は番号を付けてまとめる。依頼者の答えが次の依頼として届きます）。依頼者が「任せる」と答えたことは最小案で決め、要件定義書の「依頼に無く自分で決めた項目」に書いてください。
+採点の契約は contract.md にあります（起動方法、URL、画面の要素の id とクラス名）。必ず守ってください。
+完了条件（isdd-build の実装後レビューまで）を満たしたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"""
+
+FIRST_PROMPT_CONTROL_Q = """REQUEST.md の依頼を最後まで実装してください。Skill ツールは使わないでください。
+他のプロセスを `pkill`・`killall` などで止めないでください（同じマシンで別の作業が動いています）。自分が起動したサーバーは、その PID だけを止めてください。依頼者は応答を読んで答えます。分からないことは、応答の中で依頼者に質問してよいです（質問は番号を付けてまとめる。依頼者の答えが次の依頼として届きます）。依頼者が「任せる」と答えたことは最も単純な案で決めてください。
+採点の契約は contract.md にあります（起動方法、URL、画面の要素の id とクラス名）。必ず守ってください。
 実装が動くことを確かめたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"""
 
 CHANGE_NOTE = "これは既存のアプリへの変更要求です。前の段までの文書とコードがこのディレクトリにあります。既存の機能を壊さないでください。"
@@ -52,35 +63,6 @@ FOLLOW_UP_CONTROL = "続けてください。不明な点は最も単純な案�
 
 def log(label: str, msg: str) -> None:
     print(f"[{datetime.now().strftime('%H:%M:%S')}] [{label}] {msg}", flush=True)
-
-
-def run_claude(workdir: Path, prompt: str, model: str, session: str, timeout_min: int) -> dict:
-    cmd = ["claude", "-p", "--model", model, "--output-format", "json", "--setting-sources", "project",
-           "--permission-mode", "acceptEdits", "--allowedTools", ",".join(ALLOWED_TOOLS)]
-    if session:
-        cmd += ["--resume", session]
-    env = dict(os.environ)
-    env.pop("CLAUDECODE", None)  # 入れ子の起動を許す
-    started = time.time()
-    try:
-        proc = subprocess.run(cmd, cwd=workdir, capture_output=True, text=True, timeout=timeout_min * 60, env=env, input=prompt)
-        out = proc.stdout
-    except subprocess.TimeoutExpired as e:
-        return {"error": f"timeout {timeout_min} min", "raw": ((e.stdout or b"").decode(errors="replace"))[-2000:], "wall_sec": round(time.time() - started, 1)}
-    data = {}
-    try:
-        data = json.loads(out)
-    except json.JSONDecodeError:
-        idx = out.rfind("\n{")
-        if idx >= 0:
-            try:
-                data = json.loads(out[idx + 1:])
-            except json.JSONDecodeError:
-                pass
-    if not data:
-        data = {"error": "no json", "raw": (out + proc.stderr)[-3000:], "returncode": proc.returncode}
-    data["wall_sec"] = round(time.time() - started, 1)
-    return data
 
 
 def sum_usage(rounds: list) -> dict:
@@ -98,8 +80,7 @@ def sum_usage(rounds: list) -> dict:
 
 
 def write_contract(workdir: Path, stage: int) -> None:
-    parts = [(HERE / "contracts" / f"stage{i}.md").read_text(encoding="utf-8").rstrip() for i in range(1, stage + 1)]
-    (workdir / "contract.md").write_text("\n\n---\n\n".join(parts) + "\n", encoding="utf-8")
+    (workdir / "contract.md").write_text((HERE / "contracts" / f"stage{stage}.md").read_text(encoding="utf-8"), encoding="utf-8")
 
 
 def score_snapshot(label: str, stage: int, snap: Path, out_json: Path, lock_path: Path) -> None:
@@ -125,6 +106,9 @@ def main() -> int:
     parser.add_argument("--timeout-min", type=int, default=45, help="claude -p 1 回の上限")
     parser.add_argument("--label", default=None, help="結果ディレクトリの名前（既定 <arm>-r<run>）")
     parser.add_argument("--path-prefix", default=None, help="PATH の先頭に足すディレクトリ（python3 を 3.12 にするなど）")
+    parser.add_argument("--responder", default=None, help="依頼者役の隠し台帳（計測 5）。指定すると固定回答の代わりに、台帳を持つ依頼者役のモデルが質問に答える")
+    parser.add_argument("--responder-model", default="claude-sonnet-5-5")
+    parser.add_argument("--contract", default=None, help="契約ファイルの名前（既定 contracts/stage<N>.md。計測 5 は stage1-min.md）")
     args = parser.parse_args()
 
     if args.path_prefix:
@@ -151,20 +135,31 @@ def main() -> int:
 
     summary_path = results_dir / "summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else {"arm": args.arm, "run": args.run, "model": args.model, "stages": {}}
+    if all(str(st) in summary["stages"] and summary["stages"][str(st)].get("passed") is not None for st in stages):
+        log(label, "採点済みのため何もしない")
+        return 0
     summary["runner"] = "claude -p"
     scorers = []
 
     for stage in stages:
         shutil.copyfile(HERE / "stages" / f"stage{stage}.md", workdir / "REQUEST.md")
-        write_contract(workdir, stage)
-        if args.arm == "isdd":
+        if args.contract:
+            (workdir / "contract.md").write_text((HERE / "contracts" / args.contract).read_text(encoding="utf-8"), encoding="utf-8")
+        else:
+            write_contract(workdir, stage)
+        if args.arm == "isdd" and not args.responder:
             shutil.copyfile(HERE / "answers" / f"stage{stage}.md", workdir / "ANSWERS.md")
         done_flag = workdir / "STAGE_DONE"
         if done_flag.exists():
             done_flag.unlink()
-        template = FIRST_PROMPT_ISDD if args.arm == "isdd" else FIRST_PROMPT_CONTROL
-        prompt = template.format(change_note=CHANGE_NOTE if stage > 1 else "")
+        if args.responder:
+            prompt = FIRST_PROMPT_ISDD_Q if args.arm == "isdd" else FIRST_PROMPT_CONTROL_Q
+            ledger_text = (HERE / args.responder).read_text(encoding="utf-8") if not Path(args.responder).is_absolute() else Path(args.responder).read_text(encoding="utf-8")
+        else:
+            template = FIRST_PROMPT_ISDD if args.arm == "isdd" else FIRST_PROMPT_CONTROL
+            prompt = template.format(change_note=CHANGE_NOTE if stage > 1 else "")
         follow = FOLLOW_UP if args.arm == "isdd" else FOLLOW_UP_CONTROL
+        questions_asked = 0
         rounds = []
         session = ""
         log_file = open(results_dir / f"stage{stage}.log", "w", encoding="utf-8")
@@ -172,13 +167,21 @@ def main() -> int:
         stage_started = time.time()
         log(label, f"stage {stage}: 開始")
         for i in range(args.max_rounds):
-            data = run_claude(workdir, prompt if i == 0 else follow, args.model, session, args.timeout_min)
+            if i > 0 and args.responder:
+                last = (rounds[-1].get("texts") or [rounds[-1].get("result") or ""])[-1]
+                answer = ask_responder(ledger_text, last, args.responder_model, workdir)
+                if "?" in last or "？" in last or "教えてください" in last or "どちら" in last:
+                    questions_asked += 1
+                log_file.write(f"\n### 依頼者役の答え {i}\n\n{answer[:4000]}\n")
+                follow = answer
+            data = run_claude_retry(workdir, prompt if i == 0 else follow, args.model, session, args.timeout_min)
             rounds.append(data)
             session = data.get("session_id", session)
             log_file.write(f"\n## round {i + 1} ({data.get('wall_sec')} s, turns={data.get('num_turns')}, error={data.get('error')}, is_error={data.get('is_error')})\n\n")
             log_file.write(str(data.get("result", data.get("raw", "")))[:20000] + "\n")
             log_file.flush()
-            log(label, f"stage {stage}: round {i + 1} 終了（{data.get('wall_sec')} 秒、turns={data.get('num_turns')}、done={done_flag.exists()}）")
+            log(label, f"stage {stage}: round {i + 1} 終了（{data.get('wall_sec')} 秒、turns={data.get('num_turns')}、tools={data.get('tool_uses')}、skills={data.get('skills_called')}、done={done_flag.exists()}）")
+            log_file.write(f"skills_visible={data.get('skills_visible')} tool_names={data.get('tool_names')}\n")
             if done_flag.exists():
                 break
             if data.get("error") and "timeout" in str(data.get("error")):
@@ -191,7 +194,21 @@ def main() -> int:
         if snap.exists():
             shutil.rmtree(snap)
         shutil.copytree(workdir, snap, ignore=SNAPSHOT_IGNORE)
-        stage_info = {"done": done_flag.exists(), "wall_sec": wall, "started": datetime.fromtimestamp(stage_started).isoformat(timespec="seconds"), **sum_usage(rounds)}
+        skills_called = [sk for r in rounds for sk in r.get("skills_called", [])]
+        visible = sorted({sk for r in rounds for sk in (r.get("skills_visible") or [])})
+        tool_names = {}
+        for r in rounds:
+            for k, v in (r.get("tool_names") or {}).items():
+                tool_names[k] = tool_names.get(k, 0) + v
+        isdd_used = any(sk in ISDD_SKILLS for sk in skills_called)
+        artifacts = all((workdir / f).exists() for f in ("docs/requirements.md", "docs/detail_design.md", "docs/trace_map.md", "scripts/isdd"))
+        valid = ((isdd_used or artifacts) if args.arm == "isdd" else not visible and not isdd_used)
+        stage_info = {"done": done_flag.exists(), "wall_sec": wall, "started": datetime.fromtimestamp(stage_started).isoformat(timespec="seconds"),
+                      "responder": bool(args.responder), "questions_rounds": questions_asked,
+                      "tool_uses": sum(tool_names.values()), "tool_names": tool_names, "skills_called": skills_called, "isdd_skills_visible": visible,
+                      "valid": valid, "isdd_artifacts": artifacts, "validity_note": ("isdd の成果物もスキル呼び出しも無し" if args.arm == "isdd" and not (isdd_used or artifacts) else
+                                                       ("対照群に isdd のスキルが見えていた" if args.arm == "control" and (visible or isdd_used) else "")),
+                      **sum_usage(rounds)}
         summary["stages"][str(stage)] = stage_info
         summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
         t = threading.Thread(target=score_snapshot, args=(label, stage, snap, results_dir / f"stage{stage}.json", lock_path))
@@ -210,8 +227,8 @@ def main() -> int:
             if prev and prev.get("tests"):
                 info["regressions"] = sorted(t for t, v in prev["tests"].items() if v == "pass" and score["tests"].get(t) not in (None, "pass"))
         summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-        log(label, f"stage {stage}: done={info['done']} passed={info.get('passed')}/{info.get('total')} regressions={info.get('regressions')} "
-                   f"turns={info['turns']} tokens={info['usage']['total_tokens']} wall={info['wall_sec']}s")
+        log(label, f"stage {stage}: done={info['done']} valid={info.get('valid')} passed={info.get('passed')}/{info.get('total')} regressions={info.get('regressions')} "
+                   f"turns={info['turns']} tools={info.get('tool_uses')} skills={info.get('skills_called')} tokens={info['usage']['total_tokens']} wall={info['wall_sec']}s")
     return 0
 
 

@@ -1,0 +1,173 @@
+{
+  "arm": "control",
+  "run": 4,
+  "model": "claude-haiku-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 173.7,
+      "started": "2026-11-05T01:50:51",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 12,
+      "tool_names": {
+        "Bash": 10,
+        "Write": 2
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 26,
+        "output_tokens": 35986,
+        "cache_creation_input_tokens": 54417,
+        "cache_read_input_tokens": 625431,
+        "total_tokens": 715860
+      },
+      "cost_usd": 0.0351,
+      "turns": 13,
+      "rounds": 1,
+      "passed": 8,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 641,
+        "public_functions": 38,
+        "classes": 3,
+        "templates": 0
+      },
+      "score_error": null
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 132.0,
+      "started": "2026-11-05T01:53:45",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 20,
+      "tool_names": {
+        "Bash": 9,
+        "Edit": 10,
+        "Write": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 28,
+        "output_tokens": 30395,
+        "cache_creation_input_tokens": 61247,
+        "cache_read_input_tokens": 766019,
+        "total_tokens": 857689
+      },
+      "cost_usd": 0.0351,
+      "turns": 21,
+      "rounds": 1,
+      "passed": 14,
+      "total": 15,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "fail"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 842,
+        "public_functions": 42,
+        "classes": 3,
+        "templates": 0
+      },
+      "score_error": null,
+      "regressions": []
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 135.3,
+      "started": "2026-11-05T01:55:57",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 22,
+      "tool_names": {
+        "Bash": 9,
+        "Read": 2,
+        "Edit": 10,
+        "Write": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 32,
+        "output_tokens": 26815,
+        "cache_creation_input_tokens": 62623,
+        "cache_read_input_tokens": 965440,
+        "total_tokens": 1054910
+      },
+      "cost_usd": 0.0356,
+      "turns": 23,
+      "rounds": 1,
+      "passed": 22,
+      "total": 23,
+      "tests": {
+        "test_employee_restrictions[chromium]": "pass",
+        "test_staff_role_change[chromium]": "pass",
+        "test_password_reset[chromium]": "pass",
+        "test_account_delete[chromium]": "pass",
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_role_renamed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_stale_equipment_update[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_concurrent_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_duplicate_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "fail"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 1007,
+        "public_functions": 50,
+        "classes": 3,
+        "templates": 0
+      },
+      "score_error": null,
+      "regressions": []
+    }
+  },
+  "runner": "claude -p"
+}

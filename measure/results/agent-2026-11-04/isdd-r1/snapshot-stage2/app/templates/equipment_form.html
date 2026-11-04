@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if errors.conflict %}<p class="error">{{ errors.conflict }}</p>
+<p><a href="{{ url_for('web.loan_status') }}">貸出状況の画面へ戻る</a></p>
+{% endif %}
+<form method="post" action="{{ action }}">
+  {% if values.revision is defined %}<input type="hidden" name="revision" value="{{ values.revision }}">{% endif %}
+  <div class="field">
+    <label for="id_equipment_number">管理番号（半角の英数字とハイフン、20 文字以内）</label>
+    <input id="id_equipment_number" name="equipment_number" type="text" value="{{ values.equipment_number }}">
+    {% if errors.equipment_number %}<span class="field-error">{{ errors.equipment_number }}</span>{% endif %}
+  </div>
+  <div class="field">
+    <label for="id_name">備品名（50 文字以内）</label>
+    <input id="id_name" name="name" type="text" value="{{ values.name }}">
+    {% if errors.name %}<span class="field-error">{{ errors.name }}</span>{% endif %}
+  </div>
+  {% if not errors.conflict %}<button type="submit">保存</button>{% endif %}
+</form>
+{% endblock %}

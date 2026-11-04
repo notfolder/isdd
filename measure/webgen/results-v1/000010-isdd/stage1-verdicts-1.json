@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spin を押すと円盤が回転し（途中のスクリーンショットで回転中を確認）、指針の下に Tote Bag の区画が来て止まり、「You won: Tote Bag」と表示された。ページエラー・コンソールエラーは無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "回す前に Prizes 画面で 6 件の景品（Coffee Voucher、Gift Card 500、Free Dessert、Movie Ticket、Tote Bag、Mystery Gift）が説明付きで表示され、円盤の 6 区画と一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "回した後に My Records で同じ名前を検索すると、日時「11/5/2026, 1:10:52 AM」と景品「Tote Bag」の行が表示され、直前の当選と一致した。"},
+  "000010-4": {"verdict": "YES", "reason": "body の背景は rgb(230,230,230) で light gray (211,211,211) との差が各成分 40 以内。ヘッダー・Spin ボタン・見出し h2 はいずれも rgb(139,0,0) で dark red と一致し、背景と部品 3 種類がすべて合った。"}
+}

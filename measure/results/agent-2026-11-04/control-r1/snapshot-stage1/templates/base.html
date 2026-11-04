@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} - 備品台帳</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; color: #222; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: #eef; }
+    main { padding: 16px; max-width: 960px; }
+    .inline { display: inline; }
+    .message { background: #efe; border: 1px solid #8c8; padding: 6px 10px; }
+    .error { background: #fee; border: 1px solid #c88; padding: 6px 10px; }
+    .field { margin: 8px 0; }
+    .field label { display: block; }
+    .field-error { color: #b00; display: block; font-size: 0.9em; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #aaa; padding: 4px 8px; text-align: left; }
+    button { margin: 2px; }
+  </style>
+</head>
+<body>
+<header>
+  <a href="{{ url_for('index') }}">備品台帳</a>
+  <nav>
+    {% if user %}
+      <span class="current-user">{{ user['name'] }}</span>
+      <form method="post" action="{{ url_for('logout') }}" class="inline">
+        <button type="submit">ログアウト</button>
+      </form>
+    {% endif %}
+  </nav>
+</header>
+<main>
+  {% for message in get_flashed_messages() %}
+    <p class="message">{{ message }}</p>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

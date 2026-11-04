@@ -1,0 +1,23 @@
+段 3（アカウントの管理）の isdd-spec と isdd-build（実装後レビューまで）が完了した。
+
+変更フロー: .history/20261104-account-management/（change_requirements.md・change_detail_design.md・tasks.md）。
+正本（docs/requirements.md・docs/detail_design.md・docs/trace_map.md）へ反映済み。docs/active_change は削除済み。
+
+実装:
+- equipment_ledger/core/accounts.py: 一覧、担当者の付け外し、パスワードの再設定、削除（貸出中・最後の担当者は拒否、即時トランザクション）
+- equipment_ledger/core/validation.py: 再設定パスワードの長さ検査（8 文字以上）
+- equipment_ledger/auth.py: 要求ごとのセッション同期（権限変更・削除の反映）
+- equipment_ledger/views.py、templates/accounts.html、templates/equipment_status.html: /accounts/ と 3 つの操作、担当者向けの「アカウントの一覧」リンク
+- README.md: アカウントの管理の節
+- tests/test_accounts_management.py（単体・結合 17 件）、e2e/test_equipment_ledger.py に 8 件追加
+
+検証:
+- 単体テスト 42 件 OK（python -m unittest discover -s tests -t .）
+- E2E 29 件 OK（e2e/results/e2e.xml、FAIL・ERROR 0）
+- bash scripts/isdd/check.sh --strict: エラー 0・警告 0、受け入れ判定 DS-TS 29 合格、要件 41 実装済み
+- rq_integrity_checker.py・rq_ds_link_checker.py（正本）: 問題 0 件
+- implementation_completeness_checker.py: 4/4 OK
+- 起動確認: bash run.sh で / と /login/ と /accounts/register/ が 200、/accounts/ は未ログインでログイン画面へ 302
+- コードに RQ-/DS- の ID は無い
+
+未マッピング一覧: 該当なし（作りすぎ 0 件）

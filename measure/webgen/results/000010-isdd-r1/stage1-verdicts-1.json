@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin rotated the wheel (computed transform changed during and after the animation), it stopped on a slice, and 'You won Free Dessert' was shown with no page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows 8 prizes with their chances, and they match the 8 slice labels on the wheel exactly."},
+  "000010-3": {"verdict": "YES", "reason": "After a spin that won Sticker Pack, entering the name in My Winnings showed that prize with the date and time 'Nov 5, 2026, 3:21 AM'."},
+  "000010-4": {"verdict": "YES", "reason": "The body background rgb(230,230,230) is within 40 of light gray (211,211,211). The header background, the Spin button background and the h2 heading text are all rgb(139,0,0), which is dark red."}
+}

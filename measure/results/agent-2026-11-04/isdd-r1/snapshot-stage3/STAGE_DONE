@@ -1,0 +1,42 @@
+段 3（アカウントの管理）の完了要約
+
+フロー: 変更フロー（isdd-spec → isdd-build）。依頼 REQUEST.md、固定回答 ANSWERS.md、契約 contract.md（段 3 を含む）に従った。
+
+作ったもの（変更の記録）
+- .history/20261104-account-management/change_requirements.md
+- .history/20261104-account-management/change_detail_design.md
+- .history/20261104-account-management/tasks.md
+
+実装
+- app/accounts.py: list_accounts、find_account_by_id、change_account_role、reset_account_password、delete_account（書き込みトランザクションで担当者 0 人・借りている社員の削除を防ぐ）
+- app/validation.py: validate_password（8 文字以上）
+- app/auth.py: load_current_user(conn) が要求ごとに DB のアカウントを引き直す（削除された人は未ログイン、役割は DB の値）。app/__init__.py の before_request 登録は app/views.py の before_app_request に移した
+- app/views.py: /accounts/、/accounts/<社員番号>/role/、/accounts/<社員番号>/password/（GET/POST）、/accounts/<社員番号>/delete/。担当者以外は貸出状況へ戻し、未ログインはログイン画面へ
+- app/templates/account_list.html（新規）、app/templates/loan_status.html（担当者向けの「アカウントの一覧」リンク）
+- tests/unit/test_units.py に単体テストを追加、e2e/test_equipment_ledger.py に 8 場面（DS-TS-*）を追加
+- docs/trace_map.md を更新（追加の関数・画面・DS-TS 行）
+- README.md にアカウントの管理の節を追加
+
+正本
+- docs/requirements.md・docs/detail_design.md に変更を反映。docs/active_change は削除。docs/proposals.md は無かった
+
+確認（実行ログの要点）
+- 単体テスト 19 件合格。E2E 35 件合格（e2e/results/e2e.xml を出力）
+- bash scripts/isdd/check.sh --strict: 終了コード 0、エラー 0、警告 0、受け入れ判定 DS-TS 35/35、要件 38/38 実装済み
+- rq_integrity_checker.py docs/requirements.md: 問題 0（シナリオ 34 本）
+- rq_ds_link_checker.py（正本どうし、変更の組み合わせとも）: 問題 0
+- implementation_completeness_checker.py: 4/4 通過（実行形態 server、認証あり、外部連携なし）
+- コードに要件 ID・設計 ID は無し
+
+未マッピング一覧
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+要件なし（作りすぎ）: 0 件
+
+要件ごとの実装済み判定
+check.sh --strict の受け入れ判定は、要件 38 件すべてが「実装済み」、未検証 0、不合格 0。
+
+注記
+- 途中で、設計 ID の DS-FN-FIND-ACCOUNT-BY-ID が対応表チェッカーに「DS-ID の書式が不正」相当（語末が -ID のため見出しと誤認）で弾かれたため、DS-FN-GET-ACCOUNT に改名した。
+- 利用者の引き直しは before_app_request（views）で行う。

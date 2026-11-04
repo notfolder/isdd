@@ -1,0 +1,34 @@
+{
+  "stage": 2,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/isdd-r2/snapshot-stage2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "pass",
+    "test_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "fail"
+  },
+  "passed": 14,
+  "total": 15,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": ".stage2\n    def test_response_time(app):\n        app.seed(bulk_data())\n        result: dict = {}\n        # pytest-playwright の同期 API と混ざらないよう、非同期 API は別のスレッドで動かす\n        thread = threading.Thread(target=lambda: result.update(asyncio.run(_measure(app.base_url))))\n        thread.start()\n        thread.join()\n        print(\n>           f\"open max={max(result['open']):.2f}s lend={result['lend']:.2f}s \"\n                            ^^^^^^^^^^^^^^\n            f\"return={result['return']:.2f}s reload max={max(result['reload']):.2f}s\",\n            file=sys.stderr, flush=True,\n        )\nE       KeyError: 'open'\n\ntest_performance.py:95: KeyError\n=============================== warnings summary ===============================\ntest_performance.py::test_response_time[chromium]\n  /Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/_pytest/threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1 (<lambda>)\n  \n  Traceback (most recent call last):\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1075, in _bootstrap_inner\n      self.run()\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1012, in run\n      self._target(*self._args, **self._kwargs)\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 91, in <lambda>\n      thread = threading.Thread(target=lambda: result.update(asyncio.run(_measure(app.base_url))))\n                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 195, in run\n      return runner.run(main)\n             ^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 118, in run\n      return self._loop.run_until_complete(task)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n      return future.result()\n             ^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 73, in _measure\n      async with staff.expect_navigation(url=f\"{base_url}/\"):\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 60, in __aexit__\n      await self._event.value\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 35, in value\n      return mapping.from_maybe_impl(await self._future)\n                                     ^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py\", line 265, in continuation\n      event = await waiter.result()\n              ^^^^^^^^^^^^^^^^^^^^^\n  playwright._impl._errors.TimeoutError: Timeout 30000ms exceeded.\n  =========================== logs ===========================\n  waiting for navigation to \"http://127.0.0.1:51654/\" until 'load'\n    navigated to \"http://127.0.0.1:51654/?notice=lent\"\n  ============================================================\n  \n  Enable tracemalloc to get traceback where the object was allocated.\n  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.\n    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED test_performance.py::test_response_time[chromium] - KeyError: 'open'\n1 failed, 14 passed, 8 deselected, 1 warning in 184.88s (0:03:04)\n",
+  "overbuild": {
+    "source_files": 11,
+    "lines": 945,
+    "public_functions": 34,
+    "classes": 0,
+    "templates": 6
+  },
+  "duration_sec": 188.7
+}

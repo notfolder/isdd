@@ -68,7 +68,7 @@ def main() -> int:
     args = parser.parse_args()
     app = Path(args.app).resolve()
     result = {"stage": args.stage, "app": str(app), "tests": {}, "passed": 0, "total": 0, "setup_ok": None, "error": None}
-    env = dict(os.environ, MEASURE_APP_DIR=str(app))
+    env = dict(os.environ, MEASURE_APP_DIR=str(app), MEASURE_STAGE=str(args.stage))
     started = time.time()
     if not args.skip_setup and (app / "setup.sh").exists():
         try:

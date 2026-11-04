@@ -1,0 +1,32 @@
+Wheel of Fortune website: implementation complete.
+
+Files
+- setup.sh: checks python3 and sqlite3. No downloads needed (standard library only).
+- run.sh: starts server.py in the foreground. Uses PORT (default 8000) and DATA_DIR (default ./data, created if missing).
+- server.py: Python http.server + SQLite (DATA_DIR/wheel.db). Binds 127.0.0.1.
+  - GET /api/prizes, POST /api/spin {name}, GET /api/records?name=
+  - Seeds 8 sample prizes when the prizes table is empty.
+- static/index.html, style.css, app.js: single-page UI with hash routes.
+  - #/wheel: canvas wheel, name input, Spin button, result message
+  - #/prizes: prize list with name, description, and chance %
+  - #/records: winning records for a name, with count
+
+Styling: light gray background (#e4e4e4). Dark red (#8b0000) for header, nav, buttons, table headers, panels, and pointer. UI text is in English.
+
+Choices made without asking
+- Users are identified by a typed name (saved in localStorage). There are no accounts.
+- Prize is chosen server-side by weight; the wheel animates to the winning segment.
+- Name matching for records is case-insensitive.
+- No admin screen for editing prizes; prizes come from the seed data.
+
+Verification
+- bash setup.sh ran successfully.
+- PORT=8765 DATA_DIR=<tmp> bash run.sh started; / and /app.js returned 200.
+- /api/prizes returned 8 prizes with chances.
+- POST /api/spin returned a prize and recorded it. /api/records?name=alex returned the record.
+- Empty name returned 400. Path traversal returned 404.
+- node --check passes on app.js. server.py compiles.
+- Not verified: an actual in-browser run of the spin animation. No browser was driven.
+- Test server was stopped by its PID. No other processes were touched.
+
+Not committed. The git tree has new untracked files: .gitignore, server.py, setup.sh, run.sh, static/.

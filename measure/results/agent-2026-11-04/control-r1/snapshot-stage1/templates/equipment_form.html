@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}{{ heading }}{% endblock %}
+{% block content %}
+<h1>{{ heading }}</h1>
+<form method="post" action="{{ action }}">
+  {{ field("id_equipment_number", "管理番号（半角英数字とハイフン、20 文字以内）", "equipment_number", value=values.equipment_number, error=errors.get("equipment_number")) }}
+  {{ field("id_name", "備品名（50 文字以内）", "name", value=values.name, error=errors.get("name")) }}
+  <button type="submit">保存</button>
+</form>
+<p><a href="{{ url_for('index') }}">貸出状況に戻る</a></p>
+{% endblock %}

@@ -1,0 +1,55 @@
+# 対応表（設計 ID とコードの対応）
+
+isdd の対応表。書式と粒度は trace-map-rules に従う（粒度: function）。要件との対応は詳細設計書 11 章。
+
+| DS-ID | 修飾名 | 備考 |
+|---|---|---|
+| `DS-MD-APP-INIT` | `app/__init__.py` | モジュール |
+| `DS-MD-APP-MAIN` | `app/__main__.py` | モジュール |
+| `DS-MD-DB` | `app/db.py` | モジュール |
+| `DS-MD-ACCOUNTS` | `app/accounts.py` | モジュール |
+| `DS-MD-EQUIPMENT` | `app/equipment.py` | モジュール |
+| `DS-MD-AUTH` | `app/auth.py` | モジュール |
+| `DS-MD-VIEWS` | `app/views.py` | モジュール |
+| `DS-FN-CREATE-APP` | `app/__init__.py::create_app` | 関数 |
+| `DS-FN-LOAD-SETTINGS` | `app/__init__.py::load_settings` | 関数 |
+| `DS-FN-GET-DB` | `app/db.py::get_db` | 関数 |
+| `DS-FN-INIT-DB` | `app/db.py::init_db` | 関数 |
+| `DS-FN-CLOSE-DB` | `app/db.py::close_db` | 関数 |
+| `DS-FN-HASH-PASSWORD` | `app/accounts.py::hash_password` | 関数 |
+| `DS-FN-VALIDATE-REGISTRATION` | `app/accounts.py::validate_registration` | 関数 |
+| `DS-FN-REGISTER-ACCOUNT` | `app/accounts.py::register_account` | 関数 |
+| `DS-FN-GET-ACCOUNT` | `app/accounts.py::get_account` | 関数 |
+| `DS-FN-AUTHENTICATE-ACCOUNT` | `app/accounts.py::authenticate_account` | 関数 |
+| `DS-FN-VALIDATE-EQUIPMENT` | `app/equipment.py::validate_equipment` | 関数 |
+| `DS-FN-CREATE-EQUIPMENT` | `app/equipment.py::create_equipment` | 関数 |
+| `DS-FN-UPDATE-EQUIPMENT` | `app/equipment.py::update_equipment` | 関数 |
+| `DS-FN-DELETE-EQUIPMENT` | `app/equipment.py::delete_equipment` | 関数 |
+| `DS-FN-GET-EQUIPMENT` | `app/equipment.py::get_equipment` | 関数 |
+| `DS-FN-LIST-LOAN-STATUS` | `app/equipment.py::list_loan_status` | 関数 |
+| `DS-FN-LOGIN-ACCOUNT` | `app/auth.py::login_account` | 関数 |
+| `DS-FN-LOGOUT-ACCOUNT` | `app/auth.py::logout_account` | 関数 |
+| `DS-FN-CURRENT-ACCOUNT` | `app/auth.py::current_account` | 関数 |
+| `DS-FN-CHECK-IDLE-TIMEOUT` | `app/auth.py::check_idle_timeout` | 関数 |
+| `DS-FN-MANAGER-REQUIRED` | `app/auth.py::manager_required` | 関数 |
+| `DS-FN-START-SERVER` | `app/__main__.py::start_server` | 関数 |
+| `DS-IF-LOAN-STATUS-PAGE` | `app/views.py::index_page` | 画面・操作の入口 |
+| `DS-IF-REGISTER-PAGE` | `app/views.py::register_page` | 画面・操作の入口 |
+| `DS-IF-LOGIN-PAGE` | `app/views.py::login_page` | 画面・操作の入口 |
+| `DS-IF-LOGOUT-ACTION` | `app/views.py::logout_action` | 画面・操作の入口 |
+| `DS-IF-EQUIPMENT-FORM-PAGE` | `app/views.py::equipment_new_page` | 画面・操作の入口 |
+| `DS-IF-EQUIPMENT-EDIT-PAGE` | `app/views.py::equipment_edit_page` | 画面・操作の入口 |
+| `DS-IF-EQUIPMENT-DELETE-ACTION` | `app/views.py::equipment_delete_action` | 画面・操作の入口 |
+| `DS-TS-REGISTER-FIRST-ACCOUNT` | `e2e/test_scenarios.py::test_register_first_account` | E2E |
+| `DS-TS-REGISTER-VALIDATION` | `e2e/test_scenarios.py::test_register_validation` | E2E |
+| `DS-TS-REGISTER-SECOND-ACCOUNT` | `e2e/test_scenarios.py::test_register_second_account` | E2E |
+| `DS-TS-LOGIN-AND-FAILURE` | `e2e/test_scenarios.py::test_login_and_failure` | E2E |
+| `DS-TS-LOGOUT` | `e2e/test_scenarios.py::test_logout` | E2E |
+| `DS-TS-IDLE-TIMEOUT` | `e2e/test_scenarios.py::test_idle_timeout` | E2E |
+| `DS-TS-CREATE-EQUIPMENT` | `e2e/test_scenarios.py::test_create_equipment` | E2E |
+| `DS-TS-CREATE-EQUIPMENT-VALIDATION` | `e2e/test_scenarios.py::test_create_equipment_validation` | E2E |
+| `DS-TS-UPDATE-EQUIPMENT` | `e2e/test_scenarios.py::test_update_equipment` | E2E |
+| `DS-TS-DELETE-EQUIPMENT` | `e2e/test_scenarios.py::test_delete_equipment` | E2E |
+| `DS-TS-LOAN-STATUS-ANONYMOUS` | `e2e/test_scenarios.py::test_loan_status_anonymous` | E2E |
+| `DS-TS-ROLE-CONTROL` | `e2e/test_scenarios.py::test_role_control` | E2E |
+| `DS-TS-LOAN-STATUS-PERFORMANCE` | `e2e/test_scenarios.py::test_loan_status_performance` | E2E |

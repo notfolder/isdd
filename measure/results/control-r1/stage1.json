@@ -15,13 +15,13 @@
   "total": 8,
   "setup_ok": true,
   "error": null,
-  "pytest_tail": "........                                                                 [100%]\n8 passed, 13 deselected in 20.21s\n",
+  "pytest_tail": "........                                                                 [100%]\n8 passed, 15 deselected in 25.09s\n",
   "overbuild": {
     "source_files": 1,
-    "lines": 308,
-    "public_functions": 16,
-    "classes": 0,
-    "templates": 6
+    "lines": 691,
+    "public_functions": 46,
+    "classes": 3,
+    "templates": 0
   },
-  "duration_sec": 22.3
+  "duration_sec": 25.4
 }

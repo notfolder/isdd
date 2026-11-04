@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "名前を入力して Spin を押すとホイールが回転し、ポインタが Free Dessert の区画で止まり、「You won Free Dessert」と表示された。ページエラーは出なかった。"},
+  "000010-2": {"verdict": "YES", "reason": "Prize List ページに 8 つの賞品と当選確率が表示され、ホイール上の 8 区画（Gift Card $50〜Grand Prize Headphones）と完全に一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "スピン後に My Winnings で同じ名前を検索すると、最新の当選として「Free Dessert / Nov 5, 2026, 3:22 AM」が表示され、賞品と日時が正しかった。"},
+  "000010-4": {"verdict": "YES", "reason": "body の背景は rgb(230,230,230) で light gray (211,211,211) との差が 40 以内。ヘッダー・Spin ボタン・h2 見出しはいずれも rgb(139,0,0) で dark red と一致した。"}
+}

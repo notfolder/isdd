@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin with an empty name showed 'Please enter your name before spinning.' and the wheel canvas did not rotate; with 'Alice' the wheel rotated, stopped, and showed 'Alice won: Better Luck Next Time — ...' with no page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 8 prizes with description and chance, and they match the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "My Winning Records for Alice lists the new spin at the top as Player 'Alice', Prize 'Better Luck Next Time', Date 'Nov 5, 2026, 03:05 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background, Spin button background and h1 text are all rgb(0,100,0), which is dark green, so all are within 40 per channel."}
+}

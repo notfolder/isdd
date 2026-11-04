@@ -8,17 +8,19 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 import pytest
+
+from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF, EMP_FORMAT_MSG, LAST_STAFF, OLD_ROLE, ROLE, STAFF_ONLY, emp
 from playwright.async_api import async_playwright
 
 LIMIT_SECONDS = 3.0
 
 
 def bulk_data() -> dict:
-    accounts = [{"number": "000001", "name": "担当太郎", "staff": True}]
-    accounts += [{"number": f"{i:06d}", "name": f"社員{i}"} for i in range(2, 51)]
+    accounts = [{"number": emp("1"), "name": "担当太郎", "staff": True}]
+    accounts += [{"number": emp(str(i)), "name": f"社員{i}"} for i in range(2, 51)]
     equipment = [{"number": f"PC-{i:03d}", "name": f"備品{i}"} for i in range(1, 501)]
     lendings = [
-        {"equipment": f"PC-{i:03d}", "borrower": f"{(i % 49) + 2:06d}", "lent_on": "2026-10-01"}
+        {"equipment": f"PC-{i:03d}", "borrower": emp(str((i % 49) + 2)), "lent_on": "2026-10-01"}
         for i in range(1, 201)
     ]
     return {"accounts": accounts, "equipment": equipment, "lendings": lendings}
@@ -57,7 +59,7 @@ async def _measure(base_url: str) -> dict:
 
         staff = pages[0]
         await staff.goto(f"{base_url}/login/")
-        await staff.fill("#id_employee_number", "000001")
+        await staff.fill("#id_employee_number", emp("1"))
         await staff.fill("#id_password", "password1")
         await staff.get_by_role("button", name="ログイン").click()
         await staff.wait_for_url(f"{base_url}/")

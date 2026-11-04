@@ -1,0 +1,196 @@
+{
+  "site": "000010",
+  "arm": "control-r1",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 97.9,
+      "agent_tokens": 213931,
+      "usage": {
+        "input_tokens": 10,
+        "output_tokens": 24595,
+        "cache_creation_input_tokens": 36317,
+        "cache_read_input_tokens": 153009
+      },
+      "tool_uses": 10,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: Clicking Spin showed 'Spinning…' with the wheel rotating, then it stopped with the pointer on 'Better Luck Next Time' an / YES: Clicking Spin the Wheel showed 'Spinning...' while the wheel rotated, then stopped with the pointer on the 'Better Luck  / YES: Clicking 'Spin the Wheel' showed 'Spinning…'; the wheel stopped with 'Sticker Pack' under the pointer and 'You won: Stic",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: The Prize List page shows 8 prizes with descriptions and chances ('8 prizes on the wheel.'). These are the same 8 segmen / YES: The Prize List page shows all 8 prizes with descriptions and chances, and they match the 8 segments on the wheel (Grand  / YES: The Prize List page lists 8 prizes with description and chance, and these match the 8 segments shown on the wheel.",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After the spin, My Winning Records showed 'Tester has 1 recorded spin.' with the row 'Nov 5, 2026, 03:00 AM | Better Luc / YES: After spinning as Tester42, My Winning Records showed 'Tester42 has 1 recorded spin' with date/time 'Nov 5, 2026, 03:01  / YES: After the spin, My Winning Records for 'Tester' shows the latest row 'Nov 5, 2026, 03:02 AM — Sticker Pack', which match",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-4": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header background, primary button ba / YES: Body background rgb(228,228,228) is within 40 per channel of light gray (211,211,211); the header, main button and h1 ar / YES: Body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header background (139,0,0), the main bu",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 281,
+        "public_functions": 18
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 62.0,
+      "agent_tokens": 338323,
+      "usage": {
+        "input_tokens": 16,
+        "output_tokens": 11871,
+        "cache_creation_input_tokens": 35639,
+        "cache_read_input_tokens": 290797
+      },
+      "tool_uses": 18,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 2,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: With the name 'Alice', the wheel visibly rotated, stopped under the pointer, and showed 'Alice won: …' with no page erro / YES: Entering 'Alice' and spinning showed 'Spinning…', then the wheel stopped with the pointer on a segment and the page disp / YES: Clicking Spin with an empty name showed 'Please enter your name before spinning.' and the wheel canvas did not rotate; w",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: The Prize List page shows all 8 prizes with a description and chance for each, and they match the 8 segments on the whee / YES: The Prize List page shows all 8 prizes with a description and chance for each, and these match the 8 segments on the whe / YES: The Prize List page shows all 8 prizes with description and chance, and they match the 8 segments drawn on the wheel.",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After Alice's spin, My Winning Records shows a row with the player 'Alice', the prize ('Better Luck Next Time') and the  / YES: After the spin, My Winning Records shows the new win as a row with Player 'Alice', Prize 'Better Luck Next Time' and Dat / YES: My Winning Records for Alice lists the new spin at the top as Player 'Alice', Prize 'Better Luck Next Time', Date 'Nov 5",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header, the main button (background rgb(0,100,0)) and the h / YES: The body background is rgb(255,255,240), which is ivory. The header background, Spin button background and h1 text are a / YES: The body background is rgb(255,255,240), which is ivory. The header background, Spin button background and h1 text are a",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 281,
+        "public_functions": 18
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 57.1,
+      "agent_tokens": 371016,
+      "usage": {
+        "input_tokens": 18,
+        "output_tokens": 8835,
+        "cache_creation_input_tokens": 29342,
+        "cache_read_input_tokens": 332821
+      },
+      "tool_uses": 8,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 3,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: With name 'Alice' the wheel canvas rotated (transform changed over ~5s, then stopped), the pointer landed on a segment a / YES: With name 'Alice' the canvas rotated (transform changed mid-spin), stopped with the pointer on 'Free Coffee' and showed  / YES: With name 'Alice' the wheel rotated (transform changed) and stopped, showing 'Alice won: Sticker Pack — ...' with no pag",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: Reward List page shows 8 rewards with description and chance, and these match the 8 segments drawn on the wheel (Grand R / YES: The Reward List shows 8 rewards (name, description, chance), exactly matching the 8 segments drawn on the wheel. / YES: The Reward List page shows 8 rewards with description and chance, and they match the 8 segments drawn on the wheel (Gran",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After spinning as Alice, My Winning Records for 'Alice' showed a row with Player 'Alice', the reward won (Free Coffee) a / YES: My Winning Records for 'Alice' lists the new win with player 'Alice', the reward (e.g. Better Luck Next Time) and the da / YES: After spinning as Alice, My Winning Records for 'Alice' lists the new win at the top: player 'Alice', reward 'Sticker Pa",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "YES: body background rgb(255,255,240) = ivory; header rgb(0,100,0), primary button rgb(0,74,0) and h1 text rgb(0,100,0) are a / YES: The body background is rgb(255,255,240) (ivory); the header rgb(0,100,0), the primary button rgb(0,100,0) and the h1 tex / YES: The body background is rgb(255,255,240), which is ivory. The header, the primary button and the h1 are all rgb(0,100,0),",
+          "category": "Design Validation Testing",
+          "change": false
+        },
+        "000010-rename": {
+          "verdict": "YES",
+          "reason": "YES: Visible text, titles, aria-labels and placeholders on the spin, reward list and records pages contain no 'prize'/'prizes / YES: No visible text on the spin, reward list or records pages contains 'prize' (it appears only in an HTML class name); navi / YES: On the spin, reward list and records pages (including the validation, result and empty-record messages), no visible text",
+          "category": "Functional Testing",
+          "change": true
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 293,
+        "public_functions": 18
+      }
+    }
+  },
+  "runner": "claude -p"
+}

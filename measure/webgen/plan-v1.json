@@ -1,0 +1,364 @@
+{
+ "sites": {
+  "000010": {
+   "application_type": "Browser-Based Games",
+   "stages": [
+    {
+     "request": "Please implement a wheel of fortune website where users can spin the wheel to win prizes. The website should have functionalities for spinning the wheel, displaying prizes, and recording user winning records. Users should be able to spin the wheel, view the prize list, view their own winning records. Use light gray as the default background and dark red for component styling.",
+     "cases": [
+      {
+       "id": "000010-1",
+       "category": "Functional Testing",
+       "task": "Spin the wheel to initiate a gameplay session.",
+       "expected": "The wheel spins, stops at a segment, and displays the prize won without any errors."
+      },
+      {
+       "id": "000010-2",
+       "category": "Data Display Testing",
+       "task": "View the list of available prizes before spinning the wheel.",
+       "expected": "A complete and accurate list of prizes is displayed, matching the set prizes available on the wheel."
+      },
+      {
+       "id": "000010-3",
+       "category": "Data Display Testing",
+       "task": "After spinning the wheel, navigate to the section displaying user winning records.",
+       "expected": "The user's winning record is updated to include the latest prize won, with correct details on date and prize."
+      },
+      {
+       "id": "000010-4",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'light gray' as the background color and 'dark red' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'light gray' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark red', accurately reflecting the design instruction."
+      }
+     ]
+    },
+    {
+     "request": "Change request 1 for the existing wheel of fortune website in this directory.\n\n1. Change the color theme: use 'ivory' as the default background color and 'dark green' for component styling (buttons, cards, headers), replacing the previous light gray / dark red theme everywhere.\n2. Add a prize management page (reachable from the main navigation, e.g. 'Manage prizes') where a user can add a new prize (name) and remove an existing prize. The prize list page and the wheel segments must always reflect the current prize list.\n\nKeep all existing functionality (spinning, prize list, winning records) working.",
+     "cases": [
+      {
+       "id": "000010-1",
+       "category": "Functional Testing",
+       "task": "Spin the wheel to initiate a gameplay session.",
+       "expected": "The wheel spins, stops at a segment, and displays the prize won without any errors."
+      },
+      {
+       "id": "000010-2",
+       "category": "Data Display Testing",
+       "task": "View the list of available prizes before spinning the wheel.",
+       "expected": "A complete and accurate list of prizes is displayed, matching the set prizes available on the wheel."
+      },
+      {
+       "id": "000010-3",
+       "category": "Data Display Testing",
+       "task": "After spinning the wheel, navigate to the section displaying user winning records.",
+       "expected": "The user's winning record is updated to include the latest prize won, with correct details on date and prize."
+      },
+      {
+       "id": "000010-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'ivory' as the background color and 'dark green' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'ivory' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000010-c1",
+       "category": "Functional Testing",
+       "task": "Open the prize management page, add a new prize named 'Golden Ticket', then go back to the prize list and the wheel.",
+       "expected": "The prize 'Golden Ticket' appears in the prize list and as a segment of the wheel, and the prize can be removed again from the management page."
+      }
+     ]
+    },
+    {
+     "request": "Change request 2 for the existing wheel of fortune website in this directory.\n\n1. Before spinning, the user must enter their name (a required text field next to the spin control; spinning without a name shows a validation message and does not spin). Each winning record must show the player's name together with the prize and the date.\n2. Add a 'Clear records' button on the winning records page that asks for confirmation (browser confirm dialog) and, when confirmed, deletes all winning records.\n\nKeep all existing functionality (spinning, prize list and prize management, winning records, the ivory / dark green theme) working.",
+     "cases": [
+      {
+       "id": "000010-1",
+       "category": "Functional Testing",
+       "task": "Spin the wheel to initiate a gameplay session.",
+       "expected": "The wheel spins, stops at a segment, and displays the prize won without any errors."
+      },
+      {
+       "id": "000010-2",
+       "category": "Data Display Testing",
+       "task": "View the list of available prizes before spinning the wheel.",
+       "expected": "A complete and accurate list of prizes is displayed, matching the set prizes available on the wheel."
+      },
+      {
+       "id": "000010-3",
+       "category": "Data Display Testing",
+       "task": "After spinning the wheel, navigate to the section displaying user winning records.",
+       "expected": "The user's winning record is updated to include the latest prize won, with correct details on date and prize."
+      },
+      {
+       "id": "000010-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'ivory' as the background color and 'dark green' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'ivory' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000010-c1",
+       "category": "Functional Testing",
+       "task": "Open the prize management page, add a new prize named 'Golden Ticket', then go back to the prize list and the wheel.",
+       "expected": "The prize 'Golden Ticket' appears in the prize list and as a segment of the wheel, and the prize can be removed again from the management page."
+      },
+      {
+       "id": "000010-c2",
+       "category": "Functional Testing",
+       "task": "Try to spin without entering a name, then enter the name 'Alice' and spin.",
+       "expected": "Spinning without a name is refused with a validation message; after entering 'Alice' the wheel spins and the new winning record shows the name 'Alice', the prize and the date."
+      },
+      {
+       "id": "000010-c3",
+       "category": "Functional Testing",
+       "task": "On the winning records page, press 'Clear records' and confirm the dialog.",
+       "expected": "All winning records are deleted and the page shows an empty records list."
+      }
+     ]
+    }
+   ]
+  },
+  "000026": {
+   "application_type": "Discussion Forums",
+   "stages": [
+    {
+     "request": "Please implement a polls website for users to cast their votes. The website should have functionalities for voting and viewing voting results. Users should be able to browse different voting options, cast votes for selected options, and view voting results. Color the background using white and set component styles to navy.",
+     "cases": [
+      {
+       "id": "000026-1",
+       "category": "Data Display Testing",
+       "task": "Test the navigation to the voting page from the homepage.",
+       "expected": "The user can navigate to the voting page without errors, and all voting options are displayed."
+      },
+      {
+       "id": "000026-2",
+       "category": "Functional Testing",
+       "task": "Check the ability to browse different voting options without casting a vote.",
+       "expected": "The user can view a list of voting options, and each option should be clearly displayed with relevant information."
+      },
+      {
+       "id": "000026-3",
+       "category": "Functional Testing",
+       "task": "Test the voting functionality by casting a vote on a selected option.",
+       "expected": "The vote is successfully recorded, and the user receives a confirmation notification indicating that their vote has been cast."
+      },
+      {
+       "id": "000026-4",
+       "category": "Data Display Testing",
+       "task": "Check the voting results page for the display of current voting results.",
+       "expected": "The user can view the up-to-date voting results, including relevant statistics or graphical representations."
+      },
+      {
+       "id": "000026-5",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'white' as the background color and 'navy' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'white' and components (such as buttons, cards, headers, etc.) are styled with the color 'navy', accurately reflecting the design instruction."
+      }
+     ]
+    },
+    {
+     "request": "Change request 1 for the existing polls website in this directory.\n\n1. Change the color theme: use 'light yellow' as the background color and 'dark slate gray' for component styling (buttons, cards, headers), replacing the previous white / navy theme everywhere.\n2. Prevent double voting: after a user has voted in a poll, the voting controls of that poll are disabled for that browser (use a cookie or local storage) and a message 'You have already voted' is shown instead. The results page keeps working.\n\nKeep all existing functionality (browsing options, voting, results) working.",
+     "cases": [
+      {
+       "id": "000026-1",
+       "category": "Data Display Testing",
+       "task": "Test the navigation to the voting page from the homepage.",
+       "expected": "The user can navigate to the voting page without errors, and all voting options are displayed."
+      },
+      {
+       "id": "000026-2",
+       "category": "Functional Testing",
+       "task": "Check the ability to browse different voting options without casting a vote.",
+       "expected": "The user can view a list of voting options, and each option should be clearly displayed with relevant information."
+      },
+      {
+       "id": "000026-3",
+       "category": "Functional Testing",
+       "task": "Test the voting functionality by casting a vote on a selected option.",
+       "expected": "The vote is successfully recorded, and the user receives a confirmation notification indicating that their vote has been cast."
+      },
+      {
+       "id": "000026-4",
+       "category": "Data Display Testing",
+       "task": "Check the voting results page for the display of current voting results.",
+       "expected": "The user can view the up-to-date voting results, including relevant statistics or graphical representations."
+      },
+      {
+       "id": "000026-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'light yellow' as the background color and 'dark slate gray' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'light yellow' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark slate gray', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000026-c1",
+       "category": "Functional Testing",
+       "task": "Cast a vote in a poll, then return to the same poll and try to vote again.",
+       "expected": "The first vote is recorded with a confirmation; on returning, the voting controls are disabled and the message 'You have already voted' is shown; no second vote is counted."
+      }
+     ]
+    },
+    {
+     "request": "Change request 2 for the existing polls website in this directory.\n\nAdd a 'Create poll' page (reachable from the main navigation) where a user enters a question and at least two options and submits. The new poll appears on the voting page immediately, can be voted on, and shows up on the results page with its counts.\n\nKeep all existing functionality (browsing options, voting, double-vote prevention, results, the light yellow / dark slate gray theme) working.",
+     "cases": [
+      {
+       "id": "000026-1",
+       "category": "Data Display Testing",
+       "task": "Test the navigation to the voting page from the homepage.",
+       "expected": "The user can navigate to the voting page without errors, and all voting options are displayed."
+      },
+      {
+       "id": "000026-2",
+       "category": "Functional Testing",
+       "task": "Check the ability to browse different voting options without casting a vote.",
+       "expected": "The user can view a list of voting options, and each option should be clearly displayed with relevant information."
+      },
+      {
+       "id": "000026-3",
+       "category": "Functional Testing",
+       "task": "Test the voting functionality by casting a vote on a selected option.",
+       "expected": "The vote is successfully recorded, and the user receives a confirmation notification indicating that their vote has been cast."
+      },
+      {
+       "id": "000026-4",
+       "category": "Data Display Testing",
+       "task": "Check the voting results page for the display of current voting results.",
+       "expected": "The user can view the up-to-date voting results, including relevant statistics or graphical representations."
+      },
+      {
+       "id": "000026-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'light yellow' as the background color and 'dark slate gray' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'light yellow' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark slate gray', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000026-c1",
+       "category": "Functional Testing",
+       "task": "Cast a vote in a poll, then return to the same poll and try to vote again.",
+       "expected": "The first vote is recorded with a confirmation; on returning, the voting controls are disabled and the message 'You have already voted' is shown; no second vote is counted."
+      },
+      {
+       "id": "000026-c2",
+       "category": "Functional Testing",
+       "task": "Open the 'Create poll' page, create a poll with the question 'Best season?' and the options 'Spring', 'Summer', 'Autumn', then vote for 'Summer' and open the results page.",
+       "expected": "The poll 'Best season?' appears on the voting page with its three options, the vote for 'Summer' is recorded, and the results page shows 'Best season?' with 1 vote for 'Summer'."
+      }
+     ]
+    }
+   ]
+  },
+  "000088": {
+   "application_type": "Publishing/Blogging Platforms",
+   "stages": [
+    {
+     "request": "Please implement a species biological information database website for displaying and managing biological information data. The website should have functionalities for browsing, searching, and filtering. Users should be able to browse biological information data for different species, search for specific data, and filter data based on different criteria. Specify linen as the base color and maroon for all components.",
+     "cases": [
+      {
+       "id": "000088-1",
+       "category": "Functional Testing",
+       "task": "Browse the database for available biological information of different species.",
+       "expected": "The user should be able to view a list of species with corresponding biological information without any missing data or display errors."
+      },
+      {
+       "id": "000088-2",
+       "category": "Functional Testing",
+       "task": "Perform a search for a specific species using the search functionality.",
+       "expected": "The search results should display only the species that match the search criteria, demonstrating accuracy and relevance without results from unrelated species."
+      },
+      {
+       "id": "000088-3",
+       "category": "Functional Testing",
+       "task": "Apply a filter to the data based on a given criterion (e.g., habitat type).",
+       "expected": "The data should update to show only those entries that meet the filter criteria, without displaying entries that do not match."
+      },
+      {
+       "id": "000088-4",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'linen' as the background color and 'maroon' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'linen' and components (such as buttons, cards, headers, etc.) are styled with the color 'maroon', accurately reflecting the design instruction."
+      }
+     ]
+    },
+    {
+     "request": "Change request 1 for the existing species biological information database website in this directory.\n\n1. Change the color theme: use 'honeydew' as the base (background) color and 'dark olive green' for all components, replacing the previous linen / maroon theme everywhere.\n2. Add an 'Add species' form (reachable from the main navigation) with the fields name, habitat, diet and description. A submitted species appears in the browse list and is found by the search and the filters.\n\nKeep all existing functionality (browse, search, filter) working.",
+     "cases": [
+      {
+       "id": "000088-1",
+       "category": "Functional Testing",
+       "task": "Browse the database for available biological information of different species.",
+       "expected": "The user should be able to view a list of species with corresponding biological information without any missing data or display errors."
+      },
+      {
+       "id": "000088-2",
+       "category": "Functional Testing",
+       "task": "Perform a search for a specific species using the search functionality.",
+       "expected": "The search results should display only the species that match the search criteria, demonstrating accuracy and relevance without results from unrelated species."
+      },
+      {
+       "id": "000088-3",
+       "category": "Functional Testing",
+       "task": "Apply a filter to the data based on a given criterion (e.g., habitat type).",
+       "expected": "The data should update to show only those entries that meet the filter criteria, without displaying entries that do not match."
+      },
+      {
+       "id": "000088-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'honeydew' as the background color and 'dark olive green' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'honeydew' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark olive green', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000088-c1",
+       "category": "Functional Testing",
+       "task": "Open the 'Add species' form, add a species named 'Okapi' with habitat 'Rainforest', diet 'Herbivore' and a short description, then browse the list and search for 'Okapi'.",
+       "expected": "'Okapi' appears in the browse list with its habitat and diet, and the search for 'Okapi' returns it."
+      }
+     ]
+    },
+    {
+     "request": "Change request 2 for the existing species biological information database website in this directory.\n\n1. Add a sort control to the browse list: sort by name ascending (A to Z) or descending (Z to A). The list order changes accordingly and the sort works together with the search and the filters.\n2. Each species in the list links to a detail page that shows all of its fields (name, habitat, diet, description and any other stored data).\n\nKeep all existing functionality (browse, search, filter, add species, the honeydew / dark olive green theme) working.",
+     "cases": [
+      {
+       "id": "000088-1",
+       "category": "Functional Testing",
+       "task": "Browse the database for available biological information of different species.",
+       "expected": "The user should be able to view a list of species with corresponding biological information without any missing data or display errors."
+      },
+      {
+       "id": "000088-2",
+       "category": "Functional Testing",
+       "task": "Perform a search for a specific species using the search functionality.",
+       "expected": "The search results should display only the species that match the search criteria, demonstrating accuracy and relevance without results from unrelated species."
+      },
+      {
+       "id": "000088-3",
+       "category": "Functional Testing",
+       "task": "Apply a filter to the data based on a given criterion (e.g., habitat type).",
+       "expected": "The data should update to show only those entries that meet the filter criteria, without displaying entries that do not match."
+      },
+      {
+       "id": "000088-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'honeydew' as the background color and 'dark olive green' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'honeydew' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark olive green', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000088-c1",
+       "category": "Functional Testing",
+       "task": "Open the 'Add species' form, add a species named 'Okapi' with habitat 'Rainforest', diet 'Herbivore' and a short description, then browse the list and search for 'Okapi'.",
+       "expected": "'Okapi' appears in the browse list with its habitat and diet, and the search for 'Okapi' returns it."
+      },
+      {
+       "id": "000088-c2",
+       "category": "Functional Testing",
+       "task": "On the browse list, sort by name descending (Z to A), then ascending (A to Z).",
+       "expected": "The list order changes to reverse alphabetical and then alphabetical order by species name."
+      },
+      {
+       "id": "000088-c3",
+       "category": "Data Display Testing",
+       "task": "Open the detail page of a species from the browse list.",
+       "expected": "A detail page opens showing the species name, habitat, diet, description and the other stored fields without errors."
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

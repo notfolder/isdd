@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if mode == 'new' %}
+    <h1>備品の登録</h1>
+    <form method="post" action="{{ url_for('ledger.equipment_new') }}">
+      <div class="field">
+        <label for="id_equipment_number">管理番号（半角の英数字とハイフン、20 文字以内）</label>
+        <input id="id_equipment_number" name="equipment_number" type="text" value="{{ values.equipment_number }}">
+        {% if errors.equipment_number %}<span class="field-error">{{ errors.equipment_number }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="id_name">備品名（50 文字以内）</label>
+        <input id="id_name" name="name" type="text" value="{{ values.name }}">
+        {% if errors.name %}<span class="field-error">{{ errors.name }}</span>{% endif %}
+      </div>
+      <button type="submit">保存</button>
+    </form>
+  {% else %}
+    <h1>備品の修正</h1>
+    <p>管理番号: {{ values.equipment_number }}（変更できません）</p>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <form method="post" action="{{ url_for('ledger.equipment_edit', equipment_number=values.equipment_number) }}">
+      <input type="hidden" name="revision" value="{{ values.revision }}">
+      <div class="field">
+        <label for="id_name">備品名（50 文字以内）</label>
+        <input id="id_name" name="name" type="text" value="{{ values.name }}">
+        {% if errors.name %}<span class="field-error">{{ errors.name }}</span>{% endif %}
+      </div>
+      <button type="submit">保存</button>
+    </form>
+  {% endif %}
+  <p><a href="{{ url_for('ledger.status') }}">貸出状況に戻る</a></p>
+{% endblock %}

@@ -1,0 +1,73 @@
+{
+  "site": "000010",
+  "arm": "isdd-r1",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 537.9,
+      "agent_tokens": 8343936,
+      "usage": {
+        "input_tokens": 104,
+        "output_tokens": 109081,
+        "cache_creation_input_tokens": 207978,
+        "cache_read_input_tokens": 8026773
+      },
+      "tool_uses": 59,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: Clicking Spin rotated the wheel (computed transform changed during and after the animation), it stopped on a slice, and  / YES: Spin でホイールが回転し（transform が変化）、ポインタが Coffee Voucher の区画で停止、'You won Coffee Voucher' と表示された。ページエラー・コンソールエラーは無かった。 / YES: 名前を入力して Spin を押すとホイールが回転し、ポインタが Free Dessert の区画で止まり、「You won Free Dessert」と表示された。ページエラーは出なかった。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: The Prize List page shows 8 prizes with their chances, and they match the 8 slice labels on the wheel exactly. / YES: Prize List に 8 件の賞品と確率が表示され、ホイール上の 8 区画のラベルと完全に一致した。 / YES: Prize List ページに 8 つの賞品と当選確率が表示され、ホイール上の 8 区画（Gift Card $50〜Grand Prize Headphones）と完全に一致した。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After a spin that won Sticker Pack, entering the name in My Winnings showed that prize with the date and time 'Nov 5, 20 / YES: スピン後に My Winnings で名前を入力すると、直前に当たった Coffee Voucher が日時（Nov 5, 2026, 3:22 AM）付きで最新行として表示された。 / YES: スピン後に My Winnings で同じ名前を検索すると、最新の当選として「Free Dessert / Nov 5, 2026, 3:22 AM」が表示され、賞品と日時が正しかった。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-4": {
+          "verdict": "YES",
+          "reason": "YES: The body background rgb(230,230,230) is within 40 of light gray (211,211,211). The header background, the Spin button ba / YES: body 背景 rgb(230,230,230) は light gray (211,211,211) と各成分差 40 以内。ヘッダー・Spin ボタン背景・見出し h2 文字色はいずれも rgb(139,0,0) で dark red  / YES: body の背景は rgb(230,230,230) で light gray (211,211,211) との差が 40 以内。ヘッダー・Spin ボタン・h2 見出しはいずれも rgb(139,0,0) で dark red と一致した",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 674,
+        "public_functions": 0
+      }
+    }
+  },
+  "runner": "claude -p"
+}

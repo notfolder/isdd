@@ -1,0 +1,43 @@
+{
+  "arm": "isdd",
+  "run": 4,
+  "model": "claude-haiku-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 633.9,
+      "started": "2026-11-05T02:01:51",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 48,
+      "tool_names": {
+        "Bash": 37,
+        "ToolSearch": 1,
+        "WebSearch": 3,
+        "Write": 4,
+        "Edit": 3
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 90,
+        "output_tokens": 131482,
+        "cache_creation_input_tokens": 234431,
+        "cache_read_input_tokens": 6731748,
+        "total_tokens": 7097751
+      },
+      "cost_usd": 0.7818,
+      "turns": 49,
+      "rounds": 1
+    }
+  },
+  "runner": "claude -p"
+}

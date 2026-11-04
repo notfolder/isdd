@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin showed 'Spinning…' with the wheel rotating, then it stopped with the pointer on 'Better Luck Next Time' and the text 'You won: Better Luck Next Time — No prize this time. Spin again!' appeared. No page or console errors occurred."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows 8 prizes with descriptions and chances ('8 prizes on the wheel.'). These are the same 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records showed 'Tester has 1 recorded spin.' with the row 'Nov 5, 2026, 03:00 AM | Better Luck Next Time', which matches the latest prize and gives the date."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header background, primary button background and h1 color are all rgb(139,0,0), which is dark red."}
+}

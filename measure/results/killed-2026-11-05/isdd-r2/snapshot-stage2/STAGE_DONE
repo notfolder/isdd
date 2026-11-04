@@ -1,0 +1,39 @@
+# 段 2 完了の要約: 社員番号の 7 桁化と、備品の貸出・返却
+
+## 進め方（isdd の変更フロー）
+- 変更要件定義書・変更設計書・tasks.md を `.history/20261105-lending-and-employee-number/` に作成（整合チェック: 要件・設計とも合格）。
+- 実装後レビューで正本（docs/requirements.md・docs/detail_design.md・docs/trace_map.md）へ反映し、`docs/active_change` を削除。`docs/proposals.md` は無し。
+- ヒアリングは ANSWERS.md の固定回答で代替。承認はすべて与えられたものとして進めた。
+
+## 実装した内容
+- 社員番号を 7 桁（`[0-9]{7}`、先頭 0 可）に変更。アカウント登録の検査・文言、画面の表示、テストデータを 7 桁に合わせた。6 桁は登録不可。既存の 6 桁データは移行しない。
+- 貸出の登録（担当者、行の「貸出」、借りる社員の選択、貸出日は日本時間の今日が既定、未来は不可）。
+- 返却（担当者、行の「返却」、確認の「はい」で貸出の行を削除。記録は残さない）。
+- 貸出状況の一覧に 状態・借りている社員の名前・貸出日を表示。
+- 同時の貸出・返却: `BEGIN IMMEDIATE` の中で判定し、先の 1 件だけを記録。後の方には「この備品は既に貸出中です」「この備品は既に返却されています」。
+- 貸出中の備品は削除不可（「この備品は貸出中のため削除できません。先に返却を処理してください」）。
+- 修正の競合: 修正画面の読み込み時の更新時刻を隠し項目で持ち、保存時に比べる。違う、または備品が無ければ保存せず `.error` に「他の担当者が先にこの備品を更新しました。貸出状況の画面から開き直してください」。
+- 修正で管理番号を変えても貸出は同じ備品に付く（外部キーの `ON UPDATE CASCADE`）。
+- 貸出・返却は担当者だけ（社員は貸出状況へ戻して `.message`、未ログインはログイン画面）。
+
+## 変更したファイル（主要）
+- 新規: `src/lending.py`、`src/templates/lending_form.html`、`tests/test_lending.py`、`e2e/test_lending.py`
+- 変更: `src/validation.py`、`src/db.py`（lendings 表）、`src/accounts.py`（借りる社員の一覧）、`src/equipment.py`、`src/web.py`、`src/templates/status.html`、`src/templates/equipment_form.html`、`e2e/support.py`、`e2e/test_accounts.py`、`e2e/test_equipment.py`、`tests/*`、`docs/*`、`README.md`、`e2e/results/e2e.xml`（生成物）
+
+## 検証の結果
+- 単体・結合テスト: `.venv/bin/python -m unittest discover -s tests -t .` → 60 件 OK
+- E2E: `scripts/isdd/unittest_junit.py -s e2e -t . -o e2e/results/e2e.xml` → 25 件 OK（クリーンな再実行。途中で 1 回失敗した結果は、私が実行中に `pkill` でテスト用サーバーを止めたことが原因のため、再実行で置き換えた）
+- `bash scripts/isdd/check.sh --strict` → エラー 0 件・警告 0 件。受け入れ判定: DS-TS 25/25 合格、要件 28/28 実装済み
+- `rq_integrity_checker.py docs/requirements.md` → 問題 0 件
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` → 欠落 0・不整合 0
+- `implementation_completeness_checker.py .` → 4/4 通過
+- 起動確認: 空の DATA_DIR から `bash run.sh` で起動、トップ 200、未ログインの貸出要求はログインへ転送
+
+## 実装後レビューの未マッピング
+- 対応表チェックの警告は 0 件。対応表に無い公開関数・クラスは無いため、未マッピング一覧は「該当なし」。
+- 既存の不整合（段 1 から）: 詳細設計書 7-2 は `accounts.py` の `verify_password` を挙げるが、実装は非公開の `_verify_password`。対応表には載らないため、チェッカーは検出しない。要件への影響は無いので今回は直していない。
+
+## 残っている確認事項
+- 既存の 6 桁のアカウントは移行しない（依頼どおり）。6 桁のアカウントでは登録画面に 7 桁の番号を入れる必要がある。
+- 貸出中の備品の「修正」「削除」ボタンは担当者の行に残す（削除は拒否される）。
+- 依頼に無い決め事（貸出日の形式違い、成功の知らせ、既定の選択肢など）は `docs/requirements.md` の 1-2 の表に書いた。

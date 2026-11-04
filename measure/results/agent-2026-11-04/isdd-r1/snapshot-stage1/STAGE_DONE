@@ -1,0 +1,27 @@
+isdd 段 1（備品台帳と貸出状況の閲覧）: 要件定義、設計、実装、実装後レビューまで完了。
+
+作業ディレクトリ: /tmp/isdd-measure/work/isdd-r1
+
+成果物:
+- 要件定義書: docs/requirements.md（業務課題 2、見込み経営効果 1、機能 12、要件 47 件）
+- 詳細設計書: docs/detail_design.md（Flask 3.1.3 + waitress 3.0.2 + SQLite）
+- 対応表: docs/trace_map.md（function 粒度、59 行）
+- 実装: app/（Python）、app/templates/（HTML）、run.sh、setup.sh、requirements.txt、README.md
+- テスト: tests/unit（単体 10 件）、e2e/（E2E 16 件、サーバーを実起動して HTTP で確認）
+- 作業記録: .history/20261104-equipment-ledger/tasks.md
+
+確認結果:
+- bash scripts/isdd/check.sh --strict: エラー 0、警告 0。受け入れ判定 DS-TS 16/16 合格、要件 17/17 実装済み
+- rq_integrity_checker.py: 問題 0 件。rq_ds_link_checker.py: 問題 0 件
+- implementation_completeness_checker.py: 4/4 OK
+- 単体テスト: .venv/bin/python -m unittest discover -s tests/unit（10 件 OK）
+- E2E: python3 scripts/isdd/unittest_junit.py -s e2e -o e2e/results/e2e.xml（16 件 OK）
+
+実装後レビューで設計書を実装に合わせた点（docs/proposals.md に記録して反映後に削除）:
+- HTML テンプレートと起動スクリプトの DS-MD を外し、画面は DS-IF、起動は DS-OP-START で受けた（対応表チェッカーが読めないため）
+- DS-SC の行を第 7 章の db.py から外した
+- 依存の規則をファイル単位に書き直し、accounts.py は werkzeug.security を使うため werkzeug を禁止対象にしない
+- 単体テストは .venv の Python で実行する
+- 制限時間切れの知らせ文言を設計に追記
+
+未マッピング: 0 件（作りすぎ 0 件）。

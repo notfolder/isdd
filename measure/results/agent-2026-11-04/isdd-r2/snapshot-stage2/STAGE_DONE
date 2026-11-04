@@ -1,0 +1,26 @@
+段 2（備品の貸出と返却）完了の要約
+
+実施: isdd-spec（変更フロー）→ isdd-build（実装 → 実装後レビュー）。ANSWERS.md の固定回答で判断し、承認は与えられたものとして進めた。
+
+変更文書: .history/20261104-lending-return/ （change_requirements.md、change_detail_design.md、tasks.md）
+正本の反映: docs/requirements.md、docs/detail_design.md、docs/trace_map.md。docs/active_change は削除。docs/proposals.md は作らず。
+
+実装:
+- equipment_ledger/core/lending.py（貸出と返却。BEGIN IMMEDIATE、貸出は主キーで 1 件）
+- core/equipment.py（貸出状況の結合、版番号つきの修正、貸出中の削除の拒否）
+- core/validation.py（貸出入力の検査）、core/accounts.py（借りる社員の候補）、core/db.py（貸出テーブル、版番号列の移行）
+- views.py と templates/lend.html、equipment_status.html、equipment_form.html（貸出・返却ボタン、貸出の登録画面、修正の版番号と .error）
+- README.md に貸出と返却の節
+
+検証:
+- 単体・結合: .venv/bin/python -m unittest discover -s tests -t . → 25 件 OK
+- E2E: .venv/bin/python -m pytest e2e --junitxml=e2e/results/e2e.xml → 21 件 passed（段 1 の 12 件と追加の 9 件）
+- bash scripts/isdd/check.sh --strict → 終了 0、エラー 0、警告 0
+- rq_integrity_checker（正本）→ 合格、rq_ds_link_checker（正本）→ 合格
+- implementation_completeness_checker → 4/4 OK
+- 起動: bash run.sh で / 等が 200（/equipment/new/ は未ログインのため 302）
+
+注意:
+- 既存の DB には起動時に版番号列と貸出テーブルを移行する。
+- 修正の保存時、備品が削除済みなら 404 ではなく「他の担当者が先に…」の .error を出す（依頼の「削除していたら保存を拒否」に合わせた）。
+- 借りる社員の候補は担当者を含む全アカウント（依頼「アカウントから選ぶ」の解釈）。

@@ -1,0 +1,8 @@
+段 1（備品台帳と貸出状況の閲覧）: isdd-spec → isdd-build（段 1 実装、段 2 実装後レビュー）まで完了。
+
+- 要件: docs/requirements.md（要件 44 件）。設計: docs/detail_design.md（設計 ID 63 件）。対応表: docs/trace_map.md（53 行）。
+- 設計の修正: 非コードの資産（スクリプト、依存の一覧、HTML、CSS）の DS-MD を外し、テンプレートは DS-IF、スクリプトは DS-OP で受けた（案 A）。
+- 実装: equipment_ledger/（Flask + SQLite、waitress で起動）、run.sh、setup.sh、requirements.txt、README.md。
+- 検証: 単体テスト 11 件 OK、E2E 12 件合格（Playwright）、run.sh 起動で 200。
+- 整合: rq_integrity_checker 0 件、rq_ds_link_checker 0 件、check.sh --strict エラー 0・警告 0（受け入れ判定 DS-TS 12/12、要件 17/17）、implementation_completeness 4/4、コードに ID なし。
+- 段 2: 正本の差分なし（新規フロー）、未マッピング 0 件、作りすぎ 0 件、docs/proposals.md 削除、docs/active_change なし。

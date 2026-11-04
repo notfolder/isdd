@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking Spin showed 'Spinning…' with the wheel rotating, then it stopped with the pointer on 'Better Luck Next Time' an / YES: Clicking Spin the Wheel showed 'Spinning...' while the wheel rotated, then stopped with the pointer on the 'Better Luck  / YES: Clicking 'Spin the Wheel' showed 'Spinning…'; the wheel stopped with 'Sticker Pack' under the pointer and 'You won: Stic",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: The Prize List page shows 8 prizes with descriptions and chances ('8 prizes on the wheel.'). These are the same 8 segmen / YES: The Prize List page shows all 8 prizes with descriptions and chances, and they match the 8 segments on the wheel (Grand  / YES: The Prize List page lists 8 prizes with description and chance, and these match the 8 segments shown on the wheel.",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After the spin, My Winning Records showed 'Tester has 1 recorded spin.' with the row 'Nov 5, 2026, 03:00 AM | Better Luc / YES: After spinning as Tester42, My Winning Records showed 'Tester42 has 1 recorded spin' with date/time 'Nov 5, 2026, 03:01  / YES: After the spin, My Winning Records for 'Tester' shows the latest row 'Nov 5, 2026, 03:02 AM — Sticker Pack', which match",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-4": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header background, primary button ba / YES: Body background rgb(228,228,228) is within 40 per channel of light gray (211,211,211); the header, main button and h1 ar / YES: Body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header background (139,0,0), the main bu",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "stage": 2,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/control-r3/snapshot-stage2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "fail",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+    "test_equipment_create[chromium]": "fail",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "pass",
+    "test_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "fail"
+  },
+  "passed": 12,
+  "total": 15,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "    - navigation:\nE             - text: 担当太郎\nE             - link \"備品を登録\":\nE               - /url: /equipment/new/\nE             - button \"ログアウト\"\nE           - heading \"貸出状況\" [level=1]\nE           - table:\nE             - rowgroup:\nE               - row \"管理番号 備品名 状態 借りている社員 貸出日 操作\":\nE                 - columnheader \"管理番号\"\nE                 - columnheader \"備品名\"\nE                 - columnheader \"状態\"\nE                 - columnheader \"借りている社員\"\nE                 - columnheader \"貸出日\"\nE                 - columnheader \"操作\"\nE             - rowgroup:\nE               - row \"AAAAAAAAAAAAAAAAAAAA ノートパソコン 空き 貸出 修正 削除\":\nE                 - cell \"AAAAAAAAAAAAAAAAAAAA\"\nE                 - cell \"ノートパソコン\"\nE                 - cell \"空き\"\nE                 - cell\nE                 - cell\nE                 - cell \"貸出 修正 削除\":\nE                   - button \"貸出\"\nE                   - button \"修正\"\nE                   - button \"削除\"\nE               - row \"PC-001 ノートパソコン 空き 貸出 修正 削除\":\nE                 - cell \"PC-001\"\nE                 - cell \"ノートパソコン\"\nE                 - cell \"空き\"\nE                 - cell\nE                 - cell\nE                 - cell \"貸出 修正 削除\":\nE                   - button \"貸出\"\nE                   - button \"修正\"\nE                   - button \"削除\"\n\ntest_equipment.py:34: AssertionError\n_________________________ test_response_time[chromium] _________________________\n\napp = <conftest.AppServer object at 0x109f5e060>\n\n    @pytest.mark.stage2\n    def test_response_time(app):\n>       app.seed(bulk_data())\n\ntest_performance.py:88: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nconftest.py:34: in seed\n    Seeder(self.base_url, self._browser).seed(data)\nsupport/seed.py:45: in seed\n    page.select_option(\"#id_borrower\", label=f\"{names[l['borrower']]}（{l['borrower']}）\")\n../.venv/lib/python3.12/site-packages/playwright/sync_api/_generated.py:20331: in select_option\n    self._sync(\n../.venv/lib/python3.12/site-packages/playwright/_impl/_page.py:1080: in select_option\n    return await self._main_frame.select_option(**params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py:819: in select_option\n    return await self._channel.send(\"selectOption\", self._timeout, params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py:78: in send\n    return await self._connection.wrap_api_call(\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <playwright._impl._connection.Connection object at 0x1099ee7b0>\ncb = <function Channel.send.<locals>.<lambda> at 0x110f9fce0>\nis_internal = False, title = None\n\n    async def wrap_api_call(\n        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None\n    ) -> Any:\n        if self._api_zone.get():\n            return await cb()\n        task = asyncio.current_task(self._loop)\n        parsed_st = _attach_api_call_information(\n            getattr(task, \"__pw_stack__\", None) or _capture_stack_trace(),\n            is_internal,\n            title,\n        )\n        self._api_zone.set(parsed_st)\n        try:\n            return await cb()\n        except Exception as error:\n>           raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nE           playwright._impl._errors.TimeoutError: Page.select_option: Timeout 30000ms exceeded.\nE           Call log:\nE             - waiting for locator(\"#id_borrower\")\n\n../.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py:636: TimeoutError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_account_registration[chromium] - AssertionError...\nFAILED test_equipment.py::test_equipment_create[chromium] - AssertionError: L...\nFAILED test_performance.py::test_response_time[chromium] - playwright._impl._...\n3 failed, 12 passed, 8 deselected in 164.41s (0:02:44)\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 899,
+    "public_functions": 28,
+    "classes": 1,
+    "templates": 0
+  },
+  "duration_sec": 164.7
+}

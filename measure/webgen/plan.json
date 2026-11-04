@@ -33,13 +33,14 @@
      ]
     },
     {
-     "request": "Change request 1 for the existing wheel of fortune website in this directory.\n\n1. Change the color theme: use 'ivory' as the default background color and 'dark green' for component styling (buttons, cards, headers), replacing the previous light gray / dark red theme everywhere.\n2. Add a prize management page (reachable from the main navigation, e.g. 'Manage prizes') where a user can add a new prize (name) and remove an existing prize. The prize list page and the wheel segments must always reflect the current prize list.\n\nKeep all existing functionality (spinning, prize list, winning records) working.",
+     "request": "Change request 1 for the existing wheel of fortune website in this directory (changes to existing behaviour, not new features).\n\n1. Change the color theme: use 'ivory' as the default background color and 'dark green' for component styling (buttons, cards, headers), replacing light gray / dark red everywhere.\n2. Spinning now requires the player's name: a required text field next to the spin control; spinning with an empty name shows a validation message and does not spin. Every winning record must show the player's name together with the prize and the date (existing records views included).\n\nKeep all other existing functionality (prize list, winning records) working.",
      "cases": [
       {
        "id": "000010-1",
        "category": "Functional Testing",
-       "task": "Spin the wheel to initiate a gameplay session.",
-       "expected": "The wheel spins, stops at a segment, and displays the prize won without any errors."
+       "task": "Enter the player name 'Alice' and spin the wheel.",
+       "expected": "The wheel spins, stops at a segment and displays the prize won for Alice without errors. Spinning with the name field empty is refused with a validation message and the wheel does not spin.",
+       "change": true
       },
       {
        "id": "000010-2",
@@ -50,43 +51,40 @@
       {
        "id": "000010-3",
        "category": "Data Display Testing",
-       "task": "After spinning the wheel, navigate to the section displaying user winning records.",
-       "expected": "The user's winning record is updated to include the latest prize won, with correct details on date and prize."
+       "task": "After spinning as 'Alice', open the winning records.",
+       "expected": "The record list shows Alice's new win with the player name 'Alice', the prize and the date.",
+       "change": true
       },
       {
        "id": "000010-design",
        "category": "Design Validation Testing",
        "task": "Verify that the website uses 'ivory' as the background color and 'dark green' as the component color, as specified in the design requirements.",
        "expected": "The website has a background color of 'ivory' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
-      },
-      {
-       "id": "000010-c1",
-       "category": "Functional Testing",
-       "task": "Open the prize management page, add a new prize named 'Golden Ticket', then go back to the prize list and the wheel.",
-       "expected": "The prize 'Golden Ticket' appears in the prize list and as a segment of the wheel, and the prize can be removed again from the management page."
       }
      ]
     },
     {
-     "request": "Change request 2 for the existing wheel of fortune website in this directory.\n\n1. Before spinning, the user must enter their name (a required text field next to the spin control; spinning without a name shows a validation message and does not spin). Each winning record must show the player's name together with the prize and the date.\n2. Add a 'Clear records' button on the winning records page that asks for confirmation (browser confirm dialog) and, when confirmed, deletes all winning records.\n\nKeep all existing functionality (spinning, prize list and prize management, winning records, the ivory / dark green theme) working.",
+     "request": "Change request 2 for the existing wheel of fortune website in this directory (a change to existing wording, not a new feature).\n\nRename the concept 'prize' to 'reward' everywhere the user can see it: navigation labels, page titles and headings, buttons, table headers, messages (for example 'You won: ...' texts, 'No prize' texts) and the winning records. The word 'prize' / 'prizes' must not appear anywhere in the user interface any more. Behaviour stays the same.\n\nKeep all other existing functionality (name required to spin, records with player name, the ivory / dark green theme) working.",
      "cases": [
       {
        "id": "000010-1",
        "category": "Functional Testing",
-       "task": "Spin the wheel to initiate a gameplay session.",
-       "expected": "The wheel spins, stops at a segment, and displays the prize won without any errors."
+       "task": "Enter the player name 'Alice' and spin the wheel.",
+       "expected": "The wheel spins, stops at a segment and displays the reward won for Alice without errors. Spinning with the name field empty is refused with a validation message and the wheel does not spin.",
+       "change": true
       },
       {
        "id": "000010-2",
        "category": "Data Display Testing",
-       "task": "View the list of available prizes before spinning the wheel.",
-       "expected": "A complete and accurate list of prizes is displayed, matching the set prizes available on the wheel."
+       "task": "View the list of available rewards before spinning the wheel.",
+       "expected": "A complete and accurate list of rewards is displayed, matching the set rewards available on the wheel."
       },
       {
        "id": "000010-3",
        "category": "Data Display Testing",
-       "task": "After spinning the wheel, navigate to the section displaying user winning records.",
-       "expected": "The user's winning record is updated to include the latest prize won, with correct details on date and prize."
+       "task": "After spinning as 'Alice', open the winning records.",
+       "expected": "The record list shows Alice's new win with the player name 'Alice', the reward and the date.",
+       "change": true
       },
       {
        "id": "000010-design",
@@ -95,22 +93,11 @@
        "expected": "The website has a background color of 'ivory' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
       },
       {
-       "id": "000010-c1",
+       "id": "000010-rename",
        "category": "Functional Testing",
-       "task": "Open the prize management page, add a new prize named 'Golden Ticket', then go back to the prize list and the wheel.",
-       "expected": "The prize 'Golden Ticket' appears in the prize list and as a segment of the wheel, and the prize can be removed again from the management page."
-      },
-      {
-       "id": "000010-c2",
-       "category": "Functional Testing",
-       "task": "Try to spin without entering a name, then enter the name 'Alice' and spin.",
-       "expected": "Spinning without a name is refused with a validation message; after entering 'Alice' the wheel spins and the new winning record shows the name 'Alice', the prize and the date."
-      },
-      {
-       "id": "000010-c3",
-       "category": "Functional Testing",
-       "task": "On the winning records page, press 'Clear records' and confirm the dialog.",
-       "expected": "All winning records are deleted and the page shows an empty records list."
+       "change": true,
+       "task": "Open every main page (spin page, reward list, winning records) and read all visible text, navigation labels, headings, buttons and messages.",
+       "expected": "The word 'prize' (and its plural) no longer appears anywhere; the concept is called 'reward' everywhere (navigation, headings, buttons, messages), and the pages still work."
       }
      ]
     }
@@ -155,7 +142,7 @@
      ]
     },
     {
-     "request": "Change request 1 for the existing polls website in this directory.\n\n1. Change the color theme: use 'light yellow' as the background color and 'dark slate gray' for component styling (buttons, cards, headers), replacing the previous white / navy theme everywhere.\n2. Prevent double voting: after a user has voted in a poll, the voting controls of that poll are disabled for that browser (use a cookie or local storage) and a message 'You have already voted' is shown instead. The results page keeps working.\n\nKeep all existing functionality (browsing options, voting, results) working.",
+     "request": "Change request 1 for the existing polls website in this directory (changes to existing behaviour, not new features).\n\n1. Change the color theme: use 'light yellow' as the background color and 'dark slate gray' for component styling (buttons, cards, headers), replacing white / navy everywhere.\n2. Voting is now limited to one vote per poll per browser: after a user has voted, the voting controls of that poll are disabled for that browser (cookie or local storage) and the message 'You have already voted' is shown instead. A second vote must not be counted even if submitted directly.\n\nKeep all other existing functionality (browsing options, voting with confirmation, results) working.",
      "cases": [
       {
        "id": "000026-1",
@@ -172,8 +159,9 @@
       {
        "id": "000026-3",
        "category": "Functional Testing",
-       "task": "Test the voting functionality by casting a vote on a selected option.",
-       "expected": "The vote is successfully recorded, and the user receives a confirmation notification indicating that their vote has been cast."
+       "task": "Cast a vote in a poll, then return to the same poll in the same browser and try to vote again.",
+       "expected": "The first vote is recorded with a confirmation notification; on returning, the voting controls are disabled and the message 'You have already voted' is shown; no second vote is counted.",
+       "change": true
       },
       {
        "id": "000026-4",
@@ -186,17 +174,11 @@
        "category": "Design Validation Testing",
        "task": "Verify that the website uses 'light yellow' as the background color and 'dark slate gray' as the component color, as specified in the design requirements.",
        "expected": "The website has a background color of 'light yellow' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark slate gray', accurately reflecting the design instruction."
-      },
-      {
-       "id": "000026-c1",
-       "category": "Functional Testing",
-       "task": "Cast a vote in a poll, then return to the same poll and try to vote again.",
-       "expected": "The first vote is recorded with a confirmation; on returning, the voting controls are disabled and the message 'You have already voted' is shown; no second vote is counted."
       }
      ]
     },
     {
-     "request": "Change request 2 for the existing polls website in this directory.\n\nAdd a 'Create poll' page (reachable from the main navigation) where a user enters a question and at least two options and submits. The new poll appears on the voting page immediately, can be voted on, and shows up on the results page with its counts.\n\nKeep all existing functionality (browsing options, voting, double-vote prevention, results, the light yellow / dark slate gray theme) working.",
+     "request": "Change request 2 for the existing polls website in this directory (a change to existing wording, not a new feature).\n\nRename the concept 'poll' to 'survey' everywhere the user can see it: navigation labels, page titles and headings, buttons, messages and the results page. The word 'poll' / 'polls' must not appear anywhere in the user interface any more. Behaviour stays the same.\n\nKeep all other existing functionality (one vote per survey per browser, confirmation, results, the light yellow / dark slate gray theme) working.",
      "cases": [
       {
        "id": "000026-1",
@@ -213,8 +195,9 @@
       {
        "id": "000026-3",
        "category": "Functional Testing",
-       "task": "Test the voting functionality by casting a vote on a selected option.",
-       "expected": "The vote is successfully recorded, and the user receives a confirmation notification indicating that their vote has been cast."
+       "task": "Cast a vote in a survey, then return to the same survey in the same browser and try to vote again.",
+       "expected": "The first vote is recorded with a confirmation notification; on returning, the voting controls are disabled and the message 'You have already voted' is shown; no second vote is counted.",
+       "change": true
       },
       {
        "id": "000026-4",
@@ -229,16 +212,11 @@
        "expected": "The website has a background color of 'light yellow' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark slate gray', accurately reflecting the design instruction."
       },
       {
-       "id": "000026-c1",
+       "id": "000026-rename",
        "category": "Functional Testing",
-       "task": "Cast a vote in a poll, then return to the same poll and try to vote again.",
-       "expected": "The first vote is recorded with a confirmation; on returning, the voting controls are disabled and the message 'You have already voted' is shown; no second vote is counted."
-      },
-      {
-       "id": "000026-c2",
-       "category": "Functional Testing",
-       "task": "Open the 'Create poll' page, create a poll with the question 'Best season?' and the options 'Spring', 'Summer', 'Autumn', then vote for 'Summer' and open the results page.",
-       "expected": "The poll 'Best season?' appears on the voting page with its three options, the vote for 'Summer' is recorded, and the results page shows 'Best season?' with 1 vote for 'Summer'."
+       "change": true,
+       "task": "Open every main page (home, voting page, results page) and read all visible text, navigation labels, headings, buttons and messages.",
+       "expected": "The word 'poll' (and its plural) no longer appears anywhere; the concept is called 'survey' everywhere (navigation, headings, buttons, messages), and the pages still work."
       }
      ]
     }
@@ -277,7 +255,7 @@
      ]
     },
     {
-     "request": "Change request 1 for the existing species biological information database website in this directory.\n\n1. Change the color theme: use 'honeydew' as the base (background) color and 'dark olive green' for all components, replacing the previous linen / maroon theme everywhere.\n2. Add an 'Add species' form (reachable from the main navigation) with the fields name, habitat, diet and description. A submitted species appears in the browse list and is found by the search and the filters.\n\nKeep all existing functionality (browse, search, filter) working.",
+     "request": "Change request 1 for the existing species biological information database website in this directory (changes to existing behaviour, not new features).\n\n1. Change the color theme: use 'honeydew' as the base (background) color and 'dark olive green' for all components, replacing linen / maroon everywhere.\n2. The search now matches the species name only (common or scientific name). Words that appear only in the habitat, diet or description must not produce results any more. Filters keep working as before.\n\nKeep all other existing functionality (browse, filter) working.",
      "cases": [
       {
        "id": "000088-1",
@@ -288,8 +266,9 @@
       {
        "id": "000088-2",
        "category": "Functional Testing",
-       "task": "Perform a search for a specific species using the search functionality.",
-       "expected": "The search results should display only the species that match the search criteria, demonstrating accuracy and relevance without results from unrelated species."
+       "task": "Search for a species by part of its name, then search for a word that appears only in a habitat or description (for example the habitat name).",
+       "expected": "The name search returns only the matching species; the habitat/description word returns no results, because the search now matches the species name only.",
+       "change": true
       },
       {
        "id": "000088-3",
@@ -302,29 +281,24 @@
        "category": "Design Validation Testing",
        "task": "Verify that the website uses 'honeydew' as the background color and 'dark olive green' as the component color, as specified in the design requirements.",
        "expected": "The website has a background color of 'honeydew' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark olive green', accurately reflecting the design instruction."
-      },
-      {
-       "id": "000088-c1",
-       "category": "Functional Testing",
-       "task": "Open the 'Add species' form, add a species named 'Okapi' with habitat 'Rainforest', diet 'Herbivore' and a short description, then browse the list and search for 'Okapi'.",
-       "expected": "'Okapi' appears in the browse list with its habitat and diet, and the search for 'Okapi' returns it."
       }
      ]
     },
     {
-     "request": "Change request 2 for the existing species biological information database website in this directory.\n\n1. Add a sort control to the browse list: sort by name ascending (A to Z) or descending (Z to A). The list order changes accordingly and the sort works together with the search and the filters.\n2. Each species in the list links to a detail page that shows all of its fields (name, habitat, diet, description and any other stored data).\n\nKeep all existing functionality (browse, search, filter, add species, the honeydew / dark olive green theme) working.",
+     "request": "Change request 2 for the existing species biological information database website in this directory (a change to existing wording, not a new feature).\n\nRename the concept 'species' to 'organism' everywhere the user can see it: navigation labels, page titles and headings, table headers, buttons, filter labels and messages. The word 'species' must not appear anywhere in the user interface any more. Behaviour stays the same.\n\nKeep all other existing functionality (browse, name-only search, filters, the honeydew / dark olive green theme) working.",
      "cases": [
       {
        "id": "000088-1",
        "category": "Functional Testing",
-       "task": "Browse the database for available biological information of different species.",
-       "expected": "The user should be able to view a list of species with corresponding biological information without any missing data or display errors."
+       "task": "Browse the database for available biological information of different organism.",
+       "expected": "The user should be able to view a list of organisms with corresponding biological information without any missing data or display errors."
       },
       {
        "id": "000088-2",
        "category": "Functional Testing",
-       "task": "Perform a search for a specific species using the search functionality.",
-       "expected": "The search results should display only the species that match the search criteria, demonstrating accuracy and relevance without results from unrelated species."
+       "task": "Search for a organism by part of its name, then search for a word that appears only in a habitat or description (for example the habitat name).",
+       "expected": "The name search returns only the matching organisms; the habitat/description word returns no results, because the search now matches the organisms name only.",
+       "change": true
       },
       {
        "id": "000088-3",
@@ -339,22 +313,233 @@
        "expected": "The website has a background color of 'honeydew' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark olive green', accurately reflecting the design instruction."
       },
       {
-       "id": "000088-c1",
+       "id": "000088-rename",
        "category": "Functional Testing",
-       "task": "Open the 'Add species' form, add a species named 'Okapi' with habitat 'Rainforest', diet 'Herbivore' and a short description, then browse the list and search for 'Okapi'.",
-       "expected": "'Okapi' appears in the browse list with its habitat and diet, and the search for 'Okapi' returns it."
+       "change": true,
+       "task": "Open every main page (browse list, search results, filter area, detail pages) and read all visible text, navigation labels, headings, buttons and messages.",
+       "expected": "The word 'species' (and its plural) no longer appears anywhere; the concept is called 'organism' everywhere (navigation, headings, buttons, messages), and the pages still work."
+      }
+     ]
+    }
+   ]
+  },
+  "000049": {
+   "application_type": "Internal Tools",
+   "stages": [
+    {
+     "request": "Please implement a barber shop management website for managing barbers and services. The website should have functionalities for adding barbers, services, and sending WhatsApp notifications. Users should be able to browse barbers and services, add new barbers and services, and send notifications to clients. Style the layout with snow in the background and dim gray for the interface.",
+     "cases": [
+      {
+       "id": "000049-1",
+       "category": "Functional Testing",
+       "task": "Add a new barber using the provided form with valid information.",
+       "expected": "The barber should be successfully added, and a confirmation message should appear. The new barber should be visible in the barber list."
       },
       {
-       "id": "000088-c2",
+       "id": "000049-2",
        "category": "Functional Testing",
-       "task": "On the browse list, sort by name descending (Z to A), then ascending (A to Z).",
-       "expected": "The list order changes to reverse alphabetical and then alphabetical order by species name."
+       "task": "Add a new service using the provided form with valid details.",
+       "expected": "The service should be successfully added, and a confirmation message should appear. The new service should be listed under available services."
       },
       {
-       "id": "000088-c3",
+       "id": "000049-3",
        "category": "Data Display Testing",
-       "task": "Open the detail page of a species from the browse list.",
-       "expected": "A detail page opens showing the species name, habitat, diet, description and the other stored fields without errors."
+       "task": "Navigate through the website from the dashboard to the barbers and services section using a navigation menu.",
+       "expected": "Each navigation action should lead to the correct page without errors, maintaining a consistent and intuitive navigation experience."
+      },
+      {
+       "id": "000049-4",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'snow' as the background color and 'dim gray' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'snow' and components (such as buttons, cards, headers, etc.) are styled with the color 'dim gray', accurately reflecting the design instruction."
+      }
+     ]
+    },
+    {
+     "request": "Change request 1 for the existing barber shop management website in this directory (changes to existing behaviour, not new features).\n\n1. Change the color theme: use 'alice blue' as the background color and 'dark slate blue' for the interface components (buttons, cards, headers), replacing snow / dim gray everywhere.\n2. Adding a barber now requires a phone number in the international form '+<country>-<number>' (for example '+81-90-1234-5678'); any other form is rejected with a validation message and the barber is not added. The phone number is shown in the barber list.\n\nKeep all other existing functionality (services, notifications, navigation) working.",
+     "cases": [
+      {
+       "id": "000049-1",
+       "category": "Functional Testing",
+       "task": "Add a new barber using the form, first with the phone number '12345', then with the phone number '+81-90-1234-5678'.",
+       "expected": "The first attempt is rejected with a validation message about the phone number format; the second is accepted with a confirmation message, and the new barber (with the phone number) is visible in the barber list.",
+       "change": true
+      },
+      {
+       "id": "000049-2",
+       "category": "Functional Testing",
+       "task": "Add a new service using the provided form with valid details.",
+       "expected": "The service should be successfully added, and a confirmation message should appear. The new service should be listed under available services."
+      },
+      {
+       "id": "000049-3",
+       "category": "Data Display Testing",
+       "task": "Navigate through the website from the dashboard to the barbers and services section using a navigation menu.",
+       "expected": "Each navigation action should lead to the correct page without errors, maintaining a consistent and intuitive navigation experience."
+      },
+      {
+       "id": "000049-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'alice blue' as the background color and 'dark slate blue' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'alice blue' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark slate blue', accurately reflecting the design instruction."
+      }
+     ]
+    },
+    {
+     "request": "Change request 2 for the existing barber shop management website in this directory (a change to existing wording, not a new feature).\n\nRename the concept 'barber' to 'stylist' everywhere the user can see it: navigation labels, page titles and headings, form labels, buttons, table headers and messages. The word 'barber' / 'barbers' must not appear anywhere in the user interface any more (the shop name may keep 'Barber Shop' in the site title only). Behaviour stays the same.\n\nKeep all other existing functionality (phone number rule, services, notifications, the alice blue / dark slate blue theme) working.",
+     "cases": [
+      {
+       "id": "000049-1",
+       "category": "Functional Testing",
+       "task": "Add a new stylist using the form, first with the phone number '12345', then with the phone number '+81-90-1234-5678'.",
+       "expected": "The first attempt is rejected with a validation message about the phone number format; the second is accepted with a confirmation message, and the new stylist (with the phone number) is visible in the stylist list.",
+       "change": true
+      },
+      {
+       "id": "000049-2",
+       "category": "Functional Testing",
+       "task": "Add a new service using the provided form with valid details.",
+       "expected": "The service should be successfully added, and a confirmation message should appear. The new service should be listed under available services."
+      },
+      {
+       "id": "000049-3",
+       "category": "Data Display Testing",
+       "task": "Navigate through the website from the dashboard to the stylists and services section using a navigation menu.",
+       "expected": "Each navigation action should lead to the correct page without errors, maintaining a consistent and intuitive navigation experience."
+      },
+      {
+       "id": "000049-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'alice blue' as the background color and 'dark slate blue' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'alice blue' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark slate blue', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000049-rename",
+       "category": "Functional Testing",
+       "change": true,
+       "task": "Open every main page (dashboard, stylists page, services page, notifications page) and read all visible text, navigation labels, headings, buttons and messages.",
+       "expected": "The word 'barber' (and its plural) no longer appears anywhere; the concept is called 'stylist' everywhere (navigation, headings, buttons, messages), and the pages still work."
+      }
+     ]
+    }
+   ]
+  },
+  "000076": {
+   "application_type": "Personal Portfolio Sites",
+   "stages": [
+    {
+     "request": "Please implement a fitness tracking mini-program for users to record and manage their fitness activities. The mini-program should have functionalities such as a fitness leaderboard, exercise recording, fitness diary, and a fitness statistics homepage. Users should be able to browse and record their own exercises, view the leaderboard, write a fitness diary, and track their own fitness data. Apply white to the canvas background and navy to all visible components.",
+     "cases": [
+      {
+       "id": "000076-1",
+       "category": "Data Display Testing",
+       "task": "Navigate to the fitness leaderboard page.",
+       "expected": "The leaderboard page displays a list of users ranked by fitness activity, and user can navigate away without issues."
+      },
+      {
+       "id": "000076-2",
+       "category": "Functional Testing",
+       "task": "Record a new exercise activity.",
+       "expected": "Exercise activity is saved and visible under the user's exercise records without any discrepancies."
+      },
+      {
+       "id": "000076-3",
+       "category": "Functional Testing",
+       "task": "Write and save a new entry in the fitness diary.",
+       "expected": "The new entry is saved successfully and is retrievable from the fitness diary section."
+      },
+      {
+       "id": "000076-4",
+       "category": "Data Display Testing",
+       "task": "View personal fitness statistics on the homepage.",
+       "expected": "An accurate summary of the user's recorded activities is displayed, reflecting the updated fitness stats."
+      },
+      {
+       "id": "000076-5",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'white' as the background color and 'navy' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'white' and components (such as buttons, cards, headers, etc.) are styled with the color 'navy', accurately reflecting the design instruction."
+      }
+     ]
+    },
+    {
+     "request": "Change request 1 for the existing fitness tracking mini-program in this directory (changes to existing behaviour, not new features).\n\n1. Change the color theme: use 'mint cream' as the background color and 'dark green' for component styling (buttons, cards, headers), replacing white / navy everywhere.\n2. Recording an exercise now requires a duration in minutes (a number greater than 0); a record without a valid duration is rejected with a validation message. The exercise records show the duration, and the statistics on the homepage include the total minutes.\n\nKeep all other existing functionality (leaderboard, diary) working.",
+     "cases": [
+      {
+       "id": "000076-1",
+       "category": "Data Display Testing",
+       "task": "Navigate to the fitness leaderboard page.",
+       "expected": "The leaderboard page displays a list of users ranked by fitness activity, and user can navigate away without issues."
+      },
+      {
+       "id": "000076-2",
+       "category": "Functional Testing",
+       "task": "Record a new exercise activity, first without a duration, then with a duration of 30 minutes.",
+       "expected": "The record without a duration is rejected with a validation message; the record with 30 minutes is saved and appears in the user's exercise records showing the duration.",
+       "change": true
+      },
+      {
+       "id": "000076-3",
+       "category": "Functional Testing",
+       "task": "Write and save a new entry in the fitness diary.",
+       "expected": "The new entry is saved successfully and is retrievable from the fitness diary section."
+      },
+      {
+       "id": "000076-4",
+       "category": "Data Display Testing",
+       "task": "View personal fitness statistics on the homepage after recording the 30-minute activity.",
+       "expected": "The summary includes the total minutes of exercise and reflects the newly recorded activity.",
+       "change": true
+      },
+      {
+       "id": "000076-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'mint cream' as the background color and 'dark green' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'mint cream' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
+      }
+     ]
+    },
+    {
+     "request": "Change request 2 for the existing fitness tracking mini-program in this directory (a change to existing wording, not a new feature).\n\nRename the 'fitness diary' to 'training journal' everywhere the user can see it: navigation labels, page titles and headings, buttons and messages. The word 'diary' must not appear anywhere in the user interface any more. Behaviour stays the same.\n\nKeep all other existing functionality (duration rule, statistics with total minutes, leaderboard, the mint cream / dark green theme) working.",
+     "cases": [
+      {
+       "id": "000076-1",
+       "category": "Data Display Testing",
+       "task": "Navigate to the fitness leaderboard page.",
+       "expected": "The leaderboard page displays a list of users ranked by fitness activity, and user can navigate away without issues."
+      },
+      {
+       "id": "000076-2",
+       "category": "Functional Testing",
+       "task": "Record a new exercise activity, first without a duration, then with a duration of 30 minutes.",
+       "expected": "The record without a duration is rejected with a validation message; the record with 30 minutes is saved and appears in the user's exercise records showing the duration.",
+       "change": true
+      },
+      {
+       "id": "000076-3",
+       "category": "Functional Testing",
+       "task": "Write and save a new entry in the training journal.",
+       "expected": "The new entry is saved successfully and is retrievable from the training journal section."
+      },
+      {
+       "id": "000076-4",
+       "category": "Data Display Testing",
+       "task": "View personal fitness statistics on the homepage after recording the 30-minute activity.",
+       "expected": "The summary includes the total minutes of exercise and reflects the newly recorded activity.",
+       "change": true
+      },
+      {
+       "id": "000076-design",
+       "category": "Design Validation Testing",
+       "task": "Verify that the website uses 'mint cream' as the background color and 'dark green' as the component color, as specified in the design requirements.",
+       "expected": "The website has a background color of 'mint cream' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
+      },
+      {
+       "id": "000076-rename",
+       "category": "Functional Testing",
+       "change": true,
+       "task": "Open every main page (homepage, exercise records, training journal, leaderboard) and read all visible text, navigation labels, headings, buttons and messages.",
+       "expected": "The word 'diary' (and its plural) no longer appears anywhere; the concept is called 'training journal' everywhere (navigation, headings, buttons, messages), and the pages still work."
       }
      ]
     }

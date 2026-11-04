@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel rotated (transform changed) and stopped, showing 'Alice won: Sticker Pack — ...' with no page errors; with the name empty, 'Please enter your name before spinning.' appeared and the wheel transform stayed unchanged."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows 8 rewards with description and chance, and they match the 8 segments drawn on the wheel (Grand Reward, Movie Tickets, Free Coffee, 20% Off Coupon, Free Shipping, Mystery Gift Box, Sticker Pack, Better Luck Next Time)."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winning Records for 'Alice' lists the new win at the top: player 'Alice', reward 'Sticker Pack', and the date 'Nov 5, 2026, 03:10 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header, the primary button and the h1 are all rgb(0,100,0), which is dark green, so the background and all three components match."},
+  "000010-rename": {"verdict": "YES", "reason": "On the spin, reward list and records pages (including the validation, result and empty-record messages), no visible text contains 'prize'; navigation, headings and buttons all say 'Reward', and every page works. The word appears only in a hidden CSS class name."}
+}

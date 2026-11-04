@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/control-r2/snapshot-stage1",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "fail",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "fail",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass"
+  },
+  "passed": 6,
+  "total": 8,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "\"000002\")\n        expect(page.get_by_role(\"button\", name=\"ログアウト\")).to_be_visible()\n        page.goto(f\"{app.base_url}/equipment/new/\")\n>       expect_url(page, app.base_url, \"/\")\n\ntest_accounts.py:30: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npage = <Page url='http://127.0.0.1:49367/equipment/new/'>\nbase_url = 'http://127.0.0.1:49367', path = '/'\n\n    def expect_url(page: Page, base_url: str, path: str) -> None:\n        \"\"\"契約の URL に移ったか。クエリ文字列（?msg=... など）は付いていてもよい。\"\"\"\n>       expect(page).to_have_url(re.compile(\"^\" + re.escape(f\"{base_url}{path}\") + r\"(\\?.*)?$\"))\nE       AssertionError: Page URL expected to be 're.compile('^http://127\\\\.0\\\\.0\\\\.1:49367/(\\\\?.*)?$')'\nE       Actual value: http://127.0.0.1:49367/equipment/new/ \nE       Call log:\nE         - Expect \"to_have_url\" with timeout 5000ms\nE           14 × locator resolved to <html lang=\"ja\">…</html>\nE              - unexpected value \"http://127.0.0.1:49367/equipment/new/\"\nE       \nE       Aria snapshot:\nE       - banner:\nE         - text: 二番目の人\nE         - button \"ログアウト\"\nE       - main:\nE         - heading \"貸出状況\" [level=1]\nE         - text: この操作は担当者だけが行えます\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状態 借りている社員 貸出日\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状態\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE           - rowgroup\nE         - paragraph: 備品は登録されていません\n\nsupport/ui.py:51: AssertionError\n_______________ test_employee_cannot_manage_equipment[chromium] ________________\n\napp = <conftest.AppServer object at 0x10b5a4d70>\npage = <Page url='http://127.0.0.1:49472/equipment/new/'>\n\n    @pytest.mark.stage1\n    def test_employee_cannot_manage_equipment(app, page):\n        app.seed({\"accounts\": [STAFF, EMPLOYEE], \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}]})\n        login(page, app.base_url, \"000002\")\n        expect(page.get_by_role(\"button\", name=\"修正\")).to_have_count(0)\n        expect(page.get_by_role(\"button\", name=\"削除\")).to_have_count(0)\n        page.goto(f\"{app.base_url}/equipment/new/\")\n>       expect_url(page, app.base_url, \"/\")\n\ntest_accounts.py:91: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npage = <Page url='http://127.0.0.1:49472/equipment/new/'>\nbase_url = 'http://127.0.0.1:49472', path = '/'\n\n    def expect_url(page: Page, base_url: str, path: str) -> None:\n        \"\"\"契約の URL に移ったか。クエリ文字列（?msg=... など）は付いていてもよい。\"\"\"\n>       expect(page).to_have_url(re.compile(\"^\" + re.escape(f\"{base_url}{path}\") + r\"(\\?.*)?$\"))\nE       AssertionError: Page URL expected to be 're.compile('^http://127\\\\.0\\\\.0\\\\.1:49472/(\\\\?.*)?$')'\nE       Actual value: http://127.0.0.1:49472/equipment/new/ \nE       Call log:\nE         - Expect \"to_have_url\" with timeout 5000ms\nE           14 × locator resolved to <html lang=\"ja\">…</html>\nE              - unexpected value \"http://127.0.0.1:49472/equipment/new/\"\nE       \nE       Aria snapshot:\nE       - banner:\nE         - text: 社員花子\nE         - button \"ログアウト\"\nE       - main:\nE         - heading \"貸出状況\" [level=1]\nE         - text: この操作は担当者だけが行えます\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状態 借りている社員 貸出日\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状態\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE           - rowgroup:\nE             - row \"PC-001 ノートパソコン 空き\":\nE               - cell \"PC-001\"\nE               - cell \"ノートパソコン\"\nE               - cell \"空き\"\nE               - cell\nE               - cell\n\nsupport/ui.py:51: AssertionError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_first_account_becomes_staff[chromium] - Asserti...\nFAILED test_accounts.py::test_employee_cannot_manage_equipment[chromium] - As...\n2 failed, 6 passed, 13 deselected in 31.62s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 506,
+    "public_functions": 29,
+    "classes": 1,
+    "templates": 0
+  },
+  "duration_sec": 32.0
+}

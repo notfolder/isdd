@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}貸出状況{% endblock %}
+{% block content %}
+<h1>貸出状況</h1>
+{% if not user %}
+  <p><a href="{{ url_for('login') }}">ログイン</a> <a href="{{ url_for('register') }}">アカウント登録</a></p>
+{% elif is_manager %}
+  <p><a href="{{ url_for('equipment_new') }}">備品を登録</a></p>
+{% endif %}
+{% if equipment %}
+<table>
+  <thead>
+    <tr>
+      <th>管理番号</th>
+      <th>備品名</th>
+      <th>状況</th>
+      <th>借りている社員</th>
+      <th>貸出日</th>
+      {% if is_manager %}<th>操作</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in equipment %}
+    <tr data-equipment-number="{{ item['equipment_number'] }}">
+      <td>{{ item['equipment_number'] }}</td>
+      <td>{{ item['name'] }}</td>
+      <td>空き</td>
+      <td></td>
+      <td></td>
+      {% if is_manager %}
+      <td>
+        <form method="get" action="{{ url_for('equipment_edit', equipment_id=item['id']) }}" class="inline">
+          <button type="submit">修正</button>
+        </form>
+        <form method="post" action="{{ url_for('equipment_delete', equipment_id=item['id']) }}" class="inline"
+              onsubmit="return window.confirm('この備品を削除しますか？');">
+          <button type="submit">削除</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>備品は登録されていません</p>
+{% endif %}
+{% endblock %}

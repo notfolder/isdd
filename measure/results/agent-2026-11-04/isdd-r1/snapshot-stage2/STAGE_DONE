@@ -1,0 +1,8 @@
+段 2（備品の貸出と返却）: isdd-spec の変更フロー（要件・設計・tasks.md）→ isdd-build の実装と実装後レビューまで完了。
+
+- 変更の記録: .history/20261104-lending-return/（change_requirements.md、change_detail_design.md、tasks.md）。正本へ反映済み。docs/active_change は削除済み。docs/proposals.md は無い。
+- 正本: docs/requirements.md（RQ 74 件、業務課題 3、第 7 章 26 シナリオ）、docs/detail_design.md（設計 ID 80 件）、docs/trace_map.md（79 行）。
+- 実装: app/loans.py（新規: 貸出の登録・返却・貸出状況の一覧・借りる社員の選択肢）、app/equipment.py（版番号つきの取得・修正、貸出中の削除の拒否）、app/validation.py（貸出の入力検査）、app/db.py（loans テーブル、equipment.revision 列、既存 DB への列追加、外部キー）、app/views.py と templates（貸出の登録画面、返却、一覧の貸出列と「貸出」「返却」ボタン、修正画面の版番号と開き直し）。
+- テスト: 単体 14 件（.venv）全件通過。E2E 27 件（段 1 の 16 件と段 2 の 11 件）全件通過。scripts/isdd/unittest_junit.py の結果は e2e/results/e2e.xml。
+- チェック: bash scripts/isdd/check.sh --strict はエラー 0・警告 0・受け入れ判定 合格（DS-TS 27/27、要件 29/29 実装済み）。rq_integrity_checker と rq_ds_link_checker（正本）は問題 0 件。implementation_completeness_checker は 4/4 OK。
+- 段 1 の E2E の変更: test_role_button_visibility の担当者のボタン一覧に「貸出」を追加（空きの行に出るため）。test_manager_edit_equipment は版番号を送らない場合も保存できる仕様のまま変更なし。

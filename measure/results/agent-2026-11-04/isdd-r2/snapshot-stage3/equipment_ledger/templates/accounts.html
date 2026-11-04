@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>アカウントの一覧</h1>
+  <p><a href="{{ url_for('ledger.status') }}">貸出状況に戻る</a></p>
+  {% if rows %}
+    <table class="account-table">
+      <thead>
+        <tr>
+          <th>社員番号</th>
+          <th>名前</th>
+          <th>権限</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr data-employee-number="{{ row.employee_number }}">
+            <td>{{ row.employee_number }}</td>
+            <td>{{ row.name }}</td>
+            <td>{% if row.role == 'manager' %}担当者{% else %}社員{% endif %}</td>
+            <td class="row-actions">
+              {% if row.role == 'manager' %}
+                <form method="post" action="{{ url_for('ledger.account_role', employee_number=row.employee_number) }}" class="inline-form" onsubmit="return window.confirm('この人を担当者から外します。よろしいですか？');">
+                  <input type="hidden" name="role" value="member">
+                  <button type="submit">担当者から外す</button>
+                </form>
+              {% else %}
+                <form method="post" action="{{ url_for('ledger.account_role', employee_number=row.employee_number) }}" class="inline-form" onsubmit="return window.confirm('この人を担当者にします。よろしいですか？');">
+                  <input type="hidden" name="role" value="manager">
+                  <button type="submit">担当者にする</button>
+                </form>
+              {% endif %}
+              {% if reset == row.employee_number %}
+                <form method="post" action="{{ url_for('ledger.account_password', employee_number=row.employee_number) }}" class="inline-form">
+                  <div class="field">
+                    <label for="id_new_password">新しいパスワード（8 文字以上）</label>
+                    <input id="id_new_password" name="new_password" type="password" value="{{ reset_value }}">
+                    {% if reset_error %}<span class="field-error">{{ reset_error }}</span>{% endif %}
+                  </div>
+                  <button type="submit">確定</button>
+                </form>
+              {% else %}
+                <form method="get" action="{{ url_for('ledger.accounts') }}" class="inline-form">
+                  <button type="submit" name="reset" value="{{ row.employee_number }}">パスワード再設定</button>
+                </form>
+              {% endif %}
+              <form method="post" action="{{ url_for('ledger.account_delete', employee_number=row.employee_number) }}" class="inline-form" onsubmit="return window.confirm('このアカウントを削除します。よろしいですか？');">
+                <button type="submit">削除</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>アカウントは登録されていません</p>
+  {% endif %}
+{% endblock %}

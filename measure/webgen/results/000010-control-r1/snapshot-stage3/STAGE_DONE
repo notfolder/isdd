@@ -1,0 +1,13 @@
+REQUEST.md change request 2 (rename "prize" -> "reward" in the UI): done.
+
+Changes
+- static/index.html: nav link "Reward List" (#/rewards), page title/heading, intro text, table header "Reward", canvas aria-label "Reward wheel", element ids renamed to match (view-rewards, reward-body, reward-status).
+- static/app.js: wheel label "No rewards yet", errors/status texts ("No rewards are available right now.", "Could not load rewards:", "No rewards have been added yet.", "N rewards on the wheel."), route name "rewards". Old "#/prizes" links still open the Reward List.
+- server.py: sample data "Grand Reward: $100 Gift Card" and "No reward this time. Spin again!"; API error "No rewards are configured."; idempotent startup migration rewrites old "prize" wording in existing prizes and winning records in DATA_DIR.
+- Internal identifiers (API keys such as "prizes"/"prize", DB table/column names, JS variables, CSS class prize-name) are unchanged, since they are not visible to the user. Behaviour is unchanged: name required to spin, records by player name, ivory/dark green theme.
+
+Verification
+- bash setup.sh OK; PORT=8765 bash run.sh served the site. API /api/prizes, /api/spin, /api/records returned reward wording. A pre-existing "prize" DB was migrated correctly.
+- Fresh DATA_DIR start returns 200 for / and /style.css; node --check on app.js passes.
+- "prize" no longer appears in served HTML or user-visible strings. I did not drive the page in a real browser.
+- Test servers were stopped by PID; scratch directories removed.

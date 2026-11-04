@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spin を押すとホイールが回転し（途中に Spinning... 表示）、矢印の下の 10% Off Coupon の区画で止まり、「Congratulations, Tester! You won: 10% Off Coupon.」と賞品が表示された。ページエラー・コンソールエラーは無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "Prize List ページに 7 件（10% Off Coupon, Free Coffee, Movie Ticket, Mystery Gift, T-Shirt, $50 Gift Card, Try Again）が説明と確率付きで表示され、ホイールの 7 区画と一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "スピン後に My Winnings を開くと「1 win for Tester」の表に Date「Nov 5, 2026, 1:10 AM」と Prize「10% Off Coupon」が表示され、直前に当たった賞品と日付が正しく反映されていた。"},
+  "000010-4": {"verdict": "YES", "reason": "body の背景色 rgb(228,228,228) は light gray (211,211,211) と各成分の差 17 で一致。ヘッダー背景・Spin ボタン背景・見出し h1/h2 の文字色はいずれも rgb(139,0,0) で dark red と一致し、背景と部品 3 種類がすべて合った。"}
+}

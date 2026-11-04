@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}アカウント登録{% endblock %}
+{% block content %}
+<h1>アカウント登録</h1>
+<form method="post" action="{{ url_for('web.register_account') }}">
+  <div class="field">
+    <label for="id_employee_number">社員番号（6 桁の数字）</label>
+    <input id="id_employee_number" name="employee_number" type="text" inputmode="numeric" value="{{ values.employee_number }}">
+    {% if errors.employee_number %}<span class="field-error">{{ errors.employee_number }}</span>{% endif %}
+  </div>
+  <div class="field">
+    <label for="id_name">名前</label>
+    <input id="id_name" name="name" type="text" value="{{ values.name }}">
+    {% if errors.name %}<span class="field-error">{{ errors.name }}</span>{% endif %}
+  </div>
+  <div class="field">
+    <label for="id_password">パスワード（8 文字以上）</label>
+    <input id="id_password" name="password" type="password">
+    {% if errors.password %}<span class="field-error">{{ errors.password }}</span>{% endif %}
+  </div>
+  <button type="submit">登録</button>
+</form>
+{% endblock %}

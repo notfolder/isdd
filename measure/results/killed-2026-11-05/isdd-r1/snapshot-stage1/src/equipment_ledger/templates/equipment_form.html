@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+{% if mode == 'new' %}
+<h1>備品の登録</h1>
+<form method="post" action="{{ url_for('ledger.new_equipment') }}">
+{% else %}
+<h1>備品の修正</h1>
+<form method="post" action="{{ url_for('ledger.edit_equipment', equipment_number=target_number) }}">
+{% endif %}
+  <div class="field">
+    <label for="id_equipment_number">管理番号（半角の英数字とハイフン・20 文字以内）</label>
+    <input id="id_equipment_number" name="equipment_number" value="{{ form.equipment_number }}">
+    {% if errors.equipment_number %}<span class="field-error">{{ errors.equipment_number }}</span>{% endif %}
+  </div>
+  <div class="field">
+    <label for="id_name">備品名（50 文字以内）</label>
+    <input id="id_name" name="name" value="{{ form.name }}">
+    {% if errors.name %}<span class="field-error">{{ errors.name }}</span>{% endif %}
+  </div>
+  <button type="submit">保存</button>
+</form>
+{% endblock %}

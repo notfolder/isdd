@@ -1,0 +1,50 @@
+STAGE_DONE: 段 1「備品の台帳と貸出状況の閲覧」— isdd-spec（要件・設計）→ isdd-build（実装・実装後レビュー）完了
+作成日: 2026-11-05
+
+■ 段階と成果物
+- 要件定義: docs/requirements.md（新規フロー。整合チェック問題 0 件、受け入れテスト欠落 0 件、シナリオ 14 本）
+- 詳細設計: docs/detail_design.md（技術: Python 3.12 / Flask 3.1.3 / waitress 3.0.2 / SQLite / 検証は Playwright 1.64.1 + unittest）
+- 要件と設計の対応: rq_ds_link_checker 合格（欠落 0・不整合 0）
+- タスク表: .history/20261105-equipment-ledger/tasks.md
+- 対応表: docs/trace_map.md（粒度 function）
+- 実装: run.sh / setup.sh / requirements*.txt / src/（config, db, validation, accounts, sessions, auth, equipment, web, main）/ src/templates / src/static
+- テスト: tests/（単体・結合 36 件）、e2e/（E2E 15 件。Chromium で画面操作）
+- README.md（起動方法、初期ユーザーの手順）
+- isdd-setup 導入: scripts/isdd/（VERSION v2.2.0。スキル版と一致）、.gitignore に e2e/results/ 追記、git pre-commit 組み込み、AGENTS.md / CLAUDE.md の規則ブロック
+
+■ 検証（すべて今回の最終状態で実行）
+- 単体・結合: `.venv/bin/python -m unittest discover -s tests -t .` → 36 件 OK
+- E2E: `.venv/bin/python scripts/isdd/unittest_junit.py -s e2e -t . -o e2e/results/e2e.xml` → 15 件 OK
+- `bash scripts/isdd/check.sh --strict` → 終了 0。対応表 エラー 0・警告 0、依存規則なし、受け入れ判定 DS-TS 合格 15/15、要件 実装済み 18/18
+- `rq_integrity_checker.py docs/requirements.md` → 0 件、`rq_ds_link_checker.py` → 0 件
+- `implementation_completeness_checker.py .` → 4/4 通過（server・認証あり・外部連携なし）
+- `bash run.sh` で起動し、`/` 200、`/accounts/register/` 200、`/login/` 200、未ログインの `/equipment/new/` は `/login/` へ 302 を確認
+- コード（src・tests・e2e）に要件 ID・設計 ID を含むコメントは無し（確認済み）
+
+■ 未マッピング一覧（build-review 手順 6）
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+要件なし（作りすぎ）: 0 件（公開関数・クラス・ファイル。対応表の未登録の警告は 0 件）
+
+■ 要件ごとの実装済み判定（check.sh --strict の受け入れ判定）
+全 18 要件が「実装済み」。DS-TS は全 15 件合格。判定の表は `bash scripts/isdd/check.sh --strict` の出力の「要件ごとの実装済み判定」にある。
+
+■ 依頼・回答に無く、エージェントが決めた項目（docs/requirements.md 1-2）
+社員番号の前の 0 を文字列で保持 / 入力の前後の空白を除去 / 名前の空欄の文言 / パスワードの上限は無し / パスワードの文字種は制限無し / 名前の重複は可 / 管理番号は大文字小文字を区別 / 管理番号・備品名の空欄の文言 / 修正で管理番号を変更可（重複検査付き）/ 削除は確認ダイアログ後の即時削除（履歴は残さない＝ANSWERS）/ 最初の登録の同時処理は 1 トランザクション / ログイン失敗の回数制限は無し / 失敗時は入力値を残す（パスワード欄も。契約に従う。HTML に値が出る点は要確認）/ 担当者以外の要求の扱い（未ログインはログイン画面、社員は貸出状況へ戻し知らせ）/ 存在しない備品は貸出状況へ戻し「備品が見つかりません」/ 社内限定はアプリ内では判定せず配備先で制限 / セッションは DB 保存、Cookie にトークン / 復旧目標は翌営業日の日中 / 導入順序（担当者が最初に登録）。
+承認欄: ANSWERS.md で承認済みとされた項目（削除方式、導入順序）以外はすべて「未確認」のまま。
+
+■ 承認の扱い（ANSWERS.md に従い与えられたものとして進めた）
+技術選定（Flask・waitress・SQLite・Playwright）、E2E の実行手段（ローカル直接実行）、連携ライブラリ（無し）、モック方式（無し）、要件の除外（無し）、設計の承認、実装と正本の確定。
+
+■ 未完了・未実施（正直に記載）
+1. 応答終了時のエージェント用フック（.claude/settings.json の Stop）は作成していない。Write の権限が拒否されたため。手動で追加する場合は、Stop イベントで `bash scripts/isdd/check.sh` を呼ぶ設定を入れる。
+2. 技術選定の出典取得: WebSearch の権限が与えられず使えなかったため、公式の PyPI JSON（https://pypi.org/pypi/<名前>/json）と各リポジトリの LICENSE（GitHub raw）で版・ライセンスを確認した（確認日 2026-11-05）。検索による比較は行っていない。
+3. コミットは行っていない（依頼が無いため）。作業ツリーに未コミットの変更がある。
+4. 翌営業日の復旧目標、社内限定の扱い、パスワード欄の値の保持などは要件 1-2 で「未確認」。承認時に見直しが必要。
+5. Playwright の Chromium は setup.sh で取得する（ローカルのキャッシュを利用。クリーンな環境では取得にネットワークが要る）。
+6. E2E は約 95 秒。非機能の検証は 300 件の一覧表示を 1 ブラウザで測ったもので、50 人同時利用の負荷試験ではない。
+
+■ 起動方法（採点用）
+bash setup.sh   （初回 1 回）
+bash run.sh     （PORT 既定 8000、DATA_DIR 既定 ./data、SESSION_IDLE_TIMEOUT_SECONDS 既定 1800）

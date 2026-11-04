@@ -1,0 +1,99 @@
+# 段 2 完了の要約: 貸出と返却、社員番号の 7 桁化
+
+REQUEST.md の依頼を isdd の変更フロー（isdd-spec → isdd-build の実装 → 実装後レビュー）で最後まで進めた。ユーザー不在のため、質問は ANSWERS.md の固定回答と依頼文・contract.md で決め、承認はすべて与えられたものとして進めた。
+
+## 作った文書
+
+- 変更要件定義書: `.history/20261105-equipment-lending/change_requirements.md`（1-2 に依頼に無く自分で決めた項目を 22 件）
+- 変更設計書: `.history/20261105-equipment-lending/change_detail_design.md`
+- 作業一覧: `.history/20261105-equipment-lending/tasks.md`
+- 正本へ反映済み: `docs/requirements.md`、`docs/detail_design.md`、`docs/trace_map.md`
+- `docs/active_change` は反映後に削除した。`docs/proposals.md` は無い。
+
+## 正本へ反映した ID
+
+- 要件（RQ）の追加: `RQ-BZ-EQUIPMENT-LENDING`、`RQ-BK-LENDING-RECORD`、`RQ-FT-LEND-EQUIPMENT`、`RQ-FT-RETURN-EQUIPMENT`、`RQ-FT-VIEW-LENDING-STATUS`、`RQ-FT-RESTRICT-LENDING-OPERATION`、`RQ-FT-LENDING-INPUT-RULES`、`RQ-FT-PREVENT-DOUBLE-LENDING`、`RQ-FT-PREVENT-DOUBLE-RETURN`、`RQ-FT-REFUSE-DELETE-LENT-EQUIPMENT`、`RQ-FT-REJECT-STALE-EQUIPMENT-UPDATE`、`RQ-FT-KEEP-LENDING-ON-UPDATE`、`RQ-FT-ACCOUNT-INPUT-RULES-SEVEN-DIGIT`、`RQ-UI-LENDING-FORM-SCREEN`、`RQ-DT-LOAN`、`RQ-OP-SCHEMA-UPGRADE-ON-START`、テスト用利用シナリオ 7 本（`RQ-TS-LEND-EQUIPMENT` など）
+- 要件の削除（deprecated）: `RQ-FT-ACCOUNT-INPUT-RULES`（社員番号の桁数の変更で置き換え）
+- 要件の差し替え（同じ ID の本文を更新）: `RQ-BZ-EQUIPMENT-LEDGER`、`RQ-UI-EQUIPMENT-STATUS-SCREEN`、`RQ-TS-REGISTER-ACCOUNT`
+- 設計（DS）の追加: `DS-MD-LENDING`、`DS-FN-LEND-EQUIPMENT`、`DS-FN-RETURN-EQUIPMENT`、`DS-FN-VALIDATE-LENDING-INPUT`、`DS-FN-VALIDATE-ACCOUNT-INPUT-SEVEN-DIGIT`、`DS-FN-LIST-BORROWERS`、`DS-FN-LIST-EQUIPMENT-WITH-LENDING`、`DS-FN-UPDATE-EQUIPMENT-CHECKED`、`DS-FN-DELETE-UNLENT-EQUIPMENT`、`DS-FN-PREPARE-DATABASE`、`DS-IF-LENDING-STATUS-SCREEN`、`DS-IF-LENDING-SCREEN`、`DS-IF-RETURN-ACTION`、`DS-IF-EQUIPMENT-EDIT-CHECKED-SCREEN`、`DS-IF-EQUIPMENT-DELETE-UNLENT-ACTION`、`DS-SC-EQUIPMENT-TABLE-REVISIONED`、`DS-SC-LOAN-TABLE`、`DS-TS-*` 7 本
+- 設計の削除（deprecated）: `DS-FN-VALIDATE-ACCOUNT-INPUT`、`DS-FN-LIST-EQUIPMENT`、`DS-FN-UPDATE-EQUIPMENT`、`DS-FN-DELETE-EQUIPMENT`、`DS-FN-INITIALIZE-DATABASE`、`DS-IF-EQUIPMENT-STATUS-SCREEN`、`DS-IF-EQUIPMENT-EDIT-SCREEN`、`DS-IF-EQUIPMENT-DELETE-ACTION`、`DS-SC-EQUIPMENT-TABLE`
+- 中身が変わった設計（同じ ID の対応だけ差し替え）: `DS-MD-VALIDATION`、`DS-MD-ACCOUNTS`、`DS-MD-EQUIPMENT`、`DS-MD-WEB`、`DS-MD-AUTH`、`DS-TS-REGISTER-ACCOUNT`
+
+## 実装
+
+- `src/equipment_ledger/lending.py`（新規）: 貸出の登録（書き込みロック付きトランザクション、主キーの一意制約で二重の貸出を防ぐ）、返却の処理、貸出中かの確認
+- `equipment.py`: 修正は版番号（`revision`）が一致するときだけ更新し、版番号を 1 増やす。削除は貸出中なら拒否。一覧は貸出の情報を結合して返す
+- `db.py`: 備品テーブルに版番号の列、貸出テーブル（備品の内部 ID を参照、備品 1 件に 0 か 1 件）を追加。既存の DB は起動時に列と表を足す（既存データは残す）
+- `validation.py`: 社員番号を 7 桁に。貸出の入力（借りる社員、貸出日は日本時間の今日以前）
+- `accounts.py`: 借りる社員の候補（全アカウント、社員番号の昇順）
+- `web.py` と templates: 貸出・返却のボタン、貸出の登録画面（`/equipment/<管理番号>/lend/`）、返却（`/equipment/<管理番号>/return/`、POST）、修正の隠し版番号と `.error`
+- 対応表（`docs/trace_map.md`）と README を更新
+
+## テスト
+
+- 単体・結合: `.venv/bin/python -m pytest tests -q` → 55 件すべて通過（段 1 の 29 件を 7 桁に直したうえで追加）
+- E2E: `.venv/bin/python -m pytest e2e -q --junitxml=e2e/results/e2e.xml` → 16 件すべて通過（段 1 の 9 件を 7 桁に直し、貸出・返却の 7 件を追加）
+- 起動: `bash run.sh` で起動し、`/`、`/accounts/register/`、`/login/` が 200 を返すことを確認
+
+## チェッカーの実行結果（最終）
+
+- `bash scripts/isdd/check.sh --strict`: エラー 0 件、警告 0 件、対応表チェック合格、依存チェック合格（規則なし）、受け入れ判定合格（DS-TS 16/16、要件 31/31 実装済み）
+- `rq_integrity_checker.py docs/requirements.md`: 問題 0 件（RQ 64 件、受け入れテスト 16 本）
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 欠落 0 件、不整合 0 件
+- `implementation_completeness_checker.py .`: 4/4 項目通過
+- `scripts/isdd/VERSION`（v2.2.0）とスキルの `metadata.version`（v2.2.0）は一致
+
+### 未マッピング一覧
+
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件（公開関数・クラス・ファイル）
+
+### 要件ごとの実装済み判定
+
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| `RQ-FT-ACCOUNT-INPUT-RULES-SEVEN-DIGIT` | `RQ-TS-REGISTER-ACCOUNT` | `DS-TS-REGISTER-ACCOUNT` | `e2e/test_accounts.py::test_register_account` | 実装済み |
+| `RQ-FT-CREATE-EQUIPMENT` | `RQ-TS-CREATE-EQUIPMENT` | `DS-TS-CREATE-EQUIPMENT` | `e2e/test_equipment.py::test_create_equipment` | 実装済み |
+| `RQ-FT-DELETE-EQUIPMENT` | `RQ-TS-DELETE-EQUIPMENT` | `DS-TS-DELETE-EQUIPMENT` | `e2e/test_equipment.py::test_delete_equipment` | 実装済み |
+| `RQ-FT-EQUIPMENT-INPUT-RULES` | `RQ-TS-CREATE-EQUIPMENT` | `DS-TS-CREATE-EQUIPMENT` | `e2e/test_equipment.py::test_create_equipment` | 実装済み |
+| `RQ-FT-FIRST-ACCOUNT-MANAGER` | `RQ-TS-REGISTER-ACCOUNT` | `DS-TS-REGISTER-ACCOUNT` | `e2e/test_accounts.py::test_register_account` | 実装済み |
+| `RQ-FT-GENERIC-LOGIN-ERROR` | `RQ-TS-LOGIN-LOGOUT` | `DS-TS-LOGIN-LOGOUT` | `e2e/test_accounts.py::test_login_logout` | 実装済み |
+| `RQ-FT-IDLE-LOGOUT` | `RQ-TS-IDLE-LOGOUT` | `DS-TS-IDLE-LOGOUT` | `e2e/test_accounts.py::test_idle_logout` | 実装済み |
+| `RQ-FT-KEEP-LENDING-ON-UPDATE` | `RQ-TS-UPDATE-EQUIPMENT-CONFLICT` | `DS-TS-UPDATE-EQUIPMENT-CONFLICT` | `e2e/test_lending.py::test_update_equipment_conflict` | 実装済み |
+| `RQ-FT-LEND-EQUIPMENT` | `RQ-TS-LEND-EQUIPMENT` | `DS-TS-LEND-EQUIPMENT` | `e2e/test_lending.py::test_lend_equipment` | 実装済み |
+| `RQ-FT-LENDING-INPUT-RULES` | `RQ-TS-LEND-EQUIPMENT` | `DS-TS-LEND-EQUIPMENT` | `e2e/test_lending.py::test_lend_equipment` | 実装済み |
+| `RQ-FT-LOGIN` | `RQ-TS-LOGIN-LOGOUT` | `DS-TS-LOGIN-LOGOUT` | `e2e/test_accounts.py::test_login_logout` | 実装済み |
+| `RQ-FT-LOGOUT` | `RQ-TS-LOGIN-LOGOUT` | `DS-TS-LOGIN-LOGOUT` | `e2e/test_accounts.py::test_login_logout` | 実装済み |
+| `RQ-FT-PREVENT-DOUBLE-LENDING` | `RQ-TS-PREVENT-DOUBLE-LENDING` | `DS-TS-PREVENT-DOUBLE-LENDING` | `e2e/test_lending.py::test_prevent_double_lending` | 実装済み |
+| `RQ-FT-PREVENT-DOUBLE-RETURN` | `RQ-TS-RETURN-EQUIPMENT` | `DS-TS-RETURN-EQUIPMENT` | `e2e/test_lending.py::test_return_equipment` | 実装済み |
+| `RQ-FT-REFUSE-DELETE-LENT-EQUIPMENT` | `RQ-TS-REFUSE-DELETE-LENT-EQUIPMENT` | `DS-TS-REFUSE-DELETE-LENT-EQUIPMENT` | `e2e/test_lending.py::test_refuse_delete_lent_equipment` | 実装済み |
+| `RQ-FT-REGISTER-ACCOUNT` | `RQ-TS-REGISTER-ACCOUNT` | `DS-TS-REGISTER-ACCOUNT` | `e2e/test_accounts.py::test_register_account` | 実装済み |
+| `RQ-FT-REJECT-STALE-EQUIPMENT-UPDATE` | `RQ-TS-UPDATE-EQUIPMENT-CONFLICT` | `DS-TS-UPDATE-EQUIPMENT-CONFLICT` | `e2e/test_lending.py::test_update_equipment_conflict` | 実装済み |
+| `RQ-FT-RESTRICT-EQUIPMENT-OPERATION` | `RQ-TS-RESTRICT-NON-MANAGER` | `DS-TS-RESTRICT-NON-MANAGER` | `e2e/test_equipment.py::test_restrict_non_manager` | 実装済み |
+| `RQ-FT-RESTRICT-LENDING-OPERATION` | `RQ-TS-RESTRICT-LENDING-NON-MANAGER` | `DS-TS-RESTRICT-LENDING-NON-MANAGER` | `e2e/test_lending.py::test_restrict_lending_non_manager` | 実装済み |
+| `RQ-FT-RETURN-EQUIPMENT` | `RQ-TS-RETURN-EQUIPMENT` | `DS-TS-RETURN-EQUIPMENT` | `e2e/test_lending.py::test_return_equipment` | 実装済み |
+| `RQ-FT-UNIQUE-EMPLOYEE-NUMBER` | `RQ-TS-REGISTER-ACCOUNT` | `DS-TS-REGISTER-ACCOUNT` | `e2e/test_accounts.py::test_register_account` | 実装済み |
+| `RQ-FT-UNIQUE-EQUIPMENT-NUMBER` | `RQ-TS-CREATE-EQUIPMENT` | `DS-TS-CREATE-EQUIPMENT` | `e2e/test_equipment.py::test_create_equipment` | 実装済み |
+| `RQ-FT-UPDATE-EQUIPMENT` | `RQ-TS-UPDATE-EQUIPMENT`, `RQ-TS-UPDATE-EQUIPMENT-CONFLICT` | `DS-TS-UPDATE-EQUIPMENT`, `DS-TS-UPDATE-EQUIPMENT-CONFLICT` | `e2e/test_equipment.py::test_update_equipment`, `e2e/test_lending.py::test_update_equipment_conflict` | 実装済み |
+| `RQ-FT-VIEW-EQUIPMENT-STATUS` | `RQ-TS-VIEW-STATUS` | `DS-TS-VIEW-STATUS` | `e2e/test_equipment.py::test_view_status` | 実装済み |
+| `RQ-FT-VIEW-LENDING-STATUS` | `RQ-TS-VIEW-LENDING-STATUS` | `DS-TS-VIEW-LENDING-STATUS` | `e2e/test_lending.py::test_view_lending_status` | 実装済み |
+| `RQ-NF-RESPONSE-3S` | `RQ-TS-RESPONSE-TIME` | `DS-TS-RESPONSE-TIME` | `e2e/test_performance.py::test_response_time` | 実装済み |
+| `RQ-UI-ACCOUNT-REGISTER-SCREEN` | `RQ-TS-REGISTER-ACCOUNT` | `DS-TS-REGISTER-ACCOUNT` | `e2e/test_accounts.py::test_register_account` | 実装済み |
+| `RQ-UI-EQUIPMENT-FORM-SCREEN` | `RQ-TS-CREATE-EQUIPMENT`, `RQ-TS-UPDATE-EQUIPMENT`, `RQ-TS-UPDATE-EQUIPMENT-CONFLICT` | `DS-TS-CREATE-EQUIPMENT`, `DS-TS-UPDATE-EQUIPMENT`, `DS-TS-UPDATE-EQUIPMENT-CONFLICT` | `e2e/test_equipment.py::test_create_equipment`, `e2e/test_equipment.py::test_update_equipment`, `e2e/test_lending.py::test_update_equipment_conflict` | 実装済み |
+| `RQ-UI-EQUIPMENT-STATUS-SCREEN` | `RQ-TS-VIEW-LENDING-STATUS`, `RQ-TS-VIEW-STATUS` | `DS-TS-VIEW-LENDING-STATUS`, `DS-TS-VIEW-STATUS` | `e2e/test_lending.py::test_view_lending_status`, `e2e/test_equipment.py::test_view_status` | 実装済み |
+| `RQ-UI-LENDING-FORM-SCREEN` | `RQ-TS-LEND-EQUIPMENT` | `DS-TS-LEND-EQUIPMENT` | `e2e/test_lending.py::test_lend_equipment` | 実装済み |
+| `RQ-UI-LOGIN-SCREEN` | `RQ-TS-LOGIN-LOGOUT` | `DS-TS-LOGIN-LOGOUT` | `e2e/test_accounts.py::test_login_logout` | 実装済み |
+
+## 判断と残る注意（ユーザーが確かめるとよい点）
+
+1. **担当者は 1 人だけ作れる（最初の登録者）**。依頼の「2 人の担当者」は、同じ担当者アカウントを 2 つのブラウザで使って再現した。担当者を増やす仕組み（アカウント管理）は依頼に無いので作っていない。複数の担当者アカウントが要るなら、別の変更として依頼が要る。
+2. **同時の操作は決まった順で再現している**（先の操作を終えてから後の操作を送る）。本当に同時に送る負荷試験はしていない。「50 人が同時に開いても 3 秒以内」は未検証。Waitress は既定のスレッド数（4）のまま。性能が問題になれば、負荷試験と Waitress のスレッド数の見直しが要る。
+3. **修正の競合は版番号（`revision`）で判定**。値の比較では同じ値への修正を見落とすため。修正画面は隠し欄で版番号を持つ。
+4. **既存の DB**は起動時に版番号の列と貸出の表を足す（既存データは残す）。社員番号 6 桁のアカウントは移行していない。7 桁のログインでは使えないが、ログインの形式検査は段 1 のとおり無い（6 桁の番号は「社員番号またはパスワードが違います」になる）。
+5. 段 1 で `DS-OP-SETTINGS` と `DS-OP-SETUP-AND-RUN` は対応表に行が無い（運用の設計で、コードの要素ではない）。段 1 から変わっていない。チェッカーは警告にしていない。
+6. **git にはコミットしていない**（依頼が無いため）。変更は作業ツリーにある。
+
+作業の詳細は `.history/20261105-equipment-lending/`（変更要件定義書・変更設計書・tasks.md）に残した。

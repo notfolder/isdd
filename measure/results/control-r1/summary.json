@@ -2,14 +2,32 @@
   "arm": "control",
   "run": 1,
   "model": "claude-haiku-5-5",
-  "runner": "Agent tool",
   "stages": {
     "1": {
       "done": true,
-      "wall_sec": 159.0,
-      "agent_tokens": 64947,
-      "tool_uses": 10,
-      "note": "Agent ツール（haiku）",
+      "wall_sec": 194.8,
+      "started": "2026-11-05T01:24:30",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 8,
+      "tool_names": {
+        "Bash": 7,
+        "Write": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 18,
+        "output_tokens": 42627,
+        "cache_creation_input_tokens": 55851,
+        "cache_read_input_tokens": 401099,
+        "total_tokens": 499595
+      },
+      "cost_usd": 0.0365,
+      "turns": 9,
+      "rounds": 1,
       "passed": 8,
       "total": 8,
       "tests": {
@@ -24,27 +42,47 @@
       },
       "overbuild": {
         "source_files": 1,
-        "lines": 308,
-        "public_functions": 16,
-        "classes": 0,
-        "templates": 6
+        "lines": 691,
+        "public_functions": 46,
+        "classes": 3,
+        "templates": 0
       },
       "score_error": null
     },
     "2": {
       "done": true,
-      "wall_sec": 131.0,
-      "agent_tokens": 69991,
-      "tool_uses": 13,
-      "note": "Agent ツール（haiku）",
+      "wall_sec": 148.6,
+      "started": "2026-11-05T01:27:45",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 8,
+      "tool_names": {
+        "Bash": 7,
+        "Write": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 18,
+        "output_tokens": 27594,
+        "cache_creation_input_tokens": 49438,
+        "cache_read_input_tokens": 406848,
+        "total_tokens": 483898
+      },
+      "cost_usd": 0.0278,
+      "turns": 9,
+      "rounds": 1,
       "passed": 14,
-      "total": 14,
+      "total": 15,
       "tests": {
         "test_first_account_becomes_staff[chromium]": "pass",
         "test_account_registration[chromium]": "pass",
         "test_login_logout[chromium]": "pass",
         "test_session_timeout[chromium]": "pass",
         "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
         "test_equipment_create[chromium]": "pass",
         "test_equipment_update_and_delete_without_lending[chromium]": "pass",
         "test_equipment_update_keeps_lending[chromium]": "pass",
@@ -53,26 +91,47 @@
         "test_return[chromium]": "pass",
         "test_lending_status_without_login[chromium]": "pass",
         "test_lending_status_empty_and_sorted[chromium]": "pass",
-        "test_response_time[chromium]": "pass"
+        "test_response_time[chromium]": "fail"
       },
       "overbuild": {
         "source_files": 1,
-        "lines": 473,
-        "public_functions": 19,
-        "classes": 0,
-        "templates": 7
+        "lines": 899,
+        "public_functions": 56,
+        "classes": 3,
+        "templates": 0
       },
       "score_error": null,
       "regressions": []
     },
     "3": {
       "done": true,
-      "wall_sec": 116.0,
-      "agent_tokens": 65087,
-      "tool_uses": 11,
-      "note": "Agent ツール（haiku）",
-      "passed": 21,
-      "total": 21,
+      "wall_sec": 105.5,
+      "started": "2026-11-05T01:30:13",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 15,
+      "tool_names": {
+        "Bash": 8,
+        "Read": 1,
+        "Edit": 5,
+        "Write": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 24,
+        "output_tokens": 23329,
+        "cache_creation_input_tokens": 49844,
+        "cache_read_input_tokens": 582507,
+        "total_tokens": 655704
+      },
+      "cost_usd": 0.0275,
+      "turns": 16,
+      "rounds": 1,
+      "passed": 22,
+      "total": 23,
       "tests": {
         "test_employee_restrictions[chromium]": "pass",
         "test_staff_role_change[chromium]": "pass",
@@ -83,6 +142,8 @@
         "test_login_logout[chromium]": "pass",
         "test_session_timeout[chromium]": "pass",
         "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_role_renamed_everywhere[chromium]": "pass",
         "test_equipment_create[chromium]": "pass",
         "test_equipment_update_and_delete_without_lending[chromium]": "pass",
         "test_equipment_update_keeps_lending[chromium]": "pass",
@@ -94,17 +155,18 @@
         "test_duplicate_return[chromium]": "pass",
         "test_lending_status_without_login[chromium]": "pass",
         "test_lending_status_empty_and_sorted[chromium]": "pass",
-        "test_response_time[chromium]": "pass"
+        "test_response_time[chromium]": "fail"
       },
       "overbuild": {
         "source_files": 1,
-        "lines": 590,
-        "public_functions": 25,
-        "classes": 0,
-        "templates": 8
+        "lines": 1043,
+        "public_functions": 63,
+        "classes": 3,
+        "templates": 0
       },
       "score_error": null,
       "regressions": []
     }
-  }
+  },
+  "runner": "claude -p"
 }

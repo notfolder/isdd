@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}アカウント登録{% endblock %}
+{% block content %}
+<h1>アカウント登録</h1>
+<form method="post" action="{{ url_for('register') }}">
+  {{ field("id_employee_number", "社員番号（6 桁）", "employee_number", value=values.employee_number, error=errors.get("employee_number")) }}
+  {{ field("id_name", "名前（30 文字以内）", "name", value=values.name, error=errors.get("name")) }}
+  {{ field("id_password", "パスワード（8 文字以上）", "password", type="password", error=errors.get("password")) }}
+  <button type="submit">登録</button>
+</form>
+{% endblock %}

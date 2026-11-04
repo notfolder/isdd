@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}ログイン{% endblock %}
+{% block content %}
+<h1>ログイン</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="post" action="{{ url_for('login') }}">
+  {{ field("id_employee_number", "社員番号", "employee_number", value=employee_number) }}
+  {{ field("id_password", "パスワード", "password", type="password") }}
+  <button type="submit">ログイン</button>
+</form>
+{% endblock %}

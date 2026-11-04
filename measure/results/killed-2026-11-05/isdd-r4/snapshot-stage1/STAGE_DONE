@@ -1,0 +1,61 @@
+段 1 完了: 備品の台帳と貸出状況の閲覧（isdd-spec → isdd-build 実装後レビューまで）
+
+## 進め方
+- 新規フロー（docs/requirements.md・docs/detail_design.md がまだ無かったため）。
+- 質問はすべて ANSWERS.md の固定回答で答え、承認は与えられたものとして進めた。
+- 技術選定: Python 3.12 / Flask 3.1.3 / Waitress 3.0.2 / SQLite（標準）。E2E は Playwright 1.64.1 + pytest 9.2.0。
+  - 出典は PyPI の公式 JSON（https://pypi.org/pypi/<名前>/json）。WebSearch は権限が無く使えなかったため、検索による一次情報の確認はしていない。
+  - Flask・Playwright のライセンスは PyPI メタデータに記載が無く、未確認（設計書 1-1 に注記）。
+
+## 成果物
+- docs/requirements.md（要件定義書）、docs/detail_design.md（詳細設計書）、docs/trace_map.md（対応表、49 行）
+- .history/20261105-equipment-ledger/tasks.md
+- 実装: app/（__init__・__main__・db・accounts・equipment・auth・views、templates、static）
+- 起動: run.sh（bash run.sh、PORT 既定 8000、DATA_DIR、SESSION_IDLE_TIMEOUT_SECONDS 既定 1800）、setup.sh、requirements.txt
+- テスト: tests/（単体・結合 24 件）、e2e/（Playwright の E2E 13 件。JUnit XML は e2e/results/e2e.xml）
+- README.md（起動方法、初期ユーザーは無い、初回の担当者登録の手順）
+- 対応表チェック: scripts/isdd/（isdd-setup v2.2.0。VERSION とスキル版は一致）、AGENTS.md、CLAUDE.md、.gitignore（e2e/results/・data/・.venv/ など）
+- フック: .claude/settings.json に Stop 時の `bash scripts/isdd/check.sh`（手動実行で動作確認済み）
+- isdd-setup が .git/hooks/pre-commit を組み込んだ（既存のフックは無かった）
+
+## 検証の結果（最終状態）
+- `bash scripts/isdd/check.sh --strict`: エラー 0 件、警告 0 件、依存チェック合格（規則なし）、受け入れ判定 合格（DS-TS 13/13、要件 14/14 実装済み）
+- `rq_integrity_checker.py docs/requirements.md`: 問題 0 件（RQ 総数 42、受け入れテスト欠落 0）
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 欠落 0、不整合 0
+- `implementation_completeness_checker.py .`: 4/4 項目 OK
+- 単体・結合テスト: 24 件通過。E2E: 13 件通過（警告なし）
+- `bash run.sh` で起動し、GET / 200、GET /login/ 200、未ログインの POST /equipment/new/ は /login/ へ 302
+
+## 未マッピング一覧（実装後レビュー）
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件
+
+## 要件ごとの実装済み判定（check.sh の受け入れ判定）
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| `RQ-FT-CREATE-EQUIPMENT` | `RQ-TS-CREATE-EQUIPMENT`, `RQ-TS-CREATE-EQUIPMENT-VALIDATION` | `DS-TS-CREATE-EQUIPMENT`, `DS-TS-CREATE-EQUIPMENT-VALIDATION` | `e2e/test_scenarios.py::test_create_equipment`, `e2e/test_scenarios.py::test_create_equipment_validation` | 実装済み |
+| `RQ-FT-DELETE-EQUIPMENT` | `RQ-TS-DELETE-EQUIPMENT` | `DS-TS-DELETE-EQUIPMENT` | `e2e/test_scenarios.py::test_delete_equipment` | 実装済み |
+| `RQ-FT-IDLE-AUTO-LOGOUT` | `RQ-TS-IDLE-TIMEOUT` | `DS-TS-IDLE-TIMEOUT` | `e2e/test_scenarios.py::test_idle_timeout` | 実装済み |
+| `RQ-FT-LOGIN` | `RQ-TS-LOGIN-AND-FAILURE`, `RQ-TS-REGISTER-FIRST-ACCOUNT` | `DS-TS-LOGIN-AND-FAILURE`, `DS-TS-REGISTER-FIRST-ACCOUNT` | `e2e/test_scenarios.py::test_login_and_failure`, `e2e/test_scenarios.py::test_register_first_account` | 実装済み |
+| `RQ-FT-LOGOUT` | `RQ-TS-LOGOUT` | `DS-TS-LOGOUT` | `e2e/test_scenarios.py::test_logout` | 実装済み |
+| `RQ-FT-REGISTER-ACCOUNT` | `RQ-TS-REGISTER-FIRST-ACCOUNT`, `RQ-TS-REGISTER-SECOND-ACCOUNT`, `RQ-TS-REGISTER-VALIDATION` | `DS-TS-REGISTER-FIRST-ACCOUNT`, `DS-TS-REGISTER-SECOND-ACCOUNT`, `DS-TS-REGISTER-VALIDATION` | `e2e/test_scenarios.py::test_register_first_account`, `e2e/test_scenarios.py::test_register_second_account`, `e2e/test_scenarios.py::test_register_validation` | 実装済み |
+| `RQ-FT-ROLE-CONTROL` | `RQ-TS-REGISTER-SECOND-ACCOUNT`, `RQ-TS-ROLE-CONTROL` | `DS-TS-REGISTER-SECOND-ACCOUNT`, `DS-TS-ROLE-CONTROL` | `e2e/test_scenarios.py::test_register_second_account`, `e2e/test_scenarios.py::test_role_control` | 実装済み |
+| `RQ-FT-UPDATE-EQUIPMENT` | `RQ-TS-UPDATE-EQUIPMENT` | `DS-TS-UPDATE-EQUIPMENT` | `e2e/test_scenarios.py::test_update_equipment` | 実装済み |
+| `RQ-FT-VIEW-LOAN-STATUS` | `RQ-TS-CREATE-EQUIPMENT`, `RQ-TS-LOAN-STATUS-ANONYMOUS` | `DS-TS-CREATE-EQUIPMENT`, `DS-TS-LOAN-STATUS-ANONYMOUS` | `e2e/test_scenarios.py::test_create_equipment`, `e2e/test_scenarios.py::test_loan_status_anonymous` | 実装済み |
+| `RQ-NF-RESPONSE-3S` | `RQ-TS-LOAN-STATUS-PERFORMANCE` | `DS-TS-LOAN-STATUS-PERFORMANCE` | `e2e/test_scenarios.py::test_loan_status_performance` | 実装済み |
+| `RQ-UI-EQUIPMENT-FORM-SCREEN` | `RQ-TS-CREATE-EQUIPMENT`, `RQ-TS-CREATE-EQUIPMENT-VALIDATION`, `RQ-TS-UPDATE-EQUIPMENT` | `DS-TS-CREATE-EQUIPMENT`, `DS-TS-CREATE-EQUIPMENT-VALIDATION`, `DS-TS-UPDATE-EQUIPMENT` | `e2e/test_scenarios.py::test_create_equipment`, `e2e/test_scenarios.py::test_create_equipment_validation`, `e2e/test_scenarios.py::test_update_equipment` | 実装済み |
+| `RQ-UI-LOAN-STATUS-SCREEN` | `RQ-TS-LOAN-STATUS-ANONYMOUS`, `RQ-TS-ROLE-CONTROL` | `DS-TS-LOAN-STATUS-ANONYMOUS`, `DS-TS-ROLE-CONTROL` | `e2e/test_scenarios.py::test_loan_status_anonymous`, `e2e/test_scenarios.py::test_role_control` | 実装済み |
+| `RQ-UI-LOGIN-SCREEN` | `RQ-TS-LOGIN-AND-FAILURE`, `RQ-TS-REGISTER-FIRST-ACCOUNT` | `DS-TS-LOGIN-AND-FAILURE`, `DS-TS-REGISTER-FIRST-ACCOUNT` | `e2e/test_scenarios.py::test_login_and_failure`, `e2e/test_scenarios.py::test_register_first_account` | 実装済み |
+| `RQ-UI-REGISTER-SCREEN` | `RQ-TS-REGISTER-FIRST-ACCOUNT`, `RQ-TS-REGISTER-VALIDATION` | `DS-TS-REGISTER-FIRST-ACCOUNT`, `DS-TS-REGISTER-VALIDATION` | `e2e/test_scenarios.py::test_register_first_account`, `e2e/test_scenarios.py::test_register_validation` | 実装済み |
+
+## 依頼に無く自分で決めた項目
+docs/requirements.md の 1-2 に一覧（管理番号の修正可否、空欄の扱い、同時の登録と担当者の決め方、ログイン失敗の回数制限は作らない、CSRF は SameSite=Lax で代替、など）。固定回答により承認扱いとした。
+
+## 残っている確認事項・注意
+- 技術選定の出典は PyPI のメタデータのみ。Flask・Playwright のライセンスは未確認（公式リポジトリの表記を確かめる必要がある）。
+- Git: リポジトリにコミットは無く、作業はワークツリーにある（コミットは依頼されていないため未実施）。
+- 採点用の起動前に `bash setup.sh` が必要（Chromium の導入を含むためネットワークが要る）。
+- 段の区切りとして、要件・設計の承認はこの固定回答で済ませた。次の段（貸出・返却）は isdd-spec の変更フローから始める。

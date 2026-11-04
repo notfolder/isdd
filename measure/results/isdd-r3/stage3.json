@@ -1,0 +1,42 @@
+{
+  "stage": 3,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/isdd-r3/snapshot-stage3",
+  "tests": {
+    "test_employee_restrictions[chromium]": "pass",
+    "test_staff_role_change[chromium]": "pass",
+    "test_password_reset[chromium]": "pass",
+    "test_account_delete[chromium]": "pass",
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+    "test_role_renamed_everywhere[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_stale_equipment_update[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "pass",
+    "test_lending[chromium]": "pass",
+    "test_concurrent_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_duplicate_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "pass"
+  },
+  "passed": 23,
+  "total": 23,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": ".......................                                                  [100%]\n23 passed in 150.66s (0:02:30)\n",
+  "overbuild": {
+    "source_files": 10,
+    "lines": 1438,
+    "public_functions": 46,
+    "classes": 0,
+    "templates": 7
+  },
+  "duration_sec": 155.3
+}

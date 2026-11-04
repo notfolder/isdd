@@ -48,3 +48,8 @@ fb control s4 end 21:53:34
 fb isdd s3 end (3 rounds) 21:58:13
 fb isdd s4 end 22:08:39
 fb all done 00:04:17
+stage2 (measure1 redo, 5 runs x 2 arms) start 01:24:26
+stage2 done 02:57:16
+stage2 isdd r1,r2,r4 killed by SIGTERM (agent pkill suspected); rerun start 02:57:55
+stage3 chunk aa start (parallel 1) 02:58:23
+paused by assistant usage limit 03:48:10; batches keep running

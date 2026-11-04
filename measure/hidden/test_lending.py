@@ -7,11 +7,12 @@ import pytest
 from playwright.sync_api import expect
 
 from support.ui import expect_url, click_with_dialog, equipment_row, field_error, login, messages
+from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF, EMP_FORMAT_MSG, LAST_STAFF, OLD_ROLE, ROLE, STAFF_ONLY, emp
 
-STAFF = {"number": "000001", "name": "担当太郎", "staff": True}
-STAFF_Y = {"number": "000003", "name": "担当次郎", "staff": True}
-EMPLOYEE_A = {"number": "000002", "name": "社員花子"}
-EMPLOYEE_B = {"number": "000004", "name": "社員三郎"}
+STAFF = {"number": emp("1"), "name": "担当太郎", "staff": True}
+STAFF_Y = {"number": emp("3"), "name": "担当次郎", "staff": True}
+EMPLOYEE_A = {"number": emp("2"), "name": "社員花子"}
+EMPLOYEE_B = {"number": emp("4"), "name": "社員三郎"}
 
 
 def today() -> datetime.date:
@@ -32,20 +33,20 @@ def test_lending(app, page):
         "accounts": [STAFF, EMPLOYEE_A],
         "equipment": [{"number": "PC-001", "name": "ノートパソコン"}, {"number": "PC-002", "name": "モニター"}],
     })
-    login(page, app.base_url, "000001")
+    login(page, app.base_url, emp("1"))
     equipment_row(page, "PC-001").get_by_role("button", name="貸出").click()
     expect(page.locator(".lending-equipment")).to_have_text("備品: PC-001 ノートパソコン")
     expect(page.locator("#id_lent_on")).to_have_value(today().isoformat())
-    expect(page.locator("#id_borrower option", has_text="社員花子（000002）")).to_have_count(1)
+    expect(page.locator("#id_borrower option", has_text=f"社員花子（{emp('2')}）")).to_have_count(1)
     submit_lending(page, None, None)
     expect(field_error(page, "id_borrower")).to_have_text("借りる社員を選んでください")
-    submit_lending(page, "社員花子（000002）", today() + datetime.timedelta(days=1))
+    submit_lending(page, f"社員花子（{emp('2')}）", today() + datetime.timedelta(days=1))
     expect(field_error(page, "id_lent_on")).to_have_text("貸出日に未来の日付は入力できません")
-    submit_lending(page, "社員花子（000002）", today())
+    submit_lending(page, f"社員花子（{emp('2')}）", today())
     expect_url(page, app.base_url, "/")
     past = today() - datetime.timedelta(days=30)
     equipment_row(page, "PC-002").get_by_role("button", name="貸出").click()
-    submit_lending(page, "社員花子（000002）", past)
+    submit_lending(page, f"社員花子（{emp('2')}）", past)
     page.get_by_role("button", name="ログアウト").click()
     for number, day in [("PC-001", today()), ("PC-002", past)]:
         row = equipment_row(page, number)
@@ -61,13 +62,13 @@ def test_concurrent_lending(app, page, new_page):
         "equipment": [{"number": "PC-001", "name": "ノートパソコン"}],
     })
     page_y = new_page()
-    login(page, app.base_url, "000001")
-    login(page_y, app.base_url, "000003")
+    login(page, app.base_url, emp("1"))
+    login(page_y, app.base_url, emp("3"))
     for p in (page, page_y):
         equipment_row(p, "PC-001").get_by_role("button", name="貸出").click()
-    submit_lending(page, "社員花子（000002）", None)
+    submit_lending(page, f"社員花子（{emp('2')}）", None)
     expect_url(page, app.base_url, "/")
-    submit_lending(page_y, "社員三郎（000004）", None)
+    submit_lending(page_y, f"社員三郎（{emp('4')}）", None)
     expect(messages(page_y)).to_have_text(["この備品は既に貸出中です"])
     expect(equipment_row(page_y, "PC-001")).to_contain_text("社員花子")
 
@@ -77,9 +78,9 @@ def test_return(app, page):
     app.seed({
         "accounts": [STAFF, EMPLOYEE_A],
         "equipment": [{"number": "PC-001", "name": "ノートパソコン"}],
-        "lendings": [{"equipment": "PC-001", "borrower": "000002", "lent_on": "2026-10-01"}],
+        "lendings": [{"equipment": "PC-001", "borrower": emp("2"), "lent_on": "2026-10-01"}],
     })
-    login(page, app.base_url, "000001")
+    login(page, app.base_url, emp("1"))
     return_x = equipment_row(page, "PC-001").get_by_role("button", name="返却")
     click_with_dialog(page, return_x, accept=False)
     expect(equipment_row(page, "PC-001")).to_contain_text("貸出中")
@@ -95,11 +96,11 @@ def test_duplicate_return(app, page, new_page):
     app.seed({
         "accounts": [STAFF, STAFF_Y, EMPLOYEE_A],
         "equipment": [{"number": "PC-001", "name": "ノートパソコン"}],
-        "lendings": [{"equipment": "PC-001", "borrower": "000002", "lent_on": "2026-10-01"}],
+        "lendings": [{"equipment": "PC-001", "borrower": emp("2"), "lent_on": "2026-10-01"}],
     })
     page_y = new_page()
-    login(page, app.base_url, "000001")
-    login(page_y, app.base_url, "000003")
+    login(page, app.base_url, emp("1"))
+    login(page_y, app.base_url, emp("3"))
     click_with_dialog(page, equipment_row(page, "PC-001").get_by_role("button", name="返却"), accept=True)
     expect(equipment_row(page, "PC-001")).to_contain_text("空き")
     click_with_dialog(page_y, equipment_row(page_y, "PC-001").get_by_role("button", name="返却"), accept=True)
@@ -115,7 +116,7 @@ def test_lending_status_without_login(app, page):
             {"number": "PC-001", "name": "ノートパソコン"},
             {"number": "PC-002", "name": "モニター"},
         ],
-        "lendings": [{"equipment": "PC-002", "borrower": "000002", "lent_on": "2026-10-01"}],
+        "lendings": [{"equipment": "PC-002", "borrower": emp("2"), "lent_on": "2026-10-01"}],
     })
     page.goto(app.base_url)
     rows = page.locator("tbody tr")

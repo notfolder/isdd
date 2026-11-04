@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}ログイン{% endblock %}
+{% block content %}
+<h1>ログイン</h1>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+<form method="post" action="{{ url_for('web.login') }}">
+  <div class="field">
+    <label for="id_employee_number">社員番号</label>
+    <input id="id_employee_number" name="employee_number" type="text" inputmode="numeric" value="{{ employee_number }}">
+  </div>
+  <div class="field">
+    <label for="id_password">パスワード</label>
+    <input id="id_password" name="password" type="password">
+  </div>
+  <button type="submit">ログイン</button>
+</form>
+{% endblock %}

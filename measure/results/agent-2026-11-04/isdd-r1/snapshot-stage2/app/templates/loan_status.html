@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}備品の貸出状況{% endblock %}
+{% block content %}
+<h1>備品の貸出状況</h1>
+{% if manager %}
+  <p><a class="button" href="{{ url_for('web.equipment_new') }}">備品を登録</a></p>
+{% endif %}
+{% if items %}
+<table>
+  <thead>
+    <tr>
+      <th>管理番号</th>
+      <th>備品名</th>
+      <th>状態</th>
+      <th>借りている社員</th>
+      <th>貸出日</th>
+      {% if manager %}<th>操作</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr data-equipment-number="{{ item.equipment_number }}">
+      <td>{{ item.equipment_number }}</td>
+      <td>{{ item.name }}</td>
+      <td>{% if item.loaned %}貸出中{% else %}空き{% endif %}</td>
+      <td>{{ item.borrower_name }}</td>
+      <td>{{ item.lent_on }}</td>
+      {% if manager %}
+      <td>
+        {% if item.loaned %}
+        <form method="post" action="{{ url_for('web.equipment_return', equipment_number=item.equipment_number) }}" class="inline" onsubmit="return confirm('この備品を返却しますか？');">
+          <button type="submit">返却</button>
+        </form>
+        {% else %}
+        <form method="get" action="{{ url_for('web.equipment_loan', equipment_number=item.equipment_number) }}" class="inline">
+          <button type="submit">貸出</button>
+        </form>
+        {% endif %}
+        <form method="get" action="{{ url_for('web.equipment_edit', equipment_number=item.equipment_number) }}" class="inline">
+          <button type="submit">修正</button>
+        </form>
+        <form method="post" action="{{ url_for('web.equipment_delete', equipment_number=item.equipment_number) }}" class="inline" onsubmit="return confirm('この備品を削除しますか？');">
+          <button type="submit">削除</button>
+        </form>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>備品は登録されていません</p>
+{% endif %}
+{% endblock %}

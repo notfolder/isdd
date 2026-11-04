@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}アカウントの一覧{% endblock %}
+{% block content %}
+<h1>アカウントの一覧</h1>
+<p><a href="{{ url_for('index') }}">貸出状況に戻る</a></p>
+<table>
+  <thead>
+    <tr>
+      <th>社員番号</th>
+      <th>名前</th>
+      <th>担当者か社員か</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in employees %}
+    {% set is_mgr = e['role'] == '担当者' %}
+    <tr data-employee-number="{{ e['employee_number'] }}">
+      <td>{{ e['employee_number'] }}</td>
+      <td>{{ e['name'] }}</td>
+      <td>{% if is_mgr %}担当者{% else %}社員{% endif %}</td>
+      <td>
+        <form method="post" action="{{ url_for('account_role', employee_id=e['id']) }}" class="inline"
+              onsubmit="return window.confirm('この社員の担当者の設定を変えますか？');">
+          {% if is_mgr %}
+          <input type="hidden" name="to" value="社員">
+          <button type="submit">担当者から外す</button>
+          {% else %}
+          <input type="hidden" name="to" value="担当者">
+          <button type="submit">担当者にする</button>
+          {% endif %}
+        </form>
+        {% if reset_id == e['id'] %}
+        <form method="post" action="{{ url_for('account_password', employee_id=e['id']) }}" class="inline">
+          <div class="field">
+            <label>新しいパスワード（8 文字以上）</label>
+            <input name="new_password" type="password" value="{{ reset_value }}">
+            {% if reset_error %}<span class="field-error">{{ reset_error }}</span>{% endif %}
+          </div>
+          <button type="submit">確定</button>
+        </form>
+        {% else %}
+        <form method="get" action="{{ url_for('accounts') }}" class="inline">
+          <input type="hidden" name="reset" value="{{ e['id'] }}">
+          <button type="submit">パスワード再設定</button>
+        </form>
+        {% endif %}
+        <form method="post" action="{{ url_for('account_delete', employee_id=e['id']) }}" class="inline"
+              onsubmit="return window.confirm('このアカウントを削除しますか？');">
+          <button type="submit">削除</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

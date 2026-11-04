@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin the Wheel showed 'Spinning...' while the wheel rotated, then stopped with the pointer on the 'Better Luck Next Time' segment and displayed 'You won: Better Luck Next Time — No prize this time. Spin again!' with no page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 8 prizes with descriptions and chances, and they match the 8 segments on the wheel (Grand Prize, Movie Tickets, Free Coffee, 20% Off Coupon, Free Shipping, Mystery Gift Box, Sticker Pack, Better Luck Next Time)."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Tester42, My Winning Records showed 'Tester42 has 1 recorded spin' with date/time 'Nov 5, 2026, 03:01 AM' and the prize 'Better Luck Next Time', matching the latest spin."},
+  "000010-4": {"verdict": "YES", "reason": "Body background rgb(228,228,228) is within 40 per channel of light gray (211,211,211); the header, main button and h1 are rgb(139,0,0), which matches dark red (139,0,0)."}
+}

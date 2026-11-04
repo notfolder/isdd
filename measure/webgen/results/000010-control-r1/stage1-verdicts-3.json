@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking 'Spin the Wheel' showed 'Spinning…'; the wheel stopped with 'Sticker Pack' under the pointer and 'You won: Sticker Pack — A pack of limited-edition stickers.' appeared. No page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page lists 8 prizes with description and chance, and these match the 8 segments shown on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records for 'Tester' shows the latest row 'Nov 5, 2026, 03:02 AM — Sticker Pack', which matches the prize just won and includes the date."},
+  "000010-4": {"verdict": "YES", "reason": "Body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header background (139,0,0), the main button background (139,0,0) and the h1 text color (139,0,0) all match dark red."}
+}

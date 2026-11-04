@@ -1,0 +1,64 @@
+{
+  "_comment": "詳細設計書 第 7 章「依存の規則」の書き写し。業務の関数（ファイル単位）を Web の枠組み（flask）と画面・認証のファイルから切り離す。accounts.py だけは、パスワードのハッシュに werkzeug.security を使うため werkzeug を禁止の対象にしない（詳細は docs/proposals.md）。",
+  "rules": [
+    {
+      "from": "app/accounts.py",
+      "deny": [
+        "flask",
+        "app/views.py",
+        "app/auth.py"
+      ],
+      "reason": "業務の関数を Web の枠組みから独立させる（パスワードのハッシュは werkzeug.security を使う）"
+    },
+    {
+      "from": "app/equipment.py",
+      "deny": [
+        "flask",
+        "werkzeug",
+        "app/views.py",
+        "app/auth.py"
+      ],
+      "reason": "業務の関数を Web の枠組みから独立させる"
+    },
+    {
+      "from": "app/validation.py",
+      "deny": [
+        "flask",
+        "werkzeug",
+        "app/views.py",
+        "app/auth.py"
+      ],
+      "reason": "業務の関数を Web の枠組みから独立させる"
+    },
+    {
+      "from": "app/db.py",
+      "deny": [
+        "flask",
+        "werkzeug",
+        "app/views.py",
+        "app/auth.py"
+      ],
+      "reason": "業務の関数を Web の枠組みから独立させる"
+    },
+    {
+      "from": "app/config.py",
+      "deny": [
+        "flask",
+        "werkzeug",
+        "app/views.py",
+        "app/auth.py"
+      ],
+      "reason": "業務の関数を Web の枠組みから独立させる"
+    },
+    {
+      "from": "app/loans.py",
+      "deny": [
+        "flask",
+        "werkzeug",
+        "app/views.py",
+        "app/auth.py"
+      ],
+      "reason": "業務の関数を Web の枠組みから独立させる"
+    }
+  ]
+}

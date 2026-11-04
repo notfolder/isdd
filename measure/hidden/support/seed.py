@@ -6,6 +6,7 @@ accounts の 1 件目が最初の登録になり、契約どおり自動で担�
 最初の担当者がアカウントの一覧で「担当者にする」を押して付ける（段 3 の機能）。
 """
 
+from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF
 from support.ui import account_row, click_with_dialog, equipment_row, login, register
 
 
@@ -30,8 +31,8 @@ class Seeder:
                 names = {a["number"]: a["name"] for a in accounts}
                 for a in extra_staff:
                     page.goto(f"{self.base_url}/accounts/")
-                    click_with_dialog(page, account_row(page, a["number"]).get_by_role("button", name="担当者にする"), True)
-                    account_row(page, a["number"]).get_by_role("button", name="担当者から外す").wait_for()
+                    click_with_dialog(page, account_row(page, a["number"]).get_by_role("button", name=BTN_MAKE_STAFF), True)
+                    account_row(page, a["number"]).get_by_role("button", name=BTN_UNMAKE_STAFF).wait_for()
                 for e in equipment:
                     page.goto(f"{self.base_url}/equipment/new/")
                     page.fill("#id_equipment_number", e["number"])

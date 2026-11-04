@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With the name 'Alice', the wheel visibly rotated, stopped under the pointer, and showed 'Alice won: …' with no page errors. Spinning with an empty name showed 'Please enter your name before spinning.' and the wheel did not move."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 8 prizes with a description and chance for each, and they match the 8 segments on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After Alice's spin, My Winning Records shows a row with the player 'Alice', the prize ('Better Luck Next Time') and the date and time (Nov 5, 2026, 03:04 AM)."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header, the main button (background rgb(0,100,0)) and the h1 heading (text rgb(0,100,0)) are all dark green."}
+}

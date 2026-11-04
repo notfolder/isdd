@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block title %}貸出の登録{% endblock %}
+{% block content %}
+<h1>貸出の登録</h1>
+<p class="lending-equipment">備品: {{ equipment['equipment_number'] }} {{ equipment['name'] }}</p>
+<form method="post" action="{{ action }}">
+  <div class="field">
+    <label for="id_borrower">借りる社員</label>
+    <select id="id_borrower" name="borrower">
+      <option value="">選んでください</option>
+      {% for e in employees %}
+      <option value="{{ e['id'] }}" {% if values.borrower == e['id']|string %}selected{% endif %}>{{ e['name'] }}（{{ e['employee_number'] }}）</option>
+      {% endfor %}
+    </select>
+    {% if errors.get("borrower") %}<span class="field-error">{{ errors.get("borrower") }}</span>{% endif %}
+  </div>
+  {{ field("id_lent_on", "貸出日（YYYY-MM-DD、既定は今日）", "lent_on", value=values.lent_on, error=errors.get("lent_on")) }}
+  <button type="submit">登録</button>
+</form>
+<p><a href="{{ url_for('index') }}">貸出状況に戻る</a></p>
+{% endblock %}
