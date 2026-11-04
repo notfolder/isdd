@@ -52,7 +52,7 @@ metadata:
    - 外部連携の有無（`--external` / `--no-external`）: 外部システム連携の章に連携先があるか
    - 対応表の粒度（`--granularity function|class`）: 第 7 章の「対応表の粒度」。書いていなければ `function`
    - 依存の規則: 第 7 章の「依存の規則」の表（無ければ「無い」）
-2. 次を bash で実行する（ソースディレクトリが複数なら `--src` を繰り返す。例は CLI・認証なし・外部連携なし・粒度 function の場合）。
+2. 次を bash で実行する（ソースディレクトリが複数なら `--src` を繰り返す。`--src` にはファイルも書け、大きな既存リポジトリの一部のファイルだけを対象にするときに使う。例は CLI・認証なし・外部連携なし・粒度 function の場合）。
 
    ```bash
    python3 .agents/skills/isdd-setup/scripts/isdd_setup.py --src src --runtime cli --no-auth --no-external --granularity function

@@ -96,7 +96,9 @@ class Resolver:
         self.roots: List[Path] = []
         for d in source_dirs:
             d = (root / d).resolve() if not d.is_absolute() else d
-            if d.exists():
+            if d.is_file():
+                d = d.parent
+            if d.exists() and d not in self.roots:
                 self.roots.append(d)
                 # src/ 直下をパッケージの根として import するプロジェクトのために、親も候補に入れる
                 if d.parent not in self.roots and d.parent != root:
@@ -254,7 +256,7 @@ def check(root: Path, rules: List[dict], source_dirs: List[Path]) -> Tuple[List[
         base = (root / src).resolve() if not src.is_absolute() else src
         if not base.exists():
             continue
-        for path in sorted(base.rglob('*')):
+        for path in ([base] if base.is_file() else sorted(base.rglob('*'))):
             if path.is_dir() or path in seen or any(part in SKIP_DIRS for part in path.parts) or _is_test_file(path):
                 continue
             seen.add(path)
@@ -300,7 +302,7 @@ def check(root: Path, rules: List[dict], source_dirs: List[Path]) -> Tuple[List[
 def main() -> None:
     argv = [a for a in sys.argv[1:] if not a.startswith('--')]
     if len(argv) < 2:
-        print("使用方法: python3 dependency_checker.py <dependencies.json> <source_dir> [<source_dir> ...]")
+        print("使用方法: python3 dependency_checker.py <dependencies.json> <source> [<source> ...]（source はディレクトリかファイル）")
         sys.exit(2)
     rules_path = Path(argv[0])
     source_dirs = [Path(a) for a in argv[1:]]

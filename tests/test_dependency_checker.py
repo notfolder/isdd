@@ -34,6 +34,15 @@ class DependencyCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertIn("src/app.py:3", out)
         self.assertIn("連携ライブラリを通す", out)
 
+    def test_source_file_as_scope_checks_only_that_file(self):
+        self.rules([{"from": "src", "deny": ["requests"], "reason": "連携ライブラリを通す"}])
+        write(self.tmp, "src/app.py", "import os\n")
+        write(self.tmp, "src/other.py", "import requests\n")
+        code, out = self.run_checker("src/app.py")
+        self.assertEqual(code, 0, out)
+        code, out = self.run_checker("src")
+        self.assertEqual(code, 1, out)
+
     def test_python_deny_project_dir_resolves_relative_and_absolute_imports(self):
         self.rules([{"from": "external/crm/src", "deny": ["src"], "reason": "ラッパーに業務ロジックを入れない"}])
         write(self.tmp, "src/__init__.py", "")

@@ -33,7 +33,7 @@ Markdown の表で、列は「DS-ID」「修飾名」「備考」の 3 列に固
 
 ## 載せる粒度
 
-- ソースファイル（`DS-MD-*`）、クラス（`DS-CL-*`）、公開関数とメソッド（`DS-FN-*`。API の入口なら `DS-IF-*`、バッチの入口なら `DS-BT-*` でもよい）。
+- ソースファイル（`DS-MD-*`）、クラス（`DS-CL-*`）、公開関数とメソッド（`DS-FN-*`。API の入口なら `DS-IF-*`、バッチの入口なら `DS-BT-*` でもよい）。ソースファイルはチェッカーが走査するプログラム言語のファイルだけで、起動スクリプト・HTML テンプレート・CSS・設定ファイルは対応表に載せない（設計書 7 章の規則）。
 - 粒度は設計書第 7 章で決め、`isdd-setup` の `--granularity` で `check.sh` に渡す。
   - `function`（既定）: ファイル・クラス・公開関数・メソッドのすべてを載せる。
   - `class`: ファイルとクラスを載せる。公開関数とメソッドは、設計書に `DS-FN-*` があるものだけ載せる（設計書にある `DS-FN` は粒度にかかわらず対応表に要る）。クラスかファイルが登録済みなら、載せていない公開関数は未登録の警告にならない。
@@ -116,6 +116,7 @@ python3 scripts/isdd/acceptance_checker.py docs/requirements.md docs/detail_desi
 
 ## 外部連携ライブラリの扱い
 
+- 走査の範囲は `isdd-setup` の `--src` で決める。`--src` にはディレクトリだけでなくファイルも書ける。大きな既存リポジトリの一部のファイルだけを isdd の対象にするときは、対象のファイルを `--src` に並べる（例: `--src mlflow/server/security.py --src mlflow/server/security_utils.py`）。走査から外すものは `trace_map_checker.py` の `--exclude <相対パスのグロブ>`（例: `--exclude src/vendor`）。範囲の外のファイルは未登録の警告にならず、対応表の行が範囲の外を指すと「見つからない」のエラーになる（2026-11-05、計測 3 で範囲をディレクトリ単位でしか指定できず止まったため）
 - `isdd-build` が作る外部連携ライブラリ `external/[システム名]/src/` はプロジェクトのコードなので、`isdd-setup` の `--src` に含めて対応表に載せる（例: `--src src --src external/foo/src`）。
 - `external/[システム名]/mock/` は載せない。`e2e/` は `DS-TS` の行でだけ載せる。
 

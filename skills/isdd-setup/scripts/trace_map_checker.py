@@ -8,8 +8,15 @@ Trace Map Checker Script
   コード側には ID を書かない方式（isdd v2.0.0 以降）の整合チェッカー。
 
 使用方法:
-  python3 trace_map_checker.py <detail_design.md> <trace_map.md> <source_dir> [<source_dir> ...] [--strict]
+  python3 trace_map_checker.py <detail_design.md> <trace_map.md> <source> [<source> ...] [--strict]
       [--active-change <ポインタファイル>] [--tests <テストディレクトリ>]... [--granularity function|class]
+      [--exclude <相対パスのグロブ>]...
+
+走査の範囲（<source> と --exclude）:
+  <source> はディレクトリかファイル。ファイルを指定すると、そのファイルだけを走査する（大きな既存リポジトリの
+  一部のファイルだけを isdd の対象にするとき）。--exclude は走査から外す相対パスのグロブ（例: src/legacy/*、
+  src/vendor）。ディレクトリ名を書けばその配下全体を外す。範囲の外のファイルは「未登録」の警告にも
+  「見つからない」のエラーにもならない（対応表の行が範囲の外を指せば「見つからない」のエラー）。
 
 テストディレクトリ（--tests。既定の運用では e2e）:
   配下のファイルはすべてテストとみなす。ソースディレクトリの中のテストファイル（test_*.py など）も同じ扱い。
@@ -71,10 +78,11 @@ Trace Map Checker Script
 """
 
 import ast
+import fnmatch
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 DS_PATTERN = re.compile(r'\bDS(?:-[A-Z0-9][A-Z0-9_]*)+')
 HEADER_LABEL_PATTERN = re.compile(r'^(?:RQ|DS)(?:-[A-Z0-9]+)+-ID$')
@@ -221,16 +229,32 @@ def extract_regex(rel: str, content: str, lang: str, out: CodeSymbols) -> None:
                     out.add(f"{rel}::{cls}.{name}", 'method')
 
 
-def _walk_sources(root: Path, dirs: List[Path]):
-    """ディレクトリ配下の対応言語のファイルを (相対パス, 拡張子, 中身) で返す"""
+def _excluded(rel: str, excludes: Sequence[str]) -> bool:
+    """相対パスが --exclude のグロブ（またはディレクトリ名）に当たるか"""
+    for pat in excludes:
+        pat = pat.rstrip('/')
+        if fnmatch.fnmatchcase(rel, pat) or rel == pat or rel.startswith(pat + '/'):
+            return True
+    return False
+
+
+def _walk_sources(root: Path, dirs: List[Path], excludes: Sequence[str] = ()):
+    """ディレクトリ配下（またはファイルそのもの）の対応言語のファイルを (相対パス, 拡張子, 中身) で返す"""
     for base in dirs:
         base = (root / base).resolve() if not base.is_absolute() else base
         if not base.exists():
             continue
-        for path in sorted(base.rglob('*')):
+        paths = [base] if base.is_file() else sorted(base.rglob('*'))
+        for path in paths:
             if path.is_dir():
                 continue
             if any(part in SKIP_DIRS for part in path.parts):
+                continue
+            try:
+                rel_for_exclude = path.resolve().relative_to(root).as_posix()
+            except ValueError:
+                rel_for_exclude = path.as_posix()
+            if _excluded(rel_for_exclude, excludes):
                 continue
             lang = path.suffix.lower()
             if lang not in SYMBOL_LANGS and lang not in FILE_ONLY_LANGS:
@@ -258,12 +282,13 @@ def _extract(rel: str, lang: str, content: str, out: CodeSymbols) -> None:
         extract_regex(rel, content, lang, out)
 
 
-def collect_code(root: Path, source_dirs: List[Path], test_dirs: Optional[List[Path]] = None) -> CodeSymbols:
+def collect_code(root: Path, source_dirs: List[Path], test_dirs: Optional[List[Path]] = None,
+                 excludes: Sequence[str] = ()) -> CodeSymbols:
     out = CodeSymbols()
     tests = CodeSymbols()
-    for path, rel, lang, content in _walk_sources(root, source_dirs):
+    for path, rel, lang, content in _walk_sources(root, source_dirs, excludes):
         _extract(rel, lang, content, tests if _is_test_file(path) else out)
-    for _, rel, lang, content in _walk_sources(root, test_dirs or []):
+    for _, rel, lang, content in _walk_sources(root, test_dirs or [], excludes):
         _extract(rel, lang, content, tests)
     out.test_files = tests.files
     out.test_symbols = tests.symbols
@@ -410,8 +435,9 @@ def parse_trace_map(map_path: Path) -> Tuple[List[Tuple[str, str, int]], List[st
 class TraceMapChecker:
     def __init__(self, design: Path, trace_map: Path, source_dirs: List[Path], root: Path,
                  active_change: Optional[Path] = None, test_dirs: Optional[List[Path]] = None,
-                 granularity: str = 'function'):
+                 granularity: str = 'function', excludes: Optional[List[str]] = None):
         self.design = design
+        self.excludes: List[str] = excludes or []
         self.active_change = active_change
         self.trace_map = trace_map
         self.source_dirs = source_dirs
@@ -444,7 +470,7 @@ class TraceMapChecker:
         design_ids = design.ids
         rows, format_errors = parse_trace_map(self.trace_map)
         self.errors.extend(format_errors)
-        code = collect_code(self.root, self.source_dirs, self.test_dirs)
+        code = collect_code(self.root, self.source_dirs, self.test_dirs, self.excludes)
 
         mapped_ids: Set[str] = set()
         mapped_names: Set[str] = set()
@@ -584,6 +610,7 @@ def main() -> None:
     strict = False
     pointer: Optional[Path] = None
     test_dirs: List[Path] = []
+    excludes: List[str] = []
     granularity = 'function'
     argv = sys.argv[1:]
     i = 0
@@ -607,6 +634,8 @@ def main() -> None:
             pointer = Path(value_of('--active-change'))
         elif a == '--tests' or a.startswith('--tests='):
             test_dirs.append(Path(value_of('--tests')))
+        elif a == '--exclude' or a.startswith('--exclude='):
+            excludes.append(value_of('--exclude'))
         elif a == '--granularity' or a.startswith('--granularity='):
             granularity = value_of('--granularity')
             if granularity not in GRANULARITIES:
@@ -620,7 +649,7 @@ def main() -> None:
         sys.exit(2)
     root = Path.cwd().resolve()
     checker = TraceMapChecker(Path(args[0]), Path(args[1]), [Path(a) for a in args[2:]], root,
-                              resolve_active_change(pointer), test_dirs, granularity)
+                              resolve_active_change(pointer), test_dirs, granularity, excludes)
     checker.run()
     sys.exit(checker.report(strict))
 

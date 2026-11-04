@@ -73,6 +73,26 @@ class TraceMapCheckerTest(TempDirMixin, unittest.TestCase):
         code, out = self.run_checker(bad, strict=False)
         self.assertEqual(code, 1, out)
 
+    def test_source_file_as_scope_limits_scan(self):
+        # --src にファイルを書くと、そのファイルだけを走査する（同じディレクトリの他のファイルは未登録にならない）
+        write(self.tmp, "src/other.py", "def unrelated() -> None:\n    pass\n")
+        write(self.tmp, "docs/trace_map.md", MAP)
+        code, out = run_script("trace_map_checker.py", ["docs/detail_design.md", "docs/trace_map.md", "src", "--strict"], cwd=self.tmp)
+        self.assertEqual(code, 1, out)
+        self.assertIn("other.py", out)
+        code, out = run_script("trace_map_checker.py", ["docs/detail_design.md", "docs/trace_map.md", "src/hello.py", "--strict"], cwd=self.tmp)
+        self.assertEqual(code, 0, out)
+
+    def test_exclude_glob_skips_files(self):
+        write(self.tmp, "src/vendor/lib.py", "def vendored() -> None:\n    pass\n")
+        write(self.tmp, "src/legacy_old.py", "def old() -> None:\n    pass\n")
+        write(self.tmp, "docs/trace_map.md", MAP)
+        base = ["docs/detail_design.md", "docs/trace_map.md", "src", "--strict"]
+        code, out = run_script("trace_map_checker.py", base, cwd=self.tmp)
+        self.assertEqual(code, 1, out)
+        code, out = run_script("trace_map_checker.py", base + ["--exclude", "src/vendor", "--exclude", "src/legacy_*"], cwd=self.tmp)
+        self.assertEqual(code, 0, out)
+
     def test_typescript_arrow_function_is_symbol(self):
         write(self.tmp, "docs/detail_design.md", DESIGN + "| `DS-MD-UTIL-FT-PRINT-HELLO` | ts |\n| `DS-FN-FORMAT-FT-PRINT-HELLO` | ts |\n")
         write(self.tmp, "src/util.ts", "export const format = (s: string): string => s.trim();\n")

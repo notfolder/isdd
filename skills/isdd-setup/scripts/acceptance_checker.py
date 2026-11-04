@@ -266,6 +266,14 @@ def newest_mtime(dirs: List[Path]) -> Optional[datetime]:
     for d in dirs:
         if not d.exists():
             continue
+        if d.is_file():
+            try:
+                m = datetime.fromtimestamp(d.stat().st_mtime, tz=timezone.utc)
+                if newest is None or m > newest:
+                    newest = m
+            except OSError:
+                pass
+            continue
         for root, subdirs, files in os.walk(d):
             subdirs[:] = [s for s in subdirs if s not in ('results', '__pycache__', 'node_modules', '.git')]
             for f in files:

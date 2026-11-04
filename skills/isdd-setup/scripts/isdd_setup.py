@@ -118,7 +118,7 @@ def make_executable(path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="isdd 対応表チェックのセットアップ")
-    parser.add_argument("--src", action="append", required=True, help="ソースディレクトリ（複数指定可）")
+    parser.add_argument("--src", action="append", required=True, help="ソースディレクトリまたはファイル（複数指定可。大きな既存リポジトリの一部だけを対象にするときはファイルを並べる）")
     parser.add_argument("--requirements", default="docs/requirements.md")
     parser.add_argument("--design", default="docs/detail_design.md")
     parser.add_argument("--map", default="docs/trace_map.md")

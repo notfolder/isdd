@@ -31,6 +31,7 @@
 | 第 7 章の「実現する設計 ID」（`DS-MD` と同じ行の ID）は対応表に要る | trace_map_checker | `test_code_realized_id_on_ds_md_row_must_be_mapped` |
 | E2E シナリオ（`DS-TS`）はテスト関数に結ぶ。テストファイルを指せるのは `DS-TS` の行だけ。テストディレクトリがあるのに 8-2 の `DS-TS` が無ければ警告 | trace_map_checker | `test_ds_ts_row_points_to_test_function`、`test_non_ts_row_must_not_point_to_test_file` |
 | 言語ごとの確認の深さ（TS のアロー関数、記号を取れない言語はファイルの存在だけ） | trace_map_checker | `test_typescript_arrow_function_is_symbol`、`test_file_only_language_is_not_checked_for_symbols` |
+| 走査の範囲は `--src`（ディレクトリかファイル）と `--exclude`（相対パスのグロブ）で決める。範囲の外は未登録にならない | trace_map_checker、dependency_checker | `test_source_file_as_scope_limits_scan`、`test_exclude_glob_skips_files`、`test_source_file_as_scope_checks_only_that_file` |
 
 ## 依存の規則（trace-map-rules.md「依存の規則」、design-chapters.md 第 7 章）
 
