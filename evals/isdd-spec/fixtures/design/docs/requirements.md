@@ -141,9 +141,9 @@ flowchart TD
 
 ## 7. テスト用利用シナリオ
 
-| RQ-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 対応業務課題ID（RQ-BK-*） |
-|---|---|---|---|---|---|
-| `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | 正常実行で "Hello, World!" が表示されることを確かめる | スクリプトが配置されている | スクリプトを引数なしで実行する | "Hello, World!" が 1 行表示され、終了コード 0 で終わる | `RQ-BK-SHARED-VERIFICATION-SCRIPT` |
+| RQ-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 検証する要件ID | 対応業務課題ID（RQ-BK-*） |
+|---|---|---|---|---|---|---|
+| `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | 正常実行で "Hello, World!" が表示されることを確かめる | スクリプトが配置されている | スクリプトを引数なしで実行する | "Hello, World!" が 1 行表示され、終了コード 0 で終わる | `RQ-FT-GET-HELLO-MESSAGE`, `RQ-FT-PRINT-HELLO-WORLD`, `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-BK-SHARED-VERIFICATION-SCRIPT` |
 
 ## 8. 業務課題と要件の対応表
 

@@ -138,7 +138,7 @@ CLI なので、スクリプトを実行して標準出力と終了コードを�
 
 ### 8-4. E2E の実行コマンドと運用
 
-- 実行コマンド: `python3 -m unittest discover -s e2e`
+- 実行コマンド: `python3 scripts/isdd/unittest_junit.py -s e2e -o e2e/results/e2e.xml`（標準ライブラリだけで unittest を実行し、結果を JUnit XML に出す。`e2e/results/` は git 管理外）
 - テスト資産は `e2e/` に置く。全件通過をゴールにする
 
 ## 9. 運用設計

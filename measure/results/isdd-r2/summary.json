@@ -1,0 +1,177 @@
+{
+  "arm": "isdd",
+  "run": 2,
+  "model": "claude-haiku-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 904.0,
+      "note": "Agent ツール（haiku）。isdd-spec → isdd-build を通した。貸出・返却・アカウント管理まで段 1 で実装",
+      "passed": 8,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 11,
+        "lines": 1516,
+        "public_functions": 41,
+        "classes": 2,
+        "templates": 0
+      },
+      "score_error": null,
+      "agent_tokens": 341503,
+      "tool_uses": 56,
+      "agent_duration_sec": 874,
+      "original": {
+        "passed": 8,
+        "total": 8,
+        "tests": {
+          "test_first_account_becomes_staff[chromium]": "pass",
+          "test_account_registration[chromium]": "pass",
+          "test_login_logout[chromium]": "pass",
+          "test_session_timeout[chromium]": "pass",
+          "test_employee_cannot_manage_equipment[chromium]": "pass",
+          "test_equipment_create[chromium]": "pass",
+          "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+          "test_lending_status_empty_and_sorted[chromium]": "pass"
+        }
+      },
+      "scored_from": "snapshot"
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 348.0,
+      "note": "Agent ツール（haiku）。変更フロー。貸出・返却は段 1 で実装済み。引き継ぎと同時操作のルールを [追加] して正本に反映（コード変更なし）",
+      "passed": 13,
+      "total": 14,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "fail",
+        "test_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 11,
+        "lines": 1516,
+        "public_functions": 41,
+        "classes": 2,
+        "templates": 0
+      },
+      "score_error": null,
+      "regressions": [],
+      "agent_tokens": 218160,
+      "tool_uses": 43,
+      "agent_duration_sec": 348,
+      "original": {
+        "passed": 13,
+        "total": 14,
+        "tests": {
+          "test_first_account_becomes_staff[chromium]": "pass",
+          "test_account_registration[chromium]": "pass",
+          "test_login_logout[chromium]": "pass",
+          "test_session_timeout[chromium]": "pass",
+          "test_employee_cannot_manage_equipment[chromium]": "pass",
+          "test_equipment_create[chromium]": "pass",
+          "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+          "test_equipment_update_keeps_lending[chromium]": "pass",
+          "test_equipment_delete_rejects_lent[chromium]": "fail",
+          "test_lending[chromium]": "pass",
+          "test_return[chromium]": "pass",
+          "test_lending_status_without_login[chromium]": "pass",
+          "test_lending_status_empty_and_sorted[chromium]": "pass",
+          "test_response_time[chromium]": "pass"
+        }
+      },
+      "scored_from": "snapshot"
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 354.0,
+      "note": "Agent ツール（haiku）。変更フロー。アカウント管理は段 1 で実装済み。受け入れテスト 1 本と入口の文言を追加",
+      "passed": 18,
+      "total": 21,
+      "tests": {
+        "test_employee_restrictions[chromium]": "pass",
+        "test_staff_role_change[chromium]": "fail",
+        "test_password_reset[chromium]": "pass",
+        "test_account_delete[chromium]": "fail",
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_stale_equipment_update[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "fail",
+        "test_lending[chromium]": "pass",
+        "test_concurrent_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_duplicate_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 11,
+        "lines": 1516,
+        "public_functions": 41,
+        "classes": 2,
+        "templates": 0
+      },
+      "score_error": null,
+      "regressions": [],
+      "agent_tokens": 195660,
+      "tool_uses": 39,
+      "agent_duration_sec": 322,
+      "original": {
+        "passed": 18,
+        "total": 21,
+        "tests": {
+          "test_employee_restrictions[chromium]": "pass",
+          "test_staff_role_change[chromium]": "fail",
+          "test_password_reset[chromium]": "pass",
+          "test_account_delete[chromium]": "fail",
+          "test_first_account_becomes_staff[chromium]": "pass",
+          "test_account_registration[chromium]": "pass",
+          "test_login_logout[chromium]": "pass",
+          "test_session_timeout[chromium]": "pass",
+          "test_employee_cannot_manage_equipment[chromium]": "pass",
+          "test_equipment_create[chromium]": "pass",
+          "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+          "test_equipment_update_keeps_lending[chromium]": "pass",
+          "test_stale_equipment_update[chromium]": "pass",
+          "test_equipment_delete_rejects_lent[chromium]": "fail",
+          "test_lending[chromium]": "pass",
+          "test_concurrent_lending[chromium]": "pass",
+          "test_return[chromium]": "pass",
+          "test_duplicate_return[chromium]": "pass",
+          "test_lending_status_without_login[chromium]": "pass",
+          "test_lending_status_empty_and_sorted[chromium]": "pass",
+          "test_response_time[chromium]": "pass"
+        }
+      },
+      "scored_from": "snapshot"
+    }
+  },
+  "note": "隠しテストを契約の URL ベースに直し、リダイレクト先のクエリ文字列を許した版で採点し直した（isdd 群は段ごとの snapshot、対照群は最終状態）"
+}

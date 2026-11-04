@@ -1,0 +1,48 @@
+{
+  "task_id": "isdd-requirements-hearing-001",
+  "name": "ヒアリングの作法（問いのまとめ方と、複雑な案を選んだときの扱い）",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-c7zhnx_0",
+  "session_id": "0a299e88-c2e1-49f2-9434-1f3b54790238",
+  "started": "2026-11-04T10:23:42",
+  "finished": "2026-11-04T10:25:47",
+  "pass": true,
+  "grades": [
+    {
+      "name": "docs_generated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "chosen_option_recorded",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "cui_items_recorded",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "rq_integrity_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 9\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-FT-*: 1件\n  - RQ-NF-*: 1件\n  - RQ-TS-*: 3件\n  - RQ-UI-*: 2件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 7件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 3 本）"
+    },
+    {
+      "name": "batched_questions_with_complexity",
+      "type": "prompt",
+      "pass": true,
+      "detail": "条件1: 開始ゲートの2問（外部連携の有無、既存ソースとisddの運用）は独立しているため番号を付けて1回にまとめており、要件本編は答えが揃うまで聞いていない。段階1は業務の問題、業務課題、見込み経営効果の順に1問ずつ進めた。複雑な案（ファイル出力）を選ばれた後の理由確認は単独の問いとして1回だけ出し、答えを受けてから起動方法の問いに進んだ。出力先と起動方法は依存しないため同じ応答で出したが、起動方法の選択肢は出力先の答えで変わらず、この並べ方は規則に反しない。条件2: 出力先の表には案、内容、メリット、デメリット、複雑さ（C=1、2、2）、根拠の6列があり、推奨として「A（標準出力のみ）」を1つ示している。C の値は評価軸の点数（T）と整合している。"
+    },
+    {
+      "name": "complex_choice_reconfirmed",
+      "type": "prompt",
+      "pass": true,
+      "detail": "ユーザーは推奨より複雑な「ファイルにも書く」案を、最初は理由を添えずに選びました。エージェントは次の応答で、最小案（標準出力のみ）との違い（複雑さ C=1 と C=2、ファイル書き込みとログ管理の増加、書き込み失敗時の扱いが未決であること）を示し、「A では満たせず、B でないと困る業務上の理由はありますか？」と単独で 1 度だけ聞き直しました。ユーザーが「それでもファイルにも書く案にします。理由は特に無い」と答えたため、エージェントはその選択に従い、要件の「この要件が無いと何が困るか」列に「ユーザーの選択（理由は特に無い）」と記録しました。"
+    }
+  ]
+}

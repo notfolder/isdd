@@ -172,6 +172,7 @@
 
 - E2E の実行コマンドを書く。isdd-build と tasks.md はこのコマンドをそのまま使う（例: コンテナなら `docker compose run --rm <テストサービス名> <テストコマンド>`、CLI なら `python3 -m pytest e2e` のような形）
 - テスト資産はプロジェクトルートの `e2e` 配下に置く。8-2 の各 `DS-TS-*` は、実装時に対応表の `DS-TS` の行でテスト関数（`e2e/...::関数名`）に結ぶ。対応表チェッカーは `e2e` があるときに、8-2 の `DS-TS` が対応表に無ければ警告する（要件 → `RQ-TS` → `DS-TS` → テスト関数の線を機械で確かめるため）
+- E2E の実行コマンドは、結果を JUnit XML でプロジェクトルートの `e2e/results/` に出す（例: pytest なら `--junitxml=e2e/results/e2e.xml`、pytest が無い Python なら `python3 scripts/isdd/unittest_junit.py -s e2e -o e2e/results/e2e.xml`（isdd-setup が複製する標準ライブラリだけの実行器）、jest なら jest-junit、go test なら go-junit-report）。`e2e/results/` は git 管理外（`isdd-setup` が `.gitignore` に足す）。受け入れ判定（`scripts/isdd/acceptance_checker.py`。`check.sh` が呼ぶ）がこの XML を読み、対応表の `DS-TS` 行と突き合わせて、`DS-TS` ごとに合格・不合格・未実行・要再実行（XML がコードより古い）を判定し、要件ごとの実装済み判定の表を出す。照合は、pytest・go test・JUnit（Java）は関数単位（対応表の `e2e/...::関数名` と testcase の名前）、テストファイルだけを指す行は「そのファイルの testcase が全部通れば合格」、jest 系は関数名が無いのでファイル単位の行で結ぶ。8-4 には出力先と、使うテスト実行系がこのどれに当たるかを書く
 - 外部連携がある場合、外部モックは `external/[システム名]/mock/` を正本とし、`e2e` 側はシンボリックリンクで参照する（Git 管理下に置く）。モードの切り替えはテスト実行コマンドで行う（コンテナなら docker compose プロファイルも）
 - 外部連携がある場合、モック方式（固定レスポンスファイル / ローカル HTTP サーバー / 既存のモックサーバーツール / 検証用の DB）と選んだ理由、ユーザー承認の記録を書き、モックを `DS-TS-*` で設計する
 - テスト環境を作るスクリプトは原則 bash で書き、複雑な処理はプロジェクトの言語か Python を使う

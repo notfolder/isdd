@@ -7,17 +7,30 @@ isdd（Interview-driven Spec-driven Development）はインタビュー駆動で
 
 ## 背景と目的
 
-isdd は、AI 実装で起こりやすい次の問題を抑制することを目的とします。
+isdd は、文脈を持たない次の作業者（別のセッション、別の人、スキルを持たないエージェント）に向けて、要件・設計・対応表・依存の規則・受け入れテストを「守るべき契約」として残し、チェッカーでその契約を強制する開発方式です。
 
-1. 要件の曖昧さによる意図しない実装差分
-2. 変更時の影響範囲不明による品質低下
-3. 仕様とコードの対応関係が失われることによる保守性低下
-4. 実装中に判明した差分が要件・設計へ戻らないことによるドキュメント陳腐化
+1 回のセッションで仕様どおりに作ることはモデルに任せます。isdd が担うのは次の 4 つです。
 
-そのため、isdd では要件と設計を先に確定し、実装では設計 ID とコードの対応表（`docs/trace_map.md`）でトレーサビリティを維持します。
-対応表はチェッカースクリプトで機械的に検証し、スキルが起動していない時も git の pre-commit とエージェントのフックで同じチェックが走ります。
-さらに実装後は逆引き整合チェックを必須化し、要件・設計・対応表へ差分を還流して整合状態を保ちます。
+1. 要件を業務課題から絞ること（業務課題に結びつかない要件を残さない）
+2. 変更を重ねても正本と実装がずれないこと（正本は実装済みの仕様だけを持ち、変更は実装後に反映する）
+3. 作りすぎを見つけること（要件に結びつかない公開関数・画面・設定項目を実装後レビューで数える）
+4. エージェントに機械的な完了条件を与えること（対応表チェック、依存チェック、受け入れ判定が全部通ること）
+
+要件と設計を先に確定し、実装では設計 ID とコードの対応表（`docs/trace_map.md`）で対応を残します。対応表と依存の規則はチェッカーで機械的に検証し、スキルが起動していない時も git の pre-commit とエージェントのフックで同じチェックが走ります。中身が要件どおりかは、受け入れテスト（要件定義書のシナリオ → 設計書の E2E シナリオ → テスト関数 → JUnit XML の結果）で確かめます。実装後は逆引き整合チェックを必須化し、要件・設計・対応表へ差分を還流して整合状態を保ちます。
 言語・フレームワーク・DB に既定値は持たず、要件定義で集めた技術制約と要件を根拠に、設計の段階（isdd-spec）が公式情報を調べたうえで候補を比較してユーザー承認を取ります。
+
+### isdd が向く案件・向かない案件
+
+| 向く | 向かない |
+|---|---|
+| 寿命が長く、変更を重ねる | 使い捨て、1 セッションで終わる小物 |
+| 複数の人やエージェントが触る（文脈が切れる） | 1 人が 1 セッションで作り切る |
+| 要件を業務の言葉で絞りたい（ヒアリングに価値がある） | 要件が既に完全な形で与えられている |
+| 変更のたびに「何が実装済みか」を機械で確かめたい | 1〜2 ファイルの修正だけ（仕様の手順に利点が無い。[Uvik の計測](https://uvik.net/blog/spec-driven-development-benchmark/)でも小さな修正では差が出ていない） |
+
+### 段階の区切りでセッションを切り替える
+
+長いセッションでは初期の制約を忘れやすいので、要件の確定、設計の承認、実装の完了、実装後レビューの完了の区切りで、新しいセッションに切り替えて成果物から再開することを勧めます。再開に要るものは正本（`docs/requirements.md`・`docs/detail_design.md`・`docs/trace_map.md`）とコード、変更フローなら `docs/active_change` が指すディレクトリの変更要件定義書・変更設計書・`tasks.md` だけで、途中の会話は要りません。各スキルは途中からの再開に対応しています。
 
 ## かんたんな使い方
 
@@ -165,6 +178,8 @@ graph LR
 | rq_ds_link_checker.py | 要件 ID（RQ-*）と設計 ID（DS-*）の対応を、設計書の「要件と設計の対応表」の章だけから検証。問題があれば終了コード 1 | spec・build・逆引き。各スキルの同梱版を実行する |
 | trace_map_checker.py | 詳細設計書・対応表・コードの 3 者を突合し、壊れた参照（エラー）と未登録（警告）を検出。第 7 章の「実現する設計 ID」と 8-2 の E2E シナリオ（`DS-TS` → テスト関数）も確かめる。粒度は `function` / `class` | isdd-setup がプロジェクトの `scripts/isdd/` に複製し、`check.sh` から実行する |
 | dependency_checker.py | 設計書第 7 章の依存の規則（`scripts/isdd/dependencies.json`）に反する import を検出（Python・TypeScript / JavaScript・Java・Go） | 同上。`check.sh` が対応表チェックに続けて実行する |
+| acceptance_checker.py | 受け入れ判定。E2E の結果（JUnit XML、`e2e/results/`）を対応表の `DS-TS` 行と突き合わせ、要件定義書 第 7 章の「検証する要件ID」をたどって要件ごとの実装済み判定の表を出す。既定は警告だけ、`--strict` で不合格・未実行・要再実行を失敗扱い | 同上。`check.sh` が依存チェックに続けて実行する |
+| unittest_junit.py | 標準ライブラリだけで unittest を実行して JUnit XML を書く（pytest が無い Python の E2E 用） | 同上。設計書 8-4 の実行コマンドから呼ぶ |
 | implementation_completeness_checker.py | E2E・README・docs/trace_map.md の存在を機械確認。docker compose と「初期ユーザー」は completeness.json に応じて要求 | 同上（`python3 scripts/isdd/implementation_completeness_checker.py .`） |
 | isdd_setup.py | コード用チェッカーを scripts/isdd/ に複製して版を VERSION に記録し、check.sh・pre-commit・completeness.json・dependencies.json（雛形）を生成し、AGENTS.md と CLAUDE.md に規則を追記 | isdd-setup に同梱 |
 
@@ -190,10 +205,12 @@ graph LR
     MAP -->|修飾名がコードに実在するか / 公開要素が全部載っているか| CODE[ソースコード]
     DS -->|8-2 の E2E シナリオがテスト関数に結ばれているか| E2E[e2e/]
     DS -->|第 7 章の依存の規則に反する import が無いか| CODE
+    E2E -->|acceptance_checker: JUnit XML の結果を DS-TS 行と突き合わせ、要件ごとに実装済みか| RQ
 ```
 
 - コードには要件 ID も設計 ID も書かない。対応表の 1 行が「設計 ID ↔ ファイル::クラス.関数」を表す。
 - `trace_map_checker.py` は、壊れた参照（対応表が指す関数が無い、設計書に無い ID）をエラー、未登録（コードにあって対応表に無い）を警告として報告する。前向き（要件が実装されたか）は `RQ-TS` → `DS-TS` → テスト関数の線で、後ろ向き（設計に無いコードが無いか）は対応表で、設計の構造（依存の向き）は `dependency_checker.py` で見る。
+- 中身が要件どおりかは受け入れテストでしか分からない。対応表と依存の規則は、次の作業者への宣言と作りすぎの検出のためにある。`acceptance_checker.py`（v2.2.0）が E2E の結果（JUnit XML、`e2e/results/`）を対応表の `DS-TS` 行と突き合わせ、要件定義書 第 7 章の「検証する要件ID」をたどって、要件ごとに「実装済み / 不合格 / 未検証」を出す。`isdd-build` の完了条件は、この判定が全部「実装済み」になること。
 - 強制は 3 層。`AGENTS.md` と `CLAUDE.md` の規則、エージェント自身が作る応答終了時のフック、git の pre-commit（エラーだけで止める）。
 - スキルを持たない人がコードを足しても止めない。そのずれは `isdd-build` の実装後レビューが取り込む。
 
@@ -225,7 +242,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v2.1.0
+gh skill publish ./skills --tag v2.2.0
 ```
 
 ---
@@ -272,6 +289,15 @@ bash install.sh
 - `skills/` の各スキルを、このリポジトリの `.agents/skills/<スキル>/` に過不足なくコピーする（OpenCode・Codex・Copilot・Gemini CLI 向け）。旧版の `isdd-common` と、v2.0 系のスキル（v2.1 で isdd-spec・isdd-build にまとめた 8 本）があれば消す。
 - `.claude/skills` から `../.agents/skills` へのシンボリックリンクを作る（Claude Code 向け）。
 - コピーした `.agents/skills/isdd-*/` と `.claude/` は `.gitignore` で追跡しない。`.agents/skills/mermaid-syntax-skill/` は、このリポジトリで文書の mermaid 図を書くときのために外部（re2zero/deepin-skills）から入れたスキルで、isdd としては配布しない。
+
+### v2.1 系から更新する
+
+```bash
+# 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
+gh skill install notfolder/isdd --all --pin v2.2.0 --force
+```
+
+更新後、各プロジェクトで `isdd-setup` を再実行する（`check.sh` に受け入れ判定が入り、`acceptance_checker.py` と `unittest_junit.py` が複製され、`.gitignore` に `e2e/results/` が足される）。v2.1 系で作った要件定義書は、第 7 章の表に「検証する要件ID」列が無いので `rq_integrity_checker.py` が「受け入れテスト欠落」を報告する。各シナリオの行に、そのシナリオが確かめる `RQ-FT`・`RQ-UI`・`RQ-EX` を書き足す（列を足すだけなら正本を直接直してよい）。E2E の実行コマンド（設計書 8-4）は JUnit XML を `e2e/results/` に出す形にする。
 
 ### v2.0 系から更新する
 
@@ -371,6 +397,22 @@ bash evals/run-all.sh claude isdd-build
 - transcript はモデルごとに `evals/<skill>/artifacts/transcripts/<model>/` に残る。
 - `.env` の読み込みは設定済みの環境変数を上書きしない。`WAZA_CLAUDE_MODEL=... bash evals/run-all.sh claude` のように一時指定できる。
 - 各 `eval.copilot.yaml` の `timeout_seconds` は Claude での実測の約 3 倍（600〜1200 秒）。外部連携の接続テストを含むタスク（isdd-spec の precheck・research）はタスク側で 1200〜1500 秒を指定している。実行基盤が固まったときに 1 時間単位で待たないための値。`local` モードは、eval ファイルとタスク側の値の両方に `WAZA_LOCAL_TIMEOUT_SCALE`（既定 10）を掛けた一時ファイル（eval のディレクトリの `.eval.local.<番号>.yaml` と `.tasks.local.<番号>/`）で実行するので、ローカルモデルでも従来どおりの長さで動く。
+
+### Claude Code のログインで実行する（API キーなし）
+
+Anthropic API の上限に達したときや API キーを使いたくないときは、`evals/run-claude-code.py` が同じ場面定義を Claude Code のヘッドレス実行（`claude -p`）で回す。Claude Code のログイン（定額契約）で動き、`ANTHROPIC_API_KEY` は要らない。
+
+```bash
+pip install pyyaml                      # 初回のみ
+python3 evals/run-claude-code.py isdd-build isdd-spec --task 'Hello World 未マッピング*' --task 'ヒアリングの作法*'
+python3 evals/run-claude-code.py isdd-setup   # スキルの全場面
+```
+
+- 場面ごとに fixture と `skills/` を一時の作業場所（`.claude/skills/`）に置き、依頼と追い打ち依頼（`follow_up_prompts`）を `--resume` で同じセッションに送る。採点は `file`・`program` の基準をそのまま実行し、`prompt` の基準は同じセッションを分岐して開いて会話とツール履歴を見た判定を JSON で受け取る（waza の `continue_session: true` と同じ扱い）。
+- モデルは `--model`（既定 `claude-haiku-5-5`）。失敗したら同じモデルで 1 回だけ再試行する（`--attempts`）。
+- 権限は `--permission-mode acceptEdits` と許可ツールの列挙（`--allowed-tools`）で渡す。対話の確認は無く、許可されていないツール呼び出しは失敗として扱われる。
+- 結果は `evals/artifacts-claude-code/<スキル>/<場面 ID>/attempt-N/` の `result.json`（判定）と `transcript.json`（応答。git 管理外）に残る。作業場所は消さない。
+- 実行基盤が Copilot CLI ではなく Claude Code なので、`run-all.sh claude` の結果とは別物として扱う（ツールの種類や手順の運び方が違う）。v2.2.0 の公開前の最後の 3 場面はこの方式で確かめた（2026-11-04）。
 
 ### タスクと採点の作り
 

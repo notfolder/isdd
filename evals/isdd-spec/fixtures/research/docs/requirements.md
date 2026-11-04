@@ -122,6 +122,6 @@
 
 ## 7. テスト用利用シナリオ
 
-| RQ-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 対応業務課題ID（RQ-BK-*） |
-|---|---|---|---|---|---|
-| `RQ-TS-VERIFY-CUSTOMER-CSV` | CSV の書き出しを確かめる | CRM に顧客がいる | コマンドを実行する | 全顧客が CSV に書かれる | `RQ-BK-CUSTOMER-CSV-EXPORT` |
+| RQ-ID | テスト目的 | 前提条件 | テスト手順 | 期待される結果 | 検証する要件ID | 対応業務課題ID（RQ-BK-*） |
+|---|---|---|---|---|---|---|
+| `RQ-TS-VERIFY-CUSTOMER-CSV` | CSV の書き出しを確かめる | CRM に顧客がいる | コマンドを実行する | 全顧客が CSV に書かれる | `RQ-EX-READ-CRM-CUSTOMERS`, `RQ-FT-EXPORT-CUSTOMER-CSV`, `RQ-UI-CUSTOMER-CSV-FILE` | `RQ-BK-CUSTOMER-CSV-EXPORT` |

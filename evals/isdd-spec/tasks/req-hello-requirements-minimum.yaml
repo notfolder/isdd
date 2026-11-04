@@ -96,6 +96,7 @@ graders:
             - "RQ-BK-[A-Z0-9]+-[A-Z0-9]"
             - "RQ-FT-[A-Z0-9]+-[A-Z0-9]"
             - "RQ-TS-[A-Z0-9]+-[A-Z0-9]"
+            - "検証する要件ID"
 
   - name: tech_constraints_recorded
     type: file
