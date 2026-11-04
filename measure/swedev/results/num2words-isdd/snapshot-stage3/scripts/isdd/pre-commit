@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# isdd-setup pre-commit
+# 対応表の壊れた参照（エラー）だけでコミットを止める。未登録（警告）は表示だけ。
+set -u
+cd "$(git rev-parse --show-toplevel)"
+bash scripts/isdd/check.sh
+status=$?
+if [ $status -ne 0 ]; then
+  echo "isdd: 対応表にエラーがあります。docs/trace_map.md を直してからコミットしてください。" >&2
+  exit $status
+fi
+exit 0

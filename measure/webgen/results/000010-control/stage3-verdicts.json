@@ -1,0 +1,30 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "Spin を押すと「Spinning...」の後に結果が表示された（ハズレ 1 回、10% Off Coupon 1 回を確認）。エラーは出ず、当たった賞品名が画面に出た。"
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "Prize List ページに 10% Off Coupon・Free Coffee・Movie Ticket・Mystery Gift・T-Shirt・$50 Gift Card・Try Again の 7 件が表示され、ホームのホイールの区画と一致した。"
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "Alice で当選後に My Winnings を開くと、Player・Prize・Date（Nov 4, 2026, 3:06 PM など）の記録が追加されていた。最新の当選が一覧の先頭に出た。"
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "body の背景色は rgb(255,255,240)（ivory と一致）。ヘッダー・Spin ボタン・テーブル見出し・カード上端の色は rgb(0,100,0)（dark green と一致）。見出し h1 は rgb(0,67,0) で、同系統の濃い緑として扱った。"
+  },
+  "000010-c1": {
+    "verdict": "YES",
+    "reason": "Manage Prizes で Golden Ticket を追加すると「Added ...」が出て、Prize List・ホームのホイールにも表示された。Manage の Remove で削除すると、3 画面すべてから消えた。"
+  },
+  "000010-c2": {
+    "verdict": "YES",
+    "reason": "名前が空のまま Spin を押すと「Please enter your name before spinning.」と表示され、回転は始まらなかった。Alice で回すと、My Winnings に Alice・賞品名・日付の記録が追加された。"
+  },
+  "000010-c3": {
+    "verdict": "YES",
+    "reason": "Clear records で確認ダイアログ（「Delete ALL winning records...」）を受けて承諾すると「Cleared 2 winning records.」と表示され、リロード後も記録一覧が空（No winning records yet）のままだった。"
+  }
+}

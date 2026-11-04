@@ -1,0 +1,7 @@
+{
+  "task": "mlflow__mlflow.93dab383.test_genai_eval_utils.2d5441f2.lv1",
+  "mask": "ok",
+  "test_removed": [
+    "tests/cli/test_genai_eval_utils.py"
+  ]
+}

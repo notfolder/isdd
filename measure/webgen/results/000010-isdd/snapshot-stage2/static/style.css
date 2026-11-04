@@ -1,0 +1,211 @@
+/* 背景はアイボリー（既定）、部品は濃い緑。 */
+:root {
+  --background: #fffff0;
+  --surface: #fffdf5;
+  --dark-green: #006400;
+  --dark-green-hover: #004d00;
+  --text: #1f2a1f;
+  --text-on-green: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.site-header {
+  background: var(--dark-green);
+  color: var(--text-on-green);
+  padding: 12px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.site-header nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.site-header nav a {
+  color: var(--text-on-green);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.site-header nav a:hover,
+.site-header nav a:focus-visible {
+  border-color: var(--text-on-green);
+  outline: none;
+}
+
+.site-header nav a[aria-current="page"] {
+  background: var(--dark-green-hover);
+  border-color: var(--text-on-green);
+  font-weight: 700;
+}
+
+main {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.view h2 {
+  color: var(--dark-green);
+  margin-top: 0;
+}
+
+.panel {
+  background: var(--dark-green);
+  color: var(--text-on-green);
+  border: 2px solid var(--dark-green-hover);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: 600;
+}
+
+.panel label {
+  color: var(--text-on-green);
+}
+
+.panel .error {
+  color: #ffeb3b;
+}
+
+input {
+  font-size: 1rem;
+  padding: 8px 10px;
+  border: 1px solid #999;
+  border-radius: 6px;
+}
+
+input:focus {
+  outline: 2px solid var(--dark-green);
+}
+
+button {
+  background: var(--dark-green);
+  color: var(--text-on-green);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+button:hover:not(:disabled) {
+  background: var(--dark-green-hover);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.error {
+  color: var(--dark-green);
+  font-weight: 700;
+  margin: 0;
+  min-height: 1.2em;
+}
+
+.empty {
+  color: var(--dark-green);
+  font-weight: 600;
+}
+
+.wheel-area {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 8px 0 16px;
+}
+
+.wheel {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  border: 6px solid var(--dark-green);
+  overflow: hidden;
+  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.wheel svg {
+  display: block;
+}
+
+.pointer {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 26px solid var(--dark-green);
+  z-index: 1;
+}
+
+.result {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dark-green);
+  min-height: 1.6em;
+}
+
+table.list {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+
+table.list button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+table.list th {
+  background: var(--dark-green);
+  color: var(--text-on-green);
+  text-align: left;
+  padding: 10px;
+}
+
+table.list td {
+  padding: 10px;
+  border-bottom: 1px solid #c9c9c9;
+}
+
+.view[hidden] {
+  display: none;
+}

@@ -1,0 +1,23 @@
+# 完了の要約（yamllint: 欠落関数の復元、変更フロー）
+
+変更: .history/20261104-restore-linter-functions/（change_requirements.md、change_detail_design.md、tasks.md）
+
+実装（yamllint/linter.py のみ）:
+- LintProblem.__init__、__eq__（line・column・rule で比較、desc と level は比べない）、__lt__（(line, column) の順）
+- _run（先頭行の disable-file で何も出さない、構文エラーを優先、規則の問題を生成）
+- run（無視ファイルは空、str・bytes（UTF-8）・テキストストリームを受け付け、それ以外は TypeError）
+
+正本への反映（実装後レビュー）:
+- docs/detail_design.md の DS-IF-LIBRARY-API と DS-FN-LINTER-RUN に bytes の受け付けを追記（既存の単体テストが bytes を求めるため）
+- docs/active_change を削除。docs/requirements.md は変更なし（要件は増減しない）
+- 対応表（docs/trace_map.md）は変更なし（新しい DS-ID は無い）
+
+検証:
+- python -m pytest tests: 414 passed（復元前は 375 件が失敗）
+- python -m pytest e2e --junitxml=e2e/results/e2e.xml: 13 passed
+- bash scripts/isdd/check.sh --strict: エラー 0、警告 0、受け入れ判定 合格（DS-TS 13/13、要件 19/19 実装済み）
+- rq_integrity_checker.py docs/requirements.md: 問題 0
+- rq_ds_link_checker.py: 問題 0（変更文書と正本の両方）
+- implementation_completeness_checker.py: 4/4 OK
+- yamllint --version / python -m yamllint --version: 1.35.1
+- flake8 linter.py: 問題なし

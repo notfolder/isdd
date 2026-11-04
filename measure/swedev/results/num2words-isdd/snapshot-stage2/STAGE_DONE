@@ -1,0 +1,8 @@
+完了の要約（数字列の分割 splitbyx の復元。isdd 変更フロー: 変更要件定義書 → 変更設計書 → 実装 → 実装後レビュー）
+
+- 変更の記録: .history/20261104-restore-splitbyx/（change_requirements.md, change_detail_design.md, tasks.md）。新しい要件は足さず、既存の RQ-FT-CONVERT-CARDINAL を満たす既存の設計要素 DS-FN-SPLITBYX の実装を戻す変更。
+- 実装: num2words/utils.py に splitbyx(n, x, format_int=True) を PRD のシグネチャとドキュメント文字列どおりに追加。get_digits と他の挙動は変更なし。
+- 単体テスト: .venv の python（PATH に .venv/bin と bin、PYTHONPATH にリポジトリ）で python -m pytest tests が 1433 件全件合格（docopt と delegator.py を .venv に入れた。CLI テストは bin/ を PATH に入れた場合のみ通る）。
+- E2E: e2e/ の既存 7 件を実行し e2e/results/e2e.xml を更新。全件合格。
+- 正本: 既存の docs/requirements.md・docs/detail_design.md・docs/trace_map.md に DS-FN-SPLITBYX と対応が既にあったため、反映する [追加]/[削除] は無く、正本は書き換えず。docs/active_change は削除済み。docs/proposals.md は無い。
+- チェック: bash scripts/isdd/check.sh --strict はエラー 0・警告 0・受け入れ判定合格（要件 8 件実装済み、DS-TS 6 件合格）。rq_integrity_checker（正本）、rq_ds_link_checker（正本、および変更の組み合わせ）、implementation_completeness_checker（4/4 通過）。

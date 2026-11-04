@@ -1,0 +1,13 @@
+{
+  "task": "python_string_utils-test_is_ip_v4-level2",
+  "files": {
+    "string_utils/validation.py": {
+      "removed": [
+        "is_full_string",
+        "is_ip_v4"
+      ],
+      "missing": []
+    }
+  },
+  "test_removed": "tests/test_is_ip_v4.py"
+}

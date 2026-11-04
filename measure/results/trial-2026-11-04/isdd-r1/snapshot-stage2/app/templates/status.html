@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+{% if not current_user %}
+  <p><a href="{{ url_for('ledger.login') }}">ログイン</a> <a href="{{ url_for('ledger.account_register') }}">アカウント登録</a></p>
+{% elif current_user.is_manager %}
+  <p><a href="{{ url_for('ledger.equipment_new') }}">備品の登録</a> <a href="{{ url_for('ledger.account_list') }}">アカウントの一覧</a></p>
+{% endif %}
+{% if rows %}
+<table>
+  <thead>
+    <tr>
+      <th>管理番号</th>
+      <th>備品名</th>
+      <th>状態</th>
+      <th>借りている社員</th>
+      <th>貸出日</th>
+      {% if current_user and current_user.is_manager %}<th>操作</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr data-equipment-number="{{ row['equipment_number'] }}">
+      <td>{{ row['equipment_number'] }}</td>
+      <td>{{ row['name'] }}</td>
+      <td>{{ '貸出中' if row['lent_on'] else '空き' }}</td>
+      <td>{{ row['borrower_name'] or '' }}</td>
+      <td>{{ row['lent_on'] or '' }}</td>
+      {% if current_user and current_user.is_manager %}
+      <td>
+        <form method="get" action="{{ url_for('ledger.equipment_edit', equipment_number=row['equipment_number']) }}" class="inline">
+          <button type="submit">修正</button>
+        </form>
+        <form method="post" action="{{ url_for('ledger.equipment_delete', equipment_number=row['equipment_number']) }}" class="inline" onsubmit="return confirm('この備品を削除しますか？')">
+          <input type="hidden" name="version" value="{{ row['version'] }}">
+          <button type="submit">削除</button>
+        </form>
+        {% if row['lent_on'] %}
+        <form method="post" action="{{ url_for('ledger.return_equipment_view', equipment_number=row['equipment_number']) }}" class="inline" onsubmit="return confirm('返却しますか？')">
+          <input type="hidden" name="version" value="{{ row['version'] }}">
+          <button type="submit">返却</button>
+        </form>
+        {% else %}
+        <form method="get" action="{{ url_for('ledger.lend', equipment_number=row['equipment_number']) }}" class="inline">
+          <button type="submit">貸出</button>
+        </form>
+        {% endif %}
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>備品は登録されていません</p>
+{% endif %}
+{% endblock %}

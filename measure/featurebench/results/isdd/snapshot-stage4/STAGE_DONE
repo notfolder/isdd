@@ -1,0 +1,7 @@
+GenAI 評価結果の整形と表示の復元（mlflow/cli/genai_eval_utils.py）
+
+- 実装: extract_assessments_from_results、format_table_output、resolve_scorers を Interface Description どおりのシグネチャで実装（既存の型と _format_assessment_cell は変更なし）。
+- E2E: e2e/test_genai_eval_utils.py（3 件）を追加。全 E2E 26 件通過（e2e/results/e2e.xml）。
+- 変更文書: .history/20261104-restore-genai-eval-utils/（変更要件定義書・変更設計書・tasks.md）。正本（docs/requirements.md・detail_design.md・trace_map.md）へ反映済み。docs/active_change は削除済み。
+- 既知の制約: 対応表チェッカーの走査範囲に mlflow/cli は入れていない（ANSWERS.md）。そのため check.sh の対応表で mlflow/cli のファイルが「見つかりません」になる。
+- 既存の別件（this directory の状態）: mlflow/server/security.py と security_utils.py が無く、対応表にその分のエラーが残っている。今回の変更の範囲外。

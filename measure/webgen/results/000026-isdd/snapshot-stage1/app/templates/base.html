@@ -1,0 +1,40 @@
+{% macro result_block(result) %}
+<section class="card result">
+  <h2>{{ result.question }}</h2>
+  {% if result.total == 0 %}
+  <p class="empty">No votes yet.</p>
+  {% else %}
+  <p class="meta">Total votes: {{ result.total }}</p>
+  {% endif %}
+  <ul class="bars">
+    {% for option in result.options %}
+    <li>
+      <div class="bar-label"><span>{{ option.label }}</span><span>{{ option.votes }} ({{ option.percent }}%)</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width: {{ option.percent }}%"></div></div>
+    </li>
+    {% endfor %}
+  </ul>
+  <a class="button small" href="{{ url_for('polls.poll_page', poll_id=result.id) }}">Open poll</a>
+</section>
+{% endmacro %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Polls{% endblock %} - Polls</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-name" href="{{ url_for('polls.index') }}">Polls</a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="{{ url_for('polls.index') }}" class="{{ 'active' if request.endpoint == 'polls.index' or request.endpoint == 'polls.poll_page' }}">Polls</a>
+      <a href="{{ url_for('polls.results') }}" class="{{ 'active' if request.endpoint == 'polls.results' }}">Results</a>
+    </nav>
+  </header>
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

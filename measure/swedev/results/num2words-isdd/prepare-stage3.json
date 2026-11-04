@@ -1,0 +1,18 @@
+{
+  "task": "num2words-test_base-level1",
+  "files": {
+    "num2words/base.py": {
+      "removed": [
+        "Num2Word_Base.__init__",
+        "Num2Word_Base.merge",
+        "Num2Word_Base.pluralize",
+        "Num2Word_Base.set_high_numwords",
+        "Num2Word_Base.title",
+        "Num2Word_Base.to_cardinal_float",
+        "Num2Word_Base.to_currency",
+        "Num2Word_Base.to_ordinal_num"
+      ],
+      "missing": []
+    }
+  }
+}

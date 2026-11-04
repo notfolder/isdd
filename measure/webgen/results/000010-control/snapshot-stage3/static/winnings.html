@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Winnings | Wheel of Fortune</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body data-page="winnings">
+<header class="site-header">
+  <a class="brand" href="/">Wheel of Fortune</a>
+  <nav class="main-nav" aria-label="Main">
+    <a href="/" data-nav="spin">Spin the Wheel</a>
+    <a href="/prizes" data-nav="prizes">Prize List</a>
+    <a href="/manage" data-nav="manage">Manage Prizes</a>
+    <a href="/winnings" data-nav="winnings">My Winnings</a>
+  </nav>
+</header>
+<main class="container">
+  <section class="card">
+    <h1>My Winnings</h1>
+    <p class="lead">Enter the name you spin with to see the prizes you have won.</p>
+    <form id="lookup-form" class="inline-form">
+      <label for="lookup-name">Your name</label>
+      <input id="lookup-name" type="text" maxlength="30" placeholder="Enter your name" autocomplete="nickname">
+      <button class="btn btn-primary" type="submit">Show my winnings</button>
+    </form>
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+    <p id="summary" class="summary"></p>
+    <div id="results" aria-live="polite"></div>
+    <div class="clear-area">
+      <button id="clear-records" type="button" class="btn btn-danger">Clear records</button>
+      <span class="hint">Deletes the winning records of all players.</span>
+    </div>
+  </section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

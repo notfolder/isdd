@@ -1,0 +1,50 @@
+{
+  "_comment": "詳細設計書 第 7 章「依存の規則」の書き写し。isdd-setup が雛形を作り、以後は手で保つ（再実行でも上書きしない）。from: 規則を当てるディレクトリ / deny: 依存してはいけない先（プロジェクト内のパス、または外部モジュール名）/ allow: 依存してよいプロジェクト内のディレクトリ（書くと from 自身と allow 以外は違反）/ reason: 理由",
+  "rules": [
+    {
+      "from": "app/routes.py",
+      "allow": [
+        "app/repository.py",
+        "app/validation.py",
+        "app/constants.py",
+        "app/sorting.py"
+      ],
+      "reason": "画面の処理は保存の手段（SQLite）を直接扱わない（並べ替えの純粋な関数 app/sorting.py は可）"
+    },
+    {
+      "from": "app/validation.py",
+      "allow": [
+        "app/repository.py",
+        "app/constants.py"
+      ],
+      "reason": "検証は画面の経路に依存しない"
+    },
+    {
+      "from": "app/repository.py",
+      "allow": [
+        "app/db.py",
+        "app/constants.py",
+        "app/validation.py"
+      ],
+      "reason": "保存の処理は画面と初期データに依存しない"
+    },
+    {
+      "from": "app/seed.py",
+      "allow": [
+        "app/repository.py",
+        "app/constants.py"
+      ],
+      "reason": "初期データは画面に依存しない"
+    },
+    {
+      "from": "app/db.py",
+      "deny": [
+        "app/routes.py",
+        "app/repository.py",
+        "app/validation.py",
+        "app/seed.py"
+      ],
+      "reason": "接続と表の作成は最下層"
+    }
+  ]
+}

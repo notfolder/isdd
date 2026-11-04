@@ -1,0 +1,12 @@
+{
+  "task": "num2words-test_currency-level1",
+  "files": {
+    "num2words/currency.py": {
+      "removed": [
+        "parse_currency_parts"
+      ],
+      "missing": []
+    }
+  },
+  "test_removed": "tests/test_currency.py"
+}

@@ -1,0 +1,9 @@
+Change request 2 (Create poll) completed in /tmp/webgen/work/000026-isdd.
+
+- isdd-spec (change flow): .history/20261104-create-poll/ holds change_requirements.md, change_detail_design.md, tasks.md. docs/active_change was registered, then removed after reflection.
+- isdd-build: implemented app/voting.py (InvalidPoll, VotingService.create_poll), app/views.py (GET/POST /polls/new, created=1 notice), app/templates/new_poll.html, base.html nav now Polls | Create poll | Results, poll.html created notice, style.css input styles (light yellow / dark slate gray kept).
+- Tests: unit 14 passed (tests/test_voting.py adds create and reject cases); E2E 13 passed (adds test_create_poll, test_reject_invalid_poll; test_navigation extended).
+- Checks: check.sh --strict 0 errors 0 warnings; acceptance 15/15 DS-TS, 22/22 requirements implemented; rq_integrity_checker and rq_ds_link_checker pass on docs/; implementation_completeness_checker 4/4 OK.
+- Reflected into docs/requirements.md and docs/detail_design.md, trace_map.md rows added; README Pages updated.
+- Decision recorded: the create form has 4 option boxes (empty ignored), so at most 4 options per poll.
+- Smoke test: setup.sh and PORT=8931 run.sh; /, /polls/1, /polls/new, /results, style.css return 200; valid POST 303 to the new poll; invalid POST 400. Server stopped.

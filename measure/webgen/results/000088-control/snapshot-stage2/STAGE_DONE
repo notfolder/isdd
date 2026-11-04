@@ -1,0 +1,6 @@
+Change request 1 done.
+
+1. Colour theme: background honeydew (#F0FFF0); all components dark olive green (#556B2F, hover #3F5222). Header, buttons, card and table borders, headings, table headers, badges, notices, tiles and focus outline use olive. Table striping uses a slightly darker honeydew (#E0F0DC). Old linen/maroon values are removed from app.py.
+2. Add species: the 'Add species' nav item (/species/new) now shows a form with Name (required), Habitat (list), Diet (list) and Description. Name is saved as both the common name and the scientific name (the scientific name is required and unique). Duplicate names are rejected. The added species appears in the browse list and is found by search and by habitat/diet filters. The full field set is still available through Edit on each species page.
+
+Checked with curl: pages return 200, add/validation/duplicate handling, search, filters, edit, delete. The server starts via setup.sh and run.sh. Stored data is under DATA_DIR (default ./data, created by setup.sh and seeded with 11 sample species on first start).

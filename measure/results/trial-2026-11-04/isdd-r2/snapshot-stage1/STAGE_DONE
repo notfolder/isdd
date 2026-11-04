@@ -1,0 +1,88 @@
+# STAGE_DONE: 備品台帳・貸出状況（段 1）
+
+isdd の要件定義 → 設計 → 実装 → 実装後レビューを完了した。
+
+## 作った文書とファイル
+
+- 要件: docs/requirements.md（要件 70 件の ID、業務課題 3、テスト用シナリオ 14）
+- 設計: docs/detail_design.md（設計 ID 74 件、要件と設計の対応表、除外要件は無し）
+- 対応表: docs/trace_map.md（function 粒度）
+- 作業の指示: .history/20261104-equipment-ledger/tasks.md
+- 実装: app/（__main__.py、config.py、db.py、security.py、validation.py、accounts.py、equipment.py、lending.py、sessions.py、web.py、templates.py）、run.sh、setup.sh、README.md
+- テスト: tests/unit/test_units.py（単体・結合 14 件）、e2e/（HTTP 経由の E2E 17 件。e2e/results/e2e.xml は failures 0）
+- チェッカー導入: scripts/isdd/（isdd-setup v2.2.0 の複製）、scripts/isdd/dependencies.json（第 7 章の規則 8 件）、scripts/isdd/completeness.json、AGENTS.md、CLAUDE.md、.gitignore、.git/hooks/pre-commit
+
+## チェッカーの結果
+
+- rq_integrity_checker.py docs/requirements.md: 問題 0 件（exit 0）
+- rq_ds_link_checker.py docs/requirements.md docs/detail_design.md: 欠落 0 件、不整合 0 件（exit 0）
+- bash scripts/isdd/check.sh --strict: エラー 0 件、警告 0 件、依存チェック合格、受け入れ判定 DS-TS 16 件合格、要件 36 件実装済み（exit 0）
+- implementation_completeness_checker.py: 4/4 通過
+- 単体テスト: 14 件 OK。E2E: 17 件 OK
+
+## 確かめた結果（live）
+
+- bash setup.sh と PORT=8795 DATA_DIR=/tmp/isdd-r2-data bash run.sh で起動し、起動後に停止した（停止確認済み、テスト用の DATA_DIR は削除）
+- `/`、`/accounts/register/`、`/login/` が 200。`/equipment/new/` と `/accounts/` は未ログインで `/login/` へ 303
+- 登録画面の id（id_employee_number、id_name、id_password）、貸出状況の未ログイン時のリンク（ログイン、アカウント登録）、誤ったログインの `.error`（社員番号またはパスワードが違います）を確認
+- 契約の各 id・文言・data 属性は E2E テストで確かめた（HTML を解析して確認）
+
+## 実装後レビュー
+
+### 未マッピング一覧
+
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件（公開関数・クラス・ファイル）
+
+### 要件ごとの実装済み判定
+
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| `RQ-FT-CHANGE-MANAGER-ROLE` | `RQ-TS-MANAGE-MANAGER-ROLE` | `DS-TS-MANAGE-MANAGER-ROLE` | `e2e/test_accounts.py::TestManageAccounts.test_manage_manager_role` | 実装済み |
+| `RQ-FT-CREATE-EQUIPMENT` | `RQ-TS-CREATE-EQUIPMENT` | `DS-TS-CREATE-EQUIPMENT` | `e2e/test_equipment.py::TestCreateEquipment.test_create_equipment` | 実装済み |
+| `RQ-FT-DELETE-ACCOUNT` | `RQ-TS-DELETE-ACCOUNT` | `DS-TS-DELETE-ACCOUNT` | `e2e/test_accounts.py::TestManageAccounts.test_delete_account` | 実装済み |
+| `RQ-FT-DELETE-EQUIPMENT` | `RQ-TS-DELETE-EQUIPMENT` | `DS-TS-DELETE-EQUIPMENT` | `e2e/test_equipment.py::TestDeleteEquipment.test_delete_equipment` | 実装済み |
+| `RQ-FT-DETECT-CONCURRENT-UPDATE` | `RQ-TS-UPDATE-EQUIPMENT` | `DS-TS-UPDATE-EQUIPMENT` | `e2e/test_equipment.py::TestUpdateEquipment.test_update_equipment` | 実装済み |
+| `RQ-FT-EXPIRE-IDLE-SESSION` | `RQ-TS-IDLE-LOGOUT` | `DS-TS-IDLE-LOGOUT` | `e2e/test_accounts.py::TestIdleLogout.test_idle_logout` | 実装済み |
+| `RQ-FT-LEND-EQUIPMENT` | `RQ-TS-LEND-EQUIPMENT` | `DS-TS-LEND-EQUIPMENT` | `e2e/test_equipment.py::TestLendEquipment.test_lend_equipment` | 実装済み |
+| `RQ-FT-LIST-ACCOUNTS` | `RQ-TS-MANAGE-MANAGER-ROLE` | `DS-TS-MANAGE-MANAGER-ROLE` | `e2e/test_accounts.py::TestManageAccounts.test_manage_manager_role` | 実装済み |
+| `RQ-FT-LOGIN` | `RQ-TS-LOGIN-LOGOUT` | `DS-TS-LOGIN-LOGOUT` | `e2e/test_accounts.py::TestLoginLogout.test_login_logout` | 実装済み |
+| `RQ-FT-LOGOUT` | `RQ-TS-LOGIN-LOGOUT` | `DS-TS-LOGIN-LOGOUT` | `e2e/test_accounts.py::TestLoginLogout.test_login_logout` | 実装済み |
+| `RQ-FT-REGISTER-ACCOUNT` | `RQ-TS-REGISTER-ACCOUNTS` | `DS-TS-REGISTER-ACCOUNTS` | `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts`, `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts_limit` | 実装済み |
+| `RQ-FT-RESET-PASSWORD` | `RQ-TS-RESET-PASSWORD` | `DS-TS-RESET-PASSWORD` | `e2e/test_accounts.py::TestManageAccounts.test_reset_password` | 実装済み |
+| `RQ-FT-RESTRICT-MANAGER-OPERATIONS` | `RQ-TS-RESTRICT-NON-MANAGER` | `DS-TS-RESTRICT-NON-MANAGER` | `e2e/test_equipment.py::TestRestrictNonManager.test_restrict_non_manager` | 実装済み |
+| `RQ-FT-RETURN-EQUIPMENT` | `RQ-TS-RETURN-EQUIPMENT` | `DS-TS-RETURN-EQUIPMENT` | `e2e/test_equipment.py::TestReturnEquipment.test_return_equipment` | 実装済み |
+| `RQ-FT-RULE-ACCOUNT-LIMIT` | `RQ-TS-REGISTER-ACCOUNTS` | `DS-TS-REGISTER-ACCOUNTS` | `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts`, `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts_limit` | 実装済み |
+| `RQ-FT-RULE-AT-LEAST-ONE-MANAGER` | `RQ-TS-MANAGE-MANAGER-ROLE` | `DS-TS-MANAGE-MANAGER-ROLE` | `e2e/test_accounts.py::TestManageAccounts.test_manage_manager_role` | 実装済み |
+| `RQ-FT-RULE-CONCURRENT-UPDATE` | `RQ-TS-UPDATE-EQUIPMENT` | `DS-TS-UPDATE-EQUIPMENT` | `e2e/test_equipment.py::TestUpdateEquipment.test_update_equipment` | 実装済み |
+| `RQ-FT-RULE-EQUIPMENT-NUMBER-UNIQUE` | `RQ-TS-CREATE-EQUIPMENT` | `DS-TS-CREATE-EQUIPMENT` | `e2e/test_equipment.py::TestCreateEquipment.test_create_equipment` | 実装済み |
+| `RQ-FT-RULE-FIRST-ACCOUNT-MANAGER` | `RQ-TS-REGISTER-ACCOUNTS` | `DS-TS-REGISTER-ACCOUNTS` | `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts`, `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts_limit` | 実装済み |
+| `RQ-FT-RULE-FUTURE-LENT-DATE` | `RQ-TS-LEND-EQUIPMENT` | `DS-TS-LEND-EQUIPMENT` | `e2e/test_equipment.py::TestLendEquipment.test_lend_equipment` | 実装済み |
+| `RQ-FT-RULE-LENDING-EXCLUSIVE` | `RQ-TS-LEND-EQUIPMENT` | `DS-TS-LEND-EQUIPMENT` | `e2e/test_equipment.py::TestLendEquipment.test_lend_equipment` | 実装済み |
+| `RQ-FT-RULE-LOGIN-FAILURE-GENERIC` | `RQ-TS-LOGIN-LOGOUT`, `RQ-TS-RESTRICT-NON-MANAGER` | `DS-TS-LOGIN-LOGOUT`, `DS-TS-RESTRICT-NON-MANAGER` | `e2e/test_accounts.py::TestLoginLogout.test_login_logout`, `e2e/test_equipment.py::TestRestrictNonManager.test_restrict_non_manager` | 実装済み |
+| `RQ-FT-RULE-NO-DELETE-BORROWED-ACCOUNT` | `RQ-TS-DELETE-ACCOUNT` | `DS-TS-DELETE-ACCOUNT` | `e2e/test_accounts.py::TestManageAccounts.test_delete_account` | 実装済み |
+| `RQ-FT-RULE-NO-DELETE-LENT` | `RQ-TS-DELETE-EQUIPMENT` | `DS-TS-DELETE-EQUIPMENT` | `e2e/test_equipment.py::TestDeleteEquipment.test_delete_equipment` | 実装済み |
+| `RQ-FT-RULE-RETURN-ONLY-LENT` | `RQ-TS-RETURN-EQUIPMENT` | `DS-TS-RETURN-EQUIPMENT` | `e2e/test_equipment.py::TestReturnEquipment.test_return_equipment` | 実装済み |
+| `RQ-FT-UPDATE-EQUIPMENT` | `RQ-TS-UPDATE-EQUIPMENT` | `DS-TS-UPDATE-EQUIPMENT` | `e2e/test_equipment.py::TestUpdateEquipment.test_update_equipment` | 実装済み |
+| `RQ-FT-VIEW-LENDING-STATUS` | `RQ-TS-VIEW-LENDING-STATUS` | `DS-TS-VIEW-LENDING-STATUS` | `e2e/test_equipment.py::TestViewLendingStatus.test_view_lending_status` | 実装済み |
+| `RQ-NF-CONCURRENT-USERS-50` | ― | `DS-TS-CONCURRENT-USERS` | `e2e/test_nonfunctional.py::TestConcurrentUsers.test_concurrent_users` | 実装済み |
+| `RQ-NF-PASSWORD-AUTH` | `RQ-TS-IDLE-LOGOUT` | `DS-TS-IDLE-LOGOUT` | `e2e/test_accounts.py::TestIdleLogout.test_idle_logout` | 実装済み |
+| `RQ-NF-RESPONSE-TIME-3S` | ― | `DS-TS-RESPONSE-TIME` | `e2e/test_nonfunctional.py::TestResponseTime.test_response_time` | 実装済み |
+| `RQ-UI-ACCOUNT-LIST-SCREEN` | `RQ-TS-DELETE-ACCOUNT`, `RQ-TS-MANAGE-MANAGER-ROLE`, `RQ-TS-RESET-PASSWORD` | `DS-TS-DELETE-ACCOUNT`, `DS-TS-MANAGE-MANAGER-ROLE`, `DS-TS-RESET-PASSWORD` | `e2e/test_accounts.py::TestManageAccounts.test_delete_account`, `e2e/test_accounts.py::TestManageAccounts.test_manage_manager_role`, `e2e/test_accounts.py::TestManageAccounts.test_reset_password` | 実装済み |
+| `RQ-UI-EQUIPMENT-FORM-SCREEN` | `RQ-TS-CREATE-EQUIPMENT`, `RQ-TS-UPDATE-EQUIPMENT` | `DS-TS-CREATE-EQUIPMENT`, `DS-TS-UPDATE-EQUIPMENT` | `e2e/test_equipment.py::TestCreateEquipment.test_create_equipment`, `e2e/test_equipment.py::TestUpdateEquipment.test_update_equipment` | 実装済み |
+| `RQ-UI-LENDING-FORM-SCREEN` | `RQ-TS-LEND-EQUIPMENT` | `DS-TS-LEND-EQUIPMENT` | `e2e/test_equipment.py::TestLendEquipment.test_lend_equipment` | 実装済み |
+| `RQ-UI-LENDING-STATUS-SCREEN` | `RQ-TS-DELETE-EQUIPMENT`, `RQ-TS-EMPTY-EQUIPMENT-LIST`, `RQ-TS-VIEW-LENDING-STATUS` | `DS-TS-DELETE-EQUIPMENT`, `DS-TS-EMPTY-EQUIPMENT-LIST`, `DS-TS-VIEW-LENDING-STATUS` | `e2e/test_equipment.py::TestDeleteEquipment.test_delete_equipment`, `e2e/test_equipment.py::TestEmptyEquipmentList.test_empty_equipment_list`, `e2e/test_equipment.py::TestViewLendingStatus.test_view_lending_status` | 実装済み |
+| `RQ-UI-LOGIN-SCREEN` | `RQ-TS-LOGIN-LOGOUT` | `DS-TS-LOGIN-LOGOUT` | `e2e/test_accounts.py::TestLoginLogout.test_login_logout` | 実装済み |
+| `RQ-UI-REGISTER-ACCOUNT-SCREEN` | `RQ-TS-REGISTER-ACCOUNTS` | `DS-TS-REGISTER-ACCOUNTS` | `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts`, `e2e/test_accounts.py::TestRegisterAccounts.test_register_accounts_limit` | 実装済み |
+
+## 残っている問題・判断
+
+- REQUEST.md は今回の段で貸出の登録を「すべて空きでよい」としているが、contract.md と ANSWERS.md は貸出・返却の画面と操作を求めるため、貸出・返却・担当者の付け外し・パスワード再設定・アカウント削除も実装した。
+- 文書の書き方ルールでは ID を表の列にだけ書くべきだが、詳細設計書の本文の説明文に ID を多く書いている（チェッカーは通る）。
+- isdd の「応答終了時に check.sh を実行するフック」は作っていない（この実行環境の設定をこの作業で変えないため）。
+- E2E はブラウザを使わず HTTP と HTML の解析で確かめた。確認ダイアログ（window.confirm）の見た目と動きは実ブラウザでは確かめていない（onsubmit の confirm を HTML に出している）。
+- 会社の 50 人規模の同時利用は、テストでは 50 件の同時ログインと 50 件の同時応答で確かめた。実機の負荷は測っていない。
+- git の変更はコミットしていない（作業ディレクトリに commit が無い状態のまま）。

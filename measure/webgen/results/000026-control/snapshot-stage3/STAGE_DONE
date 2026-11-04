@@ -1,0 +1,9 @@
+Change request 2 (Create poll) implemented in server.py.
+
+- New "Create poll" nav link (all pages), plus "Create a poll" buttons on Home and All Polls.
+- GET /polls/new: form with a question and six option fields (options 1 and 2 required).
+- POST /polls: trims input, validates (question required, max 200 chars; at least two options; max 100 chars per option), re-shows the form with an error (HTTP 400) on failure, otherwise inserts the poll and its options into SQLite and redirects (303) to /polls/<id>?created=1.
+- The new poll appears on All Polls and the voting page, can be voted on (double-vote cookie prevention unchanged), and appears on the Results list and its results page with counts. Results for a poll with zero votes now list every option at 0 votes with a notice, instead of only an empty message.
+- Existing routes, sample data seeding, the theme, and the data/ directory are unchanged.
+
+Checked: setup.sh, then run.sh on a scratch DATA_DIR and on the default data/ directory; create (valid and invalid), vote, double-vote, results, and 404 paths all behave as expected.

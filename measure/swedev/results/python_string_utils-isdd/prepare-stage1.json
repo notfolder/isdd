@@ -1,0 +1,12 @@
+{
+  "task": "python_string_utils-test_is_credit_card-level1",
+  "files": {
+    "string_utils/validation.py": {
+      "removed": [
+        "is_credit_card"
+      ],
+      "missing": []
+    }
+  },
+  "test_removed": "tests/test_is_credit_card.py"
+}

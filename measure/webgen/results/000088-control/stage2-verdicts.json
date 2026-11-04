@@ -1,0 +1,22 @@
+{
+  "000088-1": {
+    "verdict": "PARTIAL",
+    "reason": "一覧（/species）は 12 件すべてを表示し、詳細ページもエラーなく開けた。ただし一覧の寿命で Fly agaric と Gut bacterium が「Not recorded」、詳細ページでは 8 種の個体数推定が「Not recorded」のままで、「欠損データがないこと」という期待の一部を満たさない。"
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "「bear」は Polar bear の 1 件のみ、「Lion」は Lion のみ、「salmon」は Atlantic salmon のみ、「zzzz」は 0 件を返し、無関係な種は混ざらなかった。「mammal」は学名の綱（Mammalia）にも一致して 5 件を返し、検索は正しく動く。"
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "生息地フィルタ（Marine）で 2 件（Atlantic salmon、Blue whale）に絞られ、Forest では 3 件、Herbivore と Fungi の絞り込みも該当行だけになった。一致しない行は表示されなかった。"
+  },
+  "000088-design": {
+    "verdict": "YES",
+    "reason": "body の背景色は rgb(240,255,240)（honeydew）。ヘッダー、ボタン、見出し、カードの枠線、バッジ、表の見出しは rgb(85,107,47)（dark olive green）。カードの背景は honeydew、表の行は薄い緑、現在のナビは rgb(63,82,34) の濃い色で、部品の色として期待どおりに適用されている。"
+  },
+  "000088-c1": {
+    "verdict": "PARTIAL",
+    "reason": "「Add species」フォームで名前、生息地 Forest（フォームに Rainforest は無く、最も近い Forest を選んだ）、食性 Herbivore、説明を入力して追加でき、Okapi は一覧（13 件中）と検索「Okapi」の両方に Forest / Herbivore で出た。ただし指定の生息地 Rainforest は選べず、期待の生息地の部分が満たされない。"
+  }
+}

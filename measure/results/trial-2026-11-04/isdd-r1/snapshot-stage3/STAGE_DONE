@@ -1,0 +1,32 @@
+段 3（アカウントの管理）の完了要約
+
+1. 結果
+- 依頼の 6 項目（一覧、担当者の付け外し、パスワード再設定、アカウント削除、貸出中の社員の削除拒否、担当者 0 人の拒否）と、担当者だけの操作・要求の拒否は、段 1 の正本の要件と既存コードで実装済みだった。サーバーを起動して HTTP で 32 件を手動確認し、すべて合格した（確認用のスクリプトは削除済み）。
+- 契約と合わなかった点は 1 件だけだった。貸出状況の画面から備品の登録へ行く担当者向けリンクの文言が、契約では「備品を登録」、正本と実装では「備品の登録」だった。文言を「備品を登録」に直し、正本（要件 RQ-UI-LENDING-STATUS-SCREEN・RQ-TS-ROLE-CHECK、詳細設計の画面の 5 項目と DS-TS-ROLE-CHECK）も合わせた。要件 ID と設計 ID は変えていない。
+- 契約の画面の文言（完全一致の 19 件）と id、ボタン、リンクは、ソースに含まれることを確かめた。
+
+2. 変えた文書とファイル
+- .history/20261104-account-management/change_requirements.md（新規）
+- .history/20261104-account-management/change_detail_design.md（新規）
+- .history/20261104-account-management/tasks.md（新規）
+- docs/requirements.md（画面の文言 2 行、RQ-TS-ROLE-CHECK の手順に確認を 1 件）
+- docs/detail_design.md（画面の 5 項目の文言 1 行、DS-TS-ROLE-CHECK の手順に確認を 1 件）
+- docs/active_change は作成し、反映後に削除した（変更フローの完了）
+- app/templates/status.html（リンクの文言）
+- e2e/test_scenarios.py（test_role_check に担当者のリンク確認を追加）
+- e2e/results/e2e.xml（E2E の再実行で更新）
+
+3. チェッカーの結果
+- rq_integrity_checker.py docs/requirements.md: 問題 0 件（終了コード 0）
+- rq_ds_link_checker.py docs/requirements.md docs/detail_design.md: 問題 0 件（終了コード 0）
+- bash scripts/isdd/check.sh --strict: 終了コード 0。対応表 エラー 0・警告 0。依存チェック 規則なし。受け入れ判定 DS-TS 13/13 合格、要件 実装済み 38/38
+- implementation_completeness_checker.py .: 4/4 項目通過
+- 単体テスト（pytest tests）: 44 件通過
+- E2E（pytest e2e --junitxml=e2e/results/e2e.xml）: 13 件通過
+
+4. 未マッピング
+- 対応表にないコードの警告は 0 件。要件なし（作りすぎ）は 0 件。
+
+5. 残っている問題
+- 文言の修正は、スキルの規則（区分は [追加] と [削除] だけ）とは別に、正本の該当行を直接書き換えた。ID は変えていないので、チェッカーは通る。
+- 契約と正本の文言が食い違った原因は調べていない。今回は文言だけを契約に合わせた。

@@ -1,0 +1,30 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "ホームの「Open poll」から /polls/1 などの投票ページへ遷移でき、エラーは出なかった（pageerror・console error なし）。各ページで 4 件・3 件の選択肢が表示された。"
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "投票せずに各ページを開くと、選択肢（Python・JavaScript・Go・Rust など）が一覧で表示され、設問と「Pick one language.」などの説明も見える。選択肢に付く追加情報はないが、表示名は明確。"
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "Python に投票すると「Thank you for your vote.」が表示され、結果の合計が 11 から 12 に増えて Python が 6 (50%) になった。"
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "結果ページに各投票の合計数と、選択肢ごとの件数・割合（例: Python 6 (50%)）が表示され、投票後の最新値に更新されていた。グラフはないが、統計表示は期待を満たす。"
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "body の背景は rgb(255,255,224)（light yellow）。ヘッダー・ボタン・見出し・カードの枠線は rgb(47,79,79)（dark slate gray）。カードの内側の塗りは light yellow だが、部品の色としては dark slate gray が使われている。"
+  },
+  "000026-c1": {
+    "verdict": "YES",
+    "reason": "投票直後に「Thank you for your vote.」が出て、同じ投票ページに戻ると「You have already voted」が表示され、ラジオボタンと Vote ボタンは disabled だった。再投票は試みられず、結果の合計も増えなかった。"
+  },
+  "000026-c2": {
+    "verdict": "YES",
+    "reason": "「Create poll」で Best season? と Spring・Summer・Autumn を作成すると「Your poll has been created.」が出て、投票一覧に Best season? が 3 options で表示された。Summer に投票すると結果ページに「Best season?」の Total votes 1、Summer 1 (100%) が出た。"
+  }
+}

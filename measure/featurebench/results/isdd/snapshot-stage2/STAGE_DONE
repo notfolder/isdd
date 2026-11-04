@@ -1,0 +1,11 @@
+完了の要約（isdd-spec 変更フロー → isdd-build 実装 → 実装後レビュー）
+
+- 変更要件定義書・変更設計書・tasks.md: .history/20261104-restore-npmi-functions/
+- 実装: mlflow/store/analytics/trace_correlation.py に calculate_npmi_from_counts と calculate_smoothed_npmi を依頼の Interface Description どおりに実装（既存のデータクラスと JEFFREYS_PRIOR は変更せず、内部の補助関数 _contingency_cells・_npmi_from_cells・_clamp を追加）。mlflow/store/analytics/__init__.py に 2 関数の import を追加。
+- 検査の対象: scripts/isdd/check.sh に mlflow/store/analytics を --src として追加。
+- 対応表: docs/trace_map.md に 10 行（モジュール 2、データクラス 2、関数 2、E2E 4）を追加。
+- E2E: e2e/test_trace_correlation.py を新規作成（4 件）。e2e 全件（18 件）合格。JUnit XML は e2e/results/e2e.xml。
+- 検査: bash scripts/isdd/check.sh --strict が終了コード 0（対応表エラー 0・警告 0、受け入れ判定 DS-TS 18/18 合格、要件 23/23 実装済み）。implementation_completeness_checker が 4/4 通過。rq_integrity_checker と rq_ds_link_checker が問題 0 件。
+- 実装後レビュー: 変更を正本へ反映（docs/requirements.md と docs/detail_design.md に新しい範囲と RQ/DS の追加、用語・本文の更新、第 7 章・第 8 章・第 11 章の追記）。docs/active_change は削除。docs/proposals.md は無し。
+- 既存の挙動は変更していない。既存の tests/ は変更していない。
+- 注意: E2E の全件実行は 1 回目、test_sdk_stop_records_trace 付近で長く止まり、プロセスを止めて再実行した（再実行は 285 秒で全件合格）。

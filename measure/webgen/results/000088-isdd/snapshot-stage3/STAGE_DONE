@@ -1,0 +1,9 @@
+変更依頼 2（一覧の名前順の並べ替え、詳細画面の全項目）の isdd-spec（変更フロー）と isdd-build（実装・実装後レビュー）が完了した。
+
+- 変更要件・変更設計・tasks: .history/20261104-sort-and-record-dates/
+- 実装: app/sorting.py（新規）、app/routes.py（sort 読み取りと並べ替え）、app/templates/species_list.html（Sort 選択欄）、app/templates/species_detail.html（Added / Last updated）。README の機能説明を更新。
+- テスト: tests/test_sorting.py を追加。e2e に test_sort_species_list と test_show_species_record_dates を追加。単体 OK、E2E 11 件 OK。
+- 対応表 docs/trace_map.md を更新。check.sh --strict はエラー 0 件・警告 0 件、受け入れ判定合格。rq_ds_link_checker と rq_integrity_checker は問題 0 件。implementation_completeness_checker は 4/4 通過。
+- 正本: docs/requirements.md と docs/detail_design.md に変更を反映済み。docs/active_change は削除済み。
+- 設計の修正 1 件（ユーザー不在のため自分で決定）: 変更設計書 7 章と scripts/isdd/dependencies.json の依存の規則で、app/routes.py から app/sorting.py への依存を 1 項目だけ許可した（純粋な関数のため）。
+- 起動: bash setup.sh 後、PORT=8012 bash run.sh で一覧・詳細・登録の画面が 200 で開くことを確認（起動したプロセスは停止済み）。

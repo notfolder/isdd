@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Entered a name and pressed Spin; the wheel animated for about 4 seconds, stopped, and the message 'Congratulations, ...! You won: X' (or the no-prize message) appeared with no errors. In 9 spins the landed segment matched the displayed result each time."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 7 prizes (10% Off Coupon, Free Coffee, Movie Ticket, Mystery Gift, T-Shirt, $50 Gift Card, Try Again), matching the 7 wheel segments and their labels."},
+  "000010-3": {"verdict": "YES", "reason": "After a spin, the My Winnings page (name lookup) lists the new record with the date (for example 'Nov 4, 2026, 11:27 AM', matching the current time) and the prize won, and the summary count is updated."},
+  "000010-4": {"verdict": "YES", "reason": "The page background is rgb(228,228,228), a light gray close to 'light gray'. The header, buttons, headings, card borders, and nav links are rgb(139,0,0) (#8b0000, dark red). Minor exceptions: the no-prize badge (#6b6b6b) and the Try Again wheel segment (#555555) are gray, and the cards are near-white (#fafafa/#ffffff)."}
+}

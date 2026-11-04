@@ -1,0 +1,28 @@
+段 2（貸出と返却）の変更フロー完了。isdd-spec（変更要件定義・変更設計・tasks）→ 実装 → 実装後レビュー（正本反映）まで終了。
+
+既存の状態: 貸出・返却・同時更新・削除の拒否など依頼の大半は段 1 の時点で正本と実装にあった。今回の不足は次の 2 つだけ。
+1. 備品を修正しても貸出の記録を引き継ぐ（RQ-FT-RULE-KEEP-LENDING-ON-UPDATE、テスト RQ-TS-KEEP-LENDING-ON-UPDATE）
+2. 同時の貸出・返却は先の 1 件だけを処理し、後の方に「既に貸出中」「既に返却されています」を知らせる（RQ-FT-RULE-CONCURRENT-LEND-RETURN、テスト RQ-TS-CONCURRENT-LEND-RETURN）
+
+実装: アプリのコードは変更なし（既存の設計で両方を満たすことを確認）。E2E に 2 件を追加（e2e/test_equipment.py）。
+
+変えた文書・ファイル:
+- .history/20261104-lending-return/change_requirements.md（新規）
+- .history/20261104-lending-return/change_detail_design.md（新規）
+- .history/20261104-lending-return/tasks.md（新規）
+- docs/requirements.md（3-2 に 2 ルール、4-3 の備考 2 件、第 7 章に 2 シナリオ）
+- docs/detail_design.md（8-2 に 2 件、第 11 章に 2 件の DS-TS と既存 DS-FN の対応の追記）
+- docs/trace_map.md（DS-TS-KEEP-LENDING-ON-UPDATE、DS-TS-CONCURRENT-LEND-RETURN の 2 行）
+- e2e/test_equipment.py（TestKeepLendingOnUpdate、TestConcurrentLendReturn、_race を追加）
+- e2e/results/e2e.xml（再生成。19 件）
+- docs/active_change は作成して反映後に削除済み
+
+チェッカー:
+- rq_integrity_checker.py docs/requirements.md: 問題 0 件（シナリオ 16 本）
+- rq_ds_link_checker.py docs/requirements.md docs/detail_design.md: 欠落 0、不整合 0
+- scripts/isdd/check.sh --strict: エラー 0、警告 0、DS-TS 18/18 合格、要件 38/38 実装済み
+- implementation_completeness_checker.py: 4/4 通過
+- 単体テスト 14 件 OK、E2E 19 件 OK（同時テストを 3 回連続で実行して OK）
+- 変更要件・変更設計の整合は rq_integrity_checker と rq_ds_link_checker（--base 付き）で 0 件
+
+起動確認: setup.sh 実行後、PORT=8796 DATA_DIR=/tmp/isdd-r2-data2 bash run.sh で起動。/、/accounts/register/、/login/ が 200、/equipment/new/ と /accounts/ が未ログインでログイン画面へ 303。登録、ログイン、備品登録、貸出、未来日の拒否（貸出日に未来の日付は入力できません）、返却の一連を curl で確認。自分が起動したサーバー（pid 84513）だけを止め、/tmp/isdd-r2-data2 を削除済み。

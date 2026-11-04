@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Browse species{% endblock %}
+{% block content %}
+<h1>Browse species</h1>
+
+{% if notice == 'deleted' %}
+  <p class="notice" role="status">Species deleted.</p>
+{% endif %}
+
+<form class="filter-form" method="get" action="{{ url_for('species.list_species') }}">
+  <div class="field">
+    <label for="q">Search</label>
+    <input id="q" name="q" type="search" value="{{ keyword }}" placeholder="Scientific name, common name or description">
+  </div>
+  <div class="field">
+    <label for="kingdom">Kingdom</label>
+    <select id="kingdom" name="kingdom">
+      <option value="">All</option>
+      {% for k in kingdoms %}<option value="{{ k }}" {% if selected.kingdom == k %}selected{% endif %}>{{ k }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="habitat">Habitat</label>
+    <select id="habitat" name="habitat">
+      <option value="">All</option>
+      {% for h in habitats %}<option value="{{ h }}" {% if selected.habitat == h %}selected{% endif %}>{{ h }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="diet">Diet</label>
+    <select id="diet" name="diet">
+      <option value="">All</option>
+      {% for d in diets %}<option value="{{ d }}" {% if selected.diet == d %}selected{% endif %}>{{ d }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="field">
+    <label for="conservation_status">Conservation status</label>
+    <select id="conservation_status" name="conservation_status">
+      <option value="">All</option>
+      {% for code, label in statuses.items() %}<option value="{{ code }}" {% if selected.conservation_status == code %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="actions">
+    <button type="submit" class="button">Search</button>
+    <a class="button secondary" href="{{ url_for('species.list_species') }}">Clear</a>
+  </div>
+</form>
+
+<p class="count">{{ rows|length }} species</p>
+
+{% if rows %}
+<table class="species-table">
+  <thead>
+    <tr>
+      <th>Common name</th>
+      <th>Scientific name</th>
+      <th>Kingdom</th>
+      <th>Habitat</th>
+      <th>Diet</th>
+      <th>Conservation status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      <td><a href="{{ url_for('species.show_species_detail', species_id=row['id']) }}">{{ row['common_name'] }}</a></td>
+      <td>{% if row['scientific_name'] %}<em>{{ row['scientific_name'] }}</em>{% else %}—{% endif %}</td>
+      <td>{{ row['kingdom'] or '—' }}</td>
+      <td>{{ row['habitat'] }}</td>
+      <td>{{ row['diet'] }}</td>
+      <td>{{ statuses[row['conservation_status']] if row['conservation_status'] else '—' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p class="empty">No species match the current search and filters.</p>
+{% endif %}
+{% endblock %}

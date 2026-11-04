@@ -1,0 +1,22 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "On the reset site (127.0.0.1:63866), spinning as 'Tester2' showed 'Spinning...', then the wheel stopped with the pointer on 'Try Again' and the page showed 'No prize this time, Tester2. Spin again!' with no errors. A separate spin as 'Winner0' stopped on '10% Off Coupon' and showed 'Congratulations, Winner0! You won: 10% Off Coupon'. The spin works and displays the result each time."
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "The Prize List page shows all 7 entries (10% Off Coupon, Free Coffee, Movie Ticket, Mystery Gift, T-Shirt, $50 Gift Card, Try Again) with their chances, matching the 7 wheel segments and the Manage Prizes list."
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "After a spin that won 10% Off Coupon (name 'Winner0'), My Winnings for 'Winner0' lists '1 win for Winner0' with the row 'Nov 4, 2026, 3:05 PM | 10% Off Coupon'. A 'Try Again' spin records nothing, which matches the site's rule that only prizes are saved."
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "Body background is rgb(255,255,240), which is ivory. The header, primary buttons, card borders and headings are dark green (rgb(0,100,0) and rgb(0,67,0)). The Remove buttons are white with dark-green text and border, so no red component remains."
+  },
+  "000010-c1": {
+    "verdict": "YES",
+    "reason": "Adding 'Golden Ticket' on Manage Prizes showed it in the Manage list, on the Prize List page, and as a labelled segment on the wheel of the home page. Clicking its Remove button removed it from the Manage list and the Prize List, and the site was left without it."
+  }
+}

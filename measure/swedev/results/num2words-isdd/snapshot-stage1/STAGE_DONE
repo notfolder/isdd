@@ -1,0 +1,9 @@
+完了の要約（isdd 変更フロー: parse_currency_parts の復元）
+
+- 逆引き: num2words/ パッケージを対象に docs/requirements.md・docs/detail_design.md・docs/trace_map.md を作成（ファイル・クラス・公開関数を対応表に登録）。既知の欠落（parse_currency_parts が無く import 不可）を当時の記録に残した。
+- 変更: .history/20261104-parse-currency-parts/（change_requirements.md・change_detail_design.md・tasks.md）。
+- 実装: num2words/currency.py に parse_currency_parts を追加（PRD のシグネチャとドキュメント文字列どおり）。既存の関数は変更していない。
+- E2E: e2e/test_parse_currency_parts.py と e2e/test_baseline_scenarios.py（7 件、合格）。結果は e2e/results/e2e.xml。
+- 単体テスト: tests/ の 1427 件が合格（tests/test_cli.py は依存（delegator）が無いため除外）。
+- 対応表・要件・設計: bash scripts/isdd/check.sh --strict がエラー 0・警告 0。受け入れ判定は DS-TS 6/6 合格、要件 8/8 実装済み。
+- 実装後レビュー: 変更を正本へ反映し、docs/active_change と docs/proposals.md を削除。

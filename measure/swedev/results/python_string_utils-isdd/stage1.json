@@ -1,0 +1,18 @@
+{
+  "python_string_utils-test_is_credit_card-level1": {
+    "passed": 7,
+    "gt_passed": 7,
+    "total": 7,
+    "tests": {
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_cannot_provide_unsupported_card_type": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_numbers_in_string_should_be_15_at_least": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_should_accept_any_valid_card_number_if_type_is_not_specified": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_should_return_false_for_non_string_objects": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_should_validate_only_specific_card_type_if_specified": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_string_cannot_be_empty": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_string_cannot_contain_letters": "pass"
+    },
+    "tail": "tests/test_is_credit_card.py::IsCreditCardTestCase::test_string_cannot_be_empty PASSED [ 85%]\ntests/test_is_credit_card.py::IsCreditCardTestCase::test_string_cannot_contain_letters PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit0.xml ----------------------\n============================== 7 passed in 0.05s ===============================",
+    "rate": 1.0
+  }
+}

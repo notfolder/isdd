@@ -1,0 +1,10 @@
+Change request 1 implemented.
+
+1. Theme: page background is ivory (#fffff0). Header, buttons, card top borders, table headers, prize card edges and badges use dark green (#006400 and shades). Wheel segments use dark green shades; the no-prize segment uses a muted green-gray. Error text uses a dark amber instead of red.
+2. Prize management: new "Manage Prizes" page at /manage, linked from the main navigation on every page. Users can add a prize by name (max 30 characters, duplicates rejected case-insensitively) and remove any prize (Remove button). Added prizes get weight 10 and are winning segments. Past winnings keep the prize name.
+   - API: POST /api/prizes {name}, DELETE /api/prizes/<id>.
+   - The Spin page reloads the prize list before each spin, and again when the tab becomes visible, so the wheel matches the list. The Prize List page reads the list on each load.
+   - Sample prizes are seeded only once (meta table flag), so an emptied list stays empty after a restart.
+   - Segment colors are assigned by position on the server, so existing data also gets the green palette.
+Existing spin, prize list and winnings features were checked via the API (spin, winnings history, add, duplicate, empty, delete, delete again, bad body) and by rendering the pages in headless Chrome.
+Start: bash setup.sh; PORT=8000 bash run.sh

@@ -1,0 +1,7 @@
+Implemented the two functions removed from string_utils/validation.py.
+
+- is_full_string(input_string): returns is_string(input_string) and input_string.strip() != ''. Placed after is_string.
+- is_ip_v4(input_string): returns False unless is_full_string(input_string) and SHALLOW_IP_V4_RE matches; then checks each dot-separated octet is 0..255. Placed before is_ip_v6.
+
+Verification: existing suite (python -m pytest in .venv, Python 3.12) 392 passed. Spot checks for is_ip_v4 (valid/out-of-range/spaces/extra dots/non-str/blank) and is_full_string (blank, whitespace, non-str) behaved as the docstrings describe.
+Known edge: SHALLOW_IP_V4_RE ends with '$', which also matches before a trailing newline, so '1.2.3.4\n' is accepted (unchanged from the regex in _regex.py).

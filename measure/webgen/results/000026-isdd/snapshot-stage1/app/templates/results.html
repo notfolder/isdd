@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "base.html" import result_block %}
+{% block title %}Results{% endblock %}
+{% block content %}
+<h1>Results</h1>
+<p class="lead">Vote counts and shares for every poll.</p>
+{% if results %}
+  {% for result in results %}
+    {{ result_block(result) }}
+  {% endfor %}
+{% else %}
+<p class="empty">No polls yet.</p>
+{% endif %}
+{% endblock %}

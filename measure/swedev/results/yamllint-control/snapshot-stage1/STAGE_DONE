@@ -1,0 +1,6 @@
+Implemented the four removed items from REQUEST.md.
+
+- yamllint/parser.py: token_or_comment_generator. Reads all tokens with yaml.BaseLoader (check_token/get_token). Each token is yielded as a Token with prev, next and nextnext, followed by the comments found between it and the next token (comments_between_tokens). On a scanner error the last two tokens read are dropped, because they lack the successor context the rules need; the linter reports the syntax error separately.
+- yamllint/rules/indentation.py: check() wraps _check(). An AssertionError from an inconsistent indentation state yields one problem ("cannot infer indentation: unsupported syntax") and clears the rule context. Parent.__repr__ returns "<label>:<indent>".
+
+Verification: the full existing suite passes with the project's own tests (python -m pytest tests in the .venv with pyyaml and pathspec): 414 passed.

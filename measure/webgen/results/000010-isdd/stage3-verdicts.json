@@ -1,0 +1,30 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "Entered 'Tester1' and pressed Spin. The wheel rotated at once and stopped after about 4.1 s with 'You won: Gift Card 500' (one of the six wheel segments). No error appeared."
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "The Prizes page lists six prizes with descriptions (Coffee Voucher, Gift Card 500, Free Dessert, Movie Ticket, Tote Bag, Mystery Gift). These match the six segment labels on the wheel exactly."
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "After a spin, the My Records page shows the new row for the same name with the prize that was won and the date 11/4/2026 with time. The records list shows rows only after a name search, which is how the site is built."
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "Body background is rgb(255,255,240), which is CSS 'ivory'. Header, buttons, form cards and table headers are rgb(0,100,0), which is CSS 'dark green'. Input fields are white and the table body is cream, but the expected list does not name those."
+  },
+  "000010-c1": {
+    "verdict": "YES",
+    "reason": "Adding 'Golden Ticket' on the manage page made it appear in the prize list and as a seventh wheel segment. Pressing its Remove button removed it from the manage list, the prize list and the wheel."
+  },
+  "000010-c2": {
+    "verdict": "YES",
+    "reason": "Pressing Spin with an empty name showed 'Please enter your name (1–30 characters).' and no prize was won. After entering 'Alice' and spinning, the wheel stopped on 'Coffee Voucher' and the records show a row 'Alice | Coffee Voucher | 11/4/2026, 3:43:31 PM'."
+  },
+  "000010-c3": {
+    "verdict": "YES",
+    "reason": "Clicking 'Clear records' opened the confirm dialog 'Delete all winning records? This cannot be undone.' After accepting, searches for 'Alice' and 'Tester1' both returned no rows. Checking only these two names is a limitation."
+  }
+}

@@ -1,0 +1,10 @@
+完了の要約
+- yamllint/linter.py に次を実装した（docstring と署名は REQUEST.md の PRD どおり）。
+  - LintProblem.__init__: line, column, desc, rule を保存し、level は None で初期化。
+  - LintProblem.__lt__: (line, column) の順で比較。
+  - LintProblem.__eq__: line, column, rule が同じなら等しい。
+  - run: filepath が ignore 対象なら空を返す。IOBase は read() して、bytes は UTF-8 で復号（失敗時は ISO-8859-1）、str はそのまま _run へ渡す。それ以外は TypeError。
+  - _run: 先頭行が `# yamllint disable-file` なら何も出さない。構文エラーがあればそれだけを出す。無ければ get_cosmetic_problems の結果を流す。
+- 既存の他の機能は変更していない。
+- 確認: .venv の python で `python -m pytest tests` を実行し 414 件 passed（既存テストを含む）。
+- 残り: 追加した docstring の一部行が 79 桁を超える（PRD の文章をそのまま入れたため）。flake8 は環境に無く未実行。

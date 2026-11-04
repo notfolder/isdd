@@ -1,0 +1,35 @@
+{
+  "base_url": "http://127.0.0.1:58844",
+  "cases": [
+    {
+      "id": "000010-1",
+      "category": "Functional Testing",
+      "task": "Spin the wheel to initiate a gameplay session.",
+      "expected": "The wheel spins, stops at a segment, and displays the prize won without any errors."
+    },
+    {
+      "id": "000010-2",
+      "category": "Data Display Testing",
+      "task": "View the list of available prizes before spinning the wheel.",
+      "expected": "A complete and accurate list of prizes is displayed, matching the set prizes available on the wheel."
+    },
+    {
+      "id": "000010-3",
+      "category": "Data Display Testing",
+      "task": "After spinning the wheel, navigate to the section displaying user winning records.",
+      "expected": "The user's winning record is updated to include the latest prize won, with correct details on date and prize."
+    },
+    {
+      "id": "000010-design",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'ivory' as the background color and 'dark green' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'ivory' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
+    },
+    {
+      "id": "000010-c1",
+      "category": "Functional Testing",
+      "task": "Open the prize management page, add a new prize named 'Golden Ticket', then go back to the prize list and the wheel.",
+      "expected": "The prize 'Golden Ticket' appears in the prize list and as a segment of the wheel, and the prize can be removed again from the management page."
+    }
+  ]
+}

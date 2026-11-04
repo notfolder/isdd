@@ -1,0 +1,7 @@
+Implemented the two removed functions from REQUEST.md.
+
+- string_utils/validation.py: is_uuid(input_string, allow_hex=False). Casts the input with str(), then matches UUID_HEX_OK_RE when allow_hex is True and UUID_RE otherwise. Both regexes come from string_utils/_regex.py.
+- string_utils/generation.py: uuid(as_hex=False). Calls uuid4(), returns .hex when as_hex is True, otherwise str(uuid).
+
+Both names were already in each module's __all__, so the package-level exports are unchanged.
+Verification: `.venv/bin/python -m pytest -q` in the work dir gives 380 passed (run from the root and from tests/). A smoke check confirmed uuid() output is accepted by is_uuid, hex output is rejected without allow_hex and accepted with it, and None and non-UUID input return False.

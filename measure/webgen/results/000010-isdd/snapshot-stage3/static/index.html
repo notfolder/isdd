@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wheel of Fortune</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Wheel of Fortune</h1>
+    <nav aria-label="Main">
+      <a href="#/spin" data-view="spin">Spin</a>
+      <a href="#/prizes" data-view="prizes">Prizes</a>
+      <a href="#/records" data-view="records">My Records</a>
+      <a href="#/manage" data-view="manage">Manage prizes</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="view-spin" class="view">
+      <h2>Spin the wheel</h2>
+      <form id="spin-form" class="panel">
+        <label for="spin-name">Your name</label>
+        <input id="spin-name" name="player_name" autocomplete="off">
+        <p id="spin-error" class="error" role="alert"></p>
+        <button type="submit" id="spin-button">Spin</button>
+      </form>
+      <div class="wheel-area">
+        <div class="pointer" aria-hidden="true"></div>
+        <div id="wheel" class="wheel"></div>
+      </div>
+      <p id="spin-result" class="result" aria-live="polite"></p>
+    </section>
+
+    <section id="view-prizes" class="view" hidden>
+      <h2>Prizes</h2>
+      <p id="prizes-empty" class="empty" hidden>No prizes yet</p>
+      <table class="list">
+        <thead><tr><th>Prize</th><th>Description</th></tr></thead>
+        <tbody id="prizes-body"></tbody>
+      </table>
+    </section>
+
+    <section id="view-records" class="view" hidden>
+      <h2>My Records</h2>
+      <form id="records-form" class="panel">
+        <label for="records-name">Your name</label>
+        <input id="records-name" autocomplete="off">
+        <p id="records-error" class="error" role="alert"></p>
+        <button type="submit">Search</button>
+      </form>
+      <p id="records-empty" class="empty" hidden>No records found for this name</p>
+      <table class="list">
+        <thead><tr><th>Player</th><th>Prize</th><th>Date and time</th></tr></thead>
+        <tbody id="records-body"></tbody>
+      </table>
+      <div class="records-clear">
+        <button type="button" id="clear-records-button">Clear records</button>
+        <p id="records-status" class="result" aria-live="polite"></p>
+      </div>
+    </section>
+    <section id="view-manage" class="view" hidden>
+      <h2>Manage prizes</h2>
+      <form id="manage-form" class="panel">
+        <label for="manage-name">Prize name</label>
+        <input id="manage-name" autocomplete="off">
+        <p id="manage-error" class="error" role="alert"></p>
+        <button type="submit">Add</button>
+      </form>
+      <p id="manage-empty" class="empty" hidden>No prizes yet</p>
+      <table class="list">
+        <thead><tr><th>Prize</th><th>Description</th><th></th></tr></thead>
+        <tbody id="manage-body"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

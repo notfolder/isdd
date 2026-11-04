@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Create poll{% endblock %}
+{% block content %}
+<h1>Create a poll</h1>
+<p class="lead">Enter a question and at least two options. Empty option boxes are ignored.</p>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form class="card create-form" method="post" action="{{ url_for('polls.submit_create_poll') }}">
+  <label class="field">
+    <span>Question</span>
+    <input type="text" name="question" maxlength="200" value="{{ question }}">
+  </label>
+  <fieldset>
+    <legend>Options</legend>
+    {% for value in options %}
+    <label class="field">
+      <span>Option {{ loop.index }}</span>
+      <input type="text" name="option_{{ loop.index }}" maxlength="100" value="{{ value }}">
+    </label>
+    {% endfor %}
+  </fieldset>
+  <button type="submit" class="button">Create poll</button>
+</form>
+{% endblock %}

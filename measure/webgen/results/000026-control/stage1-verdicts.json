@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "ホームの「Vote」リンク（/polls/1 など）から投票ページへ遷移でき、エラーは出ず、5 つの選択肢（Python, JavaScript, Go, Rust, Java）がすべて表示された。コンソールエラーもなし。"},
+  "000026-2": {"verdict": "PARTIAL", "reason": "投票せずに /polls と各 /polls/N で選択肢を一覧できる。ただし各選択肢はラジオボタンの名前だけで、選択肢ごとの説明などの関連情報は表示されず、「relevant information」の部分が満たされない。"},
+  "000026-3": {"verdict": "PARTIAL", "reason": "選択肢を選んで「Submit my vote」を押すと投票が記録された（Poll 1 の合計が 6→7、JavaScript が 2→3 票）。しかし投票後は結果ページへ直接遷移するだけで、投票完了を知らせる通知（メッセージ・トースト等）は DOM にもページ本文にも表示されなかった。"},
+  "000026-4": {"verdict": "YES", "reason": "/results と /polls/N/results で、投票直後に合計票数・各選択肢の票数と割合（例 42.9%）・棒グラフ（bar-fill の幅）が更新されて表示された。"},
+  "000026-5": {"verdict": "YES", "reason": "getComputedStyle で body の背景は rgb(255,255,255)（white）、ヘッダー・見出し・パネル・ボタン・カード・枠線・ナビ等の部品は rgb(0,0,128)（navy）だった。デザイン指定どおり。"}
+}

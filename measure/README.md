@@ -1,4 +1,4 @@
-# isdd の効果の計測（計測 1: 備品管理アプリの試運転）
+# isdd の効果の計測（計測 1: 備品管理アプリ、計測 2: SWE-Dev、計測 4: WebGen-Bench）
 
 `.history/BACKLOG.md` の「isdd の効果の計測」の計測 1。公開ベンチマークには「変更を重ねて文脈を切り替える」題材が無いので、自作の題材で仕組みを通す。
 
@@ -33,3 +33,12 @@ python3 measure/score.py --app /path/to/work/isdd-r1 --stage 2 --out measure/res
 ```
 
 結果は `results/` に JSON で残す（作業ディレクトリとコードは残さない）。
+
+## 2026-11-04 の本計測での変更
+
+- 契約と固定回答を段ごとに分けた（`contracts/stageN.md` は累積で `contract.md` にまとめて渡す。`answers/stageN.md`）。試運転の結果は `results/trial-2026-11-04/`。
+- `run.py` は `claude -p` の権限指定を `evals/run-claude-code.py` と同じ形（標準入力で依頼、`--permission-mode acceptEdits`、`--allowedTools` の列挙、`--setting-sources project`）に直したが、Claude Code の自動モードの分類器が「無人のエージェントの作成」として止めるため、本計測は `stage.py`（prepare → Agent ツール（haiku）→ finish → score）で回した。
+- `stage.py finish` は snapshot と記録だけ、`stage.py score` が snapshot を採点する（`results/.score.lock` で直列）。採点は `PATH=/tmp/isdd-measure/bin:$PATH`（python3 を 3.12 にする）で回す。
+- 計測 2（SWE-Dev easy、`swedev/`）: 1 パッケージを 1 作業ディレクトリにし、課題を段として積む。`swedev.py prepare` が Docker イメージから `/app/<pkg>` を取り出し、**正解の複製（build/lib、egg-info、modified_testcases、バイトコード）を消し**、課題で削られた関数を AST で消す。`evaluate` は作業ディレクトリの src をコンテナにマウントして隠しテスト（課題の test_code をコンテナに書く）を回す。
+- 計測 4（WebGen-Bench、`webgen/`）: 3 課題（000010、000026、000088）を新規 → 変更 × 2 の 3 段にした（変更の依頼とケースは `plan.json`）。採点は Haiku ＋ Playwright の採点エージェント（`grader-prompt.md`）で YES / PARTIAL / NO。
+- 計測 3（FeatureBench fast、`featurebench/`）: mlflow の課題 4 件（同じ base commit）を段として積む。`fb.py prepare` がイメージの /testbed を SSD に取り出し（.git と build/ は消す）、マスク patch と F2P テストの削除を当て、コンテナ `fb-<arm>` に /testbed としてマウントする。エージェントは `docker exec` でテストを回す。`evaluate` は test_patch を逆適用して F2P を戻し、最終段だけ P2P（全課題分）も回す（1 ファイル 15 分かかるものがある）。Docker は OrbStack でデータは /Volumes/SSD。

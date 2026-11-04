@@ -1,0 +1,125 @@
+{
+  "pkg": "num2words",
+  "arm": "control",
+  "stages": {
+    "1": {
+      "task": "num2words-test_currency-level1",
+      "done": true,
+      "wall_sec": 72.0,
+      "agent_tokens": 44481,
+      "tool_uses": 13,
+      "note": "",
+      "current": {
+        "passed": 1,
+        "gt_passed": 1,
+        "total": 1,
+        "tests": {
+          "tests.test_currency.CurrencyTestCase::test_parse_currency_parts": "pass"
+        },
+        "tail": "tests/test_currency.py::CurrencyTestCase::test_parse_currency_parts PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit0.xml ----------------------\n============================== 1 passed in 0.06s ===============================",
+        "rate": 1.0
+      },
+      "previous": {},
+      "eval_sec": 30.1,
+      "error": null,
+      "regressions": [],
+      "overbuild": {
+        "source_files": 62,
+        "lines": 13576,
+        "public_functions": 378
+      }
+    },
+    "2": {
+      "task": "num2words-test_utils-level1",
+      "done": true,
+      "wall_sec": 45.0,
+      "agent_tokens": 40867,
+      "tool_uses": 11,
+      "note": "",
+      "current": {
+        "passed": 1,
+        "gt_passed": 1,
+        "total": 1,
+        "tests": {
+          "modified_testcases.test_utils.TestUtils::test_splitbyx": "pass"
+        },
+        "tail": "modified_testcases/test_utils.py::TestUtils::test_splitbyx PASSED        [100%]\n\n--------------------- generated xml file: /tmp/junit1.xml ----------------------\n============================== 1 passed in 0.05s ===============================",
+        "rate": 1.0
+      },
+      "previous": {
+        "num2words-test_currency-level1": {
+          "passed": 1,
+          "gt_passed": 1,
+          "total": 1,
+          "tests": {
+            "tests.test_currency.CurrencyTestCase::test_parse_currency_parts": "pass"
+          },
+          "tail": "tests/test_currency.py::CurrencyTestCase::test_parse_currency_parts PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit0.xml ----------------------\n============================== 1 passed in 0.06s ===============================",
+          "rate": 1.0
+        }
+      },
+      "eval_sec": 11.0,
+      "error": null,
+      "regressions": [],
+      "overbuild": {
+        "source_files": 62,
+        "lines": 13590,
+        "public_functions": 378
+      }
+    },
+    "3": {
+      "task": "num2words-test_base-level1",
+      "done": true,
+      "wall_sec": 139.0,
+      "agent_tokens": 70124,
+      "tool_uses": 15,
+      "note": "",
+      "current": {
+        "passed": 7,
+        "gt_passed": 7,
+        "total": 7,
+        "tests": {
+          "modified_testcases.test_base.Num2WordBaseTest::test_error_merge": "pass",
+          "modified_testcases.test_base.Num2WordBaseTest::test_error_to_cardinal_float": "pass",
+          "modified_testcases.test_base.Num2WordBaseTest::test_is_title": "pass",
+          "modified_testcases.test_base.Num2WordBaseTest::test_pluralize_not_implemented": "pass",
+          "modified_testcases.test_base.Num2WordBaseTest::test_set_high_numwords_not_implemented": "pass",
+          "modified_testcases.test_base.Num2WordBaseTest::test_to_currency_not_implemented": "pass",
+          "modified_testcases.test_base.Num2WordBaseTest::test_to_ordinal_num": "pass"
+        },
+        "tail": "modified_testcases/test_base.py::Num2WordBaseTest::test_to_currency_not_implemented PASSED [ 85%]\nmodified_testcases/test_base.py::Num2WordBaseTest::test_to_ordinal_num PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit2.xml ----------------------\n============================== 7 passed in 0.05s ===============================",
+        "rate": 1.0
+      },
+      "previous": {
+        "num2words-test_currency-level1": {
+          "passed": 1,
+          "gt_passed": 1,
+          "total": 1,
+          "tests": {
+            "tests.test_currency.CurrencyTestCase::test_parse_currency_parts": "pass"
+          },
+          "tail": "tests/test_currency.py::CurrencyTestCase::test_parse_currency_parts PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit0.xml ----------------------\n============================== 1 passed in 0.05s ===============================",
+          "rate": 1.0
+        },
+        "num2words-test_utils-level1": {
+          "passed": 1,
+          "gt_passed": 1,
+          "total": 1,
+          "tests": {
+            "modified_testcases.test_utils.TestUtils::test_splitbyx": "pass"
+          },
+          "tail": "modified_testcases/test_utils.py::TestUtils::test_splitbyx PASSED        [100%]\n\n--------------------- generated xml file: /tmp/junit1.xml ----------------------\n============================== 1 passed in 0.04s ===============================",
+          "rate": 1.0
+        }
+      },
+      "eval_sec": 7.7,
+      "error": null,
+      "regressions": [],
+      "overbuild": {
+        "source_files": 62,
+        "lines": 13586,
+        "public_functions": 378
+      }
+    }
+  }
+}

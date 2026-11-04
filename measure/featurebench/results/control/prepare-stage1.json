@@ -1,0 +1,8 @@
+{
+  "task": "mlflow__mlflow.93dab383.test_config.c63d41b0.lv1",
+  "container": "1a12dbeb1762",
+  "mask": "ok",
+  "test_removed": [
+    "tests/claude_code/test_config.py"
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "task": "mlflow__mlflow.93dab383.test_genai_eval_utils.2d5441f2.lv1",
+  "done": true,
+  "wall_sec": 593.0,
+  "agent_tokens": 148927,
+  "tool_uses": 37,
+  "note": "最終段。P2P は段 1〜4 の全課題分。エージェントは isdd スキルを読み込まず .history の型を写して進めたと報告（手順の逸脱）",
+  "f2p_passed": 19,
+  "f2p_gt": 20,
+  "f2p_rate": 0.95,
+  "p2p": {
+    "tests/artifacts/test_artifacts.py": {
+      "passed": 0,
+      "total": 0,
+      "tail": "..............s......"
+    },
+    "tests/autologging/test_autologging_client.py": {
+      "passed": 11,
+      "total": 11,
+      "tail": "============================== Remaining threads ===============================\n1: <Thread(MlflowAutologgingQueueingClient_0, started 140736653280832)>\n11 passed in 1302.65s (0:21:42)"
+    },
+    "tests/data/test_dataset_source.py": {
+      "passed": 5,
+      "total": 5,
+      "tail": "::endgroup::\n\n5 passed, 4 warnings in 236.81s (0:03:56)"
+    },
+    "tests/entities/test_evaluation_dataset.py": {
+      "passed": 19,
+      "total": 19,
+      "tail": "::endgroup::\n\n19 passed in 76.13s (0:01:16)"
+    },
+    "tests/evaluate/logging/test_assessment_entity.py": {
+      "passed": 4,
+      "total": 4,
+      "tail": "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n4 passed, 19 warnings in 0.08s"
+    },
+    "tests/genai/datasets/test_evaluation_dataset.py": {
+      "passed": 12,
+      "total": 12,
+      "tail": "............                                                             [100%]\n12 passed in 0.83s"
+    },
+    "tests/genai/evaluate/test_to_predict_fn.py": {
+      "passed": 10,
+      "total": 10,
+      "tail": "::endgroup::\n\n10 passed in 302.69s (0:05:02)"
+    },
+    "tests/genai/judges/test_judge_tool_get_traces_in_session.py": {
+      "passed": 7,
+      "total": 7,
+      "tail": ".......                                                                  [100%]\n7 passed in 0.78s"
+    },
+    "tests/projects/test_databricks.py": {
+      "passed": 16,
+      "total": 16,
+      "tail": "::endgroup::\n\n16 passed, 1 warning in 616.98s (0:10:16)"
+    },
+    "tests/store/artifact/test_databricks_logged_model_artifact_repo.py": {
+      "passed": 20,
+      "total": 20,
+      "tail": "....................                                                     [100%]\n20 passed in 1.79s"
+    },
+    "tests/store/artifact/test_runs_artifact_repo.py": {
+      "passed": 19,
+      "total": 19,
+      "tail": "::endgroup::\n\n19 passed in 268.53s (0:04:28)"
+    },
+    "tests/store/model_registry/test_databricks_workspace_model_registry_store.py": {
+      "passed": 21,
+      "total": 21,
+      "tail": ".....................                                                    [100%]\n21 passed in 0.12s"
+    },
+    "tests/store/tracking/test_abstract_store.py": {
+      "passed": 30,
+      "total": 30,
+      "tail": "..............................                                           [100%]\n30 passed in 0.11s"
+    },
+    "tests/test_flavors.py": {
+      "passed": 1,
+      "total": 1,
+      "tail": "::endgroup::\n\n1 passed in 4.20s"
+    },
+    "tests/tracing/utils/test_search.py": {
+      "passed": 23,
+      "total": 23,
+      "tail": ".......................                                                  [100%]\n23 passed in 0.10s"
+    },
+    "tests/utils/test_arguments_utils.py": {
+      "passed": 9,
+      "total": 9,
+      "tail": ".........                                                                [100%]\n9 passed in 0.16s"
+    },
+    "tests/utils/test_doctor.py": {
+      "passed": 3,
+      "total": 3,
+      "tail": "::endgroup::\n\n3 passed in 219.82s (0:03:39)"
+    },
+    "tests/utils/test_gorilla.py": {
+      "passed": 6,
+      "total": 6,
+      "tail": "......                                                                   [100%]\n6 passed in 0.16s"
+    },
+    "tests/utils/test_time.py": {
+      "passed": 1,
+      "total": 1,
+      "tail": ".                                                                        [100%]\n1 passed in 0.16s"
+    }
+  },
+  "p2p_all_pass": false,
+  "f2p": {
+    "mlflow__mlflow.93dab383.test_config.c63d41b0.lv1": {
+      "tests/claude_code/test_config.py": {
+        "passed": 13,
+        "gt_passed": 13,
+        "total": 13,
+        "tests": {
+          "tests.claude_code.test_config::test_load_claude_config_valid_json": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_missing_file": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_invalid_json": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_file": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_directory": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_os_environment": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_claude_settings_fallback": "pass",
+          "tests.claude_code.test_config::test_get_env_var_default_when_not_found": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_enabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_disabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_no_config": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_new_file": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_experiment_id_precedence": "pass"
+        },
+        "tail": ".............                                                            [100%]\n13 passed in 0.08s"
+      }
+    },
+    "mlflow__mlflow.93dab383.test_trace_correlation.53c200a6.lv1": {
+      "tests/store/analytics/test_trace_correlation.py": {
+        "passed": 21,
+        "gt_passed": 21,
+        "total": 21,
+        "tests": {
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[perfect_positive]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[perfect_negative]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[independence]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[all_match_both]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[zero_filter1]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[zero_filter2]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[both_zero]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[empty_dataset]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[inconsistent]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_partial_overlap": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_with_smoothing": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_all_traces_match_both": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[half_match]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[small_counts]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[near_all]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[quarter_match]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_both_npmi_values_returned": "pass",
+          "tests.store.analytics.test_trace_correlation::test_symmetry": "pass",
+          "tests.store.analytics.test_trace_correlation::test_monotonicity_joint_count": "pass",
+          "tests.store.analytics.test_trace_correlation::test_boundary_values[high_overlap]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_boundary_values[low_overlap]": "pass"
+        },
+        "tail": ".....................                                                    [100%]\n21 passed in 0.12s"
+      }
+    },
+    "mlflow__mlflow.93dab383.test_security.98fcde1d.lv1": {
+      "tests/server/test_security.py": {
+        "passed": 30,
+        "gt_passed": 30,
+        "total": 30,
+        "tests": {
+          "tests.server.test_security::test_default_allowed_hosts": "pass",
+          "tests.server.test_security::test_custom_allowed_hosts": "pass",
+          "tests.server.test_security::test_dns_rebinding_protection[localhost-200-None]": "pass",
+          "tests.server.test_security::test_dns_rebinding_protection[127.0.0.1-200-None]": "pass",
+          "tests.server.test_security::test_dns_rebinding_protection[evil.attacker.com-403-Invalid Host header]": "pass",
+          "tests.server.test_security::test_cors_protection[POST-http://localhost:3000-http://localhost:3000]": "pass",
+          "tests.server.test_security::test_cors_protection[POST-http://evil.com-None]": "pass",
+          "tests.server.test_security::test_cors_protection[POST-None-None]": "pass",
+          "tests.server.test_security::test_cors_protection[GET-http://evil.com-None]": "pass",
+          "tests.server.test_security::test_insecure_cors_mode": "pass",
+          "tests.server.test_security::test_preflight_options_request[http://localhost:3000-http://localhost:3000]": "pass",
+          "tests.server.test_security::test_preflight_options_request[http://evil.com-None]": "pass",
+          "tests.server.test_security::test_security_headers": "pass",
+          "tests.server.test_security::test_disable_security_middleware": "pass",
+          "tests.server.test_security::test_x_frame_options_configuration": "pass",
+          "tests.server.test_security::test_notebook_trace_renderer_skips_x_frame_options": "pass",
+          "tests.server.test_security::test_wildcard_hosts": "pass",
+          "tests.server.test_security::test_endpoint_security_bypass[/health-evil.com-200]": "pass",
+          "tests.server.test_security::test_endpoint_security_bypass[/test-evil.com-403]": "pass",
+          "tests.server.test_security::test_host_validation[192.168.1.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[10.0.0.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[172.16.0.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[127.0.0.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[localhost-True]": "pass",
+          "tests.server.test_security::test_host_validation[[::1]-True]": "pass",
+          "tests.server.test_security::test_host_validation[192.168.1.1:8080-True]": "pass",
+          "tests.server.test_security::test_host_validation[[::1]:8080-True]": "pass",
+          "tests.server.test_security::test_host_validation[evil.com-False]": "pass",
+          "tests.server.test_security::test_environment_variable_configuration[MLFLOW_SERVER_CORS_ALLOWED_ORIGINS-http://app1.com,http://app2.com-expected_result0]": "pass",
+          "tests.server.test_security::test_environment_variable_configuration[MLFLOW_SERVER_ALLOWED_HOSTS-app1.com,app2.com:8080-expected_result1]": "pass"
+        },
+        "tail": "..............................                                           [100%]\n30 passed in 0.27s"
+      }
+    },
+    "mlflow__mlflow.93dab383.test_genai_eval_utils.2d5441f2.lv1": {
+      "tests/cli/test_genai_eval_utils.py": {
+        "passed": 19,
+        "gt_passed": 20,
+        "total": 20,
+        "tests": {
+          "tests.cli.test_genai_eval_utils::test_format_single_trace_with_result_and_rationale": "pass",
+          "tests.cli.test_genai_eval_utils::test_format_multiple_traces_multiple_scorers": "pass",
+          "tests.cli.test_genai_eval_utils::test_format_long_rationale_not_truncated": "pass",
+          "tests.cli.test_genai_eval_utils::test_format_error_message_formatting": "pass",
+          "tests.cli.test_genai_eval_utils::test_format_na_for_missing_results": "pass",
+          "tests.cli.test_genai_eval_utils::test_format_result_only_without_rationale": "pass",
+          "tests.cli.test_genai_eval_utils::test_format_rationale_only_without_result": "pass",
+          "tests.cli.test_genai_eval_utils::test_format_with_different_assessment_names": "pass",
+          "tests.cli.test_genai_eval_utils::test_resolve_builtin_scorer": "pass",
+          "tests.cli.test_genai_eval_utils::test_resolve_builtin_scorer_snake_case": "pass",
+          "tests.cli.test_genai_eval_utils::test_resolve_registered_scorer": "pass",
+          "tests.cli.test_genai_eval_utils::test_resolve_mixed_scorers": "pass",
+          "tests.cli.test_genai_eval_utils::test_resolve_scorer_not_found_raises_error": "fail",
+          "tests.cli.test_genai_eval_utils::test_resolve_empty_scorers_raises_error": "pass",
+          "tests.cli.test_genai_eval_utils::test_extract_with_matching_run_id": "pass",
+          "tests.cli.test_genai_eval_utils::test_extract_with_different_assessment_name": "pass",
+          "tests.cli.test_genai_eval_utils::test_extract_filter_out_assessments_with_different_run_id": "pass",
+          "tests.cli.test_genai_eval_utils::test_extract_no_assessments_for_run_id": "pass",
+          "tests.cli.test_genai_eval_utils::test_extract_multiple_assessments_from_same_run": "pass",
+          "tests.cli.test_genai_eval_utils::test_extract_no_assessments_on_trace_shows_error": "pass"
+        },
+        "tail": "=========================== short test summary info ============================\nFAILED | MEM 7.2/11.7 GB | DISK 93.8/380.8 GB tests/cli/test_genai_eval_utils.py::test_resolve_scorer_not_found_raises_error\n1 failed, 19 passed in 0.67s"
+      }
+    }
+  },
+  "regressions": [],
+  "restore_errors": [],
+  "eval_sec": 5097.4,
+  "error": null
+}

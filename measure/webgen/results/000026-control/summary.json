@@ -1,0 +1,153 @@
+{
+  "site": "000026",
+  "arm": "control",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 85.0,
+      "agent_tokens": 47161,
+      "tool_uses": 8,
+      "note": "",
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "ホームの「Vote」リンク（/polls/1 など）から投票ページへ遷移でき、エラーは出ず、5 つの選択肢（Python, JavaScript, Go, Rust, Java）がすべて表示された。コンソールエラーもなし。",
+          "category": "Data Display Testing"
+        },
+        "000026-2": {
+          "verdict": "PARTIAL",
+          "reason": "投票せずに /polls と各 /polls/N で選択肢を一覧できる。ただし各選択肢はラジオボタンの名前だけで、選択肢ごとの説明などの関連情報は表示されず、「relevant information」の部分が満たされない。",
+          "category": "Functional Testing"
+        },
+        "000026-3": {
+          "verdict": "PARTIAL",
+          "reason": "選択肢を選んで「Submit my vote」を押すと投票が記録された（Poll 1 の合計が 6→7、JavaScript が 2→3 票）。しかし投票後は結果ページへ直接遷移するだけで、投票完了を知らせる通知（メッセージ・トースト等）は DOM にもページ本文にも表示されなかった。",
+          "category": "Functional Testing"
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "/results と /polls/N/results で、投票直後に合計票数・各選択肢の票数と割合（例 42.9%）・棒グラフ（bar-fill の幅）が更新されて表示された。",
+          "category": "Data Display Testing"
+        },
+        "000026-5": {
+          "verdict": "YES",
+          "reason": "getComputedStyle で body の背景は rgb(255,255,255)（white）、ヘッダー・見出し・パネル・ボタン・カード・枠線・ナビ等の部品は rgb(0,0,128)（navy）だった。デザイン指定どおり。",
+          "category": "Design Validation Testing"
+        }
+      },
+      "score": 4.0,
+      "n_cases": 5,
+      "accuracy": 0.8,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 474,
+        "public_functions": 16
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 54.0,
+      "agent_tokens": 50501,
+      "tool_uses": 7,
+      "note": "",
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "ホームの「Vote」リンク（/polls/1）から投票ページへ遷移でき、エラーなく5つの選択肢（Python, JavaScript, Go, Rust, Java）と質問文が表示された。",
+          "category": "Data Display Testing"
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "投票せずに /polls/2 を開くと、質問文・説明文と4つの選択肢（Rooftop restaurant など）が表示され、投票は行われない。選択肢ごとの補足説明は無いが、選択肢名は明確に表示されている。",
+          "category": "Functional Testing"
+        },
+        "000026-3": {
+          "verdict": "PARTIAL",
+          "reason": "/polls/4 で選択肢を選んで送信すると、結果画面へ遷移し合計が 4 から 5 に増えて投票は記録された。しかし投票完了の確認メッセージ（通知）は画面にもHTMLにも出ず、期待の一部が欠けている。",
+          "category": "Functional Testing"
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "/results と /polls/3/results で各選択肢の票数・割合と合計（Total votes: 6）が表示され、棒グラフ（.bar-fill）も票数に応じた幅で描画されている。投票直後に合計が更新されることも確認した。",
+          "category": "Data Display Testing"
+        },
+        "000026-design": {
+          "verdict": "PARTIAL",
+          "reason": "背景は rgb(255,255,224)（light yellow と一致）、ヘッダー・主ボタン・見出しは rgb(47,79,79)（dark slate gray と一致）だった。一方、カード・投票パネル・アウトラインボタンの背景は rgb(255,255,242) とほぼ白で、dark slate gray になっているのは文字と枠線のみ。",
+          "category": "Design Validation Testing"
+        },
+        "000026-c1": {
+          "verdict": "PARTIAL",
+          "reason": "同じブラウザ文脈で投票後に /polls/3 へ戻ると、全選択肢と投票ボタンが disabled になり「You have already voted in this poll」と表示された。無効化を外して再送信しても合計は 7 のまま増えず、2 回目は数えられない。ただし 1 回目の投票後に確認メッセージが出ないため、期待の一部が欠けている。",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 4.5,
+      "n_cases": 6,
+      "accuracy": 0.75,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 476,
+        "public_functions": 16
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 64.0,
+      "agent_tokens": 51974,
+      "tool_uses": 7,
+      "note": "",
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "ホームの「Browse all polls」から /polls に移動し、「Vote」で /polls/1 の投票ページがエラーなく開き、5 つの選択肢が表示された。",
+          "category": "Data Display Testing"
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "投票せずに /polls/1 などを開くと、選択肢（Python, JavaScript 等）がラジオボタン付きで一覧表示され、投票ページの説明文も見える。",
+          "category": "Functional Testing"
+        },
+        "000026-3": {
+          "verdict": "PARTIAL",
+          "reason": "選択した投票は記録される（poll 2・poll 3 で件数が増え、結果ページに反映）が、投票後は結果ページへ遷移するだけで、投票完了の確認通知（メッセージ・トースト等）は DOM にもスクリーンショットにも出なかった。",
+          "category": "Functional Testing"
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "/results と各 /polls/N/results で、合計票数・各選択肢の票数と割合・棒グラフが表示され、投票直後の結果が反映されていた（poll 3 の合計が 6→7 に更新）。",
+          "category": "Data Display Testing"
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "body の背景色が rgb(255,255,224)（light yellow）。ヘッダー・ボタン・見出し・枠線・カード文字色が rgb(47,79,79)（dark slate gray）で、指定どおり。",
+          "category": "Design Validation Testing"
+        },
+        "000026-c1": {
+          "verdict": "PARTIAL",
+          "reason": "1 回目の投票は記録され、再訪すると「You have already voted in this poll」が表示されラジオとボタンが disabled になる。二重投票は無効化の回避（disabled を外して送信）でも加算されなかった。ただし 1 回目の投票に確認メッセージが出ず、期待の一部が欠ける。",
+          "category": "Functional Testing"
+        },
+        "000026-c2": {
+          "verdict": "YES",
+          "reason": "Create poll で 'Best season?'（Spring/Summer/Autumn）を作成すると「Your poll has been created」と表示され、/polls の一覧と投票ページに出た。Summer に投票すると結果ページに 'Best season?' の Summer 1 票（100%）が表示された。",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 6.0,
+      "n_cases": 7,
+      "accuracy": 0.857,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 563,
+        "public_functions": 18
+      }
+    }
+  }
+}

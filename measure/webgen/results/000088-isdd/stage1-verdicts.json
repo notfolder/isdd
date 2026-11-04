@@ -1,0 +1,18 @@
+{
+  "000088-1": {
+    "verdict": "PARTIAL",
+    "reason": "一覧の 12 種はすべて表示され表示エラーもない。ただし詳細ページで E. coli の Class と Average length、Fly agaric の Average length が「—」(欠損を示す表示) になっており、期待の「欠損データなし」を満たさない。"
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "「panthera」は Lion と Tiger、「tree」は English oak と Fly agaric (説明文の trees) など、一致する種だけが表示された。一致しない語 (zebra, wolf) は 0 件で、無関係な種は出なかった。"
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "生息地フィルタで Freshwater は Eurasian otter、Marine は Perrin's beaked whale、Mixed は Atlantic salmon と E. coli のみになり、条件に合わない種は表示されなかった。検索語との併用、界・食性・保全状況のフィルタも正しく絞り込まれた。"
+  },
+  "000088-4": {
+    "verdict": "YES",
+    "reason": "body の背景は rgb(250,240,230) で linen に一致。h1、ヘッダー、ナビ、ボタン、表の見出し、本文の文字色などの部品は rgb(128,0,0) で maroon に一致。入力欄と表の背景は rgb(255,248,240) でやや白寄りだが、部品の色は maroon として指定どおり。"
+  }
+}

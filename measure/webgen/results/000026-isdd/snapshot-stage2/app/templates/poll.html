@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "base.html" import result_block %}
+{% block title %}{{ poll.question if poll else 'Poll not found' }}{% endblock %}
+{% block content %}
+{% if not poll %}
+<h1>Poll not found</h1>
+<p class="error">{{ error }}</p>
+<p><a class="button" href="{{ url_for('polls.index') }}">Back to polls</a></p>
+{% else %}
+<h1>{{ poll.question }}</h1>
+{% if poll.description %}<p class="lead">{{ poll.description }}</p>{% endif %}
+{% if thanks %}<p class="notice">Thank you for your vote.</p>{% endif %}
+
+{% if voted and result %}
+  <p class="notice">You have already voted</p>
+  <form class="card vote-form" method="post" action="{{ url_for('polls.vote', poll_id=poll.id) }}">
+    <fieldset disabled>
+      <legend>Choose one option</legend>
+      {% for option in options %}
+      <label class="option">
+        <input type="radio" name="option_id" value="{{ option.id }}" disabled>
+        <span>{{ option.label }}</span>
+      </label>
+      {% endfor %}
+    </fieldset>
+    <button type="submit" class="button" disabled>Vote</button>
+  </form>
+  {{ result_block(result) }}
+{% else %}
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form class="card vote-form" method="post" action="{{ url_for('polls.vote', poll_id=poll.id) }}">
+    <fieldset>
+      <legend>Choose one option</legend>
+      {% for option in options %}
+      <label class="option">
+        <input type="radio" name="option_id" value="{{ option.id }}">
+        <span>{{ option.label }}</span>
+      </label>
+      {% endfor %}
+    </fieldset>
+    <button type="submit" class="button">Vote</button>
+  </form>
+{% endif %}
+{% endif %}
+{% endblock %}

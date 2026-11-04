@@ -1,0 +1,9 @@
+Implemented the 8 removed Num2Word_Base members in num2words/base.py:
+__init__, to_cardinal_float, pluralize, set_high_numwords, title, merge, to_ordinal_num, to_currency.
+- __init__ sets is_title, precision, exclude_title, negword, pointword and default errmsg_* (only where a subclass does not define them as class attributes), calls setup(), then builds cards and MAXVAL when number-word attributes exist.
+- to_cardinal_float raises TypeError for non-numeric input and spells out the integer part, the pointword, and each decimal digit.
+- pluralize, set_high_numwords and merge raise NotImplementedError (placeholders for subclasses).
+- title title-cases words unless listed in exclude_title, and only when is_title is set.
+- to_ordinal_num returns the value unchanged.
+- to_currency raises NotImplementedError for unknown currency codes, applies the adjective to the main unit only, and uses verbose or terse cents.
+Test result: 1427 passed; the 6 CLI tests pass when .venv/bin is on PATH.

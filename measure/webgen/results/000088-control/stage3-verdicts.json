@@ -1,0 +1,30 @@
+{
+  "000088-1": {
+    "verdict": "PARTIAL",
+    "reason": "一覧は 12 件すべて表示され画面エラーはないが、Fly agaric と Gut bacterium の寿命（Not recorded）など、一部の種で項目が空欄のまま（詳細ページで 1〜3 件の Not recorded/Not set）で「欠損データなし」を満たさない。"
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "「Lion」は Lion のみ、「bear」は Polar bear のみ、「Panthera」は Lion のみを返し、無関係な種は出なかった。「forest」は生息地が Forest の 3 種に絞られた。"
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "生息地フィルタ Marine は Atlantic salmon と Blue whale の 2 件だけになり、Forest は 3 件、Terrestrial は 1 件に更新された。不一致の行は出なかった。"
+  },
+  "000088-design": {
+    "verdict": "YES",
+    "reason": "背景は rgb(240,255,240)（honeydew）。ヘッダー・ボタン・テーブル見出し・バッジは rgb(85,107,47)（dark olive green）で、カードの枠線も同色。ただしカードの塗りは honeydew、一覧の本体セルは淡い緑（rgb(224,240,220)）。"
+  },
+  "000088-c1": {
+    "verdict": "PARTIAL",
+    "reason": "Okapi は生息地 Rainforest を選べず（フォームの生息地に Rainforest が無い）、Forest で登録した。登録後は一覧に Habitat Forest・Diet Herbivore で表示され、検索 Okapi で 1 件ヒットしたので、期待のうち生息地の値が一致しない。"
+  },
+  "000088-c2": {
+    "verdict": "YES",
+    "reason": "並び替え Name (Z to A) で Western honey bee から African bush elephant の順になり、Name (A to Z) で African bush elephant から Western honey bee の順に戻った。"
+  },
+  "000088-c3": {
+    "verdict": "YES",
+    "reason": "一覧から開いた詳細ページに名前・学名・生息地・食性・説明（Okapi は説明文あり）・寿命などの項目が表示され、エラーは無かった。全 13 件の詳細ページも 200 で表示された。"
+  }
+}

@@ -1,0 +1,28 @@
+段 3（アカウントの管理）の完了要約
+
+フロー: 変更フロー（.history/20261104-account-management/）。依頼の機能は正本と実装に既にあり、不足分だけを足した。
+
+変えた文書とファイル
+- .history/20261104-account-management/change_requirements.md（新規）: 既にある要件の確認。[追加] RQ-TS-ACCESS-ENDS-ON-RESET-AND-DELETE（再設定後の古いパスワードと削除後のログインと貸出の社員一覧を確かめる受け入れテスト）。
+- .history/20261104-account-management/change_detail_design.md（新規）: [追加] DS-TS-ACCESS-ENDS-ON-RESET-AND-DELETE。設計要素の追加は無い。
+- .history/20261104-account-management/tasks.md（新規）
+- docs/active_change（作成し、実装後レビューで削除）
+- app/templates.py: 担当者の入口の文言を「備品の登録」から「備品を登録」へ（リンク先は同じ）。
+- e2e/test_accounts.py: test_access_ends_on_reset_and_delete を追加。test_manage_manager_role に入口の確認を追加。
+- docs/requirements.md: RQ-TS-ACCESS-ENDS-ON-RESET-AND-DELETE を 7 章に追加。RQ-UI-LENDING-STATUS-SCREEN の説明に担当者の導線を追記。
+- docs/detail_design.md: DS-TS-ACCESS-ENDS-ON-RESET-AND-DELETE を 8-2 と 11 章に追加。DS-IF-LENDING-STATUS-SCREEN の説明に担当者の導線を追記。
+- docs/trace_map.md: DS-TS-ACCESS-ENDS-ON-RESET-AND-DELETE の行を追加。
+- e2e/results/e2e.xml: 再生成（20 件）。
+
+チェッカーの結果
+- rq_integrity_checker.py（docs/requirements.md）: 問題 0 件
+- rq_ds_link_checker.py（docs/requirements.md と docs/detail_design.md）: 問題 0 件
+- 変更文書の rq_integrity_checker.py・rq_ds_link_checker.py --base: 問題 0 件
+- bash scripts/isdd/check.sh --strict: 終了コード 0。対応表 エラー 0・警告 0、依存チェック合格、受け入れ判定 DS-TS 19 件合格、要件 38 件実装済み
+- implementation_completeness_checker.py: 4 / 4 通過
+- 単体テスト 14 件 OK、E2E 20 件 OK
+
+確かめた結果
+- setup.sh と PORT=8797 DATA_DIR=<work>/isdd-r2-data3 の run.sh で起動し、契約の URL（/、/accounts/、/accounts/register/、/login/）が開いた。
+- 契約の要素を HTTP で 42 項目確かめ、すべて合格（文言、id、クラス、data 属性、担当者以外の拒否、社員番号と名前の入力保持、再設定、削除、貸出の社員一覧）。
+- 自分が起動したサーバー（PID 99116）は停止済み。

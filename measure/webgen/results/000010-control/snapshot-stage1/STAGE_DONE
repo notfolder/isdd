@@ -1,0 +1,12 @@
+Wheel of Fortune website: implementation complete.
+
+Files: server.py (Python standard library, sqlite3 + http.server), setup.sh (checks Python only; no installs), run.sh (PORT default 8000, DATA_DIR default ./data), static/index.html, prizes.html, winnings.html, style.css, app.js.
+
+Features:
+- Spin the Wheel (/): SVG wheel, enter a name, Spin. The server picks a segment by weight, the wheel animates to it, wins are saved. Recent winners list.
+- Prize List (/prizes): all segments with description, win/no-prize badge and chance percent.
+- My Winnings (/winnings): enter your name (remembered in the browser) to see your recorded wins.
+- Navigation bar on every page. Light gray background, dark red components.
+- Data: DATA_DIR/wheel.db (SQLite). Sample prizes are seeded when the prize table is empty, so an empty DATA_DIR works.
+
+Checked: fresh start with empty DATA_DIR returns 200 and prizes; all pages return 200; spin API returns a segment index and records wins; invalid name returns 400; screenshots of the spin and prize pages rendered correctly in headless Chrome. The spin animation itself was not driven by a script.

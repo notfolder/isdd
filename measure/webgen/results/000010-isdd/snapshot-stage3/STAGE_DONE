@@ -1,0 +1,7 @@
+変更要求 2（利用者名の表示と抽選記録の一括削除）の完了の要約
+
+1. 変更フロー（isdd-spec）: 変更要件定義書と変更設計書、tasks.md を .history/20261104-name-entry-and-clear-records/ に作成し、rq_integrity_checker と rq_ds_link_checker が合格。
+2. 実装（isdd-build）: 抽選記録の検索に利用者名を追加し、全件一括削除（DELETE /api/records）を追加。My Records の表に Player 列と Clear records ボタン（window.confirm で確認、OK のときだけ削除）を追加。回す前の利用者名の必須は既存の動作を業務ルールとして明文化（RQ-FT-SPIN-REQUIRES-NAME）。対応表を更新。
+3. テスト: 単体テスト 22 件、E2E 11 件（JUnit XML は e2e/results/e2e.xml）がすべて合格。
+4. 実装後レビュー: 正本（docs/requirements.md、docs/detail_design.md、docs/trace_map.md）へ反映し、docs/active_change を削除。正本のチェック（rq_integrity_checker、rq_ds_link_checker）と bash scripts/isdd/check.sh --strict が合格（対応表エラー・警告 0、受け入れ判定 DS-TS 11/11、要件 18/18 実装済み）。未マッピングは該当なし、作りすぎ 0 件。
+5. 起動確認: bash setup.sh の後、PORT=18765 bash run.sh で起動し、/、/app.js、/style.css、/api/prizes、/api/records、POST /api/spin、DELETE /api/records を確認。確認後、自分のプロセスのみ停止。

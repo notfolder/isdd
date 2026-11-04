@@ -1,0 +1,68 @@
+{
+  "task": "mlflow__mlflow.93dab383.test_config.c63d41b0.lv1",
+  "done": true,
+  "wall_sec": null,
+  "agent_tokens": null,
+  "tool_uses": null,
+  "note": "トークン・所要は通知待ち",
+  "f2p_passed": 13,
+  "f2p_gt": 13,
+  "f2p_rate": 1.0,
+  "p2p": {
+    "tests/genai/evaluate/test_to_predict_fn.py": {
+      "passed": 10,
+      "total": 10,
+      "tail": "::endgroup::\n\n10 passed in 191.56s (0:03:11)"
+    },
+    "tests/projects/test_databricks.py": {
+      "passed": 16,
+      "total": 16,
+      "tail": "::endgroup::\n\n16 passed, 1 warning in 419.56s (0:06:59)"
+    },
+    "tests/genai/judges/test_judge_tool_get_traces_in_session.py": {
+      "passed": 7,
+      "total": 7,
+      "tail": ".......                                                                  [100%]\n7 passed in 0.50s"
+    },
+    "tests/entities/test_evaluation_dataset.py": {
+      "passed": 19,
+      "total": 19,
+      "tail": "::endgroup::\n\n19 passed in 69.95s (0:01:09)"
+    },
+    "tests/artifacts/test_artifacts.py": {
+      "passed": 0,
+      "total": 0,
+      "tail": "..............s....."
+    }
+  },
+  "p2p_all_pass": false,
+  "f2p": {
+    "mlflow__mlflow.93dab383.test_config.c63d41b0.lv1": {
+      "tests/claude_code/test_config.py": {
+        "passed": 13,
+        "gt_passed": 13,
+        "total": 13,
+        "tests": {
+          "tests.claude_code.test_config::test_load_claude_config_valid_json": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_missing_file": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_invalid_json": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_file": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_directory": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_os_environment": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_claude_settings_fallback": "pass",
+          "tests.claude_code.test_config::test_get_env_var_default_when_not_found": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_enabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_disabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_no_config": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_new_file": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_experiment_id_precedence": "pass"
+        },
+        "tail": ".............                                                            [100%]\n13 passed in 0.05s"
+      }
+    }
+  },
+  "regressions": [],
+  "restore_errors": [],
+  "eval_sec": 1608.8,
+  "error": null
+}

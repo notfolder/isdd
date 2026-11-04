@@ -1,0 +1,24 @@
+{
+  "task": "python_string_utils-test_strip_html-level2",
+  "files": {
+    "string_utils/manipulation.py": {
+      "removed": [
+        "strip_html"
+      ],
+      "missing": []
+    },
+    "string_utils/errors.py": {
+      "removed": [
+        "InvalidInputError.__init__"
+      ],
+      "missing": []
+    },
+    "string_utils/validation.py": {
+      "removed": [
+        "is_string"
+      ],
+      "missing": []
+    }
+  },
+  "test_removed": "tests/test_strip_html.py"
+}

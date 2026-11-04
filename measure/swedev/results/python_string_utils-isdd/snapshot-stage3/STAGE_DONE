@@ -1,0 +1,8 @@
+完了の要約: roman_encode と __RomanNumbers.encode を実装し直した（isdd 変更フロー: isdd-spec → isdd-build）。
+
+- 変更記録: .history/20261104-restore-roman-encode/（change_requirements.md・change_detail_design.md・tasks.md）。変更は既存の要件 RQ-FT-ROMAN-NUMERAL と設計 DS-FN-ROMAN-ENCODE の実装し直しのみ（[追加]・[削除] は無し）。
+- 実装: string_utils/manipulation.py の __RomanNumbers.encode（整数または整数文字列を 1〜3999 で変換。真偽値・非整数・範囲外は ValueError）と roman_encode（encode を呼ぶ）。decode と他の機能は変更していない。コードに ID は書いていない。
+- 検証: python -m pytest tests --noconftest 388 件通過、e2e 8 件通過（e2e/results/e2e.xml）。scripts/isdd/check.sh --strict はエラー 0・警告 0・受け入れ判定合格。implementation_completeness_checker 4/4 OK。rq_ds_link_checker と rq_integrity_checker は問題 0。
+- 正本: 変更内容は既存の正本に既に定義されていたため、docs/requirements.md・docs/detail_design.md・docs/trace_map.md は書き換えず。docs/active_change は削除済み（正本だけで判定して合格）。
+- 注意: PRD の roman_encode の docstring 例 roman_encode(37) # returns 'XXXVIII' は誤り（正しくは XXXVII。38 が XXXVIII）。既存の E2E テストも 37→XXXVII、38→XXXVIII と確かめている。docstring はこの依頼のとおり残してある。
+- 注意: ルートの conftest.py は hunter を要求するが、この環境には入っていないため、テストは --noconftest で実行した（hunter は入れていない）。

@@ -1,0 +1,47 @@
+{
+  "base_url": "http://127.0.0.1:60225",
+  "cases": [
+    {
+      "id": "000088-1",
+      "category": "Functional Testing",
+      "task": "Browse the database for available biological information of different species.",
+      "expected": "The user should be able to view a list of species with corresponding biological information without any missing data or display errors."
+    },
+    {
+      "id": "000088-2",
+      "category": "Functional Testing",
+      "task": "Perform a search for a specific species using the search functionality.",
+      "expected": "The search results should display only the species that match the search criteria, demonstrating accuracy and relevance without results from unrelated species."
+    },
+    {
+      "id": "000088-3",
+      "category": "Functional Testing",
+      "task": "Apply a filter to the data based on a given criterion (e.g., habitat type).",
+      "expected": "The data should update to show only those entries that meet the filter criteria, without displaying entries that do not match."
+    },
+    {
+      "id": "000088-design",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'honeydew' as the background color and 'dark olive green' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'honeydew' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark olive green', accurately reflecting the design instruction."
+    },
+    {
+      "id": "000088-c1",
+      "category": "Functional Testing",
+      "task": "Open the 'Add species' form, add a species named 'Okapi' with habitat 'Rainforest', diet 'Herbivore' and a short description, then browse the list and search for 'Okapi'.",
+      "expected": "'Okapi' appears in the browse list with its habitat and diet, and the search for 'Okapi' returns it."
+    },
+    {
+      "id": "000088-c2",
+      "category": "Functional Testing",
+      "task": "On the browse list, sort by name descending (Z to A), then ascending (A to Z).",
+      "expected": "The list order changes to reverse alphabetical and then alphabetical order by species name."
+    },
+    {
+      "id": "000088-c3",
+      "category": "Data Display Testing",
+      "task": "Open the detail page of a species from the browse list.",
+      "expected": "A detail page opens showing the species name, habitat, diet, description and the other stored fields without errors."
+    }
+  ]
+}

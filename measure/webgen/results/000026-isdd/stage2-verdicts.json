@@ -1,0 +1,26 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "トップページの「Open poll」から /polls/1 へ遷移し、エラーなく表示された。投票選択肢（Python, JavaScript, Go, Rust）が全件表示された。"
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "投票せずに /polls/1・/polls/2・/polls/3 を閲覧でき、設問文・案内文と選択肢の一覧（ラジオボタン付き）が表示された。選択肢は名称のみで説明文は無いが、選択に必要な情報は揃っている。"
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "選択肢を選んで Vote を押すと /polls/1?thanks=1 に遷移し、「Thank you for your vote.」の確認メッセージが表示された。結果集計も 11→12 票、Go 1→2 票と増えて記録された。"
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "/results で全投票の合計票数（Total votes）と各選択肢の票数・割合（%）が表示され、投票直後の結果に更新されていた。グラフは無いが統計表示で期待を満たす。"
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "body の背景色は rgb(255,255,224)（light yellow と一致）。ヘッダー・Vote ボタン・見出し(h1/h2)の色は rgb(47,79,79)（dark slate gray と一致）、カードの枠線も同色。ただしカードの背景は本体と同じ light yellow で、部品全体が dark slate gray というわけではない。"
+  },
+  "000026-c1": {
+    "verdict": "YES",
+    "reason": "同じブラウザ文脈で投票すると確認メッセージが出て、戻ると全ラジオボタンと Vote ボタンが disabled になり「You have already voted」が表示された。無効化を外して再投票を送っても票数は増えなかった（サーバー側でも 1 人 1 票）。"
+  }
+}

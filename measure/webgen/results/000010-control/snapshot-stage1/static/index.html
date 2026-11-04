@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spin the Wheel | Wheel of Fortune</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body data-page="spin">
+<header class="site-header">
+  <a class="brand" href="/">Wheel of Fortune</a>
+  <nav class="main-nav" aria-label="Main">
+    <a href="/" data-nav="spin">Spin the Wheel</a>
+    <a href="/prizes" data-nav="prizes">Prize List</a>
+    <a href="/winnings" data-nav="winnings">My Winnings</a>
+  </nav>
+</header>
+<main class="container">
+  <section class="spin-layout">
+    <div class="card wheel-panel">
+      <h1>Spin the Wheel</h1>
+      <p class="lead">Enter your name and spin. Wins are saved to My Winnings.</p>
+      <div class="wheel-wrap">
+        <div class="pointer" aria-hidden="true"></div>
+        <div id="wheel" class="wheel" role="img" aria-label="Prize wheel"></div>
+      </div>
+      <form id="spin-form" class="spin-form">
+        <label for="player-name">Your name</label>
+        <input id="player-name" type="text" maxlength="30" placeholder="Enter your name" autocomplete="nickname">
+        <button id="spin-button" type="submit" class="btn btn-primary">Spin</button>
+      </form>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </div>
+    <aside class="card">
+      <h2>Recent Winners</h2>
+      <ul id="recent-winners" class="list">
+        <li class="empty">Loading...</li>
+      </ul>
+    </aside>
+  </section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

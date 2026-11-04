@@ -1,0 +1,14 @@
+# STAGE_DONE: is_uuid と uuid の実装し直し（変更フロー）
+
+- 変更文書: .history/20261104-restore-uuid/（change_requirements.md・change_detail_design.md・tasks.md）。変更要件・変更設計に [追加][削除] は無く、既存要件 RQ-FT-CHECK-UUID・RQ-FT-GENERATE-UUID と設計 DS-FN-IS-UUID・DS-FN-UUID の実装し直し。
+- 実装: string_utils/validation.py の is_uuid(input_string, allow_hex=False)（UUID_RE / UUID_HEX_OK_RE で判定、非文字列は str() に変換）。string_utils/generation.py の uuid(as_hex=False)（uuid4()、as_hex で .hex、既定は str()）。
+- 正本: 変更は既に正本と一致していたため docs/requirements.md・docs/detail_design.md・docs/trace_map.md は書き換えず、docs/active_change を削除。docs/proposals.md は無し。
+- 検証:
+  - python -m pytest tests --noconftest: 386 passed（conftest.py は hunter を要求するため --noconftest。hunter は依存に無いので入れていない）
+  - python -m pytest e2e --noconftest --junitxml=e2e/results/e2e.xml: 8 passed
+  - bash scripts/isdd/check.sh --strict: エラー 0・警告 0、対応表・依存・受け入れ判定（DS-TS 8/8、要件 35/35 実装済み）すべて合格
+  - rq_ds_link_checker.py（変更文書・正本）: 問題 0
+  - rq_integrity_checker.py（正本）: 問題 0
+  - implementation_completeness_checker.py: 4/4 通過
+- 未マッピング: 0 件（check.sh の未登録警告 0）。要件なし（作りすぎ）: 0 件。
+- 注意: 生成物 e2e/results/e2e.xml、e2e/ 配下、.history/20261104-restore-uuid/ は未コミット。git は実行していない。

@@ -1,0 +1,15 @@
+{
+  "task": "yamllint-test_anchors-level2",
+  "files": {
+    "yamllint/linter.py": {
+      "removed": [
+        "LintProblem.__eq__",
+        "LintProblem.__init__",
+        "LintProblem.__lt__",
+        "_run",
+        "run"
+      ],
+      "missing": []
+    }
+  }
+}

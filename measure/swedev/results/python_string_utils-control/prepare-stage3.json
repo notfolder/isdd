@@ -1,0 +1,13 @@
+{
+  "task": "python_string_utils-test_roman_encode-level2",
+  "files": {
+    "string_utils/manipulation.py": {
+      "removed": [
+        "__RomanNumbers.encode",
+        "roman_encode"
+      ],
+      "missing": []
+    }
+  },
+  "test_removed": "tests/test_roman_encode.py"
+}

@@ -1,0 +1,33 @@
+{
+  "stage": 2,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/isdd-r2/snapshot-stage2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+    "test_equipment_update_keeps_lending[chromium]": "fail",
+    "test_equipment_delete_rejects_lent[chromium]": "pass",
+    "test_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "pass"
+  },
+  "passed": 12,
+  "total": 14,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "is_internal = False, title = None\n\n    async def wrap_api_call(\n        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None\n    ) -> Any:\n        if self._api_zone.get():\n            return await cb()\n        task = asyncio.current_task(self._loop)\n        parsed_st = _attach_api_call_information(\n            getattr(task, \"__pw_stack__\", None) or _capture_stack_trace(),\n            is_internal,\n            title,\n        )\n        self._api_zone.set(parsed_st)\n        try:\n            return await cb()\n        except Exception as error:\n>           raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nE           playwright._impl._errors.TimeoutError: Page.fill: Timeout 30000ms exceeded.\nE           Call log:\nE             - waiting for locator(\"#id_equipment_number\")\n\n../.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py:636: TimeoutError\n________________ test_equipment_update_keeps_lending[chromium] _________________\n\napp = <conftest.AppServer object at 0x10930d100>\npage = <Page url='http://127.0.0.1:52096/equipment/PC-001/edit/?'>\n\n    @pytest.mark.stage2\n    def test_equipment_update_keeps_lending(app, page):\n        app.seed({\n            \"accounts\": [STAFF, EMPLOYEE],\n            \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}, {\"number\": \"PC-002\", \"name\": \"ノートパソコン\"}],\n            \"lendings\": [{\"equipment\": \"PC-001\", \"borrower\": \"000002\", \"lent_on\": \"2026-10-01\"}],\n        })\n        login(page, app.base_url, \"000001\")\n        equipment_row(page, \"PC-001\").get_by_role(\"button\", name=\"修正\").click()\n>       fill_equipment(page, \"PC-101\", \"ノートパソコン（新）\")\n\ntest_equipment.py:68: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntest_equipment.py:15: in fill_equipment\n    page.fill(\"#id_equipment_number\", number)\n../.venv/lib/python3.12/site-packages/playwright/sync_api/_generated.py:17698: in fill\n    self._sync(\n../.venv/lib/python3.12/site-packages/playwright/_impl/_page.py:932: in fill\n    return await self._main_frame.fill(**locals_to_params(locals()))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py:641: in fill\n    await self._fill(**locals_to_params(locals()))\n../.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py:653: in _fill\n    await self._channel.send(\"fill\", self._timeout, locals_to_params(locals()))\n../.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py:78: in send\n    return await self._connection.wrap_api_call(\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <playwright._impl._connection.Connection object at 0x108f28ce0>\ncb = <function Channel.send.<locals>.<lambda> at 0x1093f3e20>\nis_internal = False, title = None\n\n    async def wrap_api_call(\n        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None\n    ) -> Any:\n        if self._api_zone.get():\n            return await cb()\n        task = asyncio.current_task(self._loop)\n        parsed_st = _attach_api_call_information(\n            getattr(task, \"__pw_stack__\", None) or _capture_stack_trace(),\n            is_internal,\n            title,\n        )\n        self._api_zone.set(parsed_st)\n        try:\n            return await cb()\n        except Exception as error:\n>           raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nE           playwright._impl._errors.TimeoutError: Page.fill: Timeout 30000ms exceeded.\nE           Call log:\nE             - waiting for locator(\"#id_equipment_number\")\n\n../.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py:636: TimeoutError\n=========================== short test summary info ============================\nFAILED test_equipment.py::test_equipment_update_and_delete_without_lending[chromium]\nFAILED test_equipment.py::test_equipment_update_keeps_lending[chromium] - pla...\n2 failed, 12 passed, 7 deselected in 210.17s (0:03:30)\n",
+  "overbuild": {
+    "source_files": 12,
+    "lines": 718,
+    "public_functions": 32,
+    "classes": 0,
+    "templates": 6
+  },
+  "duration_sec": 215.4
+}

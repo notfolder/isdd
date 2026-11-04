@@ -1,0 +1,5 @@
+Implemented parse_currency_parts in num2words/currency.py (appended; prefix_currency unchanged).
+- int with is_int_with_cents=True: treated as cents (divmod by 100), sign from the value.
+- int with is_int_with_cents=False: (abs(value), 0, value < 0).
+- str / float / Decimal: converted to Decimal (floats via str()), quantized to 0.01 with ROUND_HALF_UP, sign taken from the rounded value (so -0.001 gives non-negative zero), split into integer and cents.
+Test run: python -m pytest in the package dir with .venv bin on PATH: 1433 passed.

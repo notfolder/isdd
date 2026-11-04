@@ -1,0 +1,35 @@
+段 2（貸出と返却）の完了要約
+
+判定: 依頼の貸出・返却の機能は段 1 の正本に要件として入っており、コードにも実装済みだった。確認の結果、「備品を修正しても貸出の記録を引き継ぐ」だけが正本の要件・E2E に無かったため、変更フロー（.history/20261104-lending-return-change/）で [追加] し、実装後レビューで正本へ反映した。アプリのコードは変更していない（update_equipment が既に貸出を付け替えており、単体テスト test_rename_moves_active_loan で確かめられていた）。
+
+変えた文書とファイル
+- .history/20261104-lending-return-change/change_requirements.md（新規。[追加] RQ-FT-RULE-KEEP-LOAN-ON-EDIT、RQ-TS-EDIT-KEEPS-LOAN）
+- .history/20261104-lending-return-change/change_detail_design.md（新規。[追加] DS-TS-EDIT-KEEPS-LOAN、DS-FN-UPDATE-EQUIPMENT への対応の追加）
+- .history/20261104-lending-return-change/tasks.md（新規）
+- docs/requirements.md（3-2 に RQ-FT-RULE-KEEP-LOAN-ON-EDIT、第 7 章に RQ-TS-EDIT-KEEPS-LOAN を反映）
+- docs/detail_design.md（3-2 の備品の修正の行、8-2 に DS-TS-EDIT-KEEPS-LOAN、第 11 章に対応を反映）
+- docs/trace_map.md（DS-TS-EDIT-KEEPS-LOAN → e2e/test_scenarios.py::test_edit_keeps_loan）
+- e2e/test_scenarios.py（test_edit_keeps_loan を追加）
+- docs/active_change は反映後に削除済み。docs/proposals.md は無し
+
+チェッカーの結果
+- rq_integrity_checker.py docs/requirements.md: 問題 0 件
+- rq_ds_link_checker.py docs/requirements.md docs/detail_design.md: 問題 0 件
+- 変更時の確認: rq_integrity_checker.py と rq_ds_link_checker.py（--base docs/requirements.md）も合格
+- scripts/isdd/check.sh --strict: エラー 0 件、警告 0 件。対応表、依存（規則なし）、受け入れ判定に合格（DS-TS 13/13、要件 38/38 実装済み）
+- implementation_completeness_checker.py: 4/4 通過
+- 未マッピング一覧: 該当なし。要件なし（作りすぎ）: 0 件
+
+テスト
+- 単体テスト（pytest tests）: 44 件合格
+- E2E（pytest e2e）: 13 件合格（追加の test_edit_keeps_loan を含む）
+
+確かめた結果（bash setup.sh の後、PORT=8786 DATA_DIR=/tmp/isdd-r1-data2 bash run.sh で起動し、HTTP で確認）
+- 契約の URL（/、/accounts/register/、/login/、/equipment/new/、/accounts/）が起動する
+- 依頼の項目 39 件を HTTP で確認し 39 件合格。内容は、貸出（既定日、未来の日付、借りる社員の未選択）、貸出中の再貸出の拒否、貸出中の削除の拒否、社員の要求の拒否、返却と返却済みの拒否、修正後の貸出の引き継ぎ、修正の開き直し、担当者の付け外しとパスワード再設定、貸出中の社員の削除の拒否
+- 同時処理: 10 並列の貸出で 1 件だけ記録し 9 件に「この備品は既に貸出中です」、10 並列の返却で 1 件だけ処理し 9 件に「この備品は既に返却されています」
+- 自分で起動したサーバー（ポート 8786）は停止済み。他のプロセスには触れていない
+
+残っている問題
+- 依頼の「2 人が同時に修正」は「修正・削除・貸出・返却の画面を開いた後の他の担当者の更新」として、版番号の不一致で拒否する（貸出・返却も版番号で判定するため、貸出・返却の画面を開いたあとに修正があると「他の担当者が先にこの備品を更新しました」が出る。依頼の文言とは完全には一致しないが、正本の RQ-FT-RULE-CONCURRENT-UPDATE に従った既存の動作）
+- 段 1 の時点で正本に入っていた貸出・返却の要件は、変更せずに既存の振る舞いとして確認した

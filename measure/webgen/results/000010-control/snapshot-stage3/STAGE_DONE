@@ -1,0 +1,8 @@
+Change request 2 implemented (wheel of fortune, English UI).
+
+1. Name before spinning: the name field sits beside the Spin button and is labelled "Your name (required)". Spinning without a name shows "Please enter your name before spinning." (client check, and the server also rejects an empty name with 400) and does not spin. Winning records show player, prize and date: Recent Winners on the spin page already did; the My Winnings table now has a Player column as well (Player / Prize / Date).
+2. Clear records: a "Clear records" button on the My Winnings page asks for confirmation (window.confirm). If confirmed, it calls DELETE /api/winnings, which deletes all winning records and reports the count.
+Extra: My Winnings with an empty name lookup now lists the latest 20 records of all players, so the records and the clear button can be seen at once.
+
+Kept: spinning, prize list and prize management, the My Winnings name lookup, and the ivory / dark green theme. No schema change (existing DATA_DIR databases keep working).
+Checked: bash setup.sh; PORT=8931 bash run.sh; all four pages return 200; spin without a name returns 400; spin records a win; GET/DELETE /api/winnings work; prize DELETE still works. The confirm dialog and layout were not checked in a real browser.

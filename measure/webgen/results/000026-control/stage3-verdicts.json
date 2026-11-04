@@ -1,0 +1,30 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "ホームの「Browse all polls」から /polls に移動し、「Vote」で /polls/1 の投票ページがエラーなく開き、5 つの選択肢が表示された。"
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "投票せずに /polls/1 などを開くと、選択肢（Python, JavaScript 等）がラジオボタン付きで一覧表示され、投票ページの説明文も見える。"
+  },
+  "000026-3": {
+    "verdict": "PARTIAL",
+    "reason": "選択した投票は記録される（poll 2・poll 3 で件数が増え、結果ページに反映）が、投票後は結果ページへ遷移するだけで、投票完了の確認通知（メッセージ・トースト等）は DOM にもスクリーンショットにも出なかった。"
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "/results と各 /polls/N/results で、合計票数・各選択肢の票数と割合・棒グラフが表示され、投票直後の結果が反映されていた（poll 3 の合計が 6→7 に更新）。"
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "body の背景色が rgb(255,255,224)（light yellow）。ヘッダー・ボタン・見出し・枠線・カード文字色が rgb(47,79,79)（dark slate gray）で、指定どおり。"
+  },
+  "000026-c1": {
+    "verdict": "PARTIAL",
+    "reason": "1 回目の投票は記録され、再訪すると「You have already voted in this poll」が表示されラジオとボタンが disabled になる。二重投票は無効化の回避（disabled を外して送信）でも加算されなかった。ただし 1 回目の投票に確認メッセージが出ず、期待の一部が欠ける。"
+  },
+  "000026-c2": {
+    "verdict": "YES",
+    "reason": "Create poll で 'Best season?'（Spring/Summer/Autumn）を作成すると「Your poll has been created」と表示され、/polls の一覧と投票ページに出た。Summer に投票すると結果ページに 'Best season?' の Summer 1 票（100%）が表示された。"
+  }
+}

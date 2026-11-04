@@ -1,0 +1,6 @@
+Change request 1 implemented in server.py (no other files changed).
+
+1. Theme: background light yellow (#FFFFE0); dark slate gray (#2F4F4F) for header, buttons, cards, panels, table headers, bars and text. The old navy (#000080) and white backgrounds are removed from all CSS.
+2. Double-vote prevention: the existing cookie voted_<poll id> (set on a successful vote, 1 year) is kept. Once the cookie is present, the poll page shows the message "You have already voted in this poll. Your voting controls are disabled; you can still look at the results.", renders the options as disabled radio buttons and a disabled submit button, and the POST handler refuses a second vote and redirects to the poll page. The results pages are unchanged.
+
+Checked with the server running (setup.sh, then run.sh on PORT=8123, stopped afterwards): home, all polls, results and poll pages return 200; unknown poll returns 404; a vote redirects to results and sets the cookie; a repeat vote with the cookie is refused; the poll page with the cookie shows the message and disabled controls.

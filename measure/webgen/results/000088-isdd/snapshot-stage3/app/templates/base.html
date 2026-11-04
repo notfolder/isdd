@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Species Database{% endblock %} | Species Database</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('species.list_species') }}">Species Database</a>
+    <nav class="main-nav" aria-label="Main">
+      <a href="{{ url_for('species.list_species') }}">Browse species</a>
+      <a href="{{ url_for('species.show_create_form') }}">Add species</a>
+    </nav>
+  </header>
+  <main class="content">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+isdd 完了の要約（yamllint-test_indentation、計測 2）
+
+1. 逆引き（isdd-reverse-engineering）: 既存の yamllint パッケージ（32 モジュール）から正本を作成。
+   - docs/requirements.md（機能 14、データ 2、運用 2、非機能 2、テストシナリオ 13）
+   - docs/detail_design.md、docs/trace_map.md（対応表 117 行）
+   - 逆引き時点で、parser.token_or_comment_generator、indentation.check、Parent.__repr__ が無い状態だった。
+2. 変更（isdd-spec）: .history/20261104-restore-removed-functions/ に change_requirements.md（要件は増減なし）、change_detail_design.md（[追加] 2 件の公開関数）、tasks.md を作成。
+3. 実装（isdd-build）:
+   - yamllint/parser.py: token_or_comment_generator を追加（字句を前後 2 字句つきで生成し、字句間のコメントを挟む。構文エラーで止まる場合は完全に先読みできた字句だけを返す）。
+   - yamllint/rules/indentation.py: check を追加（_check への委譲）、Parent.__repr__ を追加（"{ラベル}:{インデント}"）。
+   - e2e/test_scenarios.py: 設計の DS-TS 13 件を公開 API で確かめる pytest（13 件すべて合格）。
+   - README.md を新規作成（isdd の完了条件「起動方法」を満たすため。既存の README.rst と内容は重複する）。
+4. 実後レビュー: 変更を正本へ反映し、docs/active_change を削除、正本の「現状の注記」を削除。
+
+検証結果:
+- python -m pytest tests: 414 passed（修正前は収集時に ImportError）
+- python -m pytest e2e: 13 passed
+- bash scripts/isdd/check.sh --strict: エラー 0・警告 0、受け入れ判定 DS-TS 13/13 合格、要件 19/19 実装済み
+- rq_integrity_checker / rq_ds_link_checker（正本と変更の両方）: 問題 0
+- implementation_completeness_checker: 4/4 OK
+- flake8（変更したファイル）: 指摘なし
+
+未実施・注意:
+- isdd-setup の応答終了フック（Claude のフック設定）は作らなかった。作業ディレクトリの設定を変えないため。
+- コミットはしていない（リポジトリにコミットが無いため、判断をユーザーに委ねる）。
+- .venv と yamllint.egg-info、scripts/isdd/、AGENTS.md、CLAUDE.md、.git/hooks/pre-commit は isdd の導入で生成されたもの。

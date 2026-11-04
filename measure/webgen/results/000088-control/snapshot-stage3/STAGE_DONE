@@ -1,0 +1,4 @@
+Change request 2 implemented in app.py (stdlib only; setup.sh and run.sh unchanged).
+1. Browse list sort: "Name (A to Z)" and new "Name (Z to A)" options. The sort is a toolbar control above the table, next to the result count. It keeps the search and filters (hidden fields) and submits on change. Name sorting uses the displayed name (common name, or scientific name when empty).
+2. Each list row links to the detail page, which shows every stored field (scientific name, common name, kingdom, class, habitat, diet, conservation status, lifespan, body mass, population estimate, description). The back link returns to the same search, filters and sort. Body mass precision fixed (0.0001 kg was showing as 0).
+Verified with curl on a temporary server: sort order, sort with filters, detail pages, add, edit, delete, home and list pages (HTTP 200/303 as expected). Server stopped by PID.

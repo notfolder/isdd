@@ -1,0 +1,22 @@
+{
+  "num2words-test_currency-level1": {
+    "passed": 1,
+    "gt_passed": 1,
+    "total": 1,
+    "tests": {
+      "tests.test_currency.CurrencyTestCase::test_parse_currency_parts": "pass"
+    },
+    "tail": "tests/test_currency.py::CurrencyTestCase::test_parse_currency_parts PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit0.xml ----------------------\n============================== 1 passed in 0.06s ===============================",
+    "rate": 1.0
+  },
+  "num2words-test_utils-level1": {
+    "passed": 1,
+    "gt_passed": 1,
+    "total": 1,
+    "tests": {
+      "modified_testcases.test_utils.TestUtils::test_splitbyx": "pass"
+    },
+    "tail": "modified_testcases/test_utils.py::TestUtils::test_splitbyx PASSED        [100%]\n\n--------------------- generated xml file: /tmp/junit1.xml ----------------------\n============================== 1 passed in 0.05s ===============================",
+    "rate": 1.0
+  }
+}

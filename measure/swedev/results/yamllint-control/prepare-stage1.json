@@ -1,0 +1,18 @@
+{
+  "task": "yamllint-test_indentation-level1",
+  "files": {
+    "yamllint/parser.py": {
+      "removed": [
+        "token_or_comment_generator"
+      ],
+      "missing": []
+    },
+    "yamllint/rules/indentation.py": {
+      "removed": [
+        "Parent.__repr__",
+        "check"
+      ],
+      "missing": []
+    }
+  }
+}

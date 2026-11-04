@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manage Prizes | Wheel of Fortune</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body data-page="manage">
+<header class="site-header">
+  <a class="brand" href="/">Wheel of Fortune</a>
+  <nav class="main-nav" aria-label="Main">
+    <a href="/" data-nav="spin">Spin the Wheel</a>
+    <a href="/prizes" data-nav="prizes">Prize List</a>
+    <a href="/manage" data-nav="manage">Manage Prizes</a>
+    <a href="/winnings" data-nav="winnings">My Winnings</a>
+  </nav>
+</header>
+<main class="container">
+  <section class="card">
+    <h1>Manage Prizes</h1>
+    <p class="lead">Add a prize to the wheel or remove one. Changes show up at once on the Spin the Wheel and Prize List pages.</p>
+    <form id="add-form" class="manage-form">
+      <label for="prize-name">New prize name</label>
+      <input id="prize-name" type="text" maxlength="30" placeholder="e.g. Water Bottle" autocomplete="off">
+      <button class="btn btn-primary" type="submit">Add prize</button>
+    </form>
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+    <h2>Current prizes</h2>
+    <div id="manage-list" aria-live="polite">
+      <p class="empty">Loading prizes...</p>
+    </div>
+  </section>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>

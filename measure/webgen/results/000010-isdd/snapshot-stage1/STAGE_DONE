@@ -1,0 +1,9 @@
+Wheel of Fortune（抽選ホイール）Web サイトの isdd 完了（isdd-spec → isdd-build、新規フロー）
+
+1. 仕様: docs/requirements.md（要件 29 件、テストシナリオ 7 本）、docs/detail_design.md（設計 ID 34 件、第 11 章の対応表）、.history/20261104-wheel-of-fortune/tasks.md。チェッカー: rq_integrity_checker 0 件、rq_ds_link_checker 0 件。
+2. 実装: Python 3.12 の標準ライブラリ（http.server・sqlite3）、静的な HTML・CSS・JavaScript。app/（サーバー・DB・抽選・検証）、static/（3 画面と共通メニュー）、tests/（単体 14 件、通過）、e2e/（7 本、JUnit XML は e2e/results/e2e.xml、全件通過）。
+3. 対応表: docs/trace_map.md（function 粒度）。bash scripts/isdd/check.sh --strict: エラー 0・警告 0・受け入れ判定 合格（DS-TS 7/7、要件 12/12 実装済み）。implementation_completeness_checker: 4/4 OK。
+4. 起動: bash setup.sh → PORT=8131 DATA_DIR=一時ディレクトリ bash run.sh で起動し、/ /api/prizes が 200 を返すことを確認。Chrome（ヘッドレス）で Spin・Prizes・My Records の 3 画面を撮影して、配色（薄いグレー背景、濃い赤の部品）と英語の表示を確認。
+5. 判断（ユーザー不在のため ANSWERS.md と既定の方針で決定）: ログイン無し、利用者名で記録を区別。景品は一様抽選、景品の追加・編集の画面は無し。外部連携無し。E2E は urllib で実サーバーに HTTP（ブラウザ自動化は使わず）。
+6. 要判断: 対応表チェッカーはルート直下の setup.sh・run.sh を走査できないため、詳細設計書の 7-2 から DS-MD-SETUP-SCRIPT・DS-MD-RUN-SCRIPT・DS-OP-SETUP-ENVIRONMENT を外し（第 11 章からも削除）、起動の振る舞いは DS-OP-START-SERVER（app/__main__.py::main）で対応させた。RQ-OP-START-SCRIPTS は引き続き対応する。
+7. 未実施・残り: エージェントの応答終了フックは作らなかった（この実行環境の設定を変えないため。必要なら別途）。Chrome での Spin のアニメーションと記録の一連の操作は、目視での確認が残る。

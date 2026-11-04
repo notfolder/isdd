@@ -1,0 +1,5 @@
+Implemented the three functions removed from the code base (per REQUEST.md):
+- string_utils/errors.py: InvalidInputError.__init__ -> message 'Expected "str", received "<type name>"' passed to TypeError.
+- string_utils/validation.py: is_string(obj) -> isinstance(obj, str).
+- string_utils/manipulation.py: strip_html(input_string, keep_tag_content=False) -> raises InvalidInputError for non-str; uses HTML_TAG_ONLY_RE when keep_tag_content is True, HTML_RE otherwise.
+Existing suite: 375 passed (.venv pytest, run from repo root and from tests/).

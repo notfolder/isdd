@@ -1,0 +1,1 @@
+Implemented extract_assessments_from_results, format_table_output, resolve_scorers in mlflow/cli/genai_eval_utils.py per Interface Description 1. tests/cli/test_eval.py 4/4 pass; ad-hoc checks of filtering, table formatting, and scorer resolution pass.

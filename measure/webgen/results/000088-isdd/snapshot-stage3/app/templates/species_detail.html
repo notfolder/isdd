@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{% if species %}{{ species['common_name'] }}{% else %}Not found{% endif %}{% endblock %}
+{% block content %}
+{% if species is none %}
+  <h1>Species not found.</h1>
+  <p><a class="button" href="{{ url_for('species.list_species') }}">Back to the species list</a></p>
+{% else %}
+  <h1>{{ species['common_name'] }}</h1>
+  {% if saved %}<p class="notice" role="status">Species saved.</p>{% endif %}
+  <dl class="detail">
+    <dt>Scientific name</dt><dd>{% if species['scientific_name'] %}<em>{{ species['scientific_name'] }}</em>{% else %}—{% endif %}</dd>
+    <dt>Common name</dt><dd>{{ species['common_name'] }}</dd>
+    <dt>Kingdom</dt><dd>{{ species['kingdom'] or '—' }}</dd>
+    <dt>Class</dt><dd>{{ species['taxonomic_class'] or '—' }}</dd>
+    <dt>Habitat</dt><dd>{{ species['habitat'] }}</dd>
+    <dt>Diet</dt><dd>{{ species['diet'] }}</dd>
+    <dt>Conservation status</dt><dd>{{ statuses[species['conservation_status']] if species['conservation_status'] else '—' }}</dd>
+    <dt>Average length</dt><dd>{% if species['average_length_cm'] is not none %}{{ '%.1f'|format(species['average_length_cm']) }} cm{% else %}—{% endif %}</dd>
+    <dt>Description</dt><dd>{{ species['description'] or '—' }}</dd>
+    <dt>Added</dt><dd>{{ species['created_at'][:16]|replace('T', ' ') }} UTC</dd>
+    <dt>Last updated</dt><dd>{{ species['updated_at'][:16]|replace('T', ' ') }} UTC</dd>
+  </dl>
+  <div class="actions">
+    <a class="button" href="{{ url_for('species.show_edit_form', species_id=species['id']) }}">Edit</a>
+    <a class="button secondary" href="{{ url_for('species.show_delete_confirm', species_id=species['id']) }}">Delete</a>
+  </div>
+{% endif %}
+{% endblock %}

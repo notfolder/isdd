@@ -1,0 +1,9 @@
+完了の要約（Flask セキュリティミドルウェアの復元）
+
+- 実装: mlflow/server/security_utils.py（is_allowed_host_header と補助関数）、mlflow/server/security.py（get_allowed_hosts、get_allowed_origins、init_security_middleware）。
+- E2E: e2e/test_security_middleware.py（5 件）を含む全 23 件合格（e2e/results/e2e.xml）。
+- 変更フロー: .history/20261104-restore-security-middleware/（変更要件・変更設計・tasks）。正本（docs/requirements.md、docs/detail_design.md）に反映済み。docs/active_change は削除済み。
+- 対象範囲: mlflow/server は security.py と security_utils.py だけが対象。対応表チェッカーの走査範囲には含めない（ディレクトリ単位でしか指定できないため）。
+- 既知の制約: scripts/isdd/check.sh --strict は、この範囲指定の制約により「対応表の 14 行がファイルを見つけられない」エラー 14 件で終了する（チェッカーの範囲指定の制約による既知のもの）。行は対応表に残してある。
+- 受け入れ判定: DS-TS 23/23 合格、要件 27/27 実装済み。
+- 既存テストの注意: tests/server/test_init.py::test_find_app_custom_app_plugin は環境に mlflow_test_plugin が無いため失敗（本変更と無関係）。

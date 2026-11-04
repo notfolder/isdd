@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>備品台帳</title>
+  <style>
+    body { font-family: -apple-system, "Hiragino Sans", "Yu Gothic", sans-serif; margin: 16px; color: #222; background: #fff; }
+    header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 12px; }
+    header a { margin-right: 8px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; vertical-align: top; }
+    .field { margin: 8px 0; }
+    .field label { display: block; margin-bottom: 2px; }
+    .field input, .field select { font-size: 16px; padding: 4px; max-width: 100%; }
+    .field-error { display: block; color: #b00020; font-size: 14px; }
+    .error { color: #b00020; border: 1px solid #b00020; padding: 8px; margin: 8px 0; }
+    .message { color: #0a6b2d; border: 1px solid #0a6b2d; padding: 8px; margin: 8px 0; }
+    button { font-size: 15px; padding: 4px 10px; margin: 2px; }
+    form.inline { display: inline; }
+    @media (max-width: 600px) { body { margin: 16px; } table { font-size: 14px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>備品台帳</strong>
+    {% if current_user %}
+      <span class="current-user">{{ current_user.name }}</span>
+      <form method="post" action="{{ url_for('ledger.logout') }}" class="inline">
+        <button type="submit">ログアウト</button>
+      </form>
+    {% endif %}
+  </header>
+  {% for category, text in get_flashed_messages(with_categories=true) %}
+    <div class="{{ 'error' if category == 'error' else 'message' }}">{{ text }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</body>
+</html>

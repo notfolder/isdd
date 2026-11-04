@@ -1,0 +1,65 @@
+{
+  "python_string_utils-test_is_credit_card-level1": {
+    "passed": 7,
+    "gt_passed": 7,
+    "total": 7,
+    "tests": {
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_cannot_provide_unsupported_card_type": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_numbers_in_string_should_be_15_at_least": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_should_accept_any_valid_card_number_if_type_is_not_specified": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_should_return_false_for_non_string_objects": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_should_validate_only_specific_card_type_if_specified": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_string_cannot_be_empty": "pass",
+      "tests.test_is_credit_card.IsCreditCardTestCase::test_string_cannot_contain_letters": "pass"
+    },
+    "tail": "tests/test_is_credit_card.py::IsCreditCardTestCase::test_string_cannot_be_empty PASSED [ 85%]\ntests/test_is_credit_card.py::IsCreditCardTestCase::test_string_cannot_contain_letters PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit0.xml ----------------------\n============================== 7 passed in 0.05s ===============================",
+    "rate": 1.0
+  },
+  "python_string_utils-test_is_ip_v4-level2": {
+    "passed": 8,
+    "gt_passed": 8,
+    "total": 8,
+    "tests": {
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_ip_cannot_be_blank": "pass",
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_ip_cannot_contain_spaces": "pass",
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_ip_cannot_have_multiple_dots": "pass",
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_ip_v6_is_not_recognized": "pass",
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_numbers_cannot_be_divided_by_other_signs_in_ipv4": "pass",
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_recognize_ip_strings": "pass",
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_return_false_for_non_string_objects": "pass",
+      "tests.test_is_ip_v4.IsIpV4TestCase::test_returns_false_if_ipv4_out_of_range": "pass"
+    },
+    "tail": "tests/test_is_ip_v4.py::IsIpV4TestCase::test_return_false_for_non_string_objects PASSED [ 87%]\ntests/test_is_ip_v4.py::IsIpV4TestCase::test_returns_false_if_ipv4_out_of_range PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit1.xml ----------------------\n============================== 8 passed in 0.04s ===============================",
+    "rate": 1.0
+  },
+  "python_string_utils-test_roman_encode-level2": {
+    "passed": 10,
+    "gt_passed": 10,
+    "total": 10,
+    "tests": {
+      "tests.test_roman_encode.RomanEncodeTestCase::test_combined_numbers_encode": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_encode_accepts_strings": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_encode_throws_an_exception_if_input_is_not_a_number": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_encode_throws_an_exception_if_number_is_decimal": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_encode_throws_an_exception_if_number_is_less_than_1": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_hundreds_are_encoded_as_expected": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_tens_and_units_are_encoded_as_expected": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_tens_are_encoded_as_expected": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_thousands_are_encoded_as_expected": "pass",
+      "tests.test_roman_encode.RomanEncodeTestCase::test_units_are_encoded_as_expected": "pass"
+    },
+    "tail": "tests/test_roman_encode.py::RomanEncodeTestCase::test_thousands_are_encoded_as_expected PASSED [ 90%]\ntests/test_roman_encode.py::RomanEncodeTestCase::test_units_are_encoded_as_expected PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit2.xml ----------------------\n============================== 10 passed in 0.04s ==============================",
+    "rate": 1.0
+  },
+  "python_string_utils-test_uuid-level1": {
+    "passed": 2,
+    "gt_passed": 2,
+    "total": 2,
+    "tests": {
+      "tests.test_uuid.UUIDTestCase::test_as_hex": "pass",
+      "tests.test_uuid.UUIDTestCase::test_generates_uuid_string": "pass"
+    },
+    "tail": "tests/test_uuid.py::UUIDTestCase::test_as_hex PASSED                     [ 50%]\ntests/test_uuid.py::UUIDTestCase::test_generates_uuid_string PASSED      [100%]\n\n--------------------- generated xml file: /tmp/junit3.xml ----------------------\n============================== 2 passed in 0.04s ===============================",
+    "rate": 1.0
+  }
+}

@@ -1,0 +1,7 @@
+完了の要約（isdd 変更フロー: is_full_string と is_ip_v4 の実装し直し）
+
+- 変更文書: .history/20261104-restore-full-string-and-ip-v4/（change_requirements.md・change_detail_design.md・tasks.md）。要件と設計の追加・削除は無く、既存の正本の要素（RQ-FT-CHECK-STRING-TYPE、RQ-FT-CHECK-IP-ADDRESS、DS-FN-IS-FULL-STRING、DS-FN-IS-IP-V4）を実装し直した。
+- 実装: string_utils/validation.py に is_full_string（is_string の後）と is_ip_v4（is_ip_v6 の前）を追加。他の関数は変更なし。
+- 正本: docs/requirements.md・docs/detail_design.md・docs/trace_map.md は変更なし（既に実装済みの仕様と一致）。docs/active_change は削除、docs/proposals.md は無し。
+- 検証: pytest tests 398 件通過、e2e 8 件通過（e2e/results/e2e.xml）、check.sh --strict はエラー 0・警告 0・受け入れ判定 合格（要件 35 件実装済み）、rq_ds_link_checker 問題 0、implementation_completeness_checker 4/4、rq_integrity_checker 問題 0。
+- 注意: 作業ディレクトリの .venv に hunter が無く、ルートの conftest.py が読み込めないため、pytest は --confcutdir=tests（e2e は --confcutdir=e2e）を付けて実行した。

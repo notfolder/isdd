@@ -1,0 +1,22 @@
+{
+  "000088-1": {
+    "verdict": "PARTIAL",
+    "reason": "一覧は 12 件すべて表示されエラーはないが、E. coli の Class と Average length、Fly agaric の Average length が「—」(未入力)のまま表示され、期待の「欠損なし」を満たさない。"
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "\"Tiger\" は Tiger 1 件、\"Panthera\" は Lion と Tiger の 2 件、\"whale\" は Perrin's beaked whale 1 件のみ返り、無関係な種は出なかった。該当なしの語は 0 件と表示された。"
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "habitat 絞り込みで Marine は 1 件、Mixed は 2 件、Terrestrial は 8 件、Freshwater は 1 件になり、いずれも選んだ生息地の行だけが表示された。"
+  },
+  "000088-design": {
+    "verdict": "YES",
+    "reason": "body の背景色は rgb(240,255,240)（honeydew）。ヘッダー・ボタン・表見出し・見出し文字・枠線・フォームの入力欄などは rgb(85,107,47)（dark olive green）で統一されていた。"
+  },
+  "000088-c1": {
+    "verdict": "PARTIAL",
+    "reason": "Okapi は追加後、一覧にも検索結果にも表示され、diet は Herbivore だった。ただし habitat の選択肢は Terrestrial/Freshwater/Marine/Mixed のみで Rainforest が無く、habitat は Terrestrial として保存された。"
+  }
+}

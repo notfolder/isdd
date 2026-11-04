@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Entering a name and pressing Spin rotates the SVG wheel (CSS transform animates over about 7 s, then settles), and the result line shows 'You won: <prize>' with no console or page errors. Three spins each produced a prize, and the settled rotation matched the segment under the top pointer in all three cases."},
+  "000010-2": {"verdict": "YES", "reason": "The Prizes view shows a table with exactly six rows (Coffee Voucher, Gift Card 500, Free Dessert, Movie Ticket, Tote Bag, Mystery Gift), matching the six segments on the wheel, each with a description."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning twice under a new name, the My Records view (searched by that name) listed both wins, newest first, each with a date/time (11/4/2026, today's date) and the prize won. Before spinning it showed 'No records found for this name'."},
+  "000010-4": {"verdict": "YES", "reason": "Page background computes to rgb(230,230,230), a light gray. The header, Spin button, table headers, h2 headings, nav links (#6e0000 active/inactive) and the wheel are dark red (#8b0000 and shades), and panels/table borders use #8b0000. Panel and input fills are near-white, which is a minor deviation but the dark red component color is applied consistently."}
+}

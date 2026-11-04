@@ -1,0 +1,7 @@
+__pycache__
+*.py[cod]
+/docs/_build
+/dist
+/yamllint.egg-info
+/build
+/.eggs

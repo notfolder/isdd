@@ -1,0 +1,113 @@
+{
+  "task": "mlflow__mlflow.93dab383.test_security.98fcde1d.lv1",
+  "done": true,
+  "wall_sec": null,
+  "agent_tokens": null,
+  "tool_uses": null,
+  "note": "判断を求めて 2 回停止（--src に mlflow/server を足して警告 3291 件、範囲を 2 ファイルに絞ると対応表のエラー 14 件）。strict は未通過のまま完了。トークン・所要は 3 回分の累計を通知待ち",
+  "f2p_passed": 30,
+  "f2p_gt": 30,
+  "f2p_rate": 1.0,
+  "p2p": {},
+  "p2p_all_pass": null,
+  "f2p": {
+    "mlflow__mlflow.93dab383.test_config.c63d41b0.lv1": {
+      "tests/claude_code/test_config.py": {
+        "passed": 13,
+        "gt_passed": 13,
+        "total": 13,
+        "tests": {
+          "tests.claude_code.test_config::test_load_claude_config_valid_json": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_missing_file": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_invalid_json": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_file": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_directory": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_os_environment": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_claude_settings_fallback": "pass",
+          "tests.claude_code.test_config::test_get_env_var_default_when_not_found": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_enabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_disabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_no_config": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_new_file": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_experiment_id_precedence": "pass"
+        },
+        "tail": ".............                                                            [100%]\n13 passed in 0.11s"
+      }
+    },
+    "mlflow__mlflow.93dab383.test_trace_correlation.53c200a6.lv1": {
+      "tests/store/analytics/test_trace_correlation.py": {
+        "passed": 21,
+        "gt_passed": 21,
+        "total": 21,
+        "tests": {
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[perfect_positive]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[perfect_negative]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[independence]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_correlations[all_match_both]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[zero_filter1]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[zero_filter2]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[both_zero]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[empty_dataset]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_undefined_cases[inconsistent]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_partial_overlap": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_with_smoothing": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_all_traces_match_both": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[half_match]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[small_counts]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[near_all]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_npmi_clamping[quarter_match]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_both_npmi_values_returned": "pass",
+          "tests.store.analytics.test_trace_correlation::test_symmetry": "pass",
+          "tests.store.analytics.test_trace_correlation::test_monotonicity_joint_count": "pass",
+          "tests.store.analytics.test_trace_correlation::test_boundary_values[high_overlap]": "pass",
+          "tests.store.analytics.test_trace_correlation::test_boundary_values[low_overlap]": "pass"
+        },
+        "tail": ".....................                                                    [100%]\n21 passed in 0.12s"
+      }
+    },
+    "mlflow__mlflow.93dab383.test_security.98fcde1d.lv1": {
+      "tests/server/test_security.py": {
+        "passed": 30,
+        "gt_passed": 30,
+        "total": 30,
+        "tests": {
+          "tests.server.test_security::test_default_allowed_hosts": "pass",
+          "tests.server.test_security::test_custom_allowed_hosts": "pass",
+          "tests.server.test_security::test_dns_rebinding_protection[localhost-200-None]": "pass",
+          "tests.server.test_security::test_dns_rebinding_protection[127.0.0.1-200-None]": "pass",
+          "tests.server.test_security::test_dns_rebinding_protection[evil.attacker.com-403-Invalid Host header]": "pass",
+          "tests.server.test_security::test_cors_protection[POST-http://localhost:3000-http://localhost:3000]": "pass",
+          "tests.server.test_security::test_cors_protection[POST-http://evil.com-None]": "pass",
+          "tests.server.test_security::test_cors_protection[POST-None-None]": "pass",
+          "tests.server.test_security::test_cors_protection[GET-http://evil.com-None]": "pass",
+          "tests.server.test_security::test_insecure_cors_mode": "pass",
+          "tests.server.test_security::test_preflight_options_request[http://localhost:3000-http://localhost:3000]": "pass",
+          "tests.server.test_security::test_preflight_options_request[http://evil.com-None]": "pass",
+          "tests.server.test_security::test_security_headers": "pass",
+          "tests.server.test_security::test_disable_security_middleware": "pass",
+          "tests.server.test_security::test_x_frame_options_configuration": "pass",
+          "tests.server.test_security::test_notebook_trace_renderer_skips_x_frame_options": "pass",
+          "tests.server.test_security::test_wildcard_hosts": "pass",
+          "tests.server.test_security::test_endpoint_security_bypass[/health-evil.com-200]": "pass",
+          "tests.server.test_security::test_endpoint_security_bypass[/test-evil.com-403]": "pass",
+          "tests.server.test_security::test_host_validation[192.168.1.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[10.0.0.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[172.16.0.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[127.0.0.1-True]": "pass",
+          "tests.server.test_security::test_host_validation[localhost-True]": "pass",
+          "tests.server.test_security::test_host_validation[[::1]-True]": "pass",
+          "tests.server.test_security::test_host_validation[192.168.1.1:8080-True]": "pass",
+          "tests.server.test_security::test_host_validation[[::1]:8080-True]": "pass",
+          "tests.server.test_security::test_host_validation[evil.com-False]": "pass",
+          "tests.server.test_security::test_environment_variable_configuration[MLFLOW_SERVER_CORS_ALLOWED_ORIGINS-http://app1.com,http://app2.com-expected_result0]": "pass",
+          "tests.server.test_security::test_environment_variable_configuration[MLFLOW_SERVER_ALLOWED_HOSTS-app1.com,app2.com:8080-expected_result1]": "pass"
+        },
+        "tail": "..............................                                           [100%]\n30 passed in 0.26s"
+      }
+    }
+  },
+  "regressions": [],
+  "restore_errors": [],
+  "eval_sec": 62.3,
+  "error": null
+}

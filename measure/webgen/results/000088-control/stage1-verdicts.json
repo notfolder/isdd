@@ -1,0 +1,18 @@
+{
+  "000088-1": {
+    "verdict": "PARTIAL",
+    "reason": "一覧は 12 件すべてが表示され、表示エラーは無かったが、Lifespan や Population estimate などに「Not recorded」が多数あり、期待の「欠損データが無い」を満たさない。"
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "「lion」は Lion の 1 件、「bear」は Polar bear の 1 件だけを返し、無関係な種は出なかった。「bacteria」「tree」なども該当種のみで、存在しない語は 0 件だった。"
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "Habitat を Forest に絞ると English oak・Fly agaric・Giant panda の 3 件（いずれも Forest）だけになり、Kingdom を Animalia と併用すると Giant panda のみになった。他の habitat・diet・status でも一致しない行は残らなかった。"
+  },
+  "000088-4": {
+    "verdict": "PARTIAL",
+    "reason": "背景は rgb(250,240,230) で linen に一致し、ヘッダー・ボタン・テーブル見出し・バッジ・見出し文字は maroon（rgb(128,0,0)）だった。一方でカード（section.card）の背景は rgb(255,252,247) のクリーム色で、maroon は枠線のみのため、期待の「カードも maroon で装飾される」を完全には満たさない。"
+  }
+}

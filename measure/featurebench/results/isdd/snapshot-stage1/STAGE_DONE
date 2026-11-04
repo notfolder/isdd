@@ -1,0 +1,9 @@
+完了の要約（mlflow/claude_code の逆引き正本と、設定ファイル・環境変数の 5 インターフェース復元）
+
+- 正本: docs/requirements.md・docs/detail_design.md・docs/trace_map.md（mlflow/claude_code/ の逆引き。変更の反映済み）。docs/active_change と docs/proposals.md は無い。
+- 変更: .history/20261104-restore-config-interfaces/（change_requirements.md・change_detail_design.md・tasks.md）。
+- 実装: mlflow/claude_code/config.py に get_env_var・get_tracing_status・load_claude_config・save_claude_config・setup_environment_config（Interface Description どおりのシグネチャ）。呼び出し側の import 行を hooks.py・cli.py・tracing.py に追加。
+- 現状の挙動として記録: disable_tracing_hooks は記録フラグだけを消し、追跡 URI と実験の環境変数は残す（hooks.py は変更せず、正本と E2E をこの挙動に合わせた）。
+- README.md に「起動方法」の節を追加。
+- 検証: bash scripts/isdd/check.sh --strict は終了コード 0（エラー 0・警告 0、DS-TS 14/14 合格、要件 21/21 実装済み）。E2E pytest e2e は 14 件すべて合格。tests/claude_code は変更前後とも 20 件合格。rq_integrity_checker・rq_ds_link_checker は合格。implementation_completeness_checker は 4/4 項目通過。
+- 未マッピング一覧: 該当なし。要件なし（作りすぎ）: 0 件。

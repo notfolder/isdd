@@ -1,0 +1,42 @@
+{
+  "task": "mlflow__mlflow.93dab383.test_config.c63d41b0.lv1",
+  "done": true,
+  "wall_sec": null,
+  "agent_tokens": null,
+  "tool_uses": null,
+  "note": "逆引き + 変更フロー。判断を求めて 2 回停止、追い打ち 2 回。トークン・所要は 3 回分の通知待ち",
+  "f2p_passed": 13,
+  "f2p_gt": 13,
+  "f2p_rate": 1.0,
+  "p2p": {},
+  "p2p_all_pass": null,
+  "f2p": {
+    "mlflow__mlflow.93dab383.test_config.c63d41b0.lv1": {
+      "tests/claude_code/test_config.py": {
+        "passed": 13,
+        "gt_passed": 13,
+        "total": 13,
+        "tests": {
+          "tests.claude_code.test_config::test_load_claude_config_valid_json": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_missing_file": "pass",
+          "tests.claude_code.test_config::test_load_claude_config_invalid_json": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_file": "pass",
+          "tests.claude_code.test_config::test_save_claude_config_creates_directory": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_os_environment": "pass",
+          "tests.claude_code.test_config::test_get_env_var_from_claude_settings_fallback": "pass",
+          "tests.claude_code.test_config::test_get_env_var_default_when_not_found": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_enabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_disabled": "pass",
+          "tests.claude_code.test_config::test_get_tracing_status_no_config": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_new_file": "pass",
+          "tests.claude_code.test_config::test_setup_environment_config_experiment_id_precedence": "pass"
+        },
+        "tail": ".............                                                            [100%]\n13 passed in 0.11s"
+      }
+    }
+  },
+  "regressions": [],
+  "restore_errors": [],
+  "eval_sec": 18.4,
+  "error": null
+}

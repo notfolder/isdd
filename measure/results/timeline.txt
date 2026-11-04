@@ -1,0 +1,50 @@
+stage1 start 4 arms (Agent tool, haiku) 10:48:08
+control-r2 stage1 end 10:50 (117s); stage2 start 10:50:26
+control-r1 stage1 end (159s); control-r1 stage2 start 10:50:44
+control-r1/r2 stage2 end; stage3 start 10:55:54
+control-r1/r2 stage3 end 10:58:20
+isdd-r1 stage1 end (833s); stage2 start 11:01:41
+swedev stage1 prepared 11:07:23
+isdd-r2 stage1 end (1079s, 2 rounds); stage2 start 11:08:44
+swedev psu-control stage1 end 52s; stage2 start 11:10:21
+swedev stage1 redo (build/lib leak removed) 11:11:39
+isdd-r1 stage2 end (991s); stage3 start 11:19:59
+swedev num2words-isdd stage1 end 553s 11:22:20
+webgen 000026-control stage1 end 85s; stage2 start 11:22:55
+isdd-r2 stage2 end (851s); stage3 start 11:23:29
+swedev psu-control all done; webgen 000088-control s1 end 137s; s2 start 11:23:53
+webgen 000010-control s1 end 183s; s2 start 11:24:16
+webgen 000026-control s2 end 54s; s3 start 11:24:30
+swedev psu-isdd s1 end 795s; s2 start 11:26:03
+swedev num2words-isdd s2 end; s3 start 11:27:12
+yamllint-isdd s1 end 843s; webgen 000088-control s2 end; 000026-control s3 end 11:27:44
+webgen 000010-control s2 end 124s 11:28:03
+webgen 000026-control all done 11:29:56
+RATE LIMIT hit ~11:48, resets 15:00. stopped: isdd-r1 s3, isdd-r2 s3, psu-isdd s3, yamllint-isdd s2, num2words-isdd s3, 000088-control s3, 000010-control s2 grading 15:04:19
+resumed 6 agents after rate limit; 000010-control s2/s3 re-served 15:05:10
+isdd-r1 stage3 end 15:06:40
+webgen control all 3 sites done; yamllint-isdd done; psu-isdd s3 done 15:08:07
+num2words-isdd all done 15:10:19
+isdd-r2 stage3 end 15:11:47
+swedev all done 15:13:50
+measure1 all done 15:16
+webgen 000010-isdd s1 end 15:17:13
+webgen 000026-isdd s1 end (2 rounds) 15:17:42
+webgen 000088-isdd s1 end 691s 15:18:10
+webgen isdd s1 all scored 15:19:52
+webgen 000026-isdd s2 end 15:25:39
+webgen 000088-isdd s2 end 15:26:44
+webgen 000010-isdd s2 end 15:29:19
+webgen 000088-isdd s3 end 15:34:11
+webgen 000026-isdd s3 end 15:34:56
+webgen 000010-isdd s3 end 15:40:16
+ALL DONE 15:44:03
+fb control s1 end 21:15:12
+fb control s2 end 21:18:24
+fb isdd s1 end (3 rounds) 21:22:47
+fb control s3 end 21:24:14
+fb isdd s2 end 21:39:23
+fb control s4 end 21:53:34
+fb isdd s3 end (3 rounds) 21:58:13
+fb isdd s4 end 22:08:39
+fb all done 00:04:17

@@ -1,0 +1,4 @@
+生物種情報データベース（Web）: isdd の仕様（要件・設計・タスク）、実装、実装後レビューまで完了。
+起動: bash setup.sh 後、PORT=任意 bash run.sh（127.0.0.1 で待ち受け、DATA_DIR の species.db。空ならサンプル 12 件）。
+主な画面: 一覧・検索・絞り込み（/）、詳細（/species/<id>）、登録（/species/new）、修正、削除確認。配色は linen 背景・maroon の部品。
+確認: 単体テスト 25 件、E2E 8 件（JUnit: e2e/results/e2e.xml）、check.sh --strict エラー 0・警告 0、rq 整合チェック 0 件、実装完了チェック 4/4。

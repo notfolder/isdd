@@ -1,0 +1,77 @@
+{
+  "_comment": "詳細設計書 第 7 章「依存の規則」の書き写し。isdd-setup が雛形を作り、以後は手で保つ。from: 規則を当てるファイルまたはディレクトリ / deny: 依存してはいけない先 / allow: 依存してよいプロジェクト内のディレクトリ / reason: 理由",
+  "rules": [
+    {
+      "from": "app/accounts.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    },
+    {
+      "from": "app/equipment.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    },
+    {
+      "from": "app/lending.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    },
+    {
+      "from": "app/sessions.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    },
+    {
+      "from": "app/db.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    },
+    {
+      "from": "app/security.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    },
+    {
+      "from": "app/validation.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    },
+    {
+      "from": "app/config.py",
+      "deny": [
+        "app/web.py",
+        "app/templates.py",
+        "http"
+      ],
+      "reason": "業務ロジックを HTTP と画面の部品から独立させる（詳細設計書 第 7 章の依存の規則）"
+    }
+  ]
+}

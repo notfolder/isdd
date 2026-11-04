@@ -1,0 +1,5 @@
+Implemented the removed roman_encode (module function) and __RomanNumbers.encode (classmethod) in string_utils/manipulation.py.
+- encode: str() the input, validate with is_integer, int() it, range check 1..3999 (ValueError otherwise), then build the numeral from the units digit up using __encode_digit.
+- roman_encode: delegates to __RomanNumbers.encode.
+Verified: known values (37, 1994, 2020, 3999, string inputs), invalid inputs raise ValueError, round trip with roman_decode for 1..3999, and the existing suite (382 tests) passes under .venv.
+Docstring example corrected from XXXVIII to XXXVII for 37.

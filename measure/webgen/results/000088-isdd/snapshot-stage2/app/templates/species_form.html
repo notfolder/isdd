@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% macro error_for(name) %}{% if form.errors[name] %}<p class="error">{{ form.errors[name] }}</p>{% endif %}{% endmacro %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p class="count">Fields marked * are required. Other fields can be left empty.</p>
+<form class="species-form" method="post" action="{{ action }}" novalidate>
+  <div class="field{% if form.errors.common_name %} has-error{% endif %}">
+    <label for="common_name">Name *</label>
+    <input id="common_name" name="common_name" type="text" maxlength="100" value="{{ form.common_name }}">
+    {{ error_for('common_name') }}
+  </div>
+  <div class="field{% if form.errors.habitat %} has-error{% endif %}">
+    <label for="habitat">Habitat *</label>
+    <select id="habitat" name="habitat">
+      <option value="">Select a habitat</option>
+      {% for h in habitats %}<option value="{{ h }}" {% if form.habitat == h %}selected{% endif %}>{{ h }}</option>{% endfor %}
+    </select>
+    {{ error_for('habitat') }}
+  </div>
+  <div class="field{% if form.errors.diet %} has-error{% endif %}">
+    <label for="diet">Diet *</label>
+    <select id="diet" name="diet">
+      <option value="">Select a diet</option>
+      {% for d in diets %}<option value="{{ d }}" {% if form.diet == d %}selected{% endif %}>{{ d }}</option>{% endfor %}
+    </select>
+    {{ error_for('diet') }}
+  </div>
+  <div class="field{% if form.errors.description %} has-error{% endif %}">
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="5" maxlength="2000">{{ form.description }}</textarea>
+    {{ error_for('description') }}
+  </div>
+  <h2>Other details (optional)</h2>
+  <div class="field{% if form.errors.scientific_name %} has-error{% endif %}">
+    <label for="scientific_name">Scientific name</label>
+    <input id="scientific_name" name="scientific_name" type="text" maxlength="100" value="{{ form.scientific_name }}">
+    {{ error_for('scientific_name') }}
+  </div>
+  <div class="field{% if form.errors.kingdom %} has-error{% endif %}">
+    <label for="kingdom">Kingdom</label>
+    <select id="kingdom" name="kingdom">
+      <option value="">Select a kingdom</option>
+      {% for k in kingdoms %}<option value="{{ k }}" {% if form.kingdom == k %}selected{% endif %}>{{ k }}</option>{% endfor %}
+    </select>
+    {{ error_for('kingdom') }}
+  </div>
+  <div class="field{% if form.errors.taxonomic_class %} has-error{% endif %}">
+    <label for="taxonomic_class">Class</label>
+    <input id="taxonomic_class" name="taxonomic_class" type="text" maxlength="60" value="{{ form.taxonomic_class }}">
+    {{ error_for('taxonomic_class') }}
+  </div>
+  <div class="field{% if form.errors.conservation_status %} has-error{% endif %}">
+    <label for="conservation_status">Conservation status</label>
+    <select id="conservation_status" name="conservation_status">
+      <option value="">Select a status</option>
+      {% for code, label in statuses.items() %}<option value="{{ code }}" {% if form.conservation_status == code %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    {{ error_for('conservation_status') }}
+  </div>
+  <div class="field{% if form.errors.average_length_cm %} has-error{% endif %}">
+    <label for="average_length_cm">Average length (cm)</label>
+    <input id="average_length_cm" name="average_length_cm" type="text" inputmode="decimal" value="{{ form.average_length_cm }}">
+    {{ error_for('average_length_cm') }}
+  </div>
+  <div class="actions">
+    <button type="submit" class="button">Save</button>
+    <a class="button secondary" href="{{ url_for('species.list_species') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

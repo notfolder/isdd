@@ -1,0 +1,7 @@
+splitbyx を num2words/utils.py に実装した。
+
+- 長さが x を超えるとき、先頭の余りの部分（len(n) % x 桁）を最初に出し、その後は x 桁ずつ出す。割り切れる場合は先頭の余り部分は出さない。
+- x 以下のときは n 全体を 1 つだけ出す。
+- format_int=True なら int、False なら str で出す。
+
+検証: tests/test_utils.py が通る。tests 全体は 1433 件すべて通る（.venv/bin を PATH に入れた場合。入れないと test_cli.py の 6 件が exit code 127 で落ちるが、これは実行環境の問題で splitbyx とは無関係）。

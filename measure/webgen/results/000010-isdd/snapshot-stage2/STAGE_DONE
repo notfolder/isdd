@@ -1,0 +1,10 @@
+完了: 配色の変更と景品管理ページの追加（isdd 変更フロー、変更記録 .history/20261104-prize-management-and-colors/）
+
+- 仕様: change_requirements.md・change_detail_design.md・tasks.md を作成。isdd-spec のチェッカー（rq_integrity・rq_ds_link）は合格。
+- 実装: 景品の追加（POST /api/prizes）と削除（DELETE /api/prizes/{id}）、Manage prizes 画面（4 項目の共通メニュー）、景品の一覧とホイールを画面を開くたびに読み直す処理、配色（背景 ivory #FFFFF0、部品 dark green #006400）。既存の抽選・記録・利用者名検証は変えていない。
+- 対応表 docs/trace_map.md を更新。bash scripts/isdd/check.sh --strict: エラー 0・警告 0、DS-TS 10/10 合格、要件 16/16 実装済み。
+- テスト: python3 -m unittest discover -s tests（20 件）全件通過。e2e/results/e2e.xml（E2E 10 件）全件通過。
+- 正本反映: docs/requirements.md・docs/detail_design.md を変更内容で更新（rq_integrity_checker・rq_ds_link_checker 合格）。docs/active_change は削除。
+- 起動確認: bash setup.sh の後、空きポートで PORT=... DATA_DIR=一時ディレクトリ bash run.sh を起動し、/ /app.js /style.css が 200、POST/DELETE /api/prizes が 201/200/404 を返すことを確認。確認後、自分のプロセスだけ停止。
+- 未確認: Chromium での目視確認は自動化していない（HTTP と E2E で確認）。
+- 注意: 起動確認の途中、別のプロセスがポート 18931 を使っていたため、空きポートを確かめて使い直した。他のプロセスには触れていない。

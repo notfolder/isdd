@@ -1,0 +1,29 @@
+{
+  "base_url": "http://127.0.0.1:55713",
+  "cases": [
+    {
+      "id": "000088-1",
+      "category": "Functional Testing",
+      "task": "Browse the database for available biological information of different species.",
+      "expected": "The user should be able to view a list of species with corresponding biological information without any missing data or display errors."
+    },
+    {
+      "id": "000088-2",
+      "category": "Functional Testing",
+      "task": "Perform a search for a specific species using the search functionality.",
+      "expected": "The search results should display only the species that match the search criteria, demonstrating accuracy and relevance without results from unrelated species."
+    },
+    {
+      "id": "000088-3",
+      "category": "Functional Testing",
+      "task": "Apply a filter to the data based on a given criterion (e.g., habitat type).",
+      "expected": "The data should update to show only those entries that meet the filter criteria, without displaying entries that do not match."
+    },
+    {
+      "id": "000088-4",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'linen' as the background color and 'maroon' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'linen' and components (such as buttons, cards, headers, etc.) are styled with the color 'maroon', accurately reflecting the design instruction."
+    }
+  ]
+}

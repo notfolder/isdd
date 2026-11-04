@@ -1,0 +1,18 @@
+{
+  "task": "python_string_utils-test_uuid-level1",
+  "files": {
+    "string_utils/validation.py": {
+      "removed": [
+        "is_uuid"
+      ],
+      "missing": []
+    },
+    "string_utils/generation.py": {
+      "removed": [
+        "uuid"
+      ],
+      "missing": []
+    }
+  },
+  "test_removed": "tests/test_uuid.py"
+}

@@ -1,0 +1,5 @@
+Species Biology Database: implemented in app.py (Python standard library, sqlite3). setup.sh and run.sh are in the project root.
+Pages: Home (kingdom and conservation-status tiles), Browse and search (/species: text search, filters for kingdom, habitat, diet, conservation status, sort), species detail (/species/<id>, with related species in the same habitat), Add species (/species/new), Edit (/species/<id>/edit), Delete (POST on the detail page with confirm).
+Storage: DATA_DIR/species.db (SQLite). Seeded with 12 sample species when the table is empty.
+Style: linen background, maroon for nav, headings, buttons, table headers, badges, borders and focus outlines.
+Run: bash setup.sh; PORT=8000 bash run.sh (binds 127.0.0.1).

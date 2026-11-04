@@ -1,0 +1,143 @@
+{
+  "site": "000088",
+  "arm": "control",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 137.0,
+      "agent_tokens": 63469,
+      "tool_uses": 8,
+      "note": "",
+      "cases": {
+        "000088-1": {
+          "verdict": "PARTIAL",
+          "reason": "一覧は 12 件すべてが表示され、表示エラーは無かったが、Lifespan や Population estimate などに「Not recorded」が多数あり、期待の「欠損データが無い」を満たさない。",
+          "category": "Functional Testing"
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "「lion」は Lion の 1 件、「bear」は Polar bear の 1 件だけを返し、無関係な種は出なかった。「bacteria」「tree」なども該当種のみで、存在しない語は 0 件だった。",
+          "category": "Functional Testing"
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "Habitat を Forest に絞ると English oak・Fly agaric・Giant panda の 3 件（いずれも Forest）だけになり、Kingdom を Animalia と併用すると Giant panda のみになった。他の habitat・diet・status でも一致しない行は残らなかった。",
+          "category": "Functional Testing"
+        },
+        "000088-4": {
+          "verdict": "PARTIAL",
+          "reason": "背景は rgb(250,240,230) で linen に一致し、ヘッダー・ボタン・テーブル見出し・バッジ・見出し文字は maroon（rgb(128,0,0)）だった。一方でカード（section.card）の背景は rgb(255,252,247) のクリーム色で、maroon は枠線のみのため、期待の「カードも maroon で装飾される」を完全には満たさない。",
+          "category": "Design Validation Testing"
+        }
+      },
+      "score": 3.0,
+      "n_cases": 4,
+      "accuracy": 0.75,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 643,
+        "public_functions": 25
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 77.0,
+      "agent_tokens": 60019,
+      "tool_uses": 11,
+      "note": "",
+      "cases": {
+        "000088-1": {
+          "verdict": "PARTIAL",
+          "reason": "一覧（/species）は 12 件すべてを表示し、詳細ページもエラーなく開けた。ただし一覧の寿命で Fly agaric と Gut bacterium が「Not recorded」、詳細ページでは 8 種の個体数推定が「Not recorded」のままで、「欠損データがないこと」という期待の一部を満たさない。",
+          "category": "Functional Testing"
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "「bear」は Polar bear の 1 件のみ、「Lion」は Lion のみ、「salmon」は Atlantic salmon のみ、「zzzz」は 0 件を返し、無関係な種は混ざらなかった。「mammal」は学名の綱（Mammalia）にも一致して 5 件を返し、検索は正しく動く。",
+          "category": "Functional Testing"
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "生息地フィルタ（Marine）で 2 件（Atlantic salmon、Blue whale）に絞られ、Forest では 3 件、Herbivore と Fungi の絞り込みも該当行だけになった。一致しない行は表示されなかった。",
+          "category": "Functional Testing"
+        },
+        "000088-design": {
+          "verdict": "YES",
+          "reason": "body の背景色は rgb(240,255,240)（honeydew）。ヘッダー、ボタン、見出し、カードの枠線、バッジ、表の見出しは rgb(85,107,47)（dark olive green）。カードの背景は honeydew、表の行は薄い緑、現在のナビは rgb(63,82,34) の濃い色で、部品の色として期待どおりに適用されている。",
+          "category": "Design Validation Testing"
+        },
+        "000088-c1": {
+          "verdict": "PARTIAL",
+          "reason": "「Add species」フォームで名前、生息地 Forest（フォームに Rainforest は無く、最も近い Forest を選んだ）、食性 Herbivore、説明を入力して追加でき、Okapi は一覧（13 件中）と検索「Okapi」の両方に Forest / Herbivore で出た。ただし指定の生息地 Rainforest は選べず、期待の生息地の部分が満たされない。",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 4.0,
+      "n_cases": 5,
+      "accuracy": 0.8,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 693,
+        "public_functions": 27
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 120.0,
+      "agent_tokens": 61846,
+      "tool_uses": 14,
+      "note": "上限で中断、再開して完了（所要は中断前の見込み込み）",
+      "cases": {
+        "000088-1": {
+          "verdict": "PARTIAL",
+          "reason": "一覧は 12 件すべて表示され画面エラーはないが、Fly agaric と Gut bacterium の寿命（Not recorded）など、一部の種で項目が空欄のまま（詳細ページで 1〜3 件の Not recorded/Not set）で「欠損データなし」を満たさない。",
+          "category": "Functional Testing"
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "「Lion」は Lion のみ、「bear」は Polar bear のみ、「Panthera」は Lion のみを返し、無関係な種は出なかった。「forest」は生息地が Forest の 3 種に絞られた。",
+          "category": "Functional Testing"
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "生息地フィルタ Marine は Atlantic salmon と Blue whale の 2 件だけになり、Forest は 3 件、Terrestrial は 1 件に更新された。不一致の行は出なかった。",
+          "category": "Functional Testing"
+        },
+        "000088-design": {
+          "verdict": "YES",
+          "reason": "背景は rgb(240,255,240)（honeydew）。ヘッダー・ボタン・テーブル見出し・バッジは rgb(85,107,47)（dark olive green）で、カードの枠線も同色。ただしカードの塗りは honeydew、一覧の本体セルは淡い緑（rgb(224,240,220)）。",
+          "category": "Design Validation Testing"
+        },
+        "000088-c1": {
+          "verdict": "PARTIAL",
+          "reason": "Okapi は生息地 Rainforest を選べず（フォームの生息地に Rainforest が無い）、Forest で登録した。登録後は一覧に Habitat Forest・Diet Herbivore で表示され、検索 Okapi で 1 件ヒットしたので、期待のうち生息地の値が一致しない。",
+          "category": "Functional Testing"
+        },
+        "000088-c2": {
+          "verdict": "YES",
+          "reason": "並び替え Name (Z to A) で Western honey bee から African bush elephant の順になり、Name (A to Z) で African bush elephant から Western honey bee の順に戻った。",
+          "category": "Functional Testing"
+        },
+        "000088-c3": {
+          "verdict": "YES",
+          "reason": "一覧から開いた詳細ページに名前・学名・生息地・食性・説明（Okapi は説明文あり）・寿命などの項目が表示され、エラーは無かった。全 13 件の詳細ページも 200 で表示された。",
+          "category": "Data Display Testing"
+        }
+      },
+      "score": 6.0,
+      "n_cases": 7,
+      "accuracy": 0.857,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 716,
+        "public_functions": 27
+      }
+    }
+  }
+}

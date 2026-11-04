@@ -1,0 +1,35 @@
+{
+  "base_url": "http://127.0.0.1:51751",
+  "cases": [
+    {
+      "id": "000026-1",
+      "category": "Data Display Testing",
+      "task": "Test the navigation to the voting page from the homepage.",
+      "expected": "The user can navigate to the voting page without errors, and all voting options are displayed."
+    },
+    {
+      "id": "000026-2",
+      "category": "Functional Testing",
+      "task": "Check the ability to browse different voting options without casting a vote.",
+      "expected": "The user can view a list of voting options, and each option should be clearly displayed with relevant information."
+    },
+    {
+      "id": "000026-3",
+      "category": "Functional Testing",
+      "task": "Test the voting functionality by casting a vote on a selected option.",
+      "expected": "The vote is successfully recorded, and the user receives a confirmation notification indicating that their vote has been cast."
+    },
+    {
+      "id": "000026-4",
+      "category": "Data Display Testing",
+      "task": "Check the voting results page for the display of current voting results.",
+      "expected": "The user can view the up-to-date voting results, including relevant statistics or graphical representations."
+    },
+    {
+      "id": "000026-5",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'white' as the background color and 'navy' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'white' and components (such as buttons, cards, headers, etc.) are styled with the color 'navy', accurately reflecting the design instruction."
+    }
+  ]
+}

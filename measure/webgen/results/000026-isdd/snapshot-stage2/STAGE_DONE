@@ -1,0 +1,9 @@
+完了: 変更依頼 1（配色の変更、投票済みの投票の操作無効化）を isdd-spec（変更フロー）と isdd-build（実装と実装後レビュー）で完了。
+
+- 変更の記録: .history/20261104-theme-and-vote-lock/（change_requirements.md、change_detail_design.md、tasks.md）
+- 正本への反映: docs/requirements.md（RQ-BK-MARK-VOTED-POLLS、RQ-BK-APPLY-SLATE-THEME、RQ-FT-DISABLE-VOTE-AFTER-VOTE、RQ-FT-REFUSE-REPEAT-VOTE、RQ-UI-VOTED-POLL-STATE、RQ-NF-SLATE-THEME、RQ-TS-VOTED-POLL-STATE。RQ-NF-VISUAL-THEME は削除）、docs/detail_design.md、docs/trace_map.md（DS-TS-VOTED-POLL-STATE-E2E を追加）
+- 実装: app/static/style.css（背景 #FFFFE0、部品 #2F4F4F）、app/templates/poll.html（投票済みは選択肢と Vote を disabled、「You have already voted」と結果）、app/views.py（投票済みの再送信は票を作らず、Thank you なしで詳細へ戻す）、e2e/test_polls_e2e.py（配色・再送信のテストを更新し、test_voted_poll_state を追加）、README.md
+- 確認: scripts/isdd/check.sh --strict はエラー 0 件・警告 0 件、受け入れ判定 DS-TS 13/13、要件 18/18 実装済み。rq_integrity_checker と rq_ds_link_checker は問題 0 件。implementation_completeness_checker は全項目 OK。単体テスト 8 件、E2E 11 件が全件通過。
+- 起動: bash setup.sh の後、PORT を指定して bash run.sh で起動し、/、/polls/1、/polls/3、/results、/static/style.css が 200 で応答することを確認（確認後、自分が起動したプロセスだけ停止）。
+- 既存の 1 投票 1 票の仕組み（Cookie と一意制約）は変えていない。今回は表示と再送信の応答を変えた。
+- 注意: 変更設計書 8-2 の期待結果「#ffffff と #000080 の指定が無い」は、部品上の白い文字（#FFFFFF）と両立しない。テストは「背景と部品の塗りに #ffffff と #000080 が無い」で確かめた。

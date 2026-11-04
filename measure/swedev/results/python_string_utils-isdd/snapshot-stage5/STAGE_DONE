@@ -1,0 +1,10 @@
+完了の要約（REQUEST.md の依頼: strip_html・is_string・InvalidInputError.__init__ の実装し直し）
+
+- 変更フロー（isdd-spec）: .history/20261104-restore-strip-html-and-is-string/ に change_requirements.md・change_detail_design.md・tasks.md を作成。docs/active_change で登録。要件・設計は既存の正本（RQ-FT-STRIP-HTML、RQ-FT-CHECK-STRING-TYPE、RQ-FT-REJECT-NON-STRING-INPUT、DS-FN-STRIP-HTML、DS-FN-IS-STRING、DS-CL-INVALID-INPUT-ERROR）の実装し直し。[追加]・[削除] は無い。
+- 実装（isdd-build）:
+  - string_utils/errors.py: InvalidInputError.__init__（型名と期待する型 "str" を含むメッセージで TypeError を初期化）
+  - string_utils/validation.py: is_string（isinstance(obj, str)）
+  - string_utils/manipulation.py: strip_html（文字列以外は InvalidInputError。keep_tag_content で HTML_TAG_ONLY_RE / HTML_RE を使い分け）
+- 検証: tests 381 件全通過、e2e 8 件全通過（JUnit は e2e/results/e2e.xml）。bash scripts/isdd/check.sh --strict はエラー 0・警告 0・受け入れ判定合格（要件 35 件実装済み）。rq_ds_link_checker・rq_integrity_checker・implementation_completeness_checker も合格。
+- 実装後レビュー: 正本の要件・設計は変更内容と一致していたため変更なし。docs/active_change を削除。docs/proposals.md は無し。未マッピングは 0 件、作りすぎ 0 件。
+- 注意: ルートの conftest.py が import する hunter が .venv に無いため、pytest は --noconftest を付けて実行した（conftest.py は変更していない）。

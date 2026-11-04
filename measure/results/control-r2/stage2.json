@@ -1,0 +1,33 @@
+{
+  "stage": 2,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/control-r2/snapshot-stage2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "fail",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "fail",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "pass",
+    "test_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "fail"
+  },
+  "passed": 11,
+  "total": 14,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "        thread = threading.Thread(target=lambda: result.update(asyncio.run(_measure(app.base_url))))\n        thread.start()\n        thread.join()\n        print(\n>           f\"open max={max(result['open']):.2f}s lend={result['lend']:.2f}s \"\n                            ^^^^^^^^^^^^^^\n            f\"return={result['return']:.2f}s reload max={max(result['reload']):.2f}s\",\n            file=sys.stderr, flush=True,\n        )\nE       KeyError: 'open'\n\ntest_performance.py:93: KeyError\n=============================== warnings summary ===============================\ntest_performance.py::test_response_time[chromium]\n  /Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/_pytest/threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1 (<lambda>)\n  \n  Traceback (most recent call last):\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1075, in _bootstrap_inner\n      self.run()\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/threading.py\", line 1012, in run\n      self._target(*self._args, **self._kwargs)\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 89, in <lambda>\n      thread = threading.Thread(target=lambda: result.update(asyncio.run(_measure(app.base_url))))\n                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 195, in run\n      return runner.run(main)\n             ^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/runners.py\", line 118, in run\n      return self._loop.run_until_complete(task)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/asyncio/base_events.py\", line 691, in run_until_complete\n      return future.result()\n             ^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/hidden/test_performance.py\", line 71, in _measure\n      async with staff.expect_navigation(url=f\"{base_url}/\"):\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 60, in __aexit__\n      await self._event.value\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_async_base.py\", line 35, in value\n      return mapping.from_maybe_impl(await self._future)\n                                     ^^^^^^^^^^^^^^^^^^\n    File \"/Users/notfolder/Documents/isdd/measure/.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py\", line 265, in continuation\n      event = await waiter.result()\n              ^^^^^^^^^^^^^^^^^^^^^\n  playwright._impl._errors.TimeoutError: Timeout 30000ms exceeded.\n  =========================== logs ===========================\n  waiting for navigation to \"http://127.0.0.1:51227/\" until 'load'\n    navigated to \"http://127.0.0.1:51227/?notice=lent\"\n  ============================================================\n  \n  Enable tracemalloc to get traceback where the object was allocated.\n  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.\n    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_first_account_becomes_staff[chromium] - Asserti...\nFAILED test_accounts.py::test_employee_cannot_manage_equipment[chromium] - As...\nFAILED test_performance.py::test_response_time[chromium] - KeyError: 'open'\n3 failed, 11 passed, 7 deselected, 1 warning in 195.77s (0:03:15)\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 713,
+    "public_functions": 34,
+    "classes": 1,
+    "templates": 0
+  },
+  "duration_sec": 196.1
+}

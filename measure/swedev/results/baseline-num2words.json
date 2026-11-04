@@ -1,0 +1,32 @@
+{
+  "num2words-test_currency-level1": {
+    "passed": 1,
+    "total": 1,
+    "tests": {
+      "tests.test_currency.CurrencyTestCase::test_parse_currency_parts": "pass"
+    },
+    "tail": "tests/test_currency.py::CurrencyTestCase::test_parse_currency_parts PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit0.xml ----------------------\n============================== 1 passed in 0.19s ==============================="
+  },
+  "num2words-test_utils-level1": {
+    "passed": 1,
+    "total": 1,
+    "tests": {
+      "modified_testcases.test_utils.TestUtils::test_splitbyx": "pass"
+    },
+    "tail": "modified_testcases/test_utils.py::TestUtils::test_splitbyx PASSED        [100%]\n\n--------------------- generated xml file: /tmp/junit1.xml ----------------------\n============================== 1 passed in 0.06s ==============================="
+  },
+  "num2words-test_base-level1": {
+    "passed": 7,
+    "total": 7,
+    "tests": {
+      "modified_testcases.test_base.Num2WordBaseTest::test_error_merge": "pass",
+      "modified_testcases.test_base.Num2WordBaseTest::test_error_to_cardinal_float": "pass",
+      "modified_testcases.test_base.Num2WordBaseTest::test_is_title": "pass",
+      "modified_testcases.test_base.Num2WordBaseTest::test_pluralize_not_implemented": "pass",
+      "modified_testcases.test_base.Num2WordBaseTest::test_set_high_numwords_not_implemented": "pass",
+      "modified_testcases.test_base.Num2WordBaseTest::test_to_currency_not_implemented": "pass",
+      "modified_testcases.test_base.Num2WordBaseTest::test_to_ordinal_num": "pass"
+    },
+    "tail": "modified_testcases/test_base.py::Num2WordBaseTest::test_to_currency_not_implemented PASSED [ 85%]\nmodified_testcases/test_base.py::Num2WordBaseTest::test_to_ordinal_num PASSED [100%]\n\n--------------------- generated xml file: /tmp/junit2.xml ----------------------\n============================== 7 passed in 0.06s ==============================="
+  }
+}

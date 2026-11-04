@@ -1,0 +1,143 @@
+{
+  "site": "000010",
+  "arm": "isdd",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 658,
+      "agent_tokens": 256425,
+      "tool_uses": 57,
+      "note": "",
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "Entering a name and pressing Spin rotates the SVG wheel (CSS transform animates over about 7 s, then settles), and the result line shows 'You won: <prize>' with no console or page errors. Three spins each produced a prize, and the settled rotation matched the segment under the top pointer in all three cases.",
+          "category": "Functional Testing"
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "The Prizes view shows a table with exactly six rows (Coffee Voucher, Gift Card 500, Free Dessert, Movie Ticket, Tote Bag, Mystery Gift), matching the six segments on the wheel, each with a description.",
+          "category": "Data Display Testing"
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "After spinning twice under a new name, the My Records view (searched by that name) listed both wins, newest first, each with a date/time (11/4/2026, today's date) and the prize won. Before spinning it showed 'No records found for this name'.",
+          "category": "Data Display Testing"
+        },
+        "000010-4": {
+          "verdict": "YES",
+          "reason": "Page background computes to rgb(230,230,230), a light gray. The header, Spin button, table headers, h2 headings, nav links (#6e0000 active/inactive) and the wheel are dark red (#8b0000 and shades), and panels/table borders use #8b0000. Panel and input fills are near-white, which is a minor deviation but the dark red component color is applied consistently.",
+          "category": "Design Validation Testing"
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 6,
+        "lines": 297,
+        "public_functions": 14
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 667,
+      "agent_tokens": 284982,
+      "tool_uses": 51,
+      "note": "",
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "Spin 後に 'You won: Gift Card 500' が表示され、結果は盤面のセグメントのいずれかだった。画面にエラーは出ていない（pageerror=0 件）。",
+          "category": "Functional Testing"
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "賞品一覧は 6 件（Coffee Voucher, Gift Card 500, Free Dessert, Movie Ticket, Tote Bag, Mystery Gift）で、盤面のセグメント 6 件と一致した。",
+          "category": "Data Display Testing"
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "名前で検索すると記録が 1 件表示され、最新の行は '11/4/2026, 3:31:30 PM | Gift Card 500'（スピンの結果 'Gift Card 500'、日付つき）。",
+          "category": "Data Display Testing"
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "背景は rgb(255, 255, 240)（ivory 相当）。ヘッダー rgb(0, 100, 0)、ボタン rgb(0, 77, 0)、パネル rgb(0, 100, 0)、表の見出し rgb(0, 100, 0) はいずれも dark green（rgb(0,100,0)）。盤面のセグメントも #006400・#004d00・#1b5e20・#2e7d32 の濃い緑。",
+          "category": "Design Validation Testing"
+        },
+        "000010-c1": {
+          "verdict": "YES",
+          "reason": "'Golden Ticket' を追加すると賞品一覧（True）と盤面（True）に現れた。管理画面の Remove で削除でき、一覧（True）と盤面（True）から消えた。",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 6,
+        "lines": 394,
+        "public_functions": 20
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 615,
+      "agent_tokens": 273583,
+      "tool_uses": 62,
+      "note": "",
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "Entered 'Tester1' and pressed Spin. The wheel rotated at once and stopped after about 4.1 s with 'You won: Gift Card 500' (one of the six wheel segments). No error appeared.",
+          "category": "Functional Testing"
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "The Prizes page lists six prizes with descriptions (Coffee Voucher, Gift Card 500, Free Dessert, Movie Ticket, Tote Bag, Mystery Gift). These match the six segment labels on the wheel exactly.",
+          "category": "Data Display Testing"
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "After a spin, the My Records page shows the new row for the same name with the prize that was won and the date 11/4/2026 with time. The records list shows rows only after a name search, which is how the site is built.",
+          "category": "Data Display Testing"
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "Body background is rgb(255,255,240), which is CSS 'ivory'. Header, buttons, form cards and table headers are rgb(0,100,0), which is CSS 'dark green'. Input fields are white and the table body is cream, but the expected list does not name those.",
+          "category": "Design Validation Testing"
+        },
+        "000010-c1": {
+          "verdict": "YES",
+          "reason": "Adding 'Golden Ticket' on the manage page made it appear in the prize list and as a seventh wheel segment. Pressing its Remove button removed it from the manage list, the prize list and the wheel.",
+          "category": "Functional Testing"
+        },
+        "000010-c2": {
+          "verdict": "YES",
+          "reason": "Pressing Spin with an empty name showed 'Please enter your name (1–30 characters).' and no prize was won. After entering 'Alice' and spinning, the wheel stopped on 'Coffee Voucher' and the records show a row 'Alice | Coffee Voucher | 11/4/2026, 3:43:31 PM'.",
+          "category": "Functional Testing"
+        },
+        "000010-c3": {
+          "verdict": "YES",
+          "reason": "Clicking 'Clear records' opened the confirm dialog 'Delete all winning records? This cannot be undone.' After accepting, searches for 'Alice' and 'Tester1' both returned no rows. Checking only these two names is a limitation.",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 7.0,
+      "n_cases": 7,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 6,
+        "lines": 424,
+        "public_functions": 22
+      }
+    }
+  }
+}

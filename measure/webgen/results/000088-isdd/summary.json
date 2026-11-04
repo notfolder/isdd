@@ -1,0 +1,143 @@
+{
+  "site": "000088",
+  "arm": "isdd",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 691.0,
+      "agent_tokens": 260290,
+      "tool_uses": 47,
+      "note": "",
+      "cases": {
+        "000088-1": {
+          "verdict": "PARTIAL",
+          "reason": "一覧の 12 種はすべて表示され表示エラーもない。ただし詳細ページで E. coli の Class と Average length、Fly agaric の Average length が「—」(欠損を示す表示) になっており、期待の「欠損データなし」を満たさない。",
+          "category": "Functional Testing"
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "「panthera」は Lion と Tiger、「tree」は English oak と Fly agaric (説明文の trees) など、一致する種だけが表示された。一致しない語 (zebra, wolf) は 0 件で、無関係な種は出なかった。",
+          "category": "Functional Testing"
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "生息地フィルタで Freshwater は Eurasian otter、Marine は Perrin's beaked whale、Mixed は Atlantic salmon と E. coli のみになり、条件に合わない種は表示されなかった。検索語との併用、界・食性・保全状況のフィルタも正しく絞り込まれた。",
+          "category": "Functional Testing"
+        },
+        "000088-4": {
+          "verdict": "YES",
+          "reason": "body の背景は rgb(250,240,230) で linen に一致。h1、ヘッダー、ナビ、ボタン、表の見出し、本文の文字色などの部品は rgb(128,0,0) で maroon に一致。入力欄と表の背景は rgb(255,248,240) でやや白寄りだが、部品の色は maroon として指定どおり。",
+          "category": "Design Validation Testing"
+        }
+      },
+      "score": 3.5,
+      "n_cases": 4,
+      "accuracy": 0.875,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 8,
+        "lines": 591,
+        "public_functions": 23
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 467,
+      "agent_tokens": 226119,
+      "tool_uses": 45,
+      "note": "",
+      "cases": {
+        "000088-1": {
+          "verdict": "PARTIAL",
+          "reason": "一覧は 12 件すべて表示されエラーはないが、E. coli の Class と Average length、Fly agaric の Average length が「—」(未入力)のまま表示され、期待の「欠損なし」を満たさない。",
+          "category": "Functional Testing"
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "\"Tiger\" は Tiger 1 件、\"Panthera\" は Lion と Tiger の 2 件、\"whale\" は Perrin's beaked whale 1 件のみ返り、無関係な種は出なかった。該当なしの語は 0 件と表示された。",
+          "category": "Functional Testing"
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "habitat 絞り込みで Marine は 1 件、Mixed は 2 件、Terrestrial は 8 件、Freshwater は 1 件になり、いずれも選んだ生息地の行だけが表示された。",
+          "category": "Functional Testing"
+        },
+        "000088-design": {
+          "verdict": "YES",
+          "reason": "body の背景色は rgb(240,255,240)（honeydew）。ヘッダー・ボタン・表見出し・見出し文字・枠線・フォームの入力欄などは rgb(85,107,47)（dark olive green）で統一されていた。",
+          "category": "Design Validation Testing"
+        },
+        "000088-c1": {
+          "verdict": "PARTIAL",
+          "reason": "Okapi は追加後、一覧にも検索結果にも表示され、diet は Herbivore だった。ただし habitat の選択肢は Terrestrial/Freshwater/Marine/Mixed のみで Rainforest が無く、habitat は Terrestrial として保存された。",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 4.0,
+      "n_cases": 5,
+      "accuracy": 0.8,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 8,
+        "lines": 637,
+        "public_functions": 24
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 406,
+      "agent_tokens": 195126,
+      "tool_uses": 45,
+      "note": "",
+      "cases": {
+        "000088-1": {
+          "verdict": "YES",
+          "reason": "一覧に 12 種すべてが表示され、全行の列（学名・一般名・界・生息地・食性・保全状態）に欠損や表示エラーは無かった。",
+          "category": "Functional Testing"
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "検索 'Tiger' は Tiger 1 件のみ、'Panthera' は Lion と Tiger の 2 件（一致する種のみ）、'zzzz' は 0 件で「一致なし」と表示された。",
+          "category": "Functional Testing"
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "生息地フィルタ Marine では Perrin's beaked whale の 1 件のみ、Mixed では Atlantic salmon と Escherichia coli のみ、食性 Herbivore では 3 件のみ表示され、条件外の行は出なかった。",
+          "category": "Functional Testing"
+        },
+        "000088-design": {
+          "verdict": "YES",
+          "reason": "body の背景色は rgb(240,255,240) で honeydew と一致。ヘッダー・ボタン・表の見出し・h1・セレクト等の部品は rgb(85,107,47)（dark olive green に一致）で統一されていた。",
+          "category": "Design Validation Testing"
+        },
+        "000088-c1": {
+          "verdict": "PARTIAL",
+          "reason": "Okapi の登録は成功し、一覧と検索 'Okapi' の両方に表示され、食性 Herbivore も反映された。しかし生息地の選択肢に Rainforest が無く（Terrestrial/Freshwater/Marine/Mixed のみ）、指定の生息地 Rainforest で登録できず、Terrestrial で代用して登録した。",
+          "category": "Functional Testing"
+        },
+        "000088-c2": {
+          "verdict": "YES",
+          "reason": "Name (Z to A) で Western lowland gorilla から Atlantic salmon へ逆順に並び、続けて Name (A to Z) で Atlantic salmon から Western lowland gorilla へ正順に戻った。",
+          "category": "Functional Testing"
+        },
+        "000088-c3": {
+          "verdict": "YES",
+          "reason": "一覧の行から詳細ページ（/species/N）が開き、学名・一般名・界・生息地・食性・保全状態・平均体長・説明・登録日時が表示された。全 12 件とも表示エラーは無く、存在しない ID は「Species not found」を返した。",
+          "category": "Data Display Testing"
+        }
+      },
+      "score": 6.5,
+      "n_cases": 7,
+      "accuracy": 0.929,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 9,
+        "lines": 672,
+        "public_functions": 26
+      }
+    }
+  }
+}

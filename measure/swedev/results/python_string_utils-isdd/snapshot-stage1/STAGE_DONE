@@ -1,0 +1,11 @@
+完了: isdd の逆引き・変更フロー（仕様・実装・実装後レビュー）まで
+
+- 逆引き: string_utils パッケージから docs/requirements.md・docs/detail_design.md・docs/trace_map.md を作成（is_credit_card は現コードに無いため対象外）
+- 変更: REQUEST の is_credit_card を .history/20261104-add-is-credit-card/ の変更要件定義書・変更設計書・tasks.md に記載
+- 実装: string_utils/validation.py に is_credit_card を追加（docstring どおり）。tests/test_is_credit_card.py を追加
+- E2E: e2e/test_scenarios.py（8 シナリオ）を追加。e2e/results/e2e.xml 生成
+- 実装後レビュー: 変更を正本へ反映、docs/active_change 削除、README に「起動方法」節を追加
+- 検証: bash scripts/isdd/check.sh --strict が終了コード 0（対応表 エラー 0・警告 0、受け入れ判定 DS-TS 8/8、要件 35/35 実装済み）
+  rq_integrity_checker.py・rq_ds_link_checker.py・implementation_completeness_checker.py すべて合格
+  単体テスト: python -m pytest --noconftest tests で 406 件合格
+注意: ルートの conftest.py が hunter を import するが環境に無いため、pytest は --noconftest で実行した

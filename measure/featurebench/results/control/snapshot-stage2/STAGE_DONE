@@ -1,0 +1,5 @@
+Implemented NPMI functions in mlflow/store/analytics/trace_correlation.py:
+- calculate_npmi_from_counts(joint_count, filter1_count, filter2_count, total_count) -> NPMIResult
+- calculate_smoothed_npmi(joint_count, filter1_count, filter2_count, total_count, smoothing=JEFFREYS_PRIOR) -> float
+Also re-exported both functions from mlflow/store/analytics/__init__.py (import line was missing them).
+Verified in the container: documented examples (10,20,15,100 -> ~0.523; 0,50,50,100 -> -1.0; 0,0,50,100 -> NaN unsmoothed), inconsistent counts and total<=0 return NaN, perfect co-occurrence returns 1.0, results clamped to [-1, 1]. sqlalchemy_store imports fine.

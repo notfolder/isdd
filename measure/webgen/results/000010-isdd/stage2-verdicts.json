@@ -1,0 +1,22 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "Spin 後に 'You won: Gift Card 500' が表示され、結果は盤面のセグメントのいずれかだった。画面にエラーは出ていない（pageerror=0 件）。"
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "賞品一覧は 6 件（Coffee Voucher, Gift Card 500, Free Dessert, Movie Ticket, Tote Bag, Mystery Gift）で、盤面のセグメント 6 件と一致した。"
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "名前で検索すると記録が 1 件表示され、最新の行は '11/4/2026, 3:31:30 PM | Gift Card 500'（スピンの結果 'Gift Card 500'、日付つき）。"
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "背景は rgb(255, 255, 240)（ivory 相当）。ヘッダー rgb(0, 100, 0)、ボタン rgb(0, 77, 0)、パネル rgb(0, 100, 0)、表の見出し rgb(0, 100, 0) はいずれも dark green（rgb(0,100,0)）。盤面のセグメントも #006400・#004d00・#1b5e20・#2e7d32 の濃い緑。"
+  },
+  "000010-c1": {
+    "verdict": "YES",
+    "reason": "'Golden Ticket' を追加すると賞品一覧（True）と盤面（True）に現れた。管理画面の Remove で削除でき、一覧（True）と盤面（True）から消えた。"
+  }
+}

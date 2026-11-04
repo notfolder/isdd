@@ -1,0 +1,13 @@
+完了の要約（変更フロー: Num2Word_Base の欠落メソッドの復元）
+
+- 変更記録: .history/20261104-restore-base-methods/（change_requirements.md・change_detail_design.md・tasks.md）。docs/active_change は実装後レビューで削除済み。
+- 実装: num2words/base.py に PRD の 8 個を復元（__init__、to_cardinal_float、pluralize、set_high_numwords、title、to_ordinal_num、merge、to_currency）。既存の関数と挙動は変更していない。
+- 正本: 新規の要件・設計要素は無い（既存の RQ・DS で足りる）ため、docs/requirements.md・docs/detail_design.md・docs/trace_map.md の内容は変更していない。__init__ はダンダーメソッドのため対応表に載せない規則に従った。
+- 検証:
+  - 単体テスト（tests/）: 1433 件すべて通過。tests/test_cli.py は docopt と delegator.py を .venv に入れ、PYTHONPATH をリポジトリ直下にして実行。
+  - E2E（e2e/）: 7 件通過。e2e/results/e2e.xml を更新。
+  - bash scripts/isdd/check.sh --strict: エラー 0・警告 0、受け入れ判定 DS-TS 6/6 合格、要件 8/8 実装済み。
+  - rq_integrity_checker.py・rq_ds_link_checker.py: 問題 0 件。
+  - implementation_completeness_checker.py: 4/4 通過。
+- 未マッピング一覧: 該当なし（要件なし（作りすぎ）0 件）。
+- 残りの注意: 既存 CLI テストは PYTHONPATH と docopt/delegator.py が無いと失敗する（環境の問題で、コードの変更とは無関係）。

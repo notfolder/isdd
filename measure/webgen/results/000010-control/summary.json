@@ -1,0 +1,143 @@
+{
+  "site": "000010",
+  "arm": "control",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 183.0,
+      "agent_tokens": 75085,
+      "tool_uses": 14,
+      "note": "",
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "Entered a name and pressed Spin; the wheel animated for about 4 seconds, stopped, and the message 'Congratulations, ...! You won: X' (or the no-prize message) appeared with no errors. In 9 spins the landed segment matched the displayed result each time.",
+          "category": "Functional Testing"
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "The Prize List page shows all 7 prizes (10% Off Coupon, Free Coffee, Movie Ticket, Mystery Gift, T-Shirt, $50 Gift Card, Try Again), matching the 7 wheel segments and their labels.",
+          "category": "Data Display Testing"
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "After a spin, the My Winnings page (name lookup) lists the new record with the date (for example 'Nov 4, 2026, 11:27 AM', matching the current time) and the prize won, and the summary count is updated.",
+          "category": "Data Display Testing"
+        },
+        "000010-4": {
+          "verdict": "YES",
+          "reason": "The page background is rgb(228,228,228), a light gray close to 'light gray'. The header, buttons, headings, card borders, and nav links are rgb(139,0,0) (#8b0000, dark red). Minor exceptions: the no-prize badge (#6b6b6b) and the Try Again wheel segment (#555555) are gray, and the cards are near-white (#fafafa/#ffffff).",
+          "category": "Design Validation Testing"
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 237,
+        "public_functions": 12
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 124.0,
+      "agent_tokens": 70188,
+      "tool_uses": 18,
+      "note": "",
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "On the reset site (127.0.0.1:63866), spinning as 'Tester2' showed 'Spinning...', then the wheel stopped with the pointer on 'Try Again' and the page showed 'No prize this time, Tester2. Spin again!' with no errors. A separate spin as 'Winner0' stopped on '10% Off Coupon' and showed 'Congratulations, Winner0! You won: 10% Off Coupon'. The spin works and displays the result each time.",
+          "category": "Functional Testing"
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "The Prize List page shows all 7 entries (10% Off Coupon, Free Coffee, Movie Ticket, Mystery Gift, T-Shirt, $50 Gift Card, Try Again) with their chances, matching the 7 wheel segments and the Manage Prizes list.",
+          "category": "Data Display Testing"
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "After a spin that won 10% Off Coupon (name 'Winner0'), My Winnings for 'Winner0' lists '1 win for Winner0' with the row 'Nov 4, 2026, 3:05 PM | 10% Off Coupon'. A 'Try Again' spin records nothing, which matches the site's rule that only prizes are saved.",
+          "category": "Data Display Testing"
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "Body background is rgb(255,255,240), which is ivory. The header, primary buttons, card borders and headings are dark green (rgb(0,100,0) and rgb(0,67,0)). The Remove buttons are white with dark-green text and border, so no red component remains.",
+          "category": "Design Validation Testing"
+        },
+        "000010-c1": {
+          "verdict": "YES",
+          "reason": "Adding 'Golden Ticket' on Manage Prizes showed it in the Manage list, on the Prize List page, and as a labelled segment on the wheel of the home page. Clicking its Remove button removed it from the Manage list and the Prize List, and the site was left without it.",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 320,
+        "public_functions": 18
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 63.0,
+      "agent_tokens": 57523,
+      "tool_uses": 9,
+      "note": "",
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "Spin を押すと「Spinning...」の後に結果が表示された（ハズレ 1 回、10% Off Coupon 1 回を確認）。エラーは出ず、当たった賞品名が画面に出た。",
+          "category": "Functional Testing"
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "Prize List ページに 10% Off Coupon・Free Coffee・Movie Ticket・Mystery Gift・T-Shirt・$50 Gift Card・Try Again の 7 件が表示され、ホームのホイールの区画と一致した。",
+          "category": "Data Display Testing"
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "Alice で当選後に My Winnings を開くと、Player・Prize・Date（Nov 4, 2026, 3:06 PM など）の記録が追加されていた。最新の当選が一覧の先頭に出た。",
+          "category": "Data Display Testing"
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "body の背景色は rgb(255,255,240)（ivory と一致）。ヘッダー・Spin ボタン・テーブル見出し・カード上端の色は rgb(0,100,0)（dark green と一致）。見出し h1 は rgb(0,67,0) で、同系統の濃い緑として扱った。",
+          "category": "Design Validation Testing"
+        },
+        "000010-c1": {
+          "verdict": "YES",
+          "reason": "Manage Prizes で Golden Ticket を追加すると「Added ...」が出て、Prize List・ホームのホイールにも表示された。Manage の Remove で削除すると、3 画面すべてから消えた。",
+          "category": "Functional Testing"
+        },
+        "000010-c2": {
+          "verdict": "YES",
+          "reason": "名前が空のまま Spin を押すと「Please enter your name before spinning.」と表示され、回転は始まらなかった。Alice で回すと、My Winnings に Alice・賞品名・日付の記録が追加された。",
+          "category": "Functional Testing"
+        },
+        "000010-c3": {
+          "verdict": "YES",
+          "reason": "Clear records で確認ダイアログ（「Delete ALL winning records...」）を受けて承諾すると「Cleared 2 winning records.」と表示され、リロード後も記録一覧が空（No winning records yet）のままだった。",
+          "category": "Functional Testing"
+        }
+      },
+      "score": 7.0,
+      "n_cases": 7,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 331,
+        "public_functions": 19
+      }
+    }
+  }
+}

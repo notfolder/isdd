@@ -1,0 +1,10 @@
+完了の要約
+
+変更ファイル:
+- mlflow/server/security_utils.py: 欠けていた補助関数を復元した。get_allowed_hosts_from_env / get_allowed_origins_from_env（環境変数をカンマ区切りで読み、未設定・空なら None）、get_default_allowed_hosts（localhost・127.0.0.1・[::1]・0.0.0.0 の各ポートと 10.*、192.168.*、172.16-31.*）、is_allowed_host_header（"*" で全許可、* を含むパターンは fnmatch、それ以外は完全一致、空は拒否）、is_api_endpoint（/api/ 配下で /api/test を除く）。
+- mlflow/server/security.py: get_allowed_hosts、get_allowed_origins、init_security_middleware を実装した。DISABLE_SECURITY_MIDDLEWARE が "true" のときだけ何もしない。Flask-CORS は localhost パターンと許可オリジンを設定し、"*" なら全許可。before_request で不正 Host を 403（健康確認エンドポイントは除外）、許可されないクロスオリジンの状態変更 API を 403。after_request で X-Content-Type-Options: nosniff を付け、X-Frame-Options は大文字化して付ける（空・NONE・トレース描画パスでは省く）。API の OPTIONS で 200 のときだけ 204 にする。
+
+確認:
+- tests/server/test_security_integration.py: 8 件すべて成功。
+- tests/server/test_init.py: 17 件成功、1 件失敗（test_find_app_custom_app_plugin、プラグイン検出の失敗で、今回の変更範囲外。変更前との比較は未確認）。
+- 補助関数の挙動を手動で確認（許可・拒否の判定、/api/test の除外）。

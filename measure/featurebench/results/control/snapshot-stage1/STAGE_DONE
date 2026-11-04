@@ -1,0 +1,6 @@
+Restored the five configuration interfaces in mlflow/claude_code/config.py:
+get_env_var (OS env first, then .claude/settings.json "environment", then default),
+get_tracing_status, load_claude_config, save_claude_config, setup_environment_config.
+Also restored missing imports that the removed functions broke: tracing.py (get_env_var),
+cli.py (get_tracing_status, setup_environment_config), hooks.py (load/save_claude_config).
+tests/claude_code: 20 passed.

@@ -1,0 +1,6 @@
+Implemented is_credit_card in string_utils/validation.py (placed between is_email and is_camel_case).
+- Returns False unless input is a non-empty string (is_full_string).
+- If card_type is given and not a key of CREDIT_CARDS, raises KeyError; otherwise matches only that pattern.
+- If card_type is None, returns True when any CREDIT_CARDS pattern matches.
+- No Luhn checksum (the docstring relies only on CREDIT_CARDS patterns). Other functions and CREDIT_CARDS are unchanged.
+Verified: python -m pytest tests -> 400 passed (venv at .venv with pytest and hunter, needed by conftest.py).

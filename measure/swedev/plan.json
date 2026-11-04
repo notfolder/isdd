@@ -1,0 +1,7 @@
+{
+  "packages": {
+    "python_string_utils": ["python_string_utils-test_is_credit_card-level1", "python_string_utils-test_is_ip_v4-level2", "python_string_utils-test_roman_encode-level2", "python_string_utils-test_uuid-level1", "python_string_utils-test_strip_html-level2"],
+    "yamllint": ["yamllint-test_indentation-level1", "yamllint-test_anchors-level2"],
+    "num2words": ["num2words-test_currency-level1", "num2words-test_utils-level1", "num2words-test_base-level1"]
+  }
+}

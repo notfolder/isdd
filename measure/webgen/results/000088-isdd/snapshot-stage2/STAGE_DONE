@@ -1,0 +1,10 @@
+Change request 1 (isdd change flow) completed.
+
+1. Theme: background honeydew (#F0FFF0); all components dark olive green (#556B2F); text on them white. linen/maroon removed.
+2. Add species form (existing /species/new, reached from the nav "Add species"): Name, Habitat, Diet are required; Description and the other fields (scientific name, kingdom, class, conservation status, average length) are optional. Submitted species appear in the list and are found by search and filters.
+   Existing DATA_DIR/species.db with the old schema is migrated on startup without losing rows.
+
+Documents: .history/20261104-theme-and-add-species-form/ (change_requirements.md, change_detail_design.md, tasks.md). Canonical docs/requirements.md, docs/detail_design.md, docs/trace_map.md updated. docs/active_change removed.
+
+Checks: unit tests 31 OK; E2E 9 OK (e2e/results/e2e.xml); check.sh --strict exit 0; rq_integrity_checker OK; rq_ds_link_checker OK; implementation_completeness 4/4.
+Startup: bash setup.sh; PORT=18931 bash run.sh -> /, /species/1, /species/new, /static/style.css all 200.
