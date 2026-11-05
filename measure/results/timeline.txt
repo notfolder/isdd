@@ -58,3 +58,4 @@ stage2 fully done (10 runs) 06:39:15
 stage4 (measure5) start parallel 1 06:39:27
 paused by assistant usage limit 08:24:41; stage3 13/30 done, stage4 webgen 8/10 running; relaunch: bash measure/batch2.sh 3 /tmp/isdd-measure/jobs-m4.txt ; bash measure/batch2.sh 1 /tmp/isdd-measure/jobs-m5.txt ; then judge loop in /tmp/isdd-measure/master.sh
 evaluation stopped by user 11:01:19
+2026-11-05 19:10 追加結果（社内 API 基盤: 段階 3 の 30 本完了、計測 5 お題 1 の 6 本完了）を QR 画像から取り込み REPORT.md 末尾に追記。残りは計測 5 Web サイト側の判定と段階 5
