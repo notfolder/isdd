@@ -197,6 +197,51 @@ class AcceptanceCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertIn("進行中の変更", out)
         self.assertRegex(out, r"\| `RQ-FT-REFUND-ORDER` \|.*\| 実装済み \|")
 
+    # 進行中の変更で [削除] にした要件・RQ-TS・DS-TS は判定の対象から外す（消す要件にテストを求めない）
+    def test_active_change_deletion_drops_requirements(self):
+        write(self.tmp, "docs/active_change", ".history/20260101-drop-cancel\n")
+        write(self.tmp, ".history/20260101-drop-cancel/change_requirements.md", """
+        | RQ-ID | 区分 | 内容 | 対応業務課題ID |
+        |---|---|---|---|
+        | `RQ-FT-CANCEL-ORDER` | [削除] | 取消 | `RQ-BK-X` |
+
+        ## 7. テスト用利用シナリオ
+
+        | RQ-ID | 区分 | テスト目的 | 検証する要件ID | 対応業務課題ID |
+        |---|---|---|---|---|
+        | `RQ-TS-VERIFY-CANCEL` | [削除] | 取消 | `RQ-FT-CANCEL-ORDER` | `RQ-BK-X` |
+        """)
+        write(self.tmp, ".history/20260101-drop-cancel/change_detail_design.md", """
+        ### 8-2. E2E テストのシナリオ
+
+        | 区分 | DS-ID | 目的 |
+        |---|---|---|
+        | [削除] | `DS-TS-CANCEL-E2E` | 取消 |
+
+        ## 11. 要件と設計の対応表
+
+        | 区分 | DS-ID | 対応要件ID |
+        |---|---|---|
+        | [削除] | `DS-TS-CANCEL-E2E` | `RQ-TS-VERIFY-CANCEL` |
+        | [削除] | `DS-TS-ORDER-E2E` | `RQ-TS-VERIFY-ORDER` |
+        | [追加] | `DS-TS-ORDER-E2E` | `RQ-TS-VERIFY-ORDER`, `RQ-NF-RESPONSE-1S` |
+        """)
+        write(self.tmp, "docs/trace_map.md", """
+        | DS-ID | 修飾名 | 備考 |
+        |---|---|---|
+        | `DS-TS-ORDER-E2E` | `e2e/test_order.py::test_create_order` | |
+        | `DS-TS-RESPONSE-TIME` | `e2e/test_perf.py` | ファイル単位 |
+        """)
+        self.write_results([("e2e.test_order", "test_create_order", "pass"),
+                            ("e2e.test_perf", "test_response", "pass")])
+        code, out = self.run_checker("--active-change", "docs/active_change", "--strict")
+        self.assertEqual(code, 0, out)
+        table = out.split("### 要件ごとの実装済み判定")[1]
+        self.assertNotIn("RQ-FT-CANCEL-ORDER", table)
+        self.assertNotIn("DS-TS-CANCEL-E2E", out.split("DS-TS ごとの判定")[1])
+        # [削除] と [追加] の両方に現れる DS-TS-ORDER-E2E は対応の差し替えなので残る
+        self.assertRegex(out, r"\| `RQ-FT-CREATE-ORDER` \|.*\| 実装済み \|")
+
     # design-chapters.md 8-4: pytest が無い Python では unittest_junit.py が JUnit XML を出し、受け入れ判定が読める
     def test_unittest_junit_runner_output_is_readable(self):
         write(self.tmp, "e2e/test_order.py", """

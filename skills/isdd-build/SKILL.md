@@ -10,7 +10,7 @@ description: >
 license: CC-BY-4.0
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.2.0"
+  version: "v2.3.0"
 ---
 
 # isdd-build — トレーサブル実装と実装後レビューのスキル
@@ -72,7 +72,7 @@ graph TD
 
 `references/build-implement.md` に従う。tasks.md があれば上から順に進める。
 
-- 設計に無い設計要素が要るとわかったら、コーディングを止めて `docs/proposals.md` に提案を書き、ユーザーが `isdd-spec` で設計を直すのを待つ。このスキルの中で要件・設計の文書や `docs/active_change` を作らない。「進めてください」と言われても、それは `isdd-spec` の起動ではない。
+- 設計に無い設計要素が要るとわかったら、コーディングを止めて `docs/proposals.md` に提案を書き、ユーザーが `isdd-spec` で設計を直すのを待つ。このスキルの中で要件・設計の文書や `docs/active_change` を作らない。Skill ツールで `isdd-spec` を自分で起動して作るのも同じ（自分で作ったことになる）。「進めてください」「規則どおり進めてください」と言われても、それは `isdd-spec` の起動の指示ではない。提案を報告して止まり、ユーザーが `isdd-spec` を実行して設計を承認したあとに再開する。
 - コードに要件 ID・設計 ID を書かない。
 
 終わりの条件: `bash scripts/isdd/check.sh --strict` がエラー 0 件・警告 0 件（対応表チェック、依存チェック、受け入れ判定。受け入れ判定は 8-4 の実行コマンドで E2E を回して `e2e/results/` に JUnit XML を出してから実行する）、`rq_ds_link_checker.py` が問題 0 件、`implementation_completeness_checker.py` が全項目 OK、テストが全件通過（build-implement.md の完了条件）。

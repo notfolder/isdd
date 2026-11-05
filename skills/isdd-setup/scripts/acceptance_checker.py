@@ -18,7 +18,8 @@ Acceptance Checker Script（受け入れ判定）
   - 対応表: DS-TS の行の修飾名（e2e/test_x.py::test_y、または e2e/test_x.py）
   - JUnit XML: testcase の classname・name・結果。testsuite の timestamp
   - --active-change があれば、そのディレクトリの change_requirements.md と change_detail_design.md の
-    [追加] の行を重ねる（[削除] の行は読まない）
+    [追加] の行を重ね、[削除] の行にだけ現れる ID（要件・RQ-TS・DS-TS）を正本から外す（変更で消す要件に
+    テストを求めない。[削除] と [追加] の両方の行に現れる ID は対応の差し替えなので外さない）
 
 照合:
   - pytest: classname "e2e.test_x" / "e2e.test_x.TestFoo" → ファイル e2e/test_x.py。name の "[...]" は除く
@@ -83,6 +84,21 @@ def _active_lines(path: Path) -> List[str]:
     return [l for l in lines if '[削除]' not in l]
 
 
+def _deleted_ids(path: Path, pattern) -> Set[str]:
+    """変更文書で削除する ID（[削除] の行にだけ現れ、[追加] の行には現れない ID）。区分の無い正本では空"""
+    lines = path.read_text(encoding='utf-8').splitlines()
+    if not any('[追加]' in l or '[削除]' in l for l in lines):
+        return set()
+    deleted: Set[str] = set()
+    added: Set[str] = set()
+    for l in lines:
+        if '[削除]' in l:
+            deleted.update(_ids(pattern, l))
+        if '[追加]' in l:
+            added.update(_ids(pattern, l))
+    return deleted - added
+
+
 class Requirements:
     """要件定義書 第 7 章の「検証する要件ID」列"""
 
@@ -118,6 +134,14 @@ class Requirements:
             if own and own[0].startswith('RQ-TS-'):
                 self.ts_verifies[own[0]] |= set(_ids(RQ_PATTERN, cells[verify_col]))
 
+    def drop(self, ids: Set[str]):
+        """進行中の変更で削除する要件・RQ-TS を判定の対象から外す"""
+        self.tested -= ids
+        for ts in ids:
+            self.ts_verifies.pop(ts, None)
+        for ts in self.ts_verifies:
+            self.ts_verifies[ts] -= ids
+
 
 class Design:
     """詳細設計書 第 11 章（DS-TS → RQ）と 11-1（除外要件）"""
@@ -148,6 +172,15 @@ class Design:
                 rqs = set(_ids(RQ_PATTERN, line))
                 for d in ds_ids:
                     self.ts_to_rq[d] |= rqs
+
+
+    def drop(self, ds_ids: Set[str], rq_ids: Set[str]):
+        """進行中の変更で削除する DS-TS と、削除する RQ（RQ-TS・RQ-NF）への対応を外す"""
+        self.all_ds_ts -= ds_ids
+        for ds in ds_ids:
+            self.ts_to_rq.pop(ds, None)
+        for ds in self.ts_to_rq:
+            self.ts_to_rq[ds] -= rq_ids
 
 
 class TraceMap:
@@ -364,11 +397,16 @@ def main() -> int:
         if change_dir:
             creq = change_dir / 'change_requirements.md'
             cdes = change_dir / 'change_detail_design.md'
+            deleted_rq: Set[str] = set()
             if creq.exists():
                 req.read(creq)
+                deleted_rq = _deleted_ids(creq, RQ_PATTERN)
+                req.drop(deleted_rq)
             if cdes.exists():
                 design.read(cdes)
-            print(f"進行中の変更: {change_dir}（変更要件定義書・変更設計書の [追加] の行を重ねて判定）")
+                deleted_ds = {d for d in _deleted_ids(cdes, DS_PATTERN) if d.startswith('DS-TS-')}
+                design.drop(deleted_ds, deleted_rq)
+            print(f"進行中の変更: {change_dir}（変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の ID を外して判定）")
 
     if test_dirs and not any(Path(d).exists() for d in test_dirs):
         print(f"テストディレクトリ（{', '.join(test_dirs)}）が無いので受け入れ判定を省く（E2E の有無は implementation_completeness_checker.py が確かめる）")

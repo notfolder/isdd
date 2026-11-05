@@ -76,7 +76,7 @@
 | テストファイルだけを指す行は、そのファイルの testcase が全部通れば合格 | acceptance_checker | `test_file_level_row_aggregates_file_testcases` |
 | XML がコードより古ければ要再実行。既定は警告だけ、`--strict` で失敗 | acceptance_checker | `test_stale_results_require_rerun`、`test_failure_marks_requirement_and_strict_fails` |
 | 除外要件（11-1）は対象外。go test は名前だけ、JUnit（Java）はクラス名.メソッド名で結ぶ | acceptance_checker | `test_exclusion_and_other_frameworks` |
-| `docs/active_change` があれば変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の行は読まない | acceptance_checker | `test_active_change_overlay` |
+| `docs/active_change` があれば変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の行にだけ現れる要件・RQ-TS・DS-TS は判定の対象から外す（[削除] と [追加] の両方に現れる ID は差し替えなので残す） | acceptance_checker | `test_active_change_overlay`、`test_active_change_deletion_drops_requirements` |
 | pytest が無い Python では `unittest_junit.py` が JUnit XML を出す。テストディレクトリが無ければ判定を省く | unittest_junit、acceptance_checker | `test_unittest_junit_runner_output_is_readable`、`test_missing_test_dir_skips_judgement` |
 | `check.sh` は受け入れ判定を `--junit "<E2E>/results/*.xml"` で呼び、`.gitignore` に `<E2E>/results/` を 1 回だけ足す。既定では止めず `--strict` で失敗 | isdd_setup | `test_check_sh_runs_acceptance_checker_and_ignores_results`、`test_check_sh_acceptance_is_warning_unless_strict` |
 

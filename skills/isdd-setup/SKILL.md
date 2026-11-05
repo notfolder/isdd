@@ -9,7 +9,7 @@ description: >
 license: CC-BY-4.0
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.2.0"
+  version: "v2.3.0"
 ---
 
 # isdd-setup — 対応表チェック導入スキル

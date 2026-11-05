@@ -242,7 +242,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v2.2.0
+gh skill publish ./skills --tag v2.3.0
 ```
 
 ---
@@ -290,11 +290,20 @@ bash install.sh
 - `.claude/skills` から `../.agents/skills` へのシンボリックリンクを作る（Claude Code 向け）。
 - コピーした `.agents/skills/isdd-*/` と `.claude/` は `.gitignore` で追跡しない。`.agents/skills/mermaid-syntax-skill/` は、このリポジトリで文書の mermaid 図を書くときのために外部（re2zero/deepin-skills）から入れたスキルで、isdd としては配布しない。
 
+### v2.2 系から更新する
+
+```bash
+# 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
+gh skill install notfolder/isdd --all --pin v2.3.0 --force
+```
+
+更新後、各プロジェクトで `isdd-setup` を再実行する（`trace_map_checker.py` と `dependency_checker.py` が `--src` にファイルを受け付け、`--exclude` で除外できる版に複製される）。v2.2 系で作った要件定義書は「1-2. 依頼に無く自分で決めた項目」の節が無いので `rq_integrity_checker.py` が「節の欠落」を報告する。第 1 章の末尾に節を足し、依頼文に無く自分で決めた項目を表で書く（無ければ「無し」と書く。節を足すだけなら正本を直接直してよい）。設計書で `DS-MD` を付けるのはチェッカーが走査するコードだけになったので、スクリプトは `DS-OP`、テンプレートや CSS は `DS-IF` に付け直してよい（付け直しは任意）。
+
 ### v2.1 系から更新する
 
 ```bash
 # 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
-gh skill install notfolder/isdd --all --pin v2.2.0 --force
+gh skill install notfolder/isdd --all --pin v2.3.0 --force
 ```
 
 更新後、各プロジェクトで `isdd-setup` を再実行する（`check.sh` に受け入れ判定が入り、`acceptance_checker.py` と `unittest_junit.py` が複製され、`.gitignore` に `e2e/results/` が足される）。v2.1 系で作った要件定義書は、第 7 章の表に「検証する要件ID」列が無いので `rq_integrity_checker.py` が「受け入れテスト欠落」を報告する。各シナリオの行に、そのシナリオが確かめる `RQ-FT`・`RQ-UI`・`RQ-EX` を書き足す（列を足すだけなら正本を直接直してよい）。E2E の実行コマンド（設計書 8-4）は JUnit XML を `e2e/results/` に出す形にする。
