@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "PARTIAL", "reason": "The /species list shows 17 species across 2 pages with scientific name, common name, kingdom, habitat, diet, status and lifespan, but the Lifespan column shows '—' for 3 rows (Agaricus bisporus, Dionaea muscipula, Escherichia coli), so the 'no missing data' criterion fails."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'wolf' returned only Canis lupus (Gray wolf), 1 of 17. Searching 'Panthera' from the home page returned only Panthera leo and Panthera tigris, with no unrelated species."},
+  "000088-3": {"verdict": "YES", "reason": "Setting Habitat=Marine and clicking Apply filters gave 4 of 17 entries (Blue whale, Green sea turtle, Common dolphin, Common octopus), all with habitat Marine and no non-matching entries."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which is linen. The header background (rgb(128,0,0)), main button background (rgb(128,0,0)) and h1/h2 headings (rgb(128,0,0)) all match maroon exactly."}
+}

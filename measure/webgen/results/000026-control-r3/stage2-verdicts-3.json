@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the homepage opened /polls/3 with no errors, and all 4 options (Dark mode, Offline support, Export to PDF, Keyboard shortcuts) were shown as radio choices."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists the 3 polls without voting. Each one shows its name plus a description, the number of options and the vote count, so the related-information rule is met."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote the page showed 'Thanks! Your vote has been recorded.' On returning, every radio button and the submit button were disabled, with the message 'You have already voted in this poll. Your vote: Rust.' The total stayed at 1."},
+  "000026-4": {"verdict": "YES", "reason": "The results page and each poll's results page show the current figures: total votes plus a count and percentage for every option. The count went up right after the vote was cast."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The header background, the main button background (Submit vote) and the h1/h2 text are all rgb(47,79,79), which is dark slate gray, so all 3 components match."}
+}

@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the homepage opened /polls/1 (HTTP 200, no errors), and all four options (Python, JavaScript, Go, Rust) were shown as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "Without voting, the homepage lists 3 polls, each with its name plus details (option count and total votes, e.g. 'Options: 4 · Total votes: 29'), and each poll page lists its options clearly, so the 'relevant information' rule is met."},
+  "000026-3": {"verdict": "YES", "reason": "After picking Go and clicking Submit vote, the page showed 'Your vote has been recorded.', Go went from 5 to 6 votes, and the total went from 29 to 30."},
+  "000026-4": {"verdict": "YES", "reason": "/results and /polls/1/results show votes, percentage share, totals and a bar chart for each option, and the numbers included the vote just cast."},
+  "000026-5": {"verdict": "YES", "reason": "Body background is rgb(255,255,255) (white). Nav background rgb(0,0,128), the main button background rgb(0,0,128) and h1/h2 text rgb(0,0,128) all match navy, so the background and all 3 component types match."}
+}

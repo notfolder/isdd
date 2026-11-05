@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage, Browse Polls and then a poll opened the voting page (/polls/2) with no errors, and every option (Spring/Summer/Autumn/Winter) was shown with a radio button and a Cast vote button."},
+  "000026-2": {"verdict": "YES", "reason": "/polls lists 3 polls without voting, and each one shows its name plus other details such as the number of options and total votes (e.g. '4 options · 41 votes'). That meets the 'relevant information' standard."},
+  "000026-3": {"verdict": "YES", "reason": "Picking an option and clicking Cast vote showed the text 'Thank you! Your vote has been recorded.' on the page, and the total went from 41 to 42, so the vote was recorded."},
+  "000026-4": {"verdict": "YES", "reason": "/results shows each poll's total votes and leading option, and each poll's results page shows the votes and percentage for every option (e.g. Python 15 (38.5%)). The numbers updated right after a vote."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255) (white). The header background rgb(0,0,128), the main button background rgb(0,0,128) and the h1 text rgb(0,0,128) all match navy, so the background and all three components fit."}
+}

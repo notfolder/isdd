@@ -1,0 +1,34 @@
+{
+  "stage": 2,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/isdd-r2/snapshot-stage2",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_equipment_update_keeps_lending[chromium]": "pass",
+    "test_equipment_delete_rejects_lent[chromium]": "pass",
+    "test_lending[chromium]": "pass",
+    "test_return[chromium]": "pass",
+    "test_lending_status_without_login[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass",
+    "test_response_time[chromium]": "pass"
+  },
+  "passed": 15,
+  "total": 15,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "...............                                                          [100%]\n15 passed, 8 deselected in 137.39s (0:02:17)\n",
+  "overbuild": {
+    "source_files": 14,
+    "lines": 951,
+    "public_functions": 47,
+    "classes": 0,
+    "templates": 6
+  },
+  "duration_sec": 142.0
+}

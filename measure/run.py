@@ -154,7 +154,7 @@ def main() -> int:
             done_flag.unlink()
         if args.responder:
             prompt = FIRST_PROMPT_ISDD_Q if args.arm == "isdd" else FIRST_PROMPT_CONTROL_Q
-            ledger_text = (HERE / args.responder).read_text(encoding="utf-8") if not Path(args.responder).is_absolute() else Path(args.responder).read_text(encoding="utf-8")
+            ledger_text = Path(args.responder).read_text(encoding="utf-8")
         else:
             template = FIRST_PROMPT_ISDD if args.arm == "isdd" else FIRST_PROMPT_CONTROL
             prompt = template.format(change_note=CHANGE_NOTE if stage > 1 else "")

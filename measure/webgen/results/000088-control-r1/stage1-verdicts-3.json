@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "/species で 13 種が一覧表示され、全 13 行の 9 列（学名・界・綱・生息地・食性・保全状況・体長・寿命）すべてに値があり、空欄表示は無い。表は横スクロール枠に入っていて、表示が崩れている箇所も無い。"},
+  "000088-2": {"verdict": "YES", "reason": "検索欄に「Panda」と入れて Apply filters を押すと「Showing 1 of 13 species」となり、Giant Panda だけが表示された。関係ない種は出ていない。"},
+  "000088-3": {"verdict": "YES", "reason": "Habitat=Forest で絞ると Forest の 4 種だけ、Marine で絞ると Marine の 2 種だけが表示され、条件に合わない種は出なかった。"},
+  "000088-4": {"verdict": "YES", "reason": "body の背景は rgb(250,240,230) で linen と一致した。部品はヘッダー背景 rgb(128,0,0)、主要ボタン背景 rgb(128,0,0)、見出しの文字色 rgb(128,0,0) で、3 つとも maroon と一致した。"}
+}

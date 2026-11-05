@@ -1,0 +1,72 @@
+# STAGE_DONE: Polls Website（投票サイト）
+
+依頼（REQUEST.md）を isdd-spec（要件定義 → 設計 → tasks.md）と isdd-build（実装 → 実装後レビュー）で最後まで進め、完了条件を満たした。
+
+## 起動（contract.md どおり）
+
+- `bash setup.sh`（.venv を作り Flask 3.1.3 を入れる）
+- `PORT=<任意> bash run.sh`（前景で起動。`http://127.0.0.1:$PORT/` が開く。`DATA_DIR` 既定 `./data`）
+- 初期データ: 投票テーマ 3 件（各 3〜4 選択肢、サンプル票あり）。DB が空のときだけ投入。
+
+## 画面（英語。上部 navy のメニュー「Polls」「Results」）
+
+- `/` Polls: 投票テーマの一覧（Vote / Results のリンク）
+- `/polls/<id>` 投票画面: 選択肢のラジオボタンと Vote。未選択はエラー文言
+- `/polls/<id>/results` 結果: 票数・割合・navy の横棒グラフ。投票後は「Thank you for voting.」
+- `/results` 全投票テーマの結果一覧
+- 背景は白、ナビゲーション・見出し・ボタン・結果バーは navy（#000080）
+
+## 依頼に無く決めた項目（要件定義書 1-2 に表で記録。ANSWERS.md の一任で承認扱い）
+
+投票の回数制限は無し（何度でも 1 票ずつ数える）／未選択・不正な選択肢はエラー文言で記録しない／投票テーマの作成・編集・削除は作らない／投票後は結果画面へ移る／存在しない URL は「Not found」（404）／割合は小数 1 桁／認証無し。
+
+## 成果物
+
+- 要件・設計: `docs/requirements.md`（RQ 27 件）、`docs/detail_design.md`（DS 30 件、第 11 章の対応表）、`docs/trace_map.md`（対応表 25 行）
+- tasks.md: `.history/20261105-polls-website/tasks.md`
+- コード: `src/main.py`、`src/store/db.py`（SQLite）、`src/web/app.py`（Flask）、`src/web/templates/`、`src/web/static/style.css`
+- テスト: `tests/test_store.py`（単体 8 件）、`e2e/test_site.py`（E2E 7 件、実サーバーへの HTTP）、`e2e/results/e2e.xml`
+- 運用: `setup.sh`、`run.sh`、`requirements.txt`、`README.md`（起動方法）、`.gitignore`
+- isdd 導入（isdd-setup）: `scripts/isdd/`（チェッカー複製、check.sh、dependencies.json、completeness.json、pre-commit）、`AGENTS.md`、`CLAUDE.md`
+
+## 検証の結果
+
+- `python3 .claude/skills/isdd-spec/scripts/rq_integrity_checker.py docs/requirements.md`: 問題 0 件
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 欠落 0 件、不整合 0 件
+- `bash scripts/isdd/check.sh --strict`: 対応表エラー 0・警告 0、依存チェック合格、受け入れ判定 DS-TS 7/7 合格、要件 12/12 実装済み
+- `implementation_completeness_checker.py .`: 4/4 項目通過
+- 単体テスト 8/8、E2E 7/7（Python 3.12.13 の venv と、ローカル既定の 3.9.6 の venv の両方で通過）
+- 起動: `setup.sh` を作り直してから `PORT=8191 DATA_DIR=<空> bash run.sh` で起動し、`/`・`/polls/1`・`/polls/1/results`・`/polls/2`・`/polls/3`・`/results` が 200、存在しない投票テーマが 404、未選択の投票が 400。確認後、自分の PID だけで停止
+- Chrome のヘッドレス表示で一覧・投票・結果・結果一覧のスクリーンショットを撮り、白背景と navy の部品を目視で確認
+
+### 未マッピング一覧（実装後レビュー）
+
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件（公開関数 15 件はすべて対応表にある）
+
+### 要件ごとの実装済み判定
+
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| RQ-FT-BROWSE-POLLS | RQ-TS-BROWSE-POLL-LIST | DS-TS-BROWSE-POLL-LIST | test_browse_poll_list | 実装済み |
+| RQ-FT-VIEW-POLL-OPTIONS | RQ-TS-VIEW-POLL-OPTIONS | DS-TS-VIEW-POLL-OPTIONS | test_view_poll_options | 実装済み |
+| RQ-FT-CAST-VOTE | RQ-TS-CAST-VOTE-AND-VIEW-RESULT | DS-TS-CAST-VOTE-AND-VIEW-RESULT | test_cast_vote_and_view_result | 実装済み |
+| RQ-FT-COUNT-EVERY-VOTE | RQ-TS-CAST-VOTE-AND-VIEW-RESULT | DS-TS-CAST-VOTE-AND-VIEW-RESULT | test_cast_vote_and_view_result | 実装済み |
+| RQ-FT-REJECT-INVALID-VOTE | RQ-TS-REJECT-INVALID-VOTE | DS-TS-REJECT-INVALID-VOTE | test_reject_invalid_vote | 実装済み |
+| RQ-FT-VIEW-RESULTS | RQ-TS-CAST-VOTE-AND-VIEW-RESULT | DS-TS-CAST-VOTE-AND-VIEW-RESULT | test_cast_vote_and_view_result | 実装済み |
+| RQ-FT-VIEW-ALL-RESULTS | RQ-TS-VIEW-ALL-RESULTS | DS-TS-VIEW-ALL-RESULTS | test_view_all_results | 実装済み |
+| RQ-UI-POLL-LIST-SCREEN | RQ-TS-BROWSE-POLL-LIST | DS-TS-BROWSE-POLL-LIST | test_browse_poll_list | 実装済み |
+| RQ-UI-POLL-DETAIL-SCREEN | RQ-TS-VIEW-POLL-OPTIONS | DS-TS-VIEW-POLL-OPTIONS | test_view_poll_options | 実装済み |
+| RQ-UI-POLL-RESULTS-SCREEN | RQ-TS-CAST-VOTE-AND-VIEW-RESULT | DS-TS-CAST-VOTE-AND-VIEW-RESULT | test_cast_vote_and_view_result | 実装済み |
+| RQ-UI-RESULTS-OVERVIEW-SCREEN | RQ-TS-VIEW-ALL-RESULTS | DS-TS-VIEW-ALL-RESULTS | test_view_all_results | 実装済み |
+| RQ-UI-NAVIGATION-MENU | RQ-TS-NAVIGATE-MENU | DS-TS-NAVIGATE-MENU | test_navigate_menu | 実装済み |
+
+## 残っている事項
+
+- isdd-setup のエージェント用フック（応答終了時に `bash scripts/isdd/check.sh` を実行する設定）は作っていない。理由: 作業ディレクトリの `.claude/` には利用者の既存設定があり、その設定を書き換える承認を得ていないため。必要なら `.claude/settings.json` に Stop フックとして追加できる。
+- 変更のコミットはしていない（依頼に無いため）。git の main にはまだコミットが無い。
+- 投票テーマの作成画面は依頼に無いため作っていない（初期データの 3 件だけで、契約の「サンプル内容で全機能を試せる」を満たす）。
+- 作業中、ポート 8123 は別のプロセスが使用中だったため、そのプロセスには触れず、空いている 8187 と 8191 で確認した。

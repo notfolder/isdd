@@ -1,0 +1,33 @@
+STAGE_DONE: 生物種情報データベース（isdd: 要件定義 → 設計 → 実装 → 実装後レビュー）
+
+■ 完了した段階
+- 要件定義: docs/requirements.md（業務課題 RQ-BK 2 件、機能 RQ-FT 8 件、画面 RQ-UI 7 件、非機能 RQ-NF 6 件、運用 RQ-OP 2 件、テスト用シナリオ RQ-TS 14 件）
+- 設計: docs/detail_design.md（第 1〜11 章。設計 ID 59 件、除外要件なし）
+- 作業計画: .history/20261105-species-info-database/tasks.md
+- 実装: src/（server.py、repository.py、validation.py、views.py、seed_data.py、static/style.css）、run.sh、setup.sh、requirements-dev.txt、README.md
+- テスト: tests/（単体・結合 46 件）、e2e/（Playwright の E2E 18 件）
+- 対応表: docs/trace_map.md（53 行）
+- 実装後レビュー: 変更フローではないため正本への反映は無し。docs/proposals.md と docs/active_change は作っていない
+
+■ 検証結果（すべて今回の実行）
+- python3 -m unittest discover -s tests: 46 件 OK
+- E2E（.venv の Python で scripts/isdd/unittest_junit.py）: 18 件 OK（e2e/results/e2e.xml）
+- bash scripts/isdd/check.sh --strict: エラー 0・警告 0、受け入れ判定 合格（DS-TS 18/18、要件 20/20 実装済み）
+- implementation_completeness_checker.py: 4/4 通過
+- rq_integrity_checker.py / rq_ds_link_checker.py: 問題 0 件
+- 起動: PORT=8765 bash run.sh で起動し、/ 、/species、検索・絞り込み、詳細、修正、登録、404、CSS がすべて 200。起動したプロセス（PID 47287）だけを止めた
+
+■ 起動方法
+- bash setup.sh（初回のみ。.venv と Playwright・Chromium を用意）
+- PORT=8000 bash run.sh → http://127.0.0.1:8000
+- DATA_DIR（既定 ./data）が空なら見本の種 12 件を入れる
+
+■ 承認が未確認の項目（依頼者の確認が必要）
+1. 技術選定: Python 3.12 標準ライブラリ（候補 A）。公式ドキュメントは本環境で取得できず（WebFetch 権限拒否）、出典は PyPI の索引と手元の実行結果（2026-11-05）。候補 B（Flask 3.1.3）と C（Node.js 24）は比較のみ
+2. E2E の実行手段: Playwright 1.64.1（PyPI の最新版を確認）と Chromium
+3. 要件 1-2 の決め事（生物情報の項目、固定リストの値、入力上限、学名の重複、認証なし、同時更新は排他しない、見本データの扱い、配色の文字色、性能目標など）
+4. 見本データの保全状況・寿命・体重は例示値。実利用の前に公式情報で確認が必要
+
+■ 注意
+- 応答終了時フックを .claude/settings.json に作った（Stop で bash scripts/isdd/check.sh）
+- git へのコミットはしていない

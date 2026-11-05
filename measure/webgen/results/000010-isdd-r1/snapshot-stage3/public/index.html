@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wheel of Fortune</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">Wheel of Fortune</h1>
+    <nav class="site-nav" aria-label="Main menu">
+      <a href="#/" data-route="spin">Spin the Wheel</a>
+      <a href="#/rewards" data-route="prizes">Reward List</a>
+      <a href="#/winnings" data-route="winnings">My Winnings</a>
+    </nav>
+  </header>
+
+  <main class="content">
+    <section class="screen" data-screen="spin" aria-labelledby="spin-title">
+      <h2 id="spin-title">Spin the Wheel</h2>
+      <form id="spin-form" class="panel inline-form" novalidate>
+        <label for="spin-name">Your name (required)</label>
+        <input id="spin-name" name="name" type="text" maxlength="60" autocomplete="nickname" placeholder="Enter 1-30 characters" required aria-required="true">
+        <button type="submit" id="spin-button" class="button">Spin</button>
+      </form>
+      <p id="spin-error" class="message error" role="alert" hidden></p>
+
+      <div class="wheel-wrap">
+        <div class="pointer" aria-hidden="true"></div>
+        <div id="wheel" class="wheel" aria-label="Reward wheel">
+          <div id="wheel-face" class="wheel-face"></div>
+        </div>
+      </div>
+
+      <div id="spin-result" class="panel result" aria-live="polite" hidden>
+        <p>You won</p>
+        <p id="result-prize" class="result-prize"></p>
+        <p id="result-time"></p>
+      </div>
+    </section>
+
+    <section class="screen" data-screen="prizes" aria-labelledby="prizes-title" hidden>
+      <h2 id="prizes-title">Reward List</h2>
+      <p class="muted">Each reward has a chance based on its weight. The wheel shows every reward in the same-sized slice.</p>
+      <p id="prizes-error" class="message error" role="alert" hidden></p>
+      <table class="data-table" id="prizes-table">
+        <thead>
+          <tr><th scope="col">Reward</th><th scope="col">Chance</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="screen" data-screen="winnings" aria-labelledby="winnings-title" hidden>
+      <h2 id="winnings-title">My Winnings</h2>
+      <form id="winnings-form" class="panel inline-form">
+        <label for="winnings-name">Your name</label>
+        <input id="winnings-name" name="name" type="text" maxlength="60" autocomplete="nickname" placeholder="Enter 1-30 characters">
+        <button type="submit" class="button">Show my winnings</button>
+      </form>
+      <p id="winnings-error" class="message error" role="alert" hidden></p>
+      <p id="winnings-count" class="muted" aria-live="polite"></p>
+      <table class="data-table" id="winnings-table">
+        <thead>
+          <tr><th scope="col">Player</th><th scope="col">Reward</th><th scope="col">Won at</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Wheel of Fortune</p>
+  </footer>
+</body>
+</html>

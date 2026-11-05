@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wheel of Fortune - Spin to Win</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="/">Wheel of Fortune</a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="/" aria-current="page">Spin the Wheel</a></li>
+          <li><a href="/prizes">Prize List</a></li>
+          <li><a href="/records">My Winning Records</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Spin the Wheel</h1>
+    <p class="lead">Enter your name, spin the wheel, and see what you win. Every spin is saved to your records.</p>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="wheel-title">
+        <h2 id="wheel-title">The Wheel</h2>
+        <div class="wheel-wrap">
+          <div class="pointer" aria-hidden="true"></div>
+          <canvas id="wheel" width="480" height="480" aria-label="Prize wheel"></canvas>
+        </div>
+        <button id="spin-btn" class="big" type="button">SPIN</button>
+        <div id="message" class="message" role="status" aria-live="polite">Enter your name, then press SPIN.</div>
+      </section>
+
+      <section class="card" aria-labelledby="player-title">
+        <h2 id="player-title">Player</h2>
+        <form id="player-form" autocomplete="off">
+          <label for="player-name">Your name</label>
+          <div class="row">
+            <div>
+              <input id="player-name" type="text" maxlength="40" placeholder="e.g. Alex" required>
+            </div>
+          </div>
+        </form>
+        <p class="lead" style="margin-top:14px">Your name is remembered on this browser. Use the same name on <a href="/records">My Winning Records</a> to see your wins.</p>
+
+        <h2 style="margin-top:24px">How to play</h2>
+        <ul class="steps">
+          <li>Type your name above.</li>
+          <li>Press <strong>SPIN</strong> and wait for the wheel to stop.</li>
+          <li>Your prize is saved automatically.</li>
+          <li>Check the <a href="/prizes">Prize List</a> to see every prize and its chance.</li>
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <script src="/static/app.js"></script>
+  <script src="/static/wheel.js"></script>
+</body>
+</html>

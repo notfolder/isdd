@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage, the 'Vote' link opens /surveys/1 without errors, and all 5 options (Python, JavaScript, Rust, Go, Other) are shown as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists 3 surveys with a description, option count and vote count each, and every survey page shows its options without having to vote."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote, 'Thanks! Your vote has been recorded.' is shown. On returning, the radio buttons and Submit button are disabled and 'You have already voted in this survey.' is shown. A forced resubmit is refused with an 'already voted' message and the total stays at 1 vote."},
+  "000026-4": {"verdict": "YES", "reason": "/results and each survey's results page show the total votes, the count and percentage for each option, and a progress bar. The count went up right after voting."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224) (light yellow). The header, main button and headings are all rgb(47,79,79) (dark slate gray), so the background and all 3 component colours match."},
+  "000026-rename": {"verdict": "YES", "reason": "The visible text on home, the voting page, results, the after-vote page and create contains no 'poll'. Navigation, headings, buttons and messages all use 'Survey', and every page works."}
+}

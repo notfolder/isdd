@@ -1,0 +1,150 @@
+/* Light yellow page background. Every component (header, navigation, headings, cards, buttons,
+   table headers, bars and frames) uses dark slate gray, with light yellow text on it. */
+:root {
+  --bg: #FFFFE0;
+  --slate: #2F4F4F;
+  --on-slate: #FFFFE0;
+  --error: #8b0000;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body { background: var(--bg); }
+
+body {
+  margin: 0;
+  color: var(--slate);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+.site-header { background: var(--slate); color: var(--on-slate); }
+
+.nav {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.brand { color: var(--on-slate); font-weight: 700; text-decoration: none; font-size: 1.1rem; }
+
+.nav-links { list-style: none; margin: 0; padding: 0; display: flex; gap: 1rem; }
+
+.nav-links a {
+  color: var(--on-slate);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] { border-bottom-color: var(--on-slate); }
+
+.container { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+h1, h2 { color: var(--slate); }
+h1 { margin-top: 0; }
+
+a { color: var(--slate); }
+
+.lead { font-size: 1.05rem; }
+.meta { color: var(--slate); font-size: 0.95rem; }
+.breadcrumb { font-size: 0.9rem; color: var(--slate); }
+
+.card-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+
+.card {
+  background: var(--slate);
+  color: var(--on-slate);
+  border: 2px solid var(--slate);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+.card h2 { margin: 0 0 0.25rem; font-size: 1.2rem; color: var(--on-slate); }
+.card h2 a { color: var(--on-slate); }
+.card .meta { color: var(--on-slate); }
+
+.button {
+  display: inline-block;
+  background: var(--slate);
+  color: var(--on-slate);
+  border: 2px solid var(--slate);
+  border-radius: 6px;
+  padding: 0.5rem 1.1rem;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover { background: var(--bg); color: var(--slate); }
+
+.button:disabled,
+.button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover,
+.button[disabled]:hover { background: var(--slate); color: var(--on-slate); }
+
+fieldset {
+  border: 2px solid var(--slate);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0 0 1rem;
+}
+
+legend { color: var(--slate); font-weight: 700; padding: 0 0.4rem; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.25rem;
+  cursor: pointer;
+}
+
+.option input[type="radio"] { width: 1.1rem; height: 1.1rem; accent-color: var(--slate); }
+
+fieldset:disabled .option { opacity: 0.5; cursor: not-allowed; }
+fieldset:disabled .option input[type="radio"] { cursor: not-allowed; }
+
+.notice {
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border: 2px solid var(--slate);
+}
+
+.notice-info { background: var(--bg); color: var(--slate); }
+.notice-error { background: var(--bg); color: var(--error); border-color: var(--error); font-weight: 600; }
+
+table.results { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+
+table.results th,
+table.results td {
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--slate);
+  vertical-align: middle;
+}
+
+table.results th { color: var(--slate); border-bottom: 2px solid var(--slate); }
+
+.bar-cell { width: 40%; }
+
+.bar {
+  background: var(--bg);
+  border: 1px solid var(--slate);
+  border-radius: 4px;
+  height: 1.1rem;
+  overflow: hidden;
+}
+
+.bar span { display: block; height: 100%; background: var(--slate); }

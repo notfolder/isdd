@@ -1,0 +1,36 @@
+# 完了の要約: 依頼 2「poll を survey に変える」（isdd 変更フロー: 要件 → 設計 → 実装 → 実装後レビュー）
+
+## 解釈
+画面に見える英語の "poll" / "Polls" を "survey" / "Surveys" に変えた。振る舞い（1 ブラウザ 1 投票テーマ 1 回、確認、結果、配色）は変えていない。
+ID・関数名・テーブル名・DB ファイル名 `polls.db` は内部名のため変えていない（既存データを残すため）。
+
+## 変更内容
+- ナビゲーション、サイト名、ページタイトル、一覧の見出しと説明、「No surveys yet.」、結果画面の「Vote on this survey」「Back to surveys」、結果一覧の表の見出し「Survey」、404 の「Go to Surveys」。
+- URL を `/surveys/<id>`、`/surveys/<id>/vote`、`/surveys/<id>/results` に変更。旧い `/polls/...` は転送せず 404。
+- E2E: 旧い URL と文言の期待値を新しい語に合わせ、`test_no_poll_word_in_ui` を追加（一覧・詳細・結果・結果一覧・404・投票後・投票済みの HTML に `poll` の語が無いことを確認）。
+- README の画面の説明を Surveys の語に変更。`polls.db` の説明は実ファイル名のまま。
+- 変更記録: `.history/20261105-poll-to-survey/`（change_requirements.md、change_detail_design.md、tasks.md）。正本（docs/requirements.md、docs/detail_design.md、docs/trace_map.md）へ反映済み。`docs/active_change` は削除済み。
+- 正本の文書タイトル（Polls Website）と日本語の用語「投票テーマ」は残した（画面の英語だけを変える方針）。
+
+## 検証
+- `bash setup.sh`: 完了。
+- `bash scripts/isdd/check.sh --strict`: エラー 0 件、警告 0 件。依存チェック合格。受け入れ判定 DS-TS 9/9 合格、要件 15/15 実装済み。
+- `rq_integrity_checker.py docs/requirements.md`: 問題 0 件（RQ 36 件、シナリオ 9 本）。
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 欠落 0 件、不整合 0 件。
+- `implementation_completeness_checker.py`: 4/4 項目通過。
+- 単体テスト（`tests/`）: 12 件 OK。E2E（`e2e/`、JUnit は `e2e/results/e2e.xml`）: 9 件 OK。
+- 起動: `PORT=8765 DATA_DIR=<空の一時ディレクトリ> bash run.sh`。`/`、`/surveys/1`、`/surveys/1/results`、`/results` が 200、`/surveys/9999` が 404、旧い `/polls/1` が 404。各 HTML に `poll` の語は 0 件。配色は `#FFFFE0` と `#2F4F4F`。起動したサーバーは PID 39680 だけを停止した。
+
+## 未マッピング一覧（実装後レビュー）
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件
+
+## 注意点
+- 8123 番ポートは別の作業のプロセス（Wheel of Fortune のサイト）が使用中だった。そのプロセスには触れず、自分の起動は 8765 番で行った。
+- 旧い URL `/polls/...` はリダイレクトしない。依頼に移行の指定が無かったため（ANSWERS.md で一任の扱い）。
+- 一覧ページのタイトルは `Surveys | Surveys` になる（前のバージョンの `Polls | Polls` と同じ組み立て）。
+- このマシンの venv の Python は 3.9.6（`python3` の版）。契約の Python 3.12 とは違うが、Flask 3.1.3 で起動と全テストが通っている。
+- git のコミットは作っていない（リポジトリにまだコミットが無いため、依頼に無い操作は行わなかった）。

@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage, the 'Vote' link opened /surveys/3 without errors, and all four options (Dark mode, Offline support, Export to PDF, Keyboard shortcuts) were shown as radio buttons with a Submit vote button."},
+  "000026-2": {"verdict": "YES", "reason": "Without voting, the homepage lists all three surveys with their titles plus a description, option count and vote count (for example '4 options', '1 vote so far'). That is information beyond the name, so the relevant-information criterion is met."},
+  "000026-3": {"verdict": "YES", "reason": "Right after the vote, 'Thanks! Your vote has been recorded.' appeared and the total went from 1 to 2. On returning, the page said 'You have already voted in this survey.', the radio buttons and Submit button were disabled, and the total stayed at 2 even after a direct POST attempt."},
+  "000026-4": {"verdict": "YES", "reason": "/results and /surveys/N/results show the latest total votes, vote counts and percentages for each option, and horizontal bar graphs. The counts updated immediately after a vote."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The header background, main button background and h1/h2 text are all rgb(47,79,79), which is dark slate gray. The background and all 3 component types match."},
+  "000026-rename": {"verdict": "YES", "reason": "On the home, voting, results, per-survey results and create pages, plus the messages after voting, re-voting and an empty submit, the visible text and titles never contain 'poll' or 'polls'. Navigation, headings and buttons all say 'Survey', and every page works."}
+}

@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: With name 'Alice' the wheel animated (rotate 0deg→2047.5deg), stopped, and showed 'You won Free Dessert / Recorded for A / YES: With 'Alice', the wheel-face rotated (transform changed over several seconds, then stopped) and 'You won Sticker Pack /  / YES: With 'Alice' the wheel rotated (transform changed), stopped with the pointer on 'Gift Card $50', and showed 'You won Gif",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: Before spinning, the Prize List page showed 8 prizes with chances, and they matched the 8 slice labels on the wheel exac / YES: The Prize List page shows all 8 prizes with their chances (Gift Card $50 through Grand Prize Headphones), which matches  / YES: The Prize List page shows 8 prizes with their chances, and they match the 8 segments on the wheel exactly.",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After spinning as Alice, entering Alice on My Winnings showed new rows with player 'Alice', prize 'Free Dessert' and the / YES: Searching 'Alice' on My Winnings lists the new win in the top row: Alice / Sticker Pack / Nov 5, 2026, 6:06 AM, so the p / YES: After spinning as Alice, My Winnings for 'Alice' lists the new win at the top (Alice / Coffee Voucher / Nov 5, 2026, 6:0",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header, Spin button and h2 heading are all rgb(0,100,0), wh / YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background  / YES: Body background rgb(255,255,240) matches ivory. Header rgb(0,100,0), main button rgb(0,128,15) and heading color rgb(0,1",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

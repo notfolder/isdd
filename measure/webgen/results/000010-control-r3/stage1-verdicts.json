@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking SPIN showed 'Spinning...', the wheel then stopped with the pointer on a segment (Extra Spin; an earlier spin la / YES: SPINを押すと「Spinning...」表示の後ホイールが回転し、ポインタがFree Dessertの区画で停止して「You won: Free Dessert!」と表示された。ページエラー・コンソールエラーは無かった。 / YES: SPINを押すと「Spinning...」の後にホイールが停止し、ポインタ位置の区画（Mystery Gift）と一致する「You won: Mystery Gift!」が表示され、JSエラーも無かった。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: The Prize List page lists all 8 prizes with a description and a chance for each, and they match the 8 segments drawn on  / YES: /prizesに8つの賞品が説明・結果・確率付きで一覧表示され、ホイールの8区画（$50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again / YES: Prize Listページに8件の賞品（名称・説明・結果・確率）が表示され、ホイール上の8区画の名称と完全に一致した。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After the spin, My Winning Records showed the new win (Nov 5, 2026, 6:25 AM, Extra Spin) under My Wins and Recent Winner / YES: スピン後にMy Winning Recordsを開くと、My Winsに「Nov 5, 2026, 6:26 AM / Free Dessert」が最新の記録として追加され、日付と賞品が正しく表示された。 / YES: スピン後にMy Winning Recordsを開くと、My Winsに「Nov 5, 2026, 6:27 AM / Mystery Gift」と最新の当選が日付付きで追加されていた。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-4": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(211,211,211), which is light gray. The header background, the SPIN button background and the  / YES: body背景がrgb(211,211,211)でlight grayに一致し、ヘッダー背景・SPINボタン背景・h1見出し色がいずれもrgb(139,0,0)でdark redに一致した。 / YES: bodyの背景はrgb(211,211,211)（light gray）、ヘッダー背景・SPINボタン背景・見出し文字色はすべてrgb(139,0,0)（dark red）で、背景と部品3種類がすべて一致した。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

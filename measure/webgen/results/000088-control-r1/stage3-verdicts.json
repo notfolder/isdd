@@ -1,0 +1,47 @@
+{
+  "000088-1": {
+    "verdict": "YES",
+    "reason": "YES: The /organisms list shows all 13 organisms with 9 columns (name, scientific name, kingdom, class, habitat, diet, status, / YES: The Browse & Search list shows all 13 organisms with kingdom, class, habitat, diet, conservation status, length and life / YES: The /organisms list shows all 13 organisms with 9 columns of biological information (scientific name, kingdom, class, ha",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "YES: Searching 'bear' returned only Polar Bear, and 'pan' returned only the name matches African Lion (Panthera) and Giant Pa / YES: Searching 'bear' returned only Polar Bear. Searching the habitat word 'Desert' and the description-only word 'gills' eac / YES: Searching 'pand' returned only Giant Panda (1 of 13). Searching habitat or description words ('Marine', 'Grassland', 'ba",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "YES: Filtering by habitat=Forest showed only the 4 Forest organisms ('Showing 4 of 13'). Combining Marine with Animalia showe / YES: Filtering by habitat Forest showed only the 4 Forest entries (Corpse Flower, English Oak, Fly Agaric, Giant Panda), and  / YES: Filtering by Habitat=Forest returned 4 of 13 entries, and all of them have Forest as their habitat; no non-matching entr",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(240,255,240), which equals honeydew. The header background, the main button background (.btn  / YES: The body background is rgb(240,255,240), which is honeydew. The header, main buttons and h1 headings are all rgb(85,107, / YES: The body background is rgb(240,255,240), which equals honeydew. The header, the main button (Apply filters) and the h1 h",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-rename": {
+    "verdict": "YES",
+    "reason": "YES: I checked the text and attributes of the home, list, search results, filter results, detail, edit, add, About, validatio / YES: On the home, list, search results, filter, empty-result, detail, add, edit, about and 404 pages, the word 'species' does / YES: I searched the text and titles of the home, browse/search, no-results, filter, add (including the validation-error view)",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

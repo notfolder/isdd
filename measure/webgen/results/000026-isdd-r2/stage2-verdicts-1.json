@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage (which redirects to /polls), clicking a poll opened /polls/1 without errors, and all four options (Python, JavaScript, Go, Rust) were shown with radio buttons and a Vote button."},
+  "000026-2": {"verdict": "YES", "reason": "The poll list shows each poll's title along with a description, option count, and vote count (e.g. '4 options · 11 votes'), and each poll page lists its options, all viewable without voting."},
+  "000026-3": {"verdict": "PARTIAL", "reason": "After the vote, the page went to the results page and the count rose by 1 (7→8), but no message confirming the vote appeared (moving to the results screen alone does not count). On returning, the radio buttons and Vote button were disabled and 'You have already voted in this poll.' was shown; a forced re-submission was rejected with 409 and the count stayed at 8."},
+  "000026-4": {"verdict": "YES", "reason": "Each poll's results page shows the total vote count and each option's votes and percentage share in a table with bar charts, and the counts reflected the newly cast vote immediately."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The header background, the main button background, and the h1 text color are all rgb(47,79,79), which is dark slate gray, so the background and all three components match."}
+}

@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spin を押すとホイールが回転して 1 つの区画で止まり、結果が「Try again」「You won: 10% Off Coupon!」のように表示されました。ページエラーやコンソールエラーは出ませんでした。"},
+  "000010-2": {"verdict": "YES", "reason": "Prize List ページに 7 つの賞品が説明と当選確率つきで並び、ホイールの 7 区画（10% Off Coupon、Free Coffee、Free Shipping、$5 Voucher、Mystery Gift、Grand Prize: $50 Gift Card、Try again）と一致しました。"},
+  "000010-3": {"verdict": "YES", "reason": "10% Off Coupon が当たった後、My Winning Records で名前を入れて表示すると、日時 2026-11-05 06:49:40 と賞品 10% Off Coupon の行が追加されていました。日時は実際の時刻と合っています。"},
+  "000010-4": {"verdict": "YES", "reason": "body の背景は rgb(211,211,211) で light gray に一致しました。ヘッダー背景、Spin ボタン背景、見出し h2 の文字色はいずれも rgb(139,0,0) で dark red に一致し、背景と部品 3 種類がすべて合いました。"}
+}

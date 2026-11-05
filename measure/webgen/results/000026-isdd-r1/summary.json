@@ -1,0 +1,229 @@
+{
+  "site": "000026",
+  "arm": "isdd-r1",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 624.0,
+      "agent_tokens": 8439068,
+      "usage": {
+        "input_tokens": 100,
+        "output_tokens": 110190,
+        "cache_creation_input_tokens": 214363,
+        "cache_read_input_tokens": 8114415
+      },
+      "tool_uses": 60,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: ホームの「Vote」リンクから /polls/2 の投票ページへエラーなしで移動でき、4つの選択肢（Spring/Summer/Autumn/Winter）がラジオボタンですべて表示された。 / YES: From the homepage, clicking Vote opened /polls/1 with no errors, and the page showed all four options (Python, JavaScrip / YES: From the homepage, clicking a poll's Vote link opens /polls/1 (HTTP 200, no errors), and the page shows all four options",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: 投票せずにホームの投票一覧を見られ、各投票に名称に加えて選択肢数と票数（例: 4 options · 10 votes）が表示され、投票ページでは説明文と選択肢が見られるので、関連情報の基準を満たす。 / YES: Without voting, the poll list shows each poll's name plus other details (e.g. '4 options · 10 votes'), and each poll pag / YES: You can browse the poll list without voting. Each entry shows its title plus an option count and vote count (e.g. '4 opt",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: Spring を選んで Vote を押すと結果ページに移り、総票数が 11 から 12 に増えて記録が確認でき、ページ内に確認文「Thank you for voting.」が表示された。 / YES: After picking Python and voting, the page went to the results, showed the message 'Thank you for voting.', and the total / YES: Picking Rust and pressing Vote raised Rust from 2 to 3 votes and the total from 11 to 12, and right after the vote the p",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: 結果ページに総票数、選択肢ごとの票数と割合（%）、navy の棒グラフが表示され、投票直後の値も反映されていた。/results には投票ごとの総票数と首位の選択肢も表示された。 / YES: /results shows each poll's total votes and leading option. Each poll's results page shows the up-to-date votes, share pe / YES: The results pages show the current results: total votes, each option's votes and share %, and bar charts, plus a summary",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-5": {
+          "verdict": "YES",
+          "reason": "YES: body の背景は rgb(255,255,255)（white）。ヘッダーの背景 rgb(0,0,128)、主要なボタンの背景 rgb(0,0,128)、見出しの文字色 rgb(0,0,128) で、3つとも navy に一致した。 / YES: The body background is rgb(255,255,255) (white). The header background, the main button background and the h1/h2 text co / YES: The body background is rgb(255,255,255) (white). The header background rgb(0,0,128), the main Vote button rgb(0,0,128) a",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 318,
+        "public_functions": 15
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 830.4,
+      "agent_tokens": 10805470,
+      "usage": {
+        "input_tokens": 112,
+        "output_tokens": 165250,
+        "cache_creation_input_tokens": 301344,
+        "cache_read_input_tokens": 10338764
+      },
+      "tool_uses": 59,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 1,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: Clicking 'Vote' on the homepage opened /polls/1 (HTTP 200) without errors, and all 4 options (Python, JavaScript, Go, Ru / YES: Clicking 'Vote' on the homepage opens /polls/1 with no errors, and all four options (Python, JavaScript, Go, Rust) are s / YES: Clicking 'Vote' on the homepage opened /polls/1 without errors, and all 4 options (Python, JavaScript, Go, Rust) were sh",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: The homepage lists 3 polls, each showing its title plus related info (option count and vote count, e.g. '4 options · 11  / YES: The homepage lists every poll with its name plus option and vote counts (e.g. '4 options · 11 votes'), and each poll pag / YES: Without voting, the homepage lists the 3 polls and each shows information besides its name (e.g. '4 options · 10 votes')",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: After the first vote, 'Thank you for voting.' appeared and the count went from 11 to 12. Coming back showed 'You have al / YES: After the first vote the page showed 'Thank you for voting.' and Winter went from 1 to 2 votes. On returning, 'You have  / YES: The first vote redirected to the results page with 'Thank you for voting.' and the total went from 12 to 13. On returnin",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: The results pages show totals and the leading option for each poll; the detail page shows votes and share (%) per option / YES: The results pages show up-to-date totals (they reflected the new vote), per-option vote counts and percentage shares, an / YES: /results shows each poll's total votes and leading option. Each poll's results page shows votes and share (%) per option",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,224) (light yellow). The header background, the main button background, and the h1 te / YES: The body background is rgb(255,255,224) (light yellow). The header background, Vote button background and h1 text are al / YES: Body background is rgb(255,255,224), which is light yellow. Header background rgb(47,79,79), the main Vote button backgr",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 407,
+        "public_functions": 18
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 366.8,
+      "agent_tokens": 5515460,
+      "usage": {
+        "input_tokens": 84,
+        "output_tokens": 74931,
+        "cache_creation_input_tokens": 178551,
+        "cache_read_input_tokens": 5261894
+      },
+      "tool_uses": 41,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 2,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: From the homepage, the 'Vote' link opens /surveys/1 (HTTP 200) with no errors, and the page shows all four options (Pyth / YES: Clicking 'Vote' on the home page opened /surveys/1 with no error, and all four options (Python, JavaScript, Go, Rust) we / YES: Clicking 'Vote' on the home page opened /surveys/1 without errors, and all four options (Python, JavaScript, Go, Rust) w",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: The homepage lists every survey with extra details (number of options and number of votes), and each voting page shows i / YES: The home page lists all three surveys without voting. Each shows its title plus details (option count and vote count, e. / YES: The home page lists each survey with its title plus details ('4 options · 10 votes'), and each voting page shows a descr",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: Right after the first vote, the page showed 'Thank you for voting.' and the total went from 11 to 12. Back on the same s / YES: After the first vote the results page showed 'Thank you for voting.' and the total went from 12 to 13. On returning, 'Yo / YES: The first vote raised Python from 4 to 5 and showed 'Thank you for voting.' Back on the survey, the radios and Vote butt",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: The results pages show total votes, a votes count and percentage share for each option, and a bar chart (.bar elements w / YES: /results lists each survey's total votes and leading option. The detail page shows up-to-date totals (they reflected the / YES: The results pages show the current totals (they went up right after a vote), per-option votes and share %, bar charts, a",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,224), which is light yellow. The header background, the main button background and th / YES: body background is rgb(255,255,224) = light yellow. The header background, the main Vote button background and the h1 te / YES: Body background is rgb(255,255,224) (light yellow). The header bg (47,79,79), the main Vote button bg (47,79,79) and the",
+          "category": "Design Validation Testing",
+          "change": false
+        },
+        "000026-rename": {
+          "verdict": "YES",
+          "reason": "YES: No 'poll' or 'polls' appeared in the visible text of the home page, the voting pages, the overall results page or the pe / YES: The home page, voting pages, results list and per-survey results pages all returned 200. Their titles, body text and ari / YES: 'poll' did not appear in the visible text or page titles of home, the voting pages or the results pages. Navigation, hea",
+          "category": "Functional Testing",
+          "change": true
+        }
+      },
+      "score": 6.0,
+      "n_cases": 6,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 407,
+        "public_functions": 18
+      }
+    }
+  },
+  "runner": "claude -p"
+}

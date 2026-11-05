@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote now' on the homepage opened /polls/1 without errors, and all four options (Python, TypeScript, Rust, Go) are shown as radio choices."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists 4 polls, each with a title, a description, and vote and option counts (e.g. '122 votes · 4 options'). The vote page shows every option and the results can be opened without voting."},
+  "000026-3": {"verdict": "YES", "reason": "Voting for TypeScript raised the total from 122 to 123, and the page then showed 'Thank you for voting! You voted for TypeScript.', a message that confirms the result."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows the latest total (123), the leading option, and each option's vote count with a percentage and a bar graph (bar-fill); /results shows standings for every poll."},
+  "000026-5": {"verdict": "YES", "reason": "Body background is rgb(255,255,255), which is white. Header, main button (.btn) and heading (h1) are all rgb(0,0,128), which is navy."}
+}

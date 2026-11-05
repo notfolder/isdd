@@ -1,0 +1,22 @@
+Stage done: polls website (REQUEST.md) implemented.
+
+Start:
+  bash setup.sh          # verifies python3, creates data dir (stdlib only, no downloads)
+  PORT=8000 bash run.sh  # serves http://127.0.0.1:$PORT in the foreground (exec python3 app.py)
+  DATA_DIR (default ./data) holds polls.db (SQLite). Sample polls are seeded when the DB is empty.
+
+Features (English UI, white background, navy components #000080):
+  - Navy top navigation: Polls (/), Create Poll (/create), Results (/results); active item highlighted.
+  - Polls list (/): cards with title, description, option/vote counts, "You voted" badge, Vote and View results buttons.
+  - Vote (/polls/<id>): radio options, submit votes; one vote per poll per visitor (voter cookie + UNIQUE constraint).
+    After voting, the form is replaced by "You voted for X" and a link to results.
+  - Results (/polls/<id>/results): navy progress bars with vote counts and percentages, total votes.
+  - Results overview (/results): bars for every poll.
+  - Create Poll (/create): title, optional description, 2-20 options one per line; validation errors shown inline; duplicates removed.
+  - 404 and 405 pages with a way back to the polls list.
+
+Verified by running the server: all routes return expected status codes; voting, duplicate-vote
+rejection, invalid-option rejection, validation errors, and poll creation work; HTML escaping works.
+Server was started and stopped by its own PID only (no pkill/killall).
+
+Files: app.py (server + pages), run.sh, setup.sh, .gitignore (data/, __pycache__/).

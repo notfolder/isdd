@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Winnings | Wheel of Fortune</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Wheel of Fortune</div>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Spin the Wheel</a>
+      <a href="/prizes">Prize List</a>
+      <a href="/my-winnings" aria-current="page">My Winnings</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <h1>My Winnings</h1>
+    <p class="lead">Enter the name you used on the wheel to see your winning records, newest first.
+      Try the name <strong>Sample Player</strong> to see sample records.</p>
+
+    <form id="winnings-form" class="card inline-form" novalidate>
+      <label for="winnings-name">Your name</label>
+      <input id="winnings-name" name="player_name" type="text" autocomplete="nickname" placeholder="For example, Alice">
+      <button class="button" type="submit">Show my winnings</button>
+    </form>
+    <p id="winnings-error" class="error" role="alert"></p>
+    <p id="winnings-summary" class="summary"></p>
+
+    <p id="winnings-empty" class="card empty" hidden>No winning records for this name yet. Spin the wheel to win a prize!</p>
+
+    <table id="winnings-table" class="records" hidden>
+      <thead>
+        <tr><th scope="col">Won at</th><th scope="col">Prize</th></tr>
+      </thead>
+      <tbody id="winnings-body"></tbody>
+    </table>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/my-winnings.js"></script>
+</body>
+</html>

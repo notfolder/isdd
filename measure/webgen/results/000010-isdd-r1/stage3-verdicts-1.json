@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spinning with 'Alice' rotated the wheel (rotate 0deg -> 2002.5deg), it stopped and showed 'You won Free Dessert / Recorded for Alice at ...' with no console errors. Spinning with the name empty showed 'Please enter your name (1-30 characters).' and the wheel stayed at 0deg."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows all 8 rewards with their chances, and they match the 8 segments on the wheel (Gift Card $50, Coffee Voucher, Free Dessert, Sticker Pack, Keychain, Tote Bag, Mug, Grand Reward Headphones)."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winnings for Alice showed the row 'Alice | Free Dessert | Nov 5, 2026, 6:14 AM', with the player name, reward and date."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background rgb(0,100,0) and the page headings (h2) rgb(0,100,0) are all dark green, so the background and all 3 component types match."},
+  "000010-rename": {"verdict": "YES", "reason": "On the spin, reward list and winnings pages, 'prize' appears nowhere in the visible text (navigation, headings, buttons, messages); 'Reward' is used throughout ('Reward List', 'Reward' column, etc.), and spinning and the record lookup both still work."}
+}

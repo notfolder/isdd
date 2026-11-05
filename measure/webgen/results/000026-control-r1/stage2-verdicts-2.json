@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "ホームの「Vote」リンクから /polls/3 の投票ページへエラーなく移動でき、4 つの選択肢（Dark mode, Offline support, Calendar sync, Mobile app）がすべてラジオボタンで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "投票せずにホームの投票一覧と各投票ページを閲覧でき、各投票には名称に加えて説明文・選択肢数・投票数（例: 4 options · 19 votes）が表示されており、関連情報の基準を満たす。"},
+  "000026-3": {"verdict": "YES", "reason": "投票直後に「Thanks! Your vote has been recorded.」が表示されて合計が 26→27 になった。同じブラウザで戻るとラジオと「Cast my vote」ボタンが disabled になり「You have already voted in this poll.」が表示され、再度 POST しても合計は 27 のままで、2 回目の票は数えられなかった。"},
+  "000026-4": {"verdict": "YES", "reason": "結果ページに合計票数、各選択肢の票数と割合、横棒グラフが表示され、投票直後の票が反映された最新の値になっていた。"},
+  "000026-design": {"verdict": "YES", "reason": "body の背景は rgb(255,255,224) で light yellow と一致。ヘッダー背景・主要ボタン背景・見出しの文字色はすべて rgb(47,79,79) で dark slate gray と一致した。"}
+}

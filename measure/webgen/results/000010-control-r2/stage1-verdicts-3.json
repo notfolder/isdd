@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "名前を入力してSpin the Wheelを押すと「Spinning…」と表示されてホイールが回転し、「20% Off Coupon」の区画で止まって「Tester won: 20% Off Coupon — 20% off your next purchase.」と表示された。ページエラーは出なかった。"},
+  "000010-2": {"verdict": "YES", "reason": "Reward Listに8種類の賞品が説明・確率付きで表示され、ホイールの8区画と完全に一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "My Winning Recordsの先頭に、最新のスピン（Tester、20% Off Coupon、Nov 5, 2026, 06:27 AM）がプレイヤー名・賞品・日時付きで表示された。"},
+  "000010-4": {"verdict": "NO", "reason": "bodyの背景色はrgb(255,255,240)で、light gray(211,211,211)との差が40を超える。ヘッダー・ボタン・見出しは濃い緑（rgb(0,100,0)/rgb(0,74,0)）で、dark red(139,0,0)と一致しない。背景も部品も合わない。"}
+}

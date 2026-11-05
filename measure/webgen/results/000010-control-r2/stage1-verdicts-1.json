@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spin showed 'Spinning…', the wheel stopped with the pointer on the Mystery Gift Box segment, and the page displayed 'Alex won: Mystery Gift Box — A surprise box of goodies.' with no page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records listed Alex / Mystery Gift Box / Nov 5, 2026, 06:25 AM, so it has the latest prize and its date."},
+  "000010-4": {"verdict": "NO", "reason": "The body background is rgb(255,255,240), not light gray (211,211,211): the R, G and B differences of 44, 44 and 29 exceed 40 on two channels. The header, main button and heading are dark green (0,100,0), not dark red (139,0,0), so neither the background nor the components match."}
+}

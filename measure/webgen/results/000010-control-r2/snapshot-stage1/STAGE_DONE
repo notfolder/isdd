@@ -1,0 +1,14 @@
+REQUEST.md change request (theme + required player name + names on records): done.
+
+Note: this directory had no site code when the stage started. The existing site (previous stage, 000010-control-r1) was copied in as the base, and the changes below were made on top of it.
+
+Changes
+- Theme: ivory (#fffff0) is the page background. Dark green (#006400) is used for the header, nav, buttons, panel top borders, table headers, footer and the wheel. The remaining red (validation text) is now dark amber, and the disabled button is dark green at reduced opacity, so no light gray or dark red is left.
+- Spin: the player name is a required field next to the Spin button. Spinning with an empty name shows "Please enter your name before spinning." right under the field (plus the status line), marks the field invalid, focuses it, and does not spin. The message clears when a name is typed. The server also rejects an empty name (HTTP 400).
+- Records: "My Winning Records" lists each record with Player, Reward and Date and time. The wheel's result line shows the player's name with the reward.
+- Reward List and all other behaviour are unchanged.
+
+Verification
+- bash setup.sh OK. PORT=8932 bash run.sh from this directory returned 200 for / and served /api/prizes. The server was stopped by its PID.
+- Headless Chrome, driven over CDP on a private test server (since stopped by PID): background is rgb(255,255,240), header is rgb(0,100,0), the nav reads Spin the Wheel / Reward List / My Winning Records. Empty-name spin shows the message and does not spin. Typing a name clears the message. Spin with "Alex" shows a result. Records shows the player name, reward and date. The Reward List has 8 rows.
+- Caveat: while working, files in this directory were overwritten by another process at least twice. The final versions were copied in and re-checked byte-for-byte (cmp) afterwards.

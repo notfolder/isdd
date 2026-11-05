@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: ホームの「Vote」リンクから /polls/2 の投票ページへエラーなしで移動でき、4つの選択肢（Spring/Summer/Autumn/Winter）がラジオボタンですべて表示された。 / YES: From the homepage, clicking Vote opened /polls/1 with no errors, and the page showed all four options (Python, JavaScrip / YES: From the homepage, clicking a poll's Vote link opens /polls/1 (HTTP 200, no errors), and the page shows all four options",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: 投票せずにホームの投票一覧を見られ、各投票に名称に加えて選択肢数と票数（例: 4 options · 10 votes）が表示され、投票ページでは説明文と選択肢が見られるので、関連情報の基準を満たす。 / YES: Without voting, the poll list shows each poll's name plus other details (e.g. '4 options · 10 votes'), and each poll pag / YES: You can browse the poll list without voting. Each entry shows its title plus an option count and vote count (e.g. '4 opt",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: Spring を選んで Vote を押すと結果ページに移り、総票数が 11 から 12 に増えて記録が確認でき、ページ内に確認文「Thank you for voting.」が表示された。 / YES: After picking Python and voting, the page went to the results, showed the message 'Thank you for voting.', and the total / YES: Picking Rust and pressing Vote raised Rust from 2 to 3 votes and the total from 11 to 12, and right after the vote the p",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: 結果ページに総票数、選択肢ごとの票数と割合（%）、navy の棒グラフが表示され、投票直後の値も反映されていた。/results には投票ごとの総票数と首位の選択肢も表示された。 / YES: /results shows each poll's total votes and leading option. Each poll's results page shows the up-to-date votes, share pe / YES: The results pages show the current results: total votes, each option's votes and share %, and bar charts, plus a summary",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-5": {
+    "verdict": "YES",
+    "reason": "YES: body の背景は rgb(255,255,255)（white）。ヘッダーの背景 rgb(0,0,128)、主要なボタンの背景 rgb(0,0,128)、見出しの文字色 rgb(0,0,128) で、3つとも navy に一致した。 / YES: The body background is rgb(255,255,255) (white). The header background, the main button background and the h1/h2 text co / YES: The body background is rgb(255,255,255) (white). The header background rgb(0,0,128), the main Vote button rgb(0,0,128) a",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

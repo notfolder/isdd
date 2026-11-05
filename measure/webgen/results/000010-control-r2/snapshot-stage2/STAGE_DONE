@@ -1,0 +1,23 @@
+REQUEST.md change request 1 completed.
+
+Summary
+1. Colour theme
+   - Default background is ivory (#fffff0).
+   - Components use dark green: header, nav, buttons, table headers, footer, and the cards.
+   - Cards (.panel) changed from white to a dark green card (#003d14) with a dark green border. Text inside cards is ivory, and secondary text and validation messages use lighter tints so they stay readable.
+   - Tables inside cards use an ivory body with dark green headers.
+   - The earlier dark-red error colour is now a light amber on dark cards. No red remains.
+2. Required player name
+   - The spin panel already had a required "Player name" field next to the spin button. Spinning with an empty or whitespace-only name shows a validation message and does not spin. The server also rejects an empty name with HTTP 400.
+   - Winning records already show the player name, reward and date/time, in both the spin result and the My Winning Records table. These were not changed.
+3. Unchanged: reward list, wheel, records lookup, and the setup.sh / run.sh contract (PORT, DATA_DIR, sample data).
+
+Verification
+- bash setup.sh ran OK.
+- PORT=8766 DATA_DIR=<fresh temp dir> bash run.sh served the site. The API returned sample prizes, rejected a blank name with 400, recorded a spin, and returned it from the records endpoint.
+- Headless Chrome screenshots of the Spin, Reward List and My Winning Records views rendered correctly.
+- Test servers were stopped by PID; their temp data was removed.
+
+Choices made without asking
+- "Cards" was read as the .panel containers. They are now dark green, and the inner inputs stay white for readability.
+- The spin control is still a button. Spinning is not re-tested with a click in a browser, because no browser automation is installed. The validation path was checked in the code.

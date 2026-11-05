@@ -1,0 +1,20 @@
+Change request 2 (prize -> reward) — done.
+
+What changed
+- Every user-visible "prize"/"prizes" is now "reward"/"rewards": nav link "Reward List", page title and heading, table headers ("Reward"), stat label "Rewards won", badge "No reward", result messages ("No reward this time, NAME.", "NAME won: ..."), error/empty messages, wheel canvas aria-label, sample "Try Again" description.
+- Page moved: /prizes -> /rewards (files prizes.html/prizes.js renamed to rewards.html/rewards.js). /prizes now 301-redirects to /rewards so old links work.
+- API: /api/prizes -> /api/rewards; JSON keys prize -> reward (spin response "reward", records "reward_name"/"reward_id").
+- server.py sample data renamed accordingly (SAMPLE_REWARDS).
+
+Deliberately unchanged
+- SQLite table/column names (prizes, prize_id, prize_name) so existing data files keep working. These are not shown in the UI.
+
+Behaviour unchanged
+- Name required to spin, records by player name, ivory / dark green theme, spin/records/recent-winners flows.
+
+Verified
+- bash setup.sh OK; PORT=18766 bash run.sh serves /, /rewards, /records (200), /prizes -> 301 /rewards.
+- /api/rewards, POST /api/spin, /api/spins, /api/winners return the renamed keys.
+- No "prize" text in any served HTML/JS/CSS.
+- node --check on all static JS, python compile of server.py OK.
+- Note: port 8123 was occupied by another process; I did not touch it. My test servers were stopped by their own PIDs.

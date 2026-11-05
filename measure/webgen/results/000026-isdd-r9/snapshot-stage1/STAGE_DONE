@@ -1,0 +1,51 @@
+投票サイト（Polls Website）: 要件定義 → 設計 → 実装 → 実装後レビュー 完了（2026-11-05）
+
+■ 起動
+- bash setup.sh（初回のみ。.venv に pytest と Playwright、Chromium を導入）
+- PORT=8000 bash run.sh（前面で起動。http://127.0.0.1:8000/ が開く。DATA_DIR 既定 ./data）
+- 起動確認済み: /polls、/polls/1、/polls/1/results、/results が 200、/ は /polls へ転送
+
+■ 機能（画面はすべて英語。背景 #ffffff、ナビゲーションとボタン・見出し・結果の棒は #000080）
+- 上部メニュー: Polls / Results
+- 投票一覧（/polls）→ 投票画面（/polls/{id}）で選択肢を 1 つ選んで投票
+- 未選択は「Please select an option.」、同じブラウザの 2 回目は「You have already voted in this poll.」（一人一票は Cookie で判定）
+- 結果画面（/polls/{id}/results）: 票数・割合・棒グラフ、票 0 件は「No votes yet.」
+- 結果一覧（/results）、存在しない投票は「Poll not found.」
+- サンプル投票 3 件を DB が空のときに自動投入（票 0 件の投票を 1 件含む）
+
+■ 文書（docs/ と .history/）
+- docs/requirements.md: 要件定義書（RQ-* 32 件、テストシナリオ 7 件）
+- docs/detail_design.md: 詳細設計書（DS-* 32 件、対応表は第 11 章）
+- .history/20261105-poll-website/tasks.md: 実装タスク
+- docs/trace_map.md: 設計 ID とコードの対応（粒度 class）
+- README.md: 起動方法と操作説明
+
+■ 検証結果（実行ログ）
+- rq_integrity_checker: 問題 0 件
+- rq_ds_link_checker: 合格（欠落 0、不整合 0）
+- bash scripts/isdd/check.sh --strict: 合格（対応表エラー 0、警告 0。受け入れ判定 DS-TS 8/8 合格、要件 14/14 実装済み）
+- implementation_completeness_checker: 4/4 通過
+- pytest e2e（単体 7 件 + E2E 7 件）: 14 件すべて合格
+
+■ 依頼者が「任せる」と回答した項目（最小案で決定。すべて承認は未確認）
+要件定義書 1-2 の表に記載。主なもの:
+- 投票の作成画面は作らない（サンプルデータのみ）。投票の終了・公開状態も無し
+- 一人一票はブラウザの Cookie 単位。同時の二重送信は DB 一意制約で 1 件に限る
+- 認証・ログインは無し。保持期間は無期限（削除機能無し）
+- 技術: Python 3.12 標準ライブラリ（http.server・sqlite3）、サーバー側 HTML、JavaScript 無し、待ち受けは 127.0.0.1
+- 技術選定は外部調査をしていない（「任せる」のため最小構成を採用。承認時に確認が必要）
+
+■ 残っている確認事項
+- 1-2 表の全項目の承認（特に、投票の作成画面を作らないこと、一人一票の方式）
+- 業務の問題と効果は依頼者が「分からない」と回答したため未確定（見込み経営効果は算定しない）
+- 技術選定の外部確認（候補の比較は未調査）
+- エージェントの応答終了フック（pre-commit 以外）は設定していない（isdd-build の手順で、フック機能が無い環境のため。pre-commit は .git/hooks に組み込み済み）
+- git へのコミットはしていない（依頼が無いため）
+
+■ 実装後レビューで直した点
+- 500 画面（「Something went wrong.」）を追加（設計どおり）
+- 投票済みの表示は投票を送ったときだけ。GET では出さないよう設計書を実装に合わせた
+- 「1 vote」の単数形を修正
+
+■ 注意
+- ポート 8123 は別の作業のプロセスが使用中だったため、そのプロセスには触れず、空きポートで確認した。起動確認で起動したサーバーは、いずれも自分の PID だけを止めた。

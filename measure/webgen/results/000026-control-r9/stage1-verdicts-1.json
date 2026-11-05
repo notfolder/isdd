@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage, 'Browse polls' then 'Vote' opened /polls/1 without errors, and all four options (Python, JavaScript, Go, Rust) were shown as radio buttons with a 'Cast vote' button."},
+  "000026-2": {"verdict": "YES", "reason": "/polls lists 3 polls without voting; each shows its question plus details beyond the name (option count and vote count, e.g. '4 options · 38 votes')."},
+  "000026-3": {"verdict": "YES", "reason": "After selecting Python and clicking 'Cast vote', the page showed 'Thank you! Your vote has been recorded.' and the total went from 38 to 39."},
+  "000026-4": {"verdict": "YES", "reason": "/results shows a summary table (total votes, leading option), and the per-poll results page shows the current counts and percentages with horizontal bar charts (the total reflects the new vote: 39)."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255) (white); the header, main button (.btn) and h1 are all rgb(0,0,128) (navy)."}
+}

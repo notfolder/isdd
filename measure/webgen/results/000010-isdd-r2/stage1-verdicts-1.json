@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "名前を入力して Spin を押すと 'Spinning...' 表示の後ホイールが止まり、ポインター位置の区画（Movie Ticket Pair）と同じ 'You won Movie Ticket Pair!' が表示され、ページエラーも無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "Prize List ページに 6 件の賞品（Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair, Mystery Gift）が説明付きで表示され、ホイールの 6 区画と一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "スピン後に My Winnings を開くと Tester1 の記録 1 件として日時 'Nov 5, 2026, 6:40 AM' と賞品 'Movie Ticket Pair' が表示され、直前の当選と一致した。"},
+  "000010-4": {"verdict": "YES", "reason": "body 背景 rgb(211,211,211)=light gray、ヘッダー背景・主要ボタン背景・見出し文字色がすべて rgb(139,0,0)=dark red で、背景と部品 3 種類とも許容差内だった。"}
+}

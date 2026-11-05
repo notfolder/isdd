@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "トップページの『Vote』ボタンから /polls/1 にエラーなく移動でき、全選択肢（Python, JavaScript, Go, Rust）がラジオボタンで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "投票せずに一覧で各投票（poll）が名称に加えて選択肢数・総投票数付きで表示され、各投票ページでも選択肢を閲覧できた（関連情報の基準を満たす）。"},
+  "000026-3": {"verdict": "YES", "reason": "投票直後に『Your vote has been recorded.』が表示され Italian が 6→7 票に増えた。同じブラウザで戻ると『You have already voted.』が表示され、ラジオボタンと送信ボタンがすべて disabled で、二重投票はできなかった（総数 18 のまま）。"},
+  "000026-4": {"verdict": "YES", "reason": "/results に全投票の選択肢ごとの票数・割合（%）・棒グラフ列・総投票数が表示され、直前の投票も反映された最新の結果だった。"},
+  "000026-design": {"verdict": "YES", "reason": "body 背景 rgb(255,255,224)=light yellow、ナビ背景・主要ボタン背景・見出し文字色がいずれも rgb(47,79,79)=dark slate gray で、背景と部品 3 種類がすべて一致した。"}
+}

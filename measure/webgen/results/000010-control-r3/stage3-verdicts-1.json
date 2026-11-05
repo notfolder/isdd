@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel rotated (transform changed), stopped, and showed 'Alice won: Bonus Points x2!' with no JS errors; with an empty name the message 'Please enter your name before spinning.' appeared and the wheel transform stayed 'none'."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows all 8 rewards with description, result and chance, and they match the 8 segments drawn on the wheel ($50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus Points x2, Extra Spin)."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records shows a new row 'Nov 5, 2026, 6:33 AM | Alice | Bonus Points x2', so the player name, reward and date are all there."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header rgb(0,100,0), the main SPIN button rgb(0,100,0) when not hovered, and the h1/h2 headings rgb(0,100,0) are all within 40 of dark green."},
+  "000010-rename": {"verdict": "YES", "reason": "On the spin, reward list and records pages, 'prize' does not appear in the visible text, title, labels or attributes. Navigation, headings, buttons and messages all say 'Reward', and every page works (spin, list, record lookup)."}
+}

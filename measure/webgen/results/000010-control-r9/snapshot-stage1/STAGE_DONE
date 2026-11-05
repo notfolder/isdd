@@ -1,0 +1,23 @@
+Wheel of Fortune — 完了の要約
+
+実装内容
+- 起動: `bash setup.sh`（標準ライブラリのみ。依存導入なし）→ `PORT=任意 bash run.sh`（exec で python3 server.py を前景起動）
+- DATA_DIR（既定 ./data）に SQLite (wheel.db) を作成。prizes が空なら見本の賞品 7 件を投入。
+- 画面（英語、上部ナビ固定）:
+  - Spin the Wheel (/): SVG の転がるホイール、名前入力、SPIN ボタン、結果表示、直近の当選者一覧
+  - Prize List (/prizes): 賞品カード（説明と当選確率）
+  - My Winning Records (/my-records): 名前で絞り込んだ自分の抽選履歴（日時・賞品・回数）
+- API: GET /api/prizes, POST /api/spin, GET /api/records?player=, GET /api/recent
+- 抽選は重み付き乱数（サーバー側）。ホイールはその結果の区画に止まるようアニメーション。
+- 色: 背景は薄いグレー (#e4e4e4)、コンポーネントは濃い赤 (#8b0000)。
+- 名前はブラウザの localStorage に保存（ログイン機能なし）。
+
+確認済み
+- setup.sh / run.sh が正常終了。サーバー起動後 /, /prizes, /my-records, 静的ファイルが 200。
+- API: 賞品一覧の確率、名前の正規化（空→Guest、前後空白除去）、大文字小文字を区別しない記録検索、不正 JSON で 400、パストラバーサル不可。
+- 300 回の抽選で賞品の出現割合が重みと一致。
+- headless Chrome でスピン画面と賞品画面を描画し、ラベルの向きを修正して再確認。
+- 起動したサーバーは各検証後に PID 指定で停止。
+
+未確認
+- ホイールの回転アニメーションと記録画面の操作は、コードの確認のみでブラウザ操作の検証はしていない。

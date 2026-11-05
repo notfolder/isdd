@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "PARTIAL", "reason": "/species shows a list of species with biological info columns (kingdom, habitat, diet, status, lifespan), but the Lifespan column shows '—' for 3 rows (Button mushroom, Venus flytrap, E. coli), so the no-missing-data criterion is not met."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'whale' returned exactly 1 result, Blue whale (Balaenoptera musculus), and no unrelated species."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by habitat Marine returned 4 of 17 species, and every row has habitat Marine. No non-matching entries were shown."},
+  "000088-4": {"verdict": "YES", "reason": "body background is rgb(250,240,230) (linen). Header background rgb(128,0,0), .btn background rgb(128,0,0) and h1 color rgb(128,0,0) all match maroon."}
+}

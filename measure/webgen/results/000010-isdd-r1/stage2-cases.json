@@ -1,0 +1,31 @@
+{
+  "base_url": "http://127.0.0.1:60328",
+  "cases": [
+    {
+      "id": "000010-1",
+      "category": "Functional Testing",
+      "task": "Enter the player name 'Alice' and spin the wheel.",
+      "expected": "The wheel spins, stops at a segment and displays the prize won for Alice without errors. Spinning with the name field empty is refused with a validation message and the wheel does not spin.",
+      "change": true
+    },
+    {
+      "id": "000010-2",
+      "category": "Data Display Testing",
+      "task": "View the list of available prizes before spinning the wheel.",
+      "expected": "A complete and accurate list of prizes is displayed, matching the set prizes available on the wheel."
+    },
+    {
+      "id": "000010-3",
+      "category": "Data Display Testing",
+      "task": "After spinning as 'Alice', open the winning records.",
+      "expected": "The record list shows Alice's new win with the player name 'Alice', the prize and the date.",
+      "change": true
+    },
+    {
+      "id": "000010-design",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'ivory' as the background color and 'dark green' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'ivory' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark green', accurately reflecting the design instruction."
+    }
+  ]
+}

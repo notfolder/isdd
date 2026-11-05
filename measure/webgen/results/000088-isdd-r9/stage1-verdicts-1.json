@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "/species に 12 種の一覧があり、6 列（一般名・学名・綱・生息地・食性・保全状況）すべてに値があって空欄表示は無かった。詳細ページ（例: Lion）にも科・寿命・体重・説明などの生物情報が表示された。"},
+  "000088-2": {"verdict": "YES", "reason": "名前検索で \"panda\" を入れると Giant panda の 1 件だけ、\"Japanese\" を入れると名前に Japanese を含む 3 件だけが表示され、関係ない種は出なかった。"},
+  "000088-3": {"verdict": "YES", "reason": "Habitat を Marine にして絞り込むと、Habitat が Marine の 3 件（Blue whale・Emperor penguin・Green sea turtle）だけが表示され（Showing 3 of 12）、条件に合わない行は無かった。"},
+  "000088-4": {"verdict": "YES", "reason": "body の背景は rgb(250,240,230) で linen と一致した。ナビの背景、主要ボタン、h1 見出しの色はどれも rgb(128,0,0) で maroon と一致した。"}
+}

@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With 'Alice' the wheel rotated (transform changed), stopped with the pointer on 'Gift Card $50', and showed 'You won Gift Card $50 / Recorded for Alice' with no page errors. Spinning with an empty name showed 'Please enter your name (1-30 characters).' and the wheel did not rotate."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows 8 prizes with their chances, and they match the 8 segments on the wheel exactly."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winnings for 'Alice' lists the new win at the top (Alice / Coffee Voucher / Nov 5, 2026, 6:08 AM) with player name, prize and date."},
+  "000010-design": {"verdict": "YES", "reason": "Body background rgb(255,255,240) matches ivory. Header rgb(0,100,0), main button rgb(0,128,15) and heading color rgb(0,100,0) are all within 40 per channel of dark green (0,100,0)."}
+}

@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote now' on the homepage opened /polls/2 without errors, and all four options (Spring/Summer/Autumn/Winter) appeared as radio buttons with a 'Cast my vote' button."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists 4 polls without voting. Each one shows the title plus a description and vote/option counts (e.g. '76 votes · 4 options'), which meets the related-information criterion."},
+  "000026-3": {"verdict": "YES", "reason": "Right after voting, 'Thank you for voting! You voted for Spring.' appeared and the total went from 76 to 77. On returning to the poll, 'You have already voted in this poll.' was shown and the radio buttons and submit button were disabled. A forced re-POST left the total at 77."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows the current total (updated right after the vote), the leading option, and each option's vote count and percentage with bar charts."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which matches light yellow. The header background, main button background and heading text color are all rgb(47,79,79), which matches dark slate gray."}
+}

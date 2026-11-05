@@ -1,0 +1,7 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "The /organisms list shows all 13 organisms with 9 columns (name, scientific name, kingdom, class, habitat, diet, status, length, lifespan); every column in every row has a value, with no blanks and no '—' or 'N/A' placeholders."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'bear' returned only Polar Bear, and 'pan' returned only the name matches African Lion (Panthera) and Giant Panda. The habitat words 'Grassland' and 'Marine' and the description word 'Antarctic' each returned 0 results with the text 'No organisms match these filters.'"},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by habitat=Forest showed only the 4 Forest organisms ('Showing 4 of 13'). Combining Marine with Animalia showed only Blue Whale and Green Sea Turtle; no non-matching entries appeared."},
+  "000088-design": {"verdict": "YES", "reason": "The body background is rgb(240,255,240), which equals honeydew. The header background, the main button background (.btn / Apply filters) and the h1/h2 text are all rgb(85,107,47), which equals dark olive green, so all three components match."},
+  "000088-rename": {"verdict": "YES", "reason": "I checked the text and attributes of the home, list, search results, filter results, detail, edit, add, About, validation-error and 404 pages. 'species' appears nowhere; navigation, headings and buttons all say 'Organism' (e.g. 'Add Organism', 'Save organism', 'No organisms match these filters.'), and all pages work."}
+}

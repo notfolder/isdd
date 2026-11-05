@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "PARTIAL", "reason": "The Browse & Search page lists all 23 species with their biological information (kingdom, habitat, feeding mode, conservation status, length, lifespan). However, 4 rows (Fly agaric, Common hydra, Strawberry poison-dart frog, Corpse flower) show '—' in the Lifespan column, so under the 'no missing data' rule this is PARTIAL."},
+  "000088-2": {"verdict": "YES", "reason": "Searching for 'panda' shows 'Showing 2 of 23 species' and displays only Giant panda and Red panda, with no unrelated species."},
+  "000088-3": {"verdict": "YES", "reason": "With Habitat=Forest applied, the list shows 5 species, all with habitat Forest, and no entries that don't match."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which is linen. The header background rgb(128,0,0), the main button background rgb(128,0,0) and the h1/h2 text color rgb(128,0,0) all match maroon exactly."}
+}

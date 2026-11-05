@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "/species shows all 13 species in a table with 9 columns of biological information (scientific name, kingdom, class, habitat, diet, status, length, lifespan). Every cell in every row has a value, with no '—'/N/A-type blanks and no display errors."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'pand' returns only Giant Panda. Searching the habitat words 'Forest' and 'Marine' and the description word 'seagrass' each returns 'Showing 0 of 13 species', so the search matches names only."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by Habitat=Forest leaves 4 of 13 rows (Corpse Flower, English Oak, Fly Agaric, Giant Panda), all Forest, and no non-matching entries are shown."},
+  "000088-design": {"verdict": "YES", "reason": "The body background is rgb(240,255,240) (honeydew). The header background, the main button (.btn) background and the h1/h2 text are all rgb(85,107,47) (dark olive green), so the background and all three component colors match."}
+}

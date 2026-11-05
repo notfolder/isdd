@@ -1,0 +1,30 @@
+{
+  "base_url": "http://127.0.0.1:54352",
+  "cases": [
+    {
+      "id": "000088-1",
+      "category": "Functional Testing",
+      "task": "Browse the database for available biological information of different species.",
+      "expected": "The user should be able to view a list of species with corresponding biological information without any missing data or display errors."
+    },
+    {
+      "id": "000088-2",
+      "category": "Functional Testing",
+      "task": "Search for a species by part of its name, then search for a word that appears only in a habitat or description (for example the habitat name).",
+      "expected": "The name search returns only the matching species; the habitat/description word returns no results, because the search now matches the species name only.",
+      "change": true
+    },
+    {
+      "id": "000088-3",
+      "category": "Functional Testing",
+      "task": "Apply a filter to the data based on a given criterion (e.g., habitat type).",
+      "expected": "The data should update to show only those entries that meet the filter criteria, without displaying entries that do not match."
+    },
+    {
+      "id": "000088-design",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'honeydew' as the background color and 'dark olive green' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'honeydew' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark olive green', accurately reflecting the design instruction."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ poll.question }}{% endblock %}
+{% block content %}
+<h1>{{ poll.question }}</h1>
+{% if poll.description %}<p class="lead">{{ poll.description }}</p>{% endif %}
+{% if already_voted %}<p class="notice" role="status">You have already voted</p>{% endif %}
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<form method="post" action="{{ url_for('submit_vote', poll_id=poll.id) }}" class="vote-form">
+  <fieldset>
+    <legend>Choose one option</legend>
+    {% for option in poll.options %}
+    <label class="option">
+      <input type="radio" name="option_id"{% if already_voted %} disabled{% endif %} value="{{ option.id }}"> {{ option.text }}
+    </label>
+    {% endfor %}
+  </fieldset>
+  <div class="actions">
+    <button type="submit" class="button"{% if already_voted %} disabled{% endif %}>Vote</button>
+    <a class="button button-outline" href="{{ url_for('show_poll_results', poll_id=poll.id) }}">View results</a>
+  </div>
+</form>
+{% endblock %}

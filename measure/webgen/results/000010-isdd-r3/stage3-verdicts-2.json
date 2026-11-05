@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spinning as 'Alice' made the wheel spin and stop on a segment, then show the result (e.g. 'You won: $5 Voucher!') with no page errors. Clicking Spin with an empty name showed 'Please enter a name of 1 to 20 characters.' and the wheel did not spin."},
+  "000010-2": {"verdict": "YES", "reason": "Before any spin, the Reward List page shows 7 rewards, each with a description and a chance. They match the 7 segments on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winning Records shows rows like 'Alice | $5 Voucher | 2026-11-05 07:15:10', with the player name, the reward and the date."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header rgb(0,100,0), the Spin button rgb(0,77,0) and the h2 heading rgb(0,100,0) are each within 40 of dark green (0,100,0)."},
+  "000010-rename": {"verdict": "YES", "reason": "The spin page, reward list and winning records page contain no 'prize' or 'prizes' in their text, links or buttons. The site uses 'Reward' throughout (Reward Wheel, Reward List, You won, the Reward column), and all pages worked."}
+}

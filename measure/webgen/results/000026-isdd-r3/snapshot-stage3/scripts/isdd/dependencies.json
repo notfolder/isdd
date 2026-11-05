@@ -1,0 +1,8 @@
+{
+  "rules": [
+    {"from": "src/web.py", "deny": ["src/storage.py", "src/app.py"], "reason": "経路の処理は業務処理だけを通す"},
+    {"from": "src/poll_service.py", "deny": ["src/web.py", "src/views.py", "src/app.py"], "reason": "業務処理は HTTP と画面を知らない"},
+    {"from": "src/storage.py", "deny": ["src/web.py", "src/poll_service.py", "src/views.py", "src/app.py"], "reason": "データ保存は最下層"},
+    {"from": "src/views.py", "deny": ["src/web.py", "src/poll_service.py", "src/storage.py", "src/app.py"], "reason": "画面の生成はデータを受け取るだけ"}
+  ]
+}

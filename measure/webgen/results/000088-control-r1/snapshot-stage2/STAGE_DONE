@@ -1,0 +1,7 @@
+Change request 1 implemented in server.py.
+
+1. Colour theme: honeydew (#F0FFF0) is the base background; dark olive green (#556B2F, darker #3B4B1F for hover/required marks) replaces linen and maroon across the header, footer, nav, buttons, badges, flash/error boxes, table headers, borders, links and headings. Cards and form inputs use white so they stand out on honeydew.
+2. Search: the Search text box now matches only scientific_name and common_name. Habitat, diet, family, class and description no longer produce matches. Placeholder and the About page were updated to say so. Kingdom, conservation status, habitat, diet and sort filters are unchanged.
+
+Verified: `bash setup.sh` ran cleanly; `PORT=8765 bash run.sh` served /, /species, /species/new, /about, /species/1 and /species/1/edit with HTTP 200. Searches: "forest", "carnivore", "krill" return 0 of 13; "Panthera" and "lion" return 1 each; kingdom=Plantae returns 2. The server was stopped by its PID.
+No changes were committed.

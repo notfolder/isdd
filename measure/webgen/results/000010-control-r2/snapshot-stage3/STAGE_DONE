@@ -1,0 +1,24 @@
+Change request 2: 'prize' -> 'reward' (done)
+
+What changed
+- static/index.html: already used "Reward" in navigation, headings, table headers and aria labels; no change needed.
+- static/app.js: all internal names renamed (rewards list, renderRewardTable, loadRewards, data.reward, rec.reward_name, reward-name CSS class). The old "#/prizes" link redirect was removed.
+- static/style.css: class .prize-name renamed to .reward-name.
+- server.py:
+  - API: /api/prizes -> /api/rewards (response key "rewards"); spin response key "prize" -> "reward".
+  - Records fields: prize_id/prize_name -> reward_id/reward_name.
+  - DB: table prizes -> rewards; records columns renamed. Existing databases are migrated on start-up (migrate_old_schema), and old "Prize" text in stored data is rewritten once to "Reward".
+  - Sample data (SAMPLE_REWARDS) is unchanged in content; it already used "Reward".
+
+Behaviour unchanged: name required before spin, records by player name, ivory / dark green theme, sample data on empty DATA_DIR.
+
+Verified
+- bash setup.sh OK; python compile and node --check OK.
+- Old-schema DB (prizes/prize_id tables) migrated correctly; rewards, spin, records and validation error all worked.
+- Empty DATA_DIR start gives 8 sample rewards; /api/prizes returns 404.
+- Headless Chrome screenshots of wheel, reward list and records pages render with the existing theme; no "prize" text in rendered DOM or static files.
+
+Not done
+- The spin animation and records form were not clicked through in a browser; only the API and page rendering were checked.
+- The migration code itself still contains the old word "prize" (only inside SQL/strings that rename old data).
+- Nothing was committed to git (repository has no commits yet).

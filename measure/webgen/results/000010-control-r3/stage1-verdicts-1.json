@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking SPIN showed 'Spinning...', the wheel then stopped with the pointer on a segment (Extra Spin; an earlier spin landed on Try Again), and the page showed 'You won: Extra Spin!' with no page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page lists all 8 prizes with a description and a chance for each, and they match the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records showed the new win (Nov 5, 2026, 6:25 AM, Extra Spin) under My Wins and Recent Winners, and the total spins and prizes won counts went up."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(211,211,211), which is light gray. The header background, the SPIN button background and the h1/h2 color are all rgb(139,0,0), which is dark red, so the background and all three components match."}
+}

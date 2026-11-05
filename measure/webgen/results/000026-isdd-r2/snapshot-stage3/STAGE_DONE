@@ -1,0 +1,77 @@
+# 完了の要約: 変更 2「poll」→「survey」（Survey Website）
+
+依頼: REQUEST.md（変更 2）。フロー: isdd-spec（変更フロー）→ isdd-build（実装 → 実装後レビュー）。
+回答の出どころ: ANSWERS.md（承認はすべて与えられたものとして進めた）。
+
+## 変更内容（利用者に見える部分）
+
+- 画面の用語: ナビゲーション「Surveys」「Results」、サイト名「Survey Website」（ブラウザのタイトルと見出し）、一覧の見出し「Surveys」、案内文（「Choose a survey…」「No surveys yet.」「Select a survey…」）、ボタン「Vote in this survey」、投票済み「You have already voted in this survey.」、誤り「The selected option is not valid for this survey.」
+- URL のパス: `/surveys`、`/surveys/<id>`、`/surveys/<id>/vote`（POST）、`/surveys/<id>/results`。`/` は `/surveys` へ転送。
+- 旧 URL `/polls` 系は新しいパスへ 302 で転送（新規の関数 `legacy_poll_redirect`、設計 ID `DS-IF-LEGACY-POLL-REDIRECT`）。
+- 変えていない: 一人一票、確認つきの投票、結果、投票済みの無効化、light yellow（#FFFFE0）と dark slate gray（#2F4F4F）の配色。
+- 内部の名前（テーブル `polls`、Python の名前、要件 ID・設計 ID の `POLL`、DB ファイル `polls.db`）は変えていない。画面に出ないため。
+
+## 依頼に無く自分で決めた項目（承認は ANSWERS.md により承認済み）
+
+| 項目 | 決めた内容 |
+|---|---|
+| URL のパス | `/polls` → `/surveys`（アドレス欄も利用者に見えるため） |
+| 旧 URL の転送 | `/polls` 系を 302 で新パスへ（既存のリンクを壊さないため） |
+| 内部の名前 | 変えない（UI に出ず、変えると対応表とテストの全件が変わるため） |
+| サイト名 | 「Survey Website」 |
+
+## 変更の記録と正本
+
+- 変更の記録: `.history/20261105-poll-to-survey-rename/`（`change_requirements.md`、`change_detail_design.md`、`tasks.md`）。変更の記録は書き換えていない。
+- 正本の反映: `docs/requirements.md`、`docs/detail_design.md`、`docs/trace_map.md`。追加した要件 ID: `RQ-BK-SURVEY-WORDING`、`RQ-UI-SURVEY-WORDING`、`RQ-FT-LEGACY-POLL-URL`、`RQ-TS-VERIFY-SURVEY-WORDING`、`RQ-TS-VERIFY-LEGACY-URL`。追加した設計 ID: `DS-IF-LEGACY-POLL-REDIRECT`、`DS-TS-VERIFY-SURVEY-WORDING-E2E`、`DS-TS-VERIFY-LEGACY-URL-E2E`。
+- `docs/active_change` は削除済み。`docs/proposals.md` は無い。
+
+## テストと検査の結果
+
+- 単体・結合テスト: `.venv/bin/python -m unittest discover -s tests -v` → 34 件、OK。
+- E2E: `.venv/bin/python scripts/isdd/unittest_junit.py -s e2e -o e2e/results/e2e.xml` → 11 件、OK（`e2e/results/e2e.xml`）。
+- `bash scripts/isdd/check.sh --strict` → エラー 0 件、警告 0 件、依存の規則なし、受け入れ判定に合格。
+- `python3 scripts/isdd/implementation_completeness_checker.py .` → 4/4 項目通過。
+- `rq_integrity_checker.py docs/requirements.md` → 問題 0 件（受け入れテスト欠落 0 件、シナリオ 11 本）。
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` → 欠落 0 件、不整合 0 件。
+- 変更の記録の検査（`--base docs/requirements.md`）も合格。
+
+### 未マッピング一覧
+
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件（公開関数・クラス・ファイル）
+
+### 要件ごとの実装済み判定
+
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| `RQ-FT-CAST-VOTE` | `RQ-TS-CAST-VOTE-FLOW` | `DS-TS-CAST-VOTE-E2E` | `test_cast_vote_flow` | 実装済み |
+| `RQ-FT-LEGACY-POLL-URL` | `RQ-TS-VERIFY-LEGACY-URL` | `DS-TS-VERIFY-LEGACY-URL-E2E` | `test_verify_legacy_url` | 実装済み |
+| `RQ-FT-LIST-POLLS` | `RQ-TS-BROWSE-POLLS-FLOW` | `DS-TS-BROWSE-POLLS-E2E` | `test_browse_polls_flow` | 実装済み |
+| `RQ-FT-LOCK-VOTE-CONTROLS` | `RQ-TS-VERIFY-VOTE-LOCK` | `DS-TS-VERIFY-VOTE-LOCK-E2E` | `test_verify_vote_lock` | 実装済み |
+| `RQ-FT-ONE-VOTE-PER-POLL` | `RQ-TS-ONE-VOTE-RULE`, `RQ-TS-VERIFY-VOTE-LOCK` | `DS-TS-ONE-VOTE-RULE-E2E`, `DS-TS-VERIFY-VOTE-LOCK-E2E` | `test_one_vote_rule`, `test_verify_vote_lock` | 実装済み |
+| `RQ-FT-VALIDATE-VOTE` | `RQ-TS-VALIDATE-VOTE` | `DS-TS-VALIDATE-VOTE-E2E` | `test_validate_vote` | 実装済み |
+| `RQ-FT-VIEW-POLL-OPTIONS` | `RQ-TS-BROWSE-POLLS-FLOW` | `DS-TS-BROWSE-POLLS-E2E` | `test_browse_polls_flow` | 実装済み |
+| `RQ-FT-VIEW-RESULTS` | `RQ-TS-VIEW-RESULTS` | `DS-TS-VIEW-RESULTS-E2E` | `test_view_results` | 実装済み |
+| `RQ-UI-COLOR-THEME` | `RQ-TS-VERIFY-COLOR-THEME` | `DS-TS-VERIFY-COLOR-THEME-E2E` | `test_verify_color_theme` | 実装済み |
+| `RQ-UI-POLL-DETAIL-SCREEN` | `RQ-TS-BROWSE-POLLS-FLOW`, `RQ-TS-CAST-VOTE-FLOW`, `RQ-TS-VERIFY-SURVEY-WORDING`, `RQ-TS-VERIFY-VOTE-LOCK` | 4 件 | 4 件 | 実装済み |
+| `RQ-UI-POLL-LIST-SCREEN` | `RQ-TS-BROWSE-POLLS-FLOW`, `RQ-TS-NAVIGATION`, `RQ-TS-VERIFY-LEGACY-URL`, `RQ-TS-VERIFY-SURVEY-WORDING` | 4 件 | 4 件 | 実装済み |
+| `RQ-UI-POLL-RESULTS-SCREEN` | `RQ-TS-CAST-VOTE-FLOW`, `RQ-TS-VERIFY-SURVEY-WORDING`, `RQ-TS-VIEW-RESULTS` | 3 件 | 3 件 | 実装済み |
+| `RQ-UI-RESULTS-LIST-SCREEN` | `RQ-TS-NAVIGATION`, `RQ-TS-RESULTS-LIST`, `RQ-TS-VERIFY-SURVEY-WORDING` | 3 件 | 3 件 | 実装済み |
+| `RQ-UI-SURVEY-WORDING` | `RQ-TS-VERIFY-SURVEY-WORDING` | `DS-TS-VERIFY-SURVEY-WORDING-E2E` | `test_verify_survey_wording` | 実装済み |
+
+（受け入れ判定: DS-TS 合格 11 / 不合格 0 / 未実行 0 / 要再実行 0。要件 実装済み 14 / 不合格 0 / 未検証 0。）
+
+## 起動確認
+
+- `bash setup.sh` → 完了（Python 3.12.13、Flask 3.1.3）。
+- `PORT=8766 bash run.sh` を起動して確認: `/` → 302 `/surveys`、`/surveys` `/surveys/1` `/surveys/1/results` `/results` → 200、`/polls` → 302 `/surveys`、`/polls/2` → 302 `/surveys/2`、`/static/style.css` → 200（`#FFFFE0` と `#2F4F4F` のみ、白と navy なし）。4 画面の HTML に「poll」は 0 件。
+- 確認後、起動したプロセス（PID 57832）を `kill` で止めた。ほかのプロセスには触れていない。
+
+## 残りの確認事項
+
+- 無し。
+- 注意: 利用者の画面に出ない内部の名前（`polls` テーブル、`polls.py`、要件 ID）は意図して残している（上の「内部の名前」の決め）。

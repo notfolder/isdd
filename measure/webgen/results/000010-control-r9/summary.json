@@ -1,0 +1,68 @@
+{
+  "site": "000010",
+  "arm": "control-r9",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 183.3,
+      "agent_tokens": 729309,
+      "usage": {
+        "input_tokens": 26,
+        "output_tokens": 37499,
+        "cache_creation_input_tokens": 56031,
+        "cache_read_input_tokens": 635753
+      },
+      "tool_uses": 23,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": true,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: Spin showed 'Spinning…', the wheel rotated and stopped with the pointer on 'Bonus Spin', and the result box showed 'Bonu / YES: Clicking Spin rotated the wheel group (rotate 0 → ~1821°), it then stopped, and the result area showed the prize ('Bette / YES: Spinを押すとホイールが回転（transform変化、'Spinning…'表示）し、ポインタが『10% Off Coupon』の区画で停止して結果欄に賞品名と説明が表示された。ページエラー・コンソールエラーは無かった。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: /prizes lists 7 prizes, each with a description and win chance, and they match the 7 segments on the wheel exactly ($50  / YES: /prizes lists 7 prizes, each with a description and a chance %. They match the 7 segment labels on the wheel exactly. / YES: /prizes に7件の賞品（名称・説明・確率）が表示され、ホイール上の7区画のラベルと完全に一致した。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After the spin, /my-records showed 'Tester has spun the wheel 1 time.' with the row 'Nov 5, 2026, 6:44 AM | Bonus Spin', / YES: After spinning, My Winning Records for 'Tester' showed the latest spin at the top (Nov 5, 2026, 6:45 AM – Better Luck Ne / YES: スピン後に My Winning Records で名前を入力すると、最新の『10% Off Coupon』が日付（Nov 5, 2026, 6:46 AM）と賞品名付きで先頭に記録されていた。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-4": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header, Spin button and h1 are all r / YES: The body background is rgb(228,228,228), within 40 per component of light gray (211,211,211). The header background, Spi / YES: body背景 rgb(228,228,228) は light gray(211,211,211) と各成分差40以内、ヘッダー背景・Spinボタン背景・見出し(h1/h2)色がいずれも rgb(139,0,0)＝dark red と一致し",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 293,
+        "public_functions": 19
+      }
+    }
+  },
+  "runner": "claude -p"
+}

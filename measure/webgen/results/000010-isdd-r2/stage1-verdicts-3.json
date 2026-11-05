@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "After entering a name and pressing Spin, the canvas rotated (its transform changed), stopped with the pointer on a segment (e.g. 10% Off Coupon), and 'You won 10% Off Coupon!' was shown for the same prize, with no JS errors."},
+  "000010-2": {"verdict": "YES", "reason": "The /prizes page lists '6 prizes': Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair and Mystery Gift, each with a description, matching the 6 segments on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After a spin, entering the same name on My Winnings showed the latest prize (e.g. 'Nov 5, 2026, 6:40 AM | Free Coffee') with its date and prize name, and this was confirmed in 3 retries; in the first try only, the record was not saved (0 records)."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(211,211,211), which is light gray, and the header background, main button background and h1 text are all rgb(139,0,0), which is dark red, so the background and all 3 components match."}
+}

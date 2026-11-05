@@ -1,0 +1,47 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: With 'Alice' entered, the canvas wheel visibly rotated, stopped with 'Free Shipping' under the pointer, and showed 'You  / YES: Spinning as 'Alice' made the wheel spin and stop on a segment, then show the result (e.g. 'You won: $5 Voucher!') with n / YES: Spinning as Alice animated the wheel, which stopped on a segment and showed the result ('You won: 10% Off Coupon!'; an e",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: The Reward List page shows 7 rewards (10% Off Coupon, Free Coffee, Free Shipping, $5 Voucher, Mystery Gift, Grand Reward / YES: Before any spin, the Reward List page shows 7 rewards, each with a description and a chance. They match the 7 segments o / YES: The Reward List page lists 7 rewards (10% Off Coupon, Free Coffee, Free Shipping, $5 Voucher, Mystery Gift, Grand Reward",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After the spin, My Winning Records shows the row 'Alice | Free Shipping | 2026-11-05 07:13:38', which includes the playe / YES: After spinning as Alice, My Winning Records shows rows like 'Alice | $5 Voucher | 2026-11-05 07:15:10', with the player  / YES: After Alice won, the winning records showed a new row at the top: 'Alice / 10% Off Coupon / 2026-11-05 07:16:38', with t",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header, the Spin button and the h2 heading are all rgb(0,10 / YES: The body background is rgb(255,255,240), which is ivory. The header rgb(0,100,0), the Spin button rgb(0,77,0) and the h2 / YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-rename": {
+    "verdict": "YES",
+    "reason": "YES: The visible text and titles of the spin, reward list and records pages contain no 'prize' or 'prizes'. Navigation, headi / YES: The spin page, reward list and winning records page contain no 'prize' or 'prizes' in their text, links or buttons. The  / YES: I checked the HTML and titles of the spin page, the reward list and the winning records: 'prize' appears nowhere. Naviga",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

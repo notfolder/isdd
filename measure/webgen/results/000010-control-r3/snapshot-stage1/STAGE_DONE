@@ -1,0 +1,30 @@
+Wheel of Fortune website: implementation complete.
+
+How to run:
+  bash setup.sh
+  PORT=8000 bash run.sh      (open http://127.0.0.1:8000)
+  DATA_DIR defaults to ./data; PORT defaults to 8000.
+
+What was built (per REQUEST.md):
+  - Spin the Wheel (/): enter a name, press SPIN; the server picks a prize by weight,
+    records the spin, and the canvas wheel animates to the won segment. Result shown below the wheel.
+  - Prize List (/prizes): all prizes with description, Win / No prize result, and approximate chance.
+  - My Winning Records (/records): look up wins by name (case-insensitive), with total spins and
+    prizes won, plus a Recent Winners table across all players.
+  - Navigation bar on every page with the three sections; current page highlighted.
+  - Styling: light gray background (#d3d3d3), dark red (#8b0000) for nav, cards, buttons, table headers, wheel.
+
+Choices made without asking:
+  - Identity is a plain name typed on the page, remembered in the browser's localStorage. No passwords or accounts.
+  - Prizes are seeded into DATA_DIR/wheel.db (SQLite) on first start, along with a few sample spin records
+    (Alice, Bob, Chen) so the records pages have content. "Try Again" is a non-winning segment and is not listed as a win.
+  - No prize admin UI; prizes are edited directly in the database.
+  - Python standard library only (http.server + sqlite3); no third-party packages.
+
+Verified:
+  - setup.sh runs; run.sh starts the server on 127.0.0.1:$PORT with an empty DATA_DIR.
+  - Routes /, /prizes, /records, /static/* return 200; /api/prizes, /api/spins, /api/winners, POST /api/spin work;
+    empty name returns 400; path traversal in /static returns 404.
+  - Headless Chrome screenshots of / and /records render with the intended colors and the wheel labels read correctly.
+  - The spin animation itself was not clicked through in a browser (no automation tool available); its angle math was checked by reasoning.
+  - Test servers were stopped by PID; nothing was committed.

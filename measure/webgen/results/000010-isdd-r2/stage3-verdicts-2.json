@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "NO", "reason": "http://127.0.0.1:49612 への接続が拒否され（ERR_CONNECTION_REFUSED）ページが開けないため、基準の『ページが開けない』により NO。"},
+  "000010-2": {"verdict": "NO", "reason": "サイトに接続できず（ERR_CONNECTION_REFUSED）報酬一覧ページを開けないため NO。"},
+  "000010-3": {"verdict": "NO", "reason": "サイトに接続できず（ERR_CONNECTION_REFUSED）スピンも当選記録の確認もできないため NO。"},
+  "000010-design": {"verdict": "NO", "reason": "サイトに接続できず（ERR_CONNECTION_REFUSED）body の背景色も部品の色も取得できないため NO。"},
+  "000010-rename": {"verdict": "NO", "reason": "サイトに接続できず（ERR_CONNECTION_REFUSED）どのページも開けず、ページが動くことを確認できないため NO。"}
+}

@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel rotated (canvas transform changed), stopped, and showed 'Alice won: Free Coffee!' (the pointer was on Free Coffee) without errors. With the name empty the page showed 'Please enter your name before spinning.' and the wheel transform stayed 'none'."},
+  "000010-2": {"verdict": "YES", "reason": "The /prizes page lists 8 prizes ($50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus Points x2, Extra Spin) with descriptions and chances, matching the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After Alice won Free Coffee, My Winning Records showed a new row 'Nov 5, 2026, 6:29 AM | Alice | Free Coffee' with the player name, prize and date."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), an exact match for ivory. The header background, the SPIN button background and the h1/h2 text are all rgb(0,100,0), an exact match for dark green, so the background and all 3 component colors match."}
+}

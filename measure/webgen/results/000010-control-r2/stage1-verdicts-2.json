@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spinning showed 'Spinning...' with the wheel rotating, then it stopped with the pointer on 'Free Coffee' and showed 'Tester won: Free Coffee — One free coffee of any size.' There were no page or console errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records listed 'Tester | Free Coffee | Nov 5, 2026, 06:26 AM', so the latest prize appeared with its date and time."},
+  "000010-4": {"verdict": "NO", "reason": "The body background is rgb(255,255,240), which differs from light gray (211,211,211) by more than 40 per channel. The header, main button and heading are all dark green rgb(0,100,0), not dark red (139,0,0), so neither the background nor the components match."}
+}

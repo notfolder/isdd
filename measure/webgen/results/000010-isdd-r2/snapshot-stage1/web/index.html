@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spin the Wheel | Wheel of Fortune</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Wheel of Fortune</div>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/" aria-current="page">Spin the Wheel</a>
+      <a href="/prizes">Prize List</a>
+      <a href="/my-winnings">My Winnings</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <h1>Spin the Wheel</h1>
+    <p class="lead">Enter your name, spin the wheel, and see which prize you win.</p>
+
+    <section class="spin-layout">
+      <div class="wheel-wrap">
+        <div class="pointer" aria-hidden="true"></div>
+        <canvas id="wheel" width="420" height="420" aria-label="Prize wheel"></canvas>
+      </div>
+
+      <form id="spin-form" class="card spin-form" novalidate>
+        <label for="player-name">Your name</label>
+        <input id="player-name" name="player_name" type="text" autocomplete="nickname" placeholder="For example, Alice">
+        <p id="name-error" class="error" role="alert"></p>
+        <button id="spin-button" class="button" type="submit">Spin</button>
+        <div id="result" class="result" aria-live="polite"></div>
+        <p class="hint">Your winnings are saved under your name. <a href="/my-winnings">See your winning records</a></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/spin.js"></script>
+</body>
+</html>

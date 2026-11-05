@@ -1,0 +1,72 @@
+# 完了の要約: 変更 1（配色の変更と投票操作の無効化）
+
+REQUEST.md の変更 1 を isdd-spec（変更フロー）→ isdd-build（実装 → 実装後レビュー）で最後まで進めた。ANSWERS.md の固定回答に従い、承認はすべて与えられたものとして進めた。
+
+## 1. 変更内容
+
+1. 配色: 背景を light yellow（#FFFFE0）、部品（ナビゲーション、見出し、カード、ボタン、表の見出し、棒グラフ、枠）を dark slate gray（#2F4F4F）にした。白（#ffffff）と navy（#000080）は CSS から消した。エラー文の赤（#8b0000）は残した。
+2. 投票の制限: 投票済みの投票テーマを開くと、選択肢と Vote ボタンを disabled で表示し、「You have already voted in this poll.」と結果へのリンクを出す。投票フォームは隠さない。直接の 2 回目の POST は既存の仕組み（投票用 Cookie、DB の一意制約、409）で保存せず、票数は変わらない。サーバーの投票処理（`polls.py`）は変えていない。
+
+## 2. 変更したファイル
+
+- `src/web.py`: `poll_detail_page` は既存の投票済み判定を使う。`cast_vote_action` は失敗時に投票済みかを判定し直して再表示する。
+- `src/templates/poll_detail.html`: 投票済みのとき disabled を付け、案内文を出す。
+- `src/static/style.css`: 配色を全面的に変更。無効な部品は不透明度 0.5、カーソル not-allowed。
+- `e2e/test_polls_e2e.py`: `test_navigation` の配色の確認を外し、`test_verify_vote_lock` と `test_verify_color_theme` を追加。
+- `tests/test_web.py`: 投票済みの無効化、投票済みで未選択の POST、未投票の有効な表示の 3 件を追加。
+- `docs/requirements.md`、`docs/detail_design.md`、`docs/trace_map.md`: 実装後レビューで変更を正本へ反映。`DS-IF-POLL-DETAIL-SCREEN` は内容が変わったため `DS-IF-POLL-VOTE-SCREEN` に置き換え、`DS-IF-COLOR-THEME` を追加。
+- `README.md`: 投票済みの表示を一文で説明。
+- 変更の記録（正本ではない）: `.history/20261105-theme-and-vote-lock/`（`change_requirements.md`、`change_detail_design.md`、`tasks.md`）。`docs/active_change` は反映後に削除した。
+
+## 3. 依頼に無く自分で決めた項目
+
+- 配色の値: 背景 `#FFFFE0`（CSS の lightyellow）、部品 `#2F4F4F`（CSS の darkslategray）、部品の上の文字 `#FFFFE0`。
+- カードの背景は dark slate gray（文字は light yellow）。
+- 無効な部品の見た目: 不透明度 0.5、カーソル not-allowed。
+- 投票済みの文言は既存の「You have already voted in this poll.」を使う。
+- エラー文の赤は残す（配色の指定に含まれないため）。
+
+## 4. 検証の結果
+
+- `bash setup.sh`: 成功（Python 3.12.13、Flask 3.1.3）。
+- `PORT=8767 bash run.sh`（既定の DATA_DIR）: `/` 302 → `/polls`、`/polls`、`/polls/1`、`/polls/1/results`、`/results` は 200。起動したプロセスは PID で停止した。
+- 別の一時 DATA_DIR での確認: 投票 → 303、同じ Cookie で再表示すると disabled と案内文、2 回目の POST は 409。`/static/style.css` に `#FFFFE0` と `#2F4F4F` があり、`#ffffff` と `#000080` は無い。
+- 単体・結合テスト: `.venv/bin/python -m unittest discover -s tests`: 33 件 OK（変更前 30 件）。
+- E2E: `.venv/bin/python scripts/isdd/unittest_junit.py -s e2e -o e2e/results/e2e.xml`: 9 件 OK（failures 0、errors 0）。
+- `bash scripts/isdd/check.sh --strict`: 終了コード 0。エラー 0 件、警告 0 件。受け入れ判定 DS-TS 9/9、要件 12/12。
+- `rq_integrity_checker.py`（変更要件定義書、正本）、`rq_ds_link_checker.py`（変更の組み合わせ、正本）: いずれも合格。
+- `implementation_completeness_checker.py .`: 4/4 通過。
+- 画面確認（Chrome ヘッドレスのスクリーンショット）: 投票一覧と未投票の詳細画面で、背景が light yellow、部品が dark slate gray であることを目で確認した。投票済みの無効表示はスクリーンショットでは確認していない（HTML の検査で確かめた）。
+
+### 未マッピング一覧
+
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件
+
+### 要件ごとの実装済み判定
+
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| `RQ-FT-CAST-VOTE` | `RQ-TS-CAST-VOTE-FLOW` | `DS-TS-CAST-VOTE-E2E` | `test_cast_vote_flow` | 実装済み |
+| `RQ-FT-LIST-POLLS` | `RQ-TS-BROWSE-POLLS-FLOW` | `DS-TS-BROWSE-POLLS-E2E` | `test_browse_polls_flow` | 実装済み |
+| `RQ-FT-LOCK-VOTE-CONTROLS` | `RQ-TS-VERIFY-VOTE-LOCK` | `DS-TS-VERIFY-VOTE-LOCK-E2E` | `test_verify_vote_lock` | 実装済み |
+| `RQ-FT-ONE-VOTE-PER-POLL` | `RQ-TS-ONE-VOTE-RULE`、`RQ-TS-VERIFY-VOTE-LOCK` | `DS-TS-ONE-VOTE-RULE-E2E`、`DS-TS-VERIFY-VOTE-LOCK-E2E` | `test_one_vote_rule`、`test_verify_vote_lock` | 実装済み |
+| `RQ-FT-VALIDATE-VOTE` | `RQ-TS-VALIDATE-VOTE` | `DS-TS-VALIDATE-VOTE-E2E` | `test_validate_vote` | 実装済み |
+| `RQ-FT-VIEW-POLL-OPTIONS` | `RQ-TS-BROWSE-POLLS-FLOW` | `DS-TS-BROWSE-POLLS-E2E` | `test_browse_polls_flow` | 実装済み |
+| `RQ-FT-VIEW-RESULTS` | `RQ-TS-VIEW-RESULTS` | `DS-TS-VIEW-RESULTS-E2E` | `test_view_results` | 実装済み |
+| `RQ-UI-COLOR-THEME` | `RQ-TS-VERIFY-COLOR-THEME` | `DS-TS-VERIFY-COLOR-THEME-E2E` | `test_verify_color_theme` | 実装済み |
+| `RQ-UI-POLL-DETAIL-SCREEN` | `RQ-TS-BROWSE-POLLS-FLOW`、`RQ-TS-CAST-VOTE-FLOW`、`RQ-TS-VERIFY-VOTE-LOCK` | 各 E2E | `test_browse_polls_flow`、`test_cast_vote_flow`、`test_verify_vote_lock` | 実装済み |
+| `RQ-UI-POLL-LIST-SCREEN` | `RQ-TS-BROWSE-POLLS-FLOW`、`RQ-TS-NAVIGATION` | 各 E2E | `test_browse_polls_flow`、`test_navigation` | 実装済み |
+| `RQ-UI-POLL-RESULTS-SCREEN` | `RQ-TS-CAST-VOTE-FLOW`、`RQ-TS-VIEW-RESULTS` | 各 E2E | `test_cast_vote_flow`、`test_view_results` | 実装済み |
+| `RQ-UI-RESULTS-LIST-SCREEN` | `RQ-TS-NAVIGATION`、`RQ-TS-RESULTS-LIST` | 各 E2E | `test_navigation`、`test_results_list` | 実装済み |
+
+## 5. 注意点と残りの事項
+
+- `src/templates/base.html` は変更していない（色の値は CSS にだけ書いた。設計書の `DS-IF-COLOR-THEME` の実現先の説明は、この点に合わせてある）。
+- 変更の記録の `tasks.md` のタスク 1 の文言（`base.html` の編集）は、実際の作業と完全には一致しない。記録として残している。
+- 変更は git にコミットしていない（依頼に無いため）。
+- 既存の `data/polls.db` は、起動の確認でも変更していない（一時の DATA_DIR を使い、既定の DATA_DIR では GET だけを送った）。
+- 実装の判断（配色の値、無効の見た目、カードの配色）は上の「3」にある。ユーザーが別の色や見た目を望むなら、`src/static/style.css` の変数だけ変えればよい。

@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice', SPIN rotated the wheel (the canvas transform changed during a CSS transition), it stopped, and the page showed 'Alice won: 10% Discount!' with no JS errors. With an empty name, the page showed 'Please enter your name before spinning.' and no API request or rotation happened."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page lists 8 rewards ($50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus Points x2, Extra Spin) with description and chance. This matches the 8 segment labels on the wheel image."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, the winning records page showed the new row at the top of Recent Winners and My Wins with the date (Nov 5, 2026, 6:35 AM), player 'Alice' and reward '10% Discount'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), an exact match for ivory. The header background, SPIN button background and h1 text color are all rgb(0,100,0), an exact match for dark green, so the background and all 3 components match."},
+  "000010-rename": {"verdict": "YES", "reason": "Searched the visible text and attributes of the spin, Reward List and My Winning Records pages, plus the validation, spin-result and records-lookup messages: 'prize' never appears. Navigation, headings and buttons use 'Reward', and each page still works."}
+}

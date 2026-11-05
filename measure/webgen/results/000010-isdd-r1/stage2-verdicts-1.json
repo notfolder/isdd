@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel animated (rotate 0deg→2047.5deg), stopped, and showed 'You won Free Dessert / Recorded for Alice at ...' with no page errors; with the name empty, 'Please enter your name (1-30 characters).' was shown and the wheel did not rotate or show a result."},
+  "000010-2": {"verdict": "YES", "reason": "Before spinning, the Prize List page showed 8 prizes with chances, and they matched the 8 slice labels on the wheel exactly (Gift Card $50 … Grand Prize Headphones)."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, entering Alice on My Winnings showed new rows with player 'Alice', prize 'Free Dessert' and the date 'Nov 5, 2026, 6:06 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header, Spin button and h2 heading are all rgb(0,100,0), which is dark green, so the background and all 3 components match."}
+}

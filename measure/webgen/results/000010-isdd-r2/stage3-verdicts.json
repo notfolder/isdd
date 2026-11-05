@@ -1,0 +1,47 @@
+{
+  "000010-1": {
+    "verdict": "NO",
+    "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: http://127.0.0.1:49612 への接続が拒否され（ERR_CONNECTION_REFUSED）ページが開けないため、基準の『ページが開けない』により NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+    "votes": [
+      "NO",
+      "NO",
+      "NO"
+    ]
+  },
+  "000010-2": {
+    "verdict": "NO",
+    "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）報酬一覧ページを開けないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+    "votes": [
+      "NO",
+      "NO",
+      "NO"
+    ]
+  },
+  "000010-3": {
+    "verdict": "NO",
+    "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）スピンも当選記録の確認もできないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+    "votes": [
+      "NO",
+      "NO",
+      "NO"
+    ]
+  },
+  "000010-design": {
+    "verdict": "NO",
+    "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）body の背景色も部品の色も取得できないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+    "votes": [
+      "NO",
+      "NO",
+      "NO"
+    ]
+  },
+  "000010-rename": {
+    "verdict": "NO",
+    "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）どのページも開けず、ページが動くことを確認できないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+    "votes": [
+      "NO",
+      "NO",
+      "NO"
+    ]
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "site": "000026",
+  "arm": "control-r2",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 147.6,
+      "agent_tokens": 962325,
+      "usage": {
+        "input_tokens": 38,
+        "output_tokens": 31919,
+        "cache_creation_input_tokens": 48242,
+        "cache_read_input_tokens": 882126
+      },
+      "tool_uses": 19,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: Clicking 'Vote now' on the homepage opened /polls/1 without errors, and all four options (Python, TypeScript, Rust, Go)  / YES: ホームの「Vote now」から /polls/1 へエラーなく移動でき、選択肢 4 つ（Python, TypeScript, Rust, Go）がすべてラジオボタンで表示された。 / YES: ホームの「Vote now」から /polls/1 の投票ページにエラーなく移動でき、4つの選択肢（Python/TypeScript/Rust/Go）がすべてラジオボタンで表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: The homepage lists 4 polls, each with a title, a description, and vote and option counts (e.g. '122 votes · 4 options'). / YES: 投票せずにホームで 4 つの投票を一覧でき、各投票に名称に加えて説明文・票数・選択肢数が表示され、各投票ページでは選択肢も確認できた（「See results without voting」もある）。 / YES: ホームに投票一覧（4件）が表示され、各投票に名称に加えて説明文・票数・選択肢数があり、「See results without voting」で投票せずに結果も閲覧できた。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: Voting for TypeScript raised the total from 122 to 123, and the page then showed 'Thank you for voting! You voted for Ty / YES: TypeScript を選んで「Cast my vote」を押すと総票数が 123→124 に増え、直後に「Thank you for voting! You voted for TypeScript.」という確認文が表示され、その選択肢に / YES: TypeScript を選んで「Cast my vote」すると票数が124→125に増え、直後に「Thank you for voting! You voted for TypeScript.」という確認文が表示された。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: The results page shows the latest total (123), the leading option, and each option's vote count with a percentage and a  / YES: /results と各投票の結果ページに、投票後の最新票数、総票数、首位の選択肢、選択肢ごとの票数・割合、棒グラフが表示された。 / YES: /results に各投票の総票数と首位が表示され、個別結果ページには投票直後の最新値（総数125）、各選択肢の票数・割合と割合に応じた横棒グラフが表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-5": {
+          "verdict": "YES",
+          "reason": "YES: Body background is rgb(255,255,255), which is white. Header, main button (.btn) and heading (h1) are all rgb(0,0,128), w / YES: body の背景は rgb(255,255,255)（white）で、ヘッダーの背景、主要ボタン（.btn）の背景、見出し h1/h2 の文字色がすべて rgb(0,0,128)（navy）と一致し、背景と部品 3 種類がすべて合った。 / YES: body 背景 rgb(255,255,255) で white に一致し、ヘッダー背景・主要ボタン背景・見出し文字色がいずれも rgb(0,0,128) で navy に一致した。",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 614,
+        "public_functions": 27
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 59.9,
+      "agent_tokens": 419845,
+      "usage": {
+        "input_tokens": 20,
+        "output_tokens": 11414,
+        "cache_creation_input_tokens": 32903,
+        "cache_read_input_tokens": 375508
+      },
+      "tool_uses": 14,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 1,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: Clicking 'Vote now' on the homepage opened /polls/1 with no errors, and all four options (Python, TypeScript, Rust, Go)  / YES: ホームの「Vote now」から /polls/3 へエラーなく移動でき、全選択肢（Ramen shop・Italian bistro・Food truck park・Bring your own）がラジオボタンと「Cast my vote / YES: Clicking 'Vote now' on the homepage opened /polls/2 without errors, and all four options (Spring/Summer/Autumn/Winter) a",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: The homepage lists four polls, and each one shows a description and vote/option counts besides its name, so the related- / YES: 投票せずにホームで 4 件の投票一覧を見られ、各項目に名称のほか説明文・票数・選択肢数（例: 122 votes · 4 options）があり、関連情報の基準を満たす。 / YES: The homepage lists 4 polls without voting. Each one shows the title plus a description and vote/option counts (e.g. '76 ",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: After voting, the page showed 'Thank you for voting! You voted for Hiking.' On returning, the radios and button were dis / YES: 投票直後に「Thank you for voting! You voted for Ramen shop.」と表示され、総票数が 26→27 になった。同じブラウザで戻ると「You have already voted in this po / YES: Right after voting, 'Thank you for voting! You voted for Spring.' appeared and the total went from 76 to 77. On returnin",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: The results page shows total votes, the leading option, and each option's vote count and percentage, plus bar graphs (ba / YES: /results と各投票の結果ページに総票数・最多選択肢・選択肢ごとの票数と % が棒グラフ付きで表示され、投票直後の値（26→27）も反映されていた。 / YES: The results page shows the current total (updated right after the vote), the leading option, and each option's vote coun",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "YES: Body background rgb(255,255,224) matches light yellow. Header background, .btn background and h1/h2 text color are all r / YES: body の背景は rgb(255,255,224) で light yellow に一致。ヘッダー・主要ボタン（.btn）・見出し（h1）はどれも rgb(47,79,79) で dark slate gray に一致し、背景と部品 3  / YES: The body background is rgb(255,255,224), which matches light yellow. The header background, main button background and h",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 646,
+        "public_functions": 27
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 76.3,
+      "agent_tokens": 618965,
+      "usage": {
+        "input_tokens": 26,
+        "output_tokens": 14029,
+        "cache_creation_input_tokens": 38255,
+        "cache_read_input_tokens": 566655
+      },
+      "tool_uses": 12,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 2,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: On the homepage, clicking 'Vote now' opens /surveys/1 with no errors, and the page shows all four voting options (Python / YES: Clicking 'Vote now' on the homepage opened /surveys/4 with no errors, and every option (Hiking, Movie marathon, Board ga / YES: Clicking 'Vote now' on the homepage opened /surveys/3 (HTTP 200) with no errors, and all four options appeared as radio ",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: Without voting, you can see a list of the four surveys. Each one shows its name, a description, the vote count and the n / YES: The homepage lists all 4 surveys, each with its name plus a description and vote/option counts. Each survey page shows i / YES: The homepage lists all four surveys without requiring a vote. Each one shows its name plus a description and vote/option",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: Right after voting, the page shows 'Thank you for voting! You voted for Ramen shop.' and the total went from 26 to 27. O / YES: Right after the vote, the page showed 'Thank you for voting! You voted for Hiking.' and the count went to 1. On returnin / YES: After the first vote the page showed 'Thank you for voting! You voted for Bring your own.' and the total went from 27 to",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: The results pages show the total vote count, the leading option, and each option's votes and percentage as a bar chart.  / YES: The results pages show total votes, the leading option, and votes and percentage per option with bar graphs. After a vot / YES: The results pages show the up-to-date total, the leading option, and each option's vote count and percentage with a prop",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,224), which is light yellow. The header background, main button background and h1/h2  / YES: The body background is rgb(255,255,224), which matches light yellow. The header, main button (.btn) background, and h1 t / YES: The body background is rgb(255,255,224), which is light yellow. The header background, the main buttons' background and ",
+          "category": "Design Validation Testing",
+          "change": false
+        },
+        "000026-rename": {
+          "verdict": "YES",
+          "reason": "YES: On the home, voting, results and per-survey results pages, 'poll' (in any form) did not appear in the body text, titles  / YES: No 'poll' or 'polls' appeared in the text or HTML of the home page, voting pages, or results pages. Navigation, headings / YES: I read the home, voting, per-survey results and /results pages, plus page titles and attributes. 'poll' appears nowhere;",
+          "category": "Functional Testing",
+          "change": true
+        }
+      },
+      "score": 6.0,
+      "n_cases": 6,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 650,
+        "public_functions": 27
+      }
+    }
+  },
+  "runner": "claude -p"
+}

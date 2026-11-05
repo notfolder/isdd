@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "名前を入れて Spin を押すと「Spinning...」の表示とともにホイールが回転し、10% Off Coupon の区画（ポインター位置）で止まって「You won 10% Off Coupon!」と表示された。ページエラーは出なかった。"},
+  "000010-2": {"verdict": "YES", "reason": "/prizes に 6 件の賞品（Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair, Mystery Gift）が説明付きで表示され、ホイールの 6 区画と一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "回した後に My Winnings を開くと、GraderBob の記録が 1 件追加され、日時「Nov 5, 2026, 6:41 AM」と賞品「10% Off Coupon」が表示され、当たった賞品と一致した。"},
+  "000010-4": {"verdict": "YES", "reason": "body の背景は rgb(211,211,211)（light gray と一致）。ヘッダー背景・Spin ボタン背景・h1 の文字色はどれも rgb(139,0,0)（dark red と一致）で、部品 3 種類すべてが合った。"}
+}

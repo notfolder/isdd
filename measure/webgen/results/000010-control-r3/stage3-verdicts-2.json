@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With 'Alice' the wheel showed 'Spinning...', stopped with 10% Discount under the pointer, and displayed 'Alice won: 10% Discount!' with no JS errors. Pressing SPIN with an empty name showed 'Please enter your name before spinning.' and the wheel stayed in its starting position."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List shows 8 rewards with description and chance, and they match the 8 segments on the wheel ($50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus Points x2, Extra Spin)."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records shows a new top row 'Nov 5, 2026, 6:34 AM | Alice | 10% Discount', which includes the player name, the reward and the date."},
+  "000010-design": {"verdict": "PARTIAL", "reason": "Body background rgb(255,255,240) matches ivory, and the header rgb(0,100,0) and headings rgb(0,100,0) match dark green. The main SPIN button is rgb(0,130,58), whose blue component is 58 away from dark green (limit 40), so only part of the components match."},
+  "000010-rename": {"verdict": "YES", "reason": "No 'prize'/'prizes' appears in the body text or HTML of the spin, Reward List or records pages. Navigation, headings, buttons and messages all use 'Reward', and spinning and viewing records worked."}
+}

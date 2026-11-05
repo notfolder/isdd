@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking 'Vote' on the homepage opened /polls/1 (HTTP 200) without errors, and all 4 options (Python, JavaScript, Go, Ru / YES: Clicking 'Vote' on the homepage opens /polls/1 with no errors, and all four options (Python, JavaScript, Go, Rust) are s / YES: Clicking 'Vote' on the homepage opened /polls/1 without errors, and all 4 options (Python, JavaScript, Go, Rust) were sh",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: The homepage lists 3 polls, each showing its title plus related info (option count and vote count, e.g. '4 options · 11  / YES: The homepage lists every poll with its name plus option and vote counts (e.g. '4 options · 11 votes'), and each poll pag / YES: Without voting, the homepage lists the 3 polls and each shows information besides its name (e.g. '4 options · 10 votes')",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: After the first vote, 'Thank you for voting.' appeared and the count went from 11 to 12. Coming back showed 'You have al / YES: After the first vote the page showed 'Thank you for voting.' and Winter went from 1 to 2 votes. On returning, 'You have  / YES: The first vote redirected to the results page with 'Thank you for voting.' and the total went from 12 to 13. On returnin",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: The results pages show totals and the leading option for each poll; the detail page shows votes and share (%) per option / YES: The results pages show up-to-date totals (they reflected the new vote), per-option vote counts and percentage shares, an / YES: /results shows each poll's total votes and leading option. Each poll's results page shows votes and share (%) per option",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,224) (light yellow). The header background, the main button background, and the h1 te / YES: The body background is rgb(255,255,224) (light yellow). The header background, Vote button background and h1 text are al / YES: Body background is rgb(255,255,224), which is light yellow. Header background rgb(47,79,79), the main Vote button backgr",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

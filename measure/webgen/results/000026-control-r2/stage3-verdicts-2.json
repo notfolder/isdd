@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote now' on the homepage opened /surveys/4 with no errors, and every option (Hiking, Movie marathon, Board games) showed as a radio button with a 'Cast my vote' button."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists all 4 surveys, each with its name plus a description and vote/option counts. Each survey page shows its options without making the user vote."},
+  "000026-3": {"verdict": "YES", "reason": "Right after the vote, the page showed 'Thank you for voting! You voted for Hiking.' and the count went to 1. On returning, the page said 'You have already voted in this survey.' and all radios and the submit button were disabled. The total stayed at 1 even after trying to force a second vote."},
+  "000026-4": {"verdict": "YES", "reason": "The results pages show total votes, the leading option, and votes and percentage per option with bar graphs. After a vote, the count updated straight away (0→1)."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which matches light yellow. The header, main button (.btn) background, and h1 text are all rgb(47,79,79), which matches dark slate gray."},
+  "000026-rename": {"verdict": "YES", "reason": "No 'poll' or 'polls' appeared in the text or HTML of the home page, voting pages, or results pages. Navigation, headings, and messages all say 'Survey(s)', and the pages work."}
+}

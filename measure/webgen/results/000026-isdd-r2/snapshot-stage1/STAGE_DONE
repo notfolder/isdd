@@ -1,0 +1,29 @@
+# STAGE_DONE: 投票サイト（isdd-spec → isdd-build まで完了）
+
+## 起動
+- `bash setup.sh`（.venv を作り Flask 3.1.3 を入れる）
+- `PORT=任意 bash run.sh`（127.0.0.1 で前面起動。DATA_DIR 既定は ./data）
+- 起動確認: `/` → `/polls` へ 302、`/polls`・`/polls/1`・`/polls/1/results`・`/results` が 200、`/polls/99` が 404。ローカル Chrome のスクリーンショットで白背景・navy のコンポーネントを確認。
+
+## 機能（画面から使える）
+- 投票一覧（Polls）、投票詳細と投票フォーム、投票結果（票数・割合・棒グラフ）、結果一覧（Results）
+- ナビゲーション: 上部の navy 帯に Polls / Results
+- 同じブラウザは同じ投票テーマに 1 票だけ（Cookie）。2 回目は 409 で案内
+- 未選択・不正な選択肢は 400 でエラー表示し、保存しない
+- 初期データ: DATA_DIR が空なら投票テーマ 3 件とサンプル票を投入
+
+## 段階と成果物
+- 要件: docs/requirements.md（整合チェッカー 0 件）
+- 設計: docs/detail_design.md（rq_ds_link_checker 0 件）
+- 計画: .history/20261105-polls-website/tasks.md
+- 実装: setup.sh / run.sh / requirements.txt / src/（db, polls, voter, sample_data, web, server, templates, static）
+- テスト: tests/（unittest 30 件 合格）、e2e/（HTTP による E2E 7 件 合格、JUnit: e2e/results/e2e.xml）
+- 対応表: docs/trace_map.md。`bash scripts/isdd/check.sh --strict` がエラー 0・警告 0、受け入れ判定 DS-TS 7/7 合格、要件 10/10 実装済み
+- 実装完了チェック: 4/4 項目通過
+- README.md（起動方法）
+
+## 注意・未完了
+- WebSearch の利用許可が下りず、技術選定の出典は PyPI の公式 JSON（https://pypi.org/pypi/Flask/json、確認日 2026-11-05）で取った。FastAPI / Express は未調査（設計書に明記）。
+- .claude/settings.json の応答終了フック（bash scripts/isdd/check.sh）は、書き込み権限が拒否されたため作っていない。フックのコマンド自体は手動実行で終了コード 0。
+- 依頼外の決め事（1-2 の表）は承認が「未確認」のまま。ANSWERS.md の方針で承認済み扱いで進めた。
+- 変更はコミットしていない。

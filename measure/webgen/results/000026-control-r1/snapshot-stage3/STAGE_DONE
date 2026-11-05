@@ -1,0 +1,20 @@
+Stage 2 done: "poll" renamed to "survey" in all user-visible wording.
+
+Changed (app.py, plus comments in setup.sh / run.sh):
+- Navigation: "Surveys", "Results", "Create Survey" (active state kept).
+- Brand/logo, every page title ("... · Surveys"), HTTP Server header, startup log line.
+- Headings: "Open surveys", "Create a survey", results and vote pages.
+- Buttons and notices: "Create survey", "Vote in this survey", "Back to the survey",
+  "Back to all surveys", "You have already voted in this survey", "Your survey has been created",
+  "A survey can have at most N options", "No surveys yet", "See how the votes stand in every survey."
+- URL paths renamed from /polls... to /surveys... (/surveys, /surveys/<id>, /surveys/<id>/vote).
+
+Unchanged on purpose: database file, table and column names and internal Python identifiers
+(so existing data in DATA_DIR still loads); behaviour, one vote per survey per browser, confirmation,
+results, and the light yellow / dark slate gray theme.
+
+Verified: `bash setup.sh`, then `PORT=8931 bash run.sh`. Home, results, create, survey, results-by-id,
+404 pages return 200/404 as expected. Voting redirects to results with the thanks notice, a second
+vote is blocked (disabled form and "already voted" text), empty option gives "Vote not recorded",
+creating a survey works and shows the created notice. Visible text scanned: no "poll" wording left.
+The test server was stopped by its PID; the test database was deleted so DATA_DIR starts with the sample data.

@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "SPINを押すと「Spinning...」表示の後ホイールが回転し、ポインタがFree Dessertの区画で停止して「You won: Free Dessert!」と表示された。ページエラー・コンソールエラーは無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "/prizesに8つの賞品が説明・結果・確率付きで一覧表示され、ホイールの8区画（$50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus Points x2, Extra Spin）と一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "スピン後にMy Winning Recordsを開くと、My Winsに「Nov 5, 2026, 6:26 AM / Free Dessert」が最新の記録として追加され、日付と賞品が正しく表示された。"},
+  "000010-4": {"verdict": "YES", "reason": "body背景がrgb(211,211,211)でlight grayに一致し、ヘッダー背景・SPINボタン背景・h1見出し色がいずれもrgb(139,0,0)でdark redに一致した。"}
+}

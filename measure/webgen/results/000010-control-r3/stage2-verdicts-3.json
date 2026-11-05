@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel rotated (transform changed) and stopped, showing 'Alice won: Bonus Points x2!' (an earlier spin showed 'No prize this time, Alice.') with no page errors. Spinning with an empty name showed 'Please enter your name before spinning.' and the wheel did not rotate (transform stayed none)."},
+  "000010-2": {"verdict": "YES", "reason": "/prizes lists all 8 prizes with description, result and chance, and they match the 8 segments drawn on the wheel ($50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus Points x2, Extra Spin)."},
+  "000010-3": {"verdict": "YES", "reason": "After Alice won 'Bonus Points x2', My Winning Records showed a new top row 'Nov 5, 2026, 6:31 AM | Alice | Bonus Points x2' with the player name, prize and date."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240) (ivory). The header, the SPIN button and the h1/h2 headings are all rgb(0,100,0) (dark green), so the background and all 3 component colors match within 40."}
+}

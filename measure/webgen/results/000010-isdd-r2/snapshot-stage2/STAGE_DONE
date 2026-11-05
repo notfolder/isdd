@@ -1,0 +1,51 @@
+# STAGE DONE: Wheel of Fortune 変更（配色・名前の必須化・当選記録の表示）
+
+完了日時: 2026-11-05 06:52 頃 (JST)
+
+## 結果
+- 依頼 1（配色）: 背景 ivory（#FFFFF0）、部品 dark green（#006400）。light gray（#D3D3D3）と dark red（#8B0000）は web/ から消えている。
+- 依頼 2（名前の必須化）: 名前の入力欄は Spin ボタンと同じ行にあり、ラベル「Your name (required)」、required と aria-required。空・30 文字超では回らず、既存の文言を出す。
+- 依頼 2（当選記録）: My Winnings の表に Player / Prize / Date won の列。スピン結果にも名前と当選日時を表示。API /api/winnings の各行に player_name。
+- 既存機能（景品一覧、名前での絞り込み、新しい順、初期データ）は E2E で確認。
+
+## 確認
+- 単体・結合テスト: 19 件全件 OK（python3 -m unittest discover -s tests -t .）
+- E2E: 10 件全件 OK（e2e/results/e2e.xml）
+- bash scripts/isdd/check.sh --strict: エラー 0、警告 0、受け入れ判定 合格（DS-TS 10/10、要件 13/13）
+- 起動: bash setup.sh 成功、PORT=8765 bash run.sh で / /prizes /my-winnings /static/style.css /api/prizes /api/winnings が 200。確認後、自分が起動したプロセス（PID 96748）だけを停止。
+
+## 経緯と注意
+- 同じディレクトリで、別の実行が同じ依頼の変更（.history/20261105-theme-and-player-name/）を並行して実装していた。docs/active_change がその変更を指していたため、こちらの変更は登録せず、その変更の完了（06:51 に active_change が消えた）を待って、実装の結果を検証した。
+- 残っている不要物: .history/20261105-theme-name-records/（こちらが作った草稿の変更文書。正本に反映されていない重複。削除してよい）。
+- 対応表・正本（docs/requirements.md、docs/detail_design.md）は、もう一方の変更の実装後レビューで反映済み（docs/active_change は無い）。
+
+---
+
+## 本実行（isdd-spec 変更フロー → isdd-build 実装 → 実装後レビュー）の確認
+
+上の記録とは別に、本実行が作業した内容と確認結果を追記する。上の記録は消していない。
+
+### 変更の内容
+- 配色: 背景 ivory（#FFFFF0）、部品（ナビ、ボタン、カード、見出し、表の見出し、エラーの文字、ホイール）は dark green（#006400、区画は #006400 と #003300 の交互。奇数の最後は #004A1F）。light gray（#D3D3D3）と dark red（#8B0000）は web/ と e2e の検査対象から消した。
+- 名前の必須化: 名前の入力欄を Spin ボタンと同じ行に置き、ラベルは「Your name (required)」、required 属性あり。空や 31 文字以上は検証の文言を名前欄の下に出し、回さず、抽選も記録もしない（既存の検査を維持）。
+- 当選記録の表示: 結果欄に景品名、名前、景品名、当選日時を表示。My Winnings の表は Player、Prize、Date won の列。API /api/winnings の各行に player_name を追加。
+
+### 文書（正本へ反映済み）
+- 変更の記録: `.history/20261105-theme-and-player-name/`（change_requirements.md、change_detail_design.md、tasks.md）。
+- 正本: `docs/requirements.md` と `docs/detail_design.md` に反映。`docs/trace_map.md` を新しい DS-ID に合わせた。`docs/active_change` は削除済み。`docs/proposals.md` は無い。
+- 詳細設計書は第 10 章と第 11 章（対応表）を持つ（既存のまま）。README の画面の説明を更新。
+
+### 確認（最後の編集の後に再実行）
+- `rq_integrity_checker.py`（正本）: 合格。`rq_ds_link_checker.py`（正本）: 合格。
+- `python3 -m unittest discover -s tests -t .`: 19 件 OK。
+- E2E `scripts/isdd/unittest_junit.py -s e2e`: 10 件 OK（`e2e/results/e2e.xml`）。
+- `bash scripts/isdd/check.sh --strict`: エラー 0、警告 0。受け入れ判定 合格（DS-TS 10/10、要件 13/13 実装済み）。
+- `scripts/isdd/implementation_completeness_checker.py`: 4/4 OK。
+- 未マッピング: 0 件（公開関数・クラス 21 件すべて対応表にある）。作りすぎ: 0 件。
+- 起動: `bash setup.sh` 成功。`PORT=8741 bash run.sh`（保存先は空の一時ディレクトリ）で `/`、`/prizes`、`/my-winnings`、`/static/*`、`/api/prizes`、`/api/winnings` が 200。POST `/api/spins` で記録ができ、空の名前は 400。確認後、自分のプロセス（PID 97332）だけを停止。
+
+### 注意・未確認
+- 8123 番は別のプロセスが使っていたため、本実行の起動（PORT=8123）は失敗した。その別のプロセスに GET を数件と POST を 1 件送った（POST は 405 で返った）。そのプロセスは止めていない。
+- ブラウザでの操作確認は行っていない。JavaScript は `node --check` の構文確認のみ。画面の見た目と操作は、ブラウザで一度確かめてほしい。
+- 別の実行が作った `.history/20261105-theme-name-records/` は、この実行では触っていない。正本に反映されていない重複の草稿なので、削除するかは作った側で決める。
+- `python3 -m app` の別のプロセス（PID 86288、97093）は、この実行では触っていない。

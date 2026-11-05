@@ -1,0 +1,65 @@
+# STAGE_DONE: 変更 1（配色・名前必須のスピン欄・当選記録への名前の表示）
+
+依頼: REQUEST.md。変更フロー: `.history/20261105-theme-and-player-name/`（変更要件定義書・変更設計書・tasks.md）。
+
+## 実施内容
+
+1. 配色: 背景 ivory（#fffff0）、部品 dark green（#006400）。灰色の背景と濃い赤は CSS から除いた（`public/style.css`）。エラー欄は白地に dark green の枠（赤なし）。
+2. スピン画面: 名前欄（ラベル「Your name (required)」、`required`）を Spin の隣に置いた。空・空白だけ・31 文字以上では、サーバーへ送らず、「Please enter your name (1-30 characters).」を出し、名前欄にフォーカスし、ホイールは回らず、記録もしない。結果カードは「You won」「景品名」「Recorded for 名前 at 日時」。
+3. 当選記録: My Winnings の表は Player・Prize・Won at の 3 列。API `GET /api/winnings` の各記録に `playerName` を入れた。
+4. 実装の修正（段階 2 で確認して直した点）: 結果カードの文言を承認済みの変更設計（「Recorded for 名前 at 日時」）に合わせた。以前は「Player: 名前」「Recorded at 日時」だった。
+
+## 正本への反映（段階 2）
+
+- `docs/requirements.md`: 変更の要件は反映済みだった。本文の旧仕様の記述は無いことを確かめた。
+- `docs/detail_design.md`: `DS-IF-STYLESHEET`（旧配色）を削除し、`DS-IF-THEME-STYLESHEET` を追加。`DS-IF-SPIN-SCREEN-NAME-REQUIRED` の結果カードの説明を承認済みの文言に合わせた。
+- `docs/trace_map.md`: 反映済み（`DS-IF-API-WINNINGS-DETAILS` の行、E2E の 3 行）。
+- `docs/active_change` を削除。`docs/proposals.md` は無い。`.history/` 配下の変更文書は書き換えていない。
+
+## 検証の結果
+
+- `bash setup.sh`: OK（Node v24.19.0）。
+- `node --test 'tests/unit/*.test.js'`: 10 件すべて合格。
+- E2E（`node --test --test-reporter=junit ... 'e2e/*.test.js'`、`e2e/results/e2e.xml`）: 17 件すべて合格、失敗 0。
+- `bash scripts/isdd/check.sh --strict`: 対応表 エラー 0・警告 0、依存チェック（規則なし）合格、受け入れ判定 合格（DS-TS 9/9、要件 13/13）。
+- `rq_integrity_checker.py docs/requirements.md`: 合格。
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 合格（正本だけで判定）。
+- `implementation_completeness_checker.py .`: 4/4 項目通過。
+- 起動: `PORT=8790 DATA_DIR=<空の一時ディレクトリ> bash run.sh` で起動。`/`、`/style.css`、`/app.js`、`/api/prizes`、`/api/winnings?name=Sample%20Player` が 200。CSS に `#fffff0`・`#006400` があり、`#e6e6e6`・`#8b0000` は無い。初期データ（景品 8 件、Sample Player の記録 3 件）が入っている。
+- ヘッドレス Chrome（DevTools 操作）で確認: 空欄の Spin でメッセージが出て名前欄にフォーカスし、ホイールは回らない（rotate(0deg) のまま）。「Bob」で Spin すると結果カードに「Recorded for Bob at …」。My Winnings で Bob を検索すると Player・Prize・Won at の 3 列に値が出る。空欄の検索はエラーを出す。景品一覧 8 件。上部メニューの現在の画面が強調される。3 画面のスクリーンショットでも ivory 背景と dark green の部品を確認。
+- 起動・停止に使った PID はすべて自分で起動したもの（確認後に PID 指定で停止、停止を確認）。他のプロセスは止めていない。
+
+## 未マッピング一覧
+
+### 未マッピング一覧
+
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件（公開関数 14 件はすべて対応表にある: db.js 5、routes.js 5、server.js 1、spin.js 3）
+
+## 要件ごとの実装済み判定
+
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| `RQ-FT-NAME-REQUIRED` | `RQ-TS-NAME-VALIDATION`, `RQ-TS-SPIN-NAME-REQUIRED` | `DS-TS-NAME-VALIDATION-E2E`, `DS-TS-SPIN-NAME-REQUIRED-E2E` | `e2e/name-validation.test.js`, `e2e/spin-name-required.test.js` | 実装済み |
+| `RQ-FT-RECORD-WINNING` | `RQ-TS-SPIN-AND-RECORD` | `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/spin-and-record.test.js` | 実装済み |
+| `RQ-FT-SHOW-WINNING-DETAILS` | `RQ-TS-WINNING-DETAILS` | `DS-TS-WINNING-DETAILS-E2E` | `e2e/winning-details.test.js` | 実装済み |
+| `RQ-FT-SPIN-WHEEL` | `RQ-TS-SPIN-AND-RECORD` | `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/spin-and-record.test.js` | 実装済み |
+| `RQ-FT-VIEW-OWN-WINNINGS` | `RQ-TS-VIEW-OWN-WINNINGS` | `DS-TS-VIEW-OWN-WINNINGS-E2E` | `e2e/view-own-winnings.test.js` | 実装済み |
+| `RQ-FT-VIEW-PRIZE-LIST` | `RQ-TS-VIEW-PRIZES` | `DS-TS-VIEW-PRIZES-E2E` | `e2e/view-prizes.test.js` | 実装済み |
+| `RQ-FT-WEIGHTED-DRAW` | `RQ-TS-SPIN-AND-RECORD` | `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/spin-and-record.test.js` | 実装済み |
+| `RQ-NF-THEME-IVORY-GREEN` | `RQ-TS-THEME-COLORS` | `DS-TS-THEME-COLORS-E2E` | `e2e/theme-colors.test.js` | 実装済み |
+| `RQ-UI-MY-WINNINGS-SCREEN` | `RQ-TS-NAVIGATE-SCREENS`, `RQ-TS-VIEW-OWN-WINNINGS`, `RQ-TS-WINNING-DETAILS` | `DS-TS-NAVIGATE-SCREENS-E2E`, `DS-TS-VIEW-OWN-WINNINGS-E2E`, `DS-TS-WINNING-DETAILS-E2E` | `e2e/navigate-screens.test.js`, `e2e/view-own-winnings.test.js`, `e2e/winning-details.test.js` | 実装済み |
+| `RQ-UI-NAVIGATION-MENU` | `RQ-TS-NAVIGATE-SCREENS` | `DS-TS-NAVIGATE-SCREENS-E2E` | `e2e/navigate-screens.test.js` | 実装済み |
+| `RQ-UI-PRIZE-LIST-SCREEN` | `RQ-TS-NAVIGATE-SCREENS`, `RQ-TS-VIEW-PRIZES` | `DS-TS-NAVIGATE-SCREENS-E2E`, `DS-TS-VIEW-PRIZES-E2E` | `e2e/navigate-screens.test.js`, `e2e/view-prizes.test.js` | 実装済み |
+| `RQ-UI-SPIN-NAME-FIELD` | `RQ-TS-SPIN-NAME-REQUIRED` | `DS-TS-SPIN-NAME-REQUIRED-E2E` | `e2e/spin-name-required.test.js` | 実装済み |
+| `RQ-UI-SPIN-SCREEN` | `RQ-TS-NAME-VALIDATION`, `RQ-TS-NAVIGATE-SCREENS`, `RQ-TS-SPIN-AND-RECORD`, `RQ-TS-SPIN-NAME-REQUIRED` | `DS-TS-NAME-VALIDATION-E2E`, `DS-TS-NAVIGATE-SCREENS-E2E`, `DS-TS-SPIN-AND-RECORD-E2E`, `DS-TS-SPIN-NAME-REQUIRED-E2E` | `e2e/name-validation.test.js`, `e2e/navigate-screens.test.js`, `e2e/spin-and-record.test.js`, `e2e/spin-name-required.test.js` | 実装済み |
+
+## 作業上の判断と注意
+
+- 正本の要件定義書・設計書の内容は、変更要件定義書と変更設計書の承認済みの内容に従った（ANSWERS.md の固定回答により、承認はすべて与えられたものとして進めた）。
+- 2-1 節（業務の問題）の「現状」列には変更前の状態（薄い灰色・濃い赤）が残る。これは変更の動機を記録する表で、仕様ではないため残した。
+- Git のコミットはしていない（依頼に無い）。リポジトリにはまだコミットが無い。
+- 注意: 作業中、別のプロセス（ポート 8123 で待ち受ける node 60237 と python 61005。私のものではない）に対して、確認のための HTTP 要求を送った。そのうち POST `/api/spin` `{"name":"Alice"}` は 201 で成功しており、相手の記録に「Alice」の当選記録が 1 件追加された可能性がある（空の名前の POST は 400 で記録されない）。相手のプロセスには触れていない。必要なら相手側で記録を確認して消してほしい。

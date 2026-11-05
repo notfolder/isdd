@@ -1,0 +1,7 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "The Browse & Search list shows all 13 organisms with kingdom, class, habitat, diet, conservation status, length and lifespan. Every column has a value in every row, with no blank placeholders, and the detail pages open correctly."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'bear' returned only Polar Bear. Searching the habitat word 'Desert' and the description-only word 'gills' each returned 0 results with the message 'No organisms match these filters.', so the search matches names only."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by habitat Forest showed only the 4 Forest entries (Corpse Flower, English Oak, Fly Agaric, Giant Panda), and no entry from another habitat appeared."},
+  "000088-design": {"verdict": "YES", "reason": "The body background is rgb(240,255,240), which is honeydew. The header, main buttons and h1 headings are all rgb(85,107,47), which is dark olive green, so the background and all three components match."},
+  "000088-rename": {"verdict": "YES", "reason": "On the home, list, search results, filter, empty-result, detail, add, edit, about and 404 pages, the word 'species' does not appear in any text, title or attribute. Navigation, headings, buttons and messages use 'organism', and all pages load normally."}
+}

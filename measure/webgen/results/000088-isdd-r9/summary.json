@@ -1,0 +1,73 @@
+{
+  "site": "000088",
+  "arm": "isdd-r9",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 774.1,
+      "agent_tokens": 9412007,
+      "usage": {
+        "input_tokens": 100,
+        "output_tokens": 164143,
+        "cache_creation_input_tokens": 270891,
+        "cache_read_input_tokens": 8976873
+      },
+      "tool_uses": 65,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": true,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000088-1": {
+          "verdict": "YES",
+          "reason": "YES: /species に 12 種の一覧があり、6 列（一般名・学名・綱・生息地・食性・保全状況）すべてに値があって空欄表示は無かった。詳細ページ（例: Lion）にも科・寿命・体重・説明などの生物情報が表示された。 / YES: /species lists 12 species with common/scientific name, class, habitat, diet and conservation status; all cells are fille / YES: /species lists all 12 species, and every column (common name, scientific name, class, habitat, diet, conservation status",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "YES: 名前検索で \"panda\" を入れると Giant panda の 1 件だけ、\"Japanese\" を入れると名前に Japanese を含む 3 件だけが表示され、関係ない種は出なかった。 / YES: Searching 'panda' returned 'Showing 1 of 12 species' with only Giant panda, no unrelated species. / YES: Searching 'panda' returned only Giant panda, and searching 'Japanese' returned only the 3 Japanese species, with no unre",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "YES: Habitat を Marine にして絞り込むと、Habitat が Marine の 3 件（Blue whale・Emperor penguin・Green sea turtle）だけが表示され（Showing 3 of 12）、条件 / YES: Filtering Habitat=Marine showed 3 of 12 species (Blue whale, Emperor penguin, Green sea turtle), all Marine, with no non / YES: Filtering by Habitat=Marine showed 'Showing 3 of 12 species', listing only Blue whale, Emperor penguin and Green sea tur",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-4": {
+          "verdict": "YES",
+          "reason": "YES: body の背景は rgb(250,240,230) で linen と一致した。ナビの背景、主要ボタン、h1 見出しの色はどれも rgb(128,0,0) で maroon と一致した。 / YES: body background rgb(250,240,230) = linen; nav background, Search button background and h1 text are all rgb(128,0,0) = ma / YES: The body background is rgb(250,240,230), which matches linen. The nav background rgb(128,0,0), the h1 text color rgb(128",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 891,
+        "public_functions": 21
+      }
+    }
+  },
+  "runner": "claude -p"
+}

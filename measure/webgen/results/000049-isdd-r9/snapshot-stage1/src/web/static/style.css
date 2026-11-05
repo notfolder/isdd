@@ -1,0 +1,279 @@
+/* Barber Shop site: snow background and dim gray interface. */
+
+:root {
+  --dim-gray: #696969;
+  --dim-gray-dark: #545454;
+  --dim-gray-light: #e9e9e9;
+  --text: #2b2b2b;
+  --card: #ffffff;
+  --error: #8b1e1e;
+}
+
+* { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #f7fafc 0%, #dde5ec 100%);
+  background-attachment: fixed;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Snow: falling flakes behind the content. Pure CSS, ignores the mouse. */
+.snow {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10vh;
+  color: #ffffff;
+  opacity: 0.9;
+  text-shadow: 0 0 3px rgba(105, 105, 105, 0.35);
+  animation-name: snowfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes snowfall {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(20px, 110vh, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snow { display: none; }
+  .snowflake { animation: none; }
+}
+
+/* Header and navigation in dim gray. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--dim-gray);
+  color: #ffffff;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+
+.site-nav {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.site-nav a:hover,
+.site-nav a:focus {
+  background: var(--dim-gray-dark);
+  outline: none;
+}
+
+.site-nav a.active {
+  background: #ffffff;
+  color: var(--dim-gray);
+  font-weight: 700;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin: 1.5rem auto;
+  padding: 0 1.25rem 3rem;
+}
+
+h1 {
+  color: var(--dim-gray);
+  font-size: 1.9rem;
+  margin: 0.5rem 0 1rem;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+h2 {
+  color: var(--dim-gray-dark);
+  font-size: 1.25rem;
+}
+
+a { color: var(--dim-gray); }
+a:hover { color: var(--dim-gray-dark); }
+
+/* Home cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  background: var(--card);
+  border: 1px solid #c9ced3;
+  border-top: 4px solid var(--dim-gray);
+  border-radius: 6px;
+  padding: 1.25rem;
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover,
+.card:focus {
+  border-top-color: var(--dim-gray-dark);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+.card h2 { margin-top: 0; color: var(--dim-gray); }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+th, td {
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+th {
+  background: var(--dim-gray);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+td.num { text-align: right; white-space: nowrap; }
+
+tbody tr:nth-child(even) { background: #f4f5f6; }
+
+.empty {
+  background: var(--card);
+  padding: 1rem;
+  border-radius: 6px;
+  color: var(--dim-gray);
+}
+
+/* Buttons and actions */
+.actions { margin: 1rem 0; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+
+button,
+.button {
+  display: inline-block;
+  background: var(--dim-gray);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.98rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button:hover,
+.button:hover,
+button:focus,
+.button:focus {
+  background: var(--dim-gray-dark);
+  color: #ffffff;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Forms */
+.form {
+  background: var(--card);
+  padding: 1.25rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  max-width: 640px;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 0.9rem;
+  color: var(--dim-gray-dark);
+  font-weight: 600;
+}
+
+.form input,
+.form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+  font-weight: 400;
+  color: var(--text);
+  border: 1px solid #b5bcc3;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.form input:focus,
+.form textarea:focus {
+  border-color: var(--dim-gray);
+  box-shadow: 0 0 0 3px rgba(105, 105, 105, 0.25);
+  outline: none;
+}
+
+.req { color: var(--error); }
+
+.hint { color: var(--dim-gray); font-size: 0.9rem; margin: -0.4rem 0 0.9rem; }
+
+.errors {
+  background: #fdf1f1;
+  border: 1px solid #d9a3a3;
+  border-left: 4px solid var(--error);
+  color: var(--error);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  max-width: 640px;
+}
+
+.errors ul { margin: 0.3rem 0 0; padding-left: 1.2rem; }
+
+/* WhatsApp result */
+.result {
+  margin-top: 1.5rem;
+  background: var(--card);
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  max-width: 640px;
+}
+
+.result ul { list-style: none; padding: 0; }
+.result li { display: flex; align-items: center; gap: 0.75rem; padding: 0.4rem 0; flex-wrap: wrap; }
+.number { font-weight: 700; min-width: 9rem; color: var(--dim-gray-dark); }

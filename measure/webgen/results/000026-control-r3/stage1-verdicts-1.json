@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the homepage opened /polls/3 with no errors, and the page shows all 4 options as radio buttons (Dark mode, Offline support, Export to PDF, Keyboard shortcuts)."},
+  "000026-2": {"verdict": "YES", "reason": "Without voting, the user can browse 3 polls on the homepage and open each poll's options. Each poll shows information beyond its name: a description, the number of options and the number of votes so far."},
+  "000026-3": {"verdict": "YES", "reason": "After choosing 'Offline support' and submitting, the page showed 'Thanks! Your vote has been recorded.' and 'You voted for Offline support.', and the count for that option went up to 1."},
+  "000026-4": {"verdict": "YES", "reason": "/results shows each poll's current results, including the vote just cast. It gives total votes, votes and percentages per option, and bar graphs (.fill width set to 100%, 0%, and so on)."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255), which is white. The header (.topbar), the main button (.btn) and the h1 heading are all rgb(0,0,128), which is navy."}
+}

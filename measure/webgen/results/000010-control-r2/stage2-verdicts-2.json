@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With 'Alice' entered, the wheel canvas rotated, stopped with '20% Off Coupon' under the pointer, and showed 'Alice won: 20% Off Coupon — 20% off your next purchase.' with no JS errors. Spinning with an empty name showed 'Please enter your name before spinning.' and the wheel's transform stayed the same."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments on the wheel (Grand Reward: $100 Gift Card, Movie Tickets (2), Free Coffee, 20% Off Coupon, Free Shipping, Mystery Gift Box, Sticker Pack, Better Luck Next Time)."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winning Records showed the new win as a row 'Alice | 20% Off Coupon | Nov 5, 2026, 06:31 AM', with the player name, prize and date."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header, the main button (#spin-btn) and the h1 are all rgb(0,100,0), which is dark green. Background and all three components are within tolerance."}
+}

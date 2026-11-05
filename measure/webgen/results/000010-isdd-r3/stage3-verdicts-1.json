@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With 'Alice' entered, the canvas wheel visibly rotated, stopped with 'Free Shipping' under the pointer, and showed 'You won: Free Shipping!' with no page errors. With the name empty, the message 'Please enter a name of 1 to 20 characters.' appeared and the wheel did not move."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows 7 rewards (10% Off Coupon, Free Coffee, Free Shipping, $5 Voucher, Mystery Gift, Grand Reward: $50 Gift Card, Try again), each with a description and chance. These are exactly the 7 segments on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winning Records shows the row 'Alice | Free Shipping | 2026-11-05 07:13:38', which includes the player name, the reward and the date."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header, the Spin button and the h2 heading are all rgb(0,100,0), which is dark green, so the background and all 3 components match."},
+  "000010-rename": {"verdict": "YES", "reason": "The visible text and titles of the spin, reward list and records pages contain no 'prize' or 'prizes'. Navigation, headings and messages use 'Reward', and spinning and the record list both work."}
+}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} | Polls Website</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="{{ url_for('web.poll_list_page') }}">Polls Website</a>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('web.poll_list_page') }}" {% if active == 'polls' %}aria-current="page"{% endif %}>Polls</a></li>
+        <li><a href="{{ url_for('web.results_list_page') }}" {% if active == 'results' %}aria-current="page"{% endif %}>Results</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,275 @@
+/* Theme: ivory background (default) and dark green for components (menu, buttons, cards, headers, wheel). */
+:root {
+  --bg: #fffff0;          /* ivory */
+  --green: #006400;       /* dark green */
+  --green-dark: #004d1a;  /* darker green for emphasis and the wheel's odd slice */
+  --green-hover: #00800f; /* hover and focus on buttons */
+  --green-soft: #eef5ea;  /* light green tint for table stripes */
+  --text: #1a1a1a;
+  --muted-text: #4a4a4a;
+  --panel: #ffffff;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.site-header {
+  background: var(--green);
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.site-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  border-color: #ffffff;
+  outline: none;
+}
+
+.site-nav a[aria-current="page"] {
+  background: var(--green-dark);
+  border-color: #ffffff;
+  font-weight: 700;
+}
+
+.content {
+  flex: 1;
+  width: min(900px, 100%);
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2rem;
+}
+
+h2 {
+  color: var(--green);
+  margin-top: 0;
+}
+
+.panel {
+  background: var(--panel);
+  border: 2px solid var(--green);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inline-form label {
+  font-weight: 600;
+  color: var(--green);
+}
+
+.inline-form input {
+  flex: 1 1 220px;
+  padding: 0.5rem 0.6rem;
+  font-size: 1rem;
+  border: 2px solid var(--green);
+  border-radius: 4px;
+}
+
+.button {
+  background: var(--green);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.55rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled),
+.button:focus-visible {
+  background: var(--green-hover);
+  outline: 2px solid var(--green-dark);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.message {
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  margin: 0.75rem 0;
+}
+
+/* Validation and error messages: white with a dark green frame (no red). */
+.message.error {
+  background: var(--panel);
+  color: var(--green-dark);
+  border: 2px solid var(--green);
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--muted-text);
+}
+
+/* Wheel */
+.wheel-wrap {
+  position: relative;
+  padding-top: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.pointer {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 26px solid var(--green-dark);
+  z-index: 2;
+}
+
+.wheel {
+  position: relative;
+  width: min(380px, 90vw);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 6px solid var(--green-dark);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.wheel-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  transition: transform 4.5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+.slice-label {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.slice-label span {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  width: 36%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Result card: dark green card with white text. */
+.result {
+  text-align: center;
+  background: var(--green);
+  border-color: var(--green-dark);
+  color: #ffffff;
+}
+
+.result p {
+  margin: 0.25rem 0;
+}
+
+.result .muted {
+  color: #e6f2e6;
+}
+
+.result-prize {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border: 2px solid var(--green);
+}
+
+.data-table th {
+  background: var(--green);
+  color: #ffffff;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+}
+
+.data-table td {
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid #cfdccf;
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: var(--green-soft);
+}
+
+.site-footer {
+  background: var(--green-dark);
+  color: #ffffff;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.site-footer p {
+  margin: 0.25rem;
+}
+
+@media (max-width: 600px) {
+  .site-title {
+    font-size: 1.25rem;
+  }
+}

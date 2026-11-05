@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reward List | Wheel of Fortune</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Wheel of Fortune</div>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Spin the Wheel</a>
+      <a href="/rewards" aria-current="page">Reward List</a>
+      <a href="/my-winnings">My Winnings</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <h1>Reward List</h1>
+    <p id="reward-count" class="lead"></p>
+    <p id="reward-error" class="error" role="alert"></p>
+    <ul id="reward-list" class="reward-grid"></ul>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/rewards.js"></script>
+</body>
+</html>

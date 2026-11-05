@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage, clicking Vote opened /polls/1 with no errors, and the page showed all four options (Python, JavaScript, Go, Rust) as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "Without voting, the poll list shows each poll's name plus other details (e.g. '4 options · 10 votes'), and each poll page lists its options clearly, so the relevant-information criterion is met."},
+  "000026-3": {"verdict": "YES", "reason": "After picking Python and voting, the page went to the results, showed the message 'Thank you for voting.', and the total rose from 10 to 11 (Python 5). The vote was recorded and a confirmation message appeared."},
+  "000026-4": {"verdict": "YES", "reason": "/results shows each poll's total votes and leading option. Each poll's results page shows the up-to-date votes, share percentages and bar charts (the total reflects the vote just cast)."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255) (white). The header background, the main button background and the h1/h2 text color are all rgb(0,0,128) (navy), so the background and all three components match."}
+}

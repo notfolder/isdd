@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage (/polls), clicking Vote opened /polls/1 with no error, and all four options (Spring, Summer, Autumn, Winter) are shown as radio buttons with a Submit vote button."},
+  "000026-2": {"verdict": "YES", "reason": "The poll list shows each poll by name plus its option and vote counts (e.g. '4 options · 13 votes'). Each poll page lists its options with a description, and nothing has to be voted to see them."},
+  "000026-3": {"verdict": "PARTIAL", "reason": "After voting for Summer, the total went from 13 to 14 and Summer from 7 to 8, so the vote was recorded. But the page only moved to the results screen and showed no message saying the vote was cast, so the confirmation notification is not met."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows total votes and each option's vote count and percentage, with bar graphs (bar-fill widths match the percentages). The numbers updated right after the vote."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255), which is white. The header background, the main button background and the heading text are all rgb(0,0,128), which is navy."}
+}

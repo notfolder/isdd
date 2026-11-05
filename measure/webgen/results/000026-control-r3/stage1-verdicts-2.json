@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking Vote on the homepage opened /polls/1 with no errors, and all 5 options (Python, JavaScript, Rust, Go, Other) were shown as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists 3 polls you can browse without voting. Each shows a description, the option count and the vote count besides its title, which meets the 'relevant information' rule, and each poll page lists its options."},
+  "000026-3": {"verdict": "YES", "reason": "After choosing JavaScript and clicking Submit vote, the page showed 'Thanks! Your vote has been recorded.' The count rose to 1 vote (100.0%), so the vote was recorded and a confirmation message appeared."},
+  "000026-4": {"verdict": "YES", "reason": "/results and /polls/1/results show current counts, including the vote just cast, with totals and percentages per option and a bar graph."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255) (white). The header background, the main button background and the heading text are all rgb(0,0,128) (navy), so the background and all 3 components match."}
+}

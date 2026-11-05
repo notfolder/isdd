@@ -1,0 +1,40 @@
+# STAGE_DONE: 変更 2「prize → reward」完了（2026-11-05）
+
+## 依頼
+利用者に見える英語の「prize / prizes」を「reward」に置き換える（ナビゲーション、ページのタイトルと見出し、ボタン、表の見出し、メッセージ、当選記録の表示）。動作は変えない。名前必須、記録、ivory / dark green の配色は維持。
+
+## 行ったこと（isdd の変更フロー）
+1. 要件・設計: `.history/20261105-prize-to-reward/` に `change_requirements.md`、`change_detail_design.md`、`tasks.md` がある（承認は ANSWERS.md の固定回答により与えられたものとして進めた）。
+2. 実装（isdd-build 段階 1）: 画面（`web/rewards.html`、`web/static/rewards.js`）、経路（`/rewards`、旧 `/prizes` は 301 で転送）、業務メッセージ（`No rewards are available right now.`）、対応表（`docs/trace_map.md`）、E2E（`e2e/test_wheel_site.py`）。
+3. 実装後レビュー（段階 2）: 正本 `docs/requirements.md`・`docs/detail_design.md` に表示語の変更を反映（`/rewards`、Reward List、No rewards、301 転送、8-2 の `DS-TS-PRIZE-LIST-SHOWS-ALL` の手順）。`docs/active_change` は削除済み。`docs/proposals.md` は無い。
+
+## 変更点（利用者に見える部分）
+- ナビゲーション: 「Reward List」（3 画面すべて、リンク先 `/rewards`）
+- ページのタイトル・見出し: 「Reward List」
+- 件数の文: 「N reward(s) to win on the wheel」
+- ホイールの代替文: 「Reward wheel」。説明文: 「see which reward you win」
+- My Winnings の表の見出し: Player / Reward / Date won
+- 結果欄の項目名: 「Reward」
+- メッセージ: 「No rewards are available right now.」「The reward list could not be loaded.」。記録が無いときは「...to win a reward!」
+
+## 意図的に変えていないもの
+- 公開 API のパスと JSON キー（`/api/prizes`、`prize`、`prize_name` など）。画面に出ない内部の約束。
+- DB のテーブル名と列名、Python の関数名、テスト関数名、要件・設計の ID（`RQ-*`、`DS-*`）。
+- 日本語の業務用語「景品」（正本と設計書の日本語の説明）。
+
+## 検証結果（最終の作業ツリーで確認）
+- `bash scripts/isdd/check.sh --strict`: 終了コード 0、エラー 0 件、警告 0 件。受け入れ判定: DS-TS 10/10 合格、要件 13/13 実装済み。
+- `rq_integrity_checker.py docs/requirements.md`: 問題 0 件。
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 欠落 0、不整合 0。
+- `rq_ds_link_checker.py`（変更の記録に `--base docs/requirements.md`）: 合格。
+- `implementation_completeness_checker.py .`: 4/4 通過。
+- 単体・結合テスト（`python3 -m unittest discover -s tests -t . -v`）: 19 件通過。
+- E2E（`python3 scripts/isdd/unittest_junit.py -s e2e -t . -o e2e/results/e2e.xml`）: 10 件通過。
+- `bash setup.sh` 成功。`PORT=<空きポート> bash run.sh` で起動し、`/`、`/rewards`、`/my-winnings` が 200、`/prizes` が 301 で `/rewards` へ、`/api/prizes` が 6 件、`/api/winnings?name=Sample%20Player` が記録を返す、空の名前の抽選は 400。
+- 配信される HTML に「prize」の文言は無い（`grep -i prize web/` は JavaScript の変数名と `/api/prizes` のみ）。
+
+## 注意点
+- ブラウザでの目視はしていない（HTTP の応答、E2E、ソースの文言確認の範囲）。
+- 同じマシンで別の作業のプロセスが使うポート 8123 があり、そちらは触っていない。起動確認は空きポートで行い、自分が起動したプロセスだけを PID で止めた。
+- 起動確認の抽選で、`data/wheel.sqlite3` に名前「Alice」の当選記録が 1 件増えている（確認用の記録。削除していない）。
+- git の履歴は無く、コミットはしていない。

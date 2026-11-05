@@ -1,0 +1,11 @@
+{
+  "name": "wheel-of-fortune",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wheel of Fortune reward website (Node.js 24, built-in modules only)",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage, clicking a poll's Vote link opens /polls/1 (HTTP 200, no errors), and the page shows all four options (Python, JavaScript, Go, Rust) as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "You can browse the poll list without voting. Each entry shows its title plus an option count and vote count (e.g. '4 options · 11 votes'), and each poll page shows a description and its options, so there is information beyond the name."},
+  "000026-3": {"verdict": "YES", "reason": "Picking Rust and pressing Vote raised Rust from 2 to 3 votes and the total from 11 to 12, and right after the vote the page showed 'Thank you for voting.'"},
+  "000026-4": {"verdict": "YES", "reason": "The results pages show the current results: total votes, each option's votes and share %, and bar charts, plus a summary table with each poll's leading option. The counts reflected the vote just cast."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255) (white). The header background rgb(0,0,128), the main Vote button rgb(0,0,128) and the h1 text rgb(0,0,128) all match navy."}
+}

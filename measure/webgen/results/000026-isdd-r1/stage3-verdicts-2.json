@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the home page opened /surveys/1 with no error, and all four options (Python, JavaScript, Go, Rust) were shown with a Vote button."},
+  "000026-2": {"verdict": "YES", "reason": "The home page lists all three surveys without voting. Each shows its title plus details (option count and vote count, e.g. '4 options · 10 votes'), which meets the 'relevant information' rule."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote the results page showed 'Thank you for voting.' and the total went from 12 to 13. On returning, 'You have already voted' was shown and the radio buttons and Vote button were disabled. A second POST got 409 and the total stayed at 13."},
+  "000026-4": {"verdict": "YES", "reason": "/results lists each survey's total votes and leading option. The detail page shows up-to-date totals (they reflected the new vote), votes, share % and bar charts for each option."},
+  "000026-design": {"verdict": "YES", "reason": "body background is rgb(255,255,224) = light yellow. The header background, the main Vote button background and the h1 text are all rgb(47,79,79) = dark slate gray, so all 3 components match."},
+  "000026-rename": {"verdict": "YES", "reason": "The home page, voting pages, results list and per-survey results pages all returned 200. Their titles, body text and aria-labels never contain 'poll' or 'polls', and the navigation, headings and messages use 'Survey(s)'."}
+}

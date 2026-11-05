@@ -1,0 +1,27 @@
+STAGE DONE: REQUEST.md change request 1 implemented.
+
+1. Colour theme
+   - Background is ivory (#fffff0 via CSS `ivory`). Components (header, nav, buttons, card top borders, table headers, badges, stat boxes, wheel border/hub/pointer) use dark green (`darkgreen`, #006400). Hover uses #00823a, disabled uses a muted green.
+   - Light gray and dark red were removed from style.css, the wheel segments in wheel.js, and the focus/error colours. Cards are white; table stripes are pale green. Validation errors use a dark amber instead of red.
+
+2. Name required for spinning
+   - The home page has a required "Your name (required)" text field next to the SPIN button, under the wheel. The old Player card was replaced by a "How to play" card.
+   - An empty name shows "Please enter your name before spinning." in the message area, marks the field invalid, focuses it, and does not spin. The server also rejects empty names with a 400.
+   - Enter in the name field and the SPIN button both submit the same form.
+   - The result message names the player ("Alex won: Free Coffee!").
+
+3. Player name on every winning record
+   - Wins are recorded with the player name (unchanged on the server). Every winners table now shows Date, Player and Prize: "Recent Winners" and "My Wins" on My Winning Records. The stored date is shown with the existing formatter.
+
+Unchanged: prize list page, navigation, sample data seeding, /api endpoints, DATA_DIR/PORT handling, setup.sh and run.sh.
+
+Verification
+- `bash setup.sh` ran successfully (Python 3.9.6 is the local interpreter; the code uses only the standard library).
+- Started with `PORT=18431 DATA_DIR=/tmp/wof-000010-r3/data bash run.sh` (a separate data directory, so the project tree has no data/ folder). Pages /, /prizes, /records and the static files return 200. POST /api/spin with a blank name returns 400, and with "Dana" returns 200. /api/winners and /api/spins return player names.
+- Headless Chrome screenshots of the home and records pages show the ivory and dark green theme and the name field beside SPIN.
+- Node syntax checks pass for wheel.js, records.js and app.js.
+- The server was stopped by its own PID (77953).
+
+Notes
+- Port 8123 and /tmp/wof-test.* were in use by another process on this machine (a Node server and a log written by another run). I did not touch them. My test server used its own port and files.
+- Changes are uncommitted; no git commit was made.

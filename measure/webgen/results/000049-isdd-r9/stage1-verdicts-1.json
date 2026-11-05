@@ -1,0 +1,6 @@
+{
+  "000049-1": {"verdict": "PARTIAL", "reason": "The form at /barbers/new saved the barber, which then appeared in the barber list at /barbers. After the save, the page only went back to the list and showed no confirmation message, so the confirmation-message part is not met."},
+  "000049-2": {"verdict": "PARTIAL", "reason": "The form at /services/new saved the service (Grader Scalp Massage, 20.50, 20 min), which then appeared in the services list. No confirmation message appeared after the save; the page only went back to the list."},
+  "000049-3": {"verdict": "YES", "reason": "From the dashboard, the nav menu links Home, Barbers, Services and Notify each opened the matching page (/barbers, /services, /, /notify) with no errors. Every page uses the same header and nav."},
+  "000049-4": {"verdict": "YES", "reason": "The body background is a gradient from rgb(247,250,252) to rgb(221,229,236), and every channel is within 40 of snow (255,250,250). The header background, the main button background and the h1 text are all rgb(105,105,105), which is exactly dim gray."}
+}

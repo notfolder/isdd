@@ -1,0 +1,38 @@
+Species Biological Information Database — implementation complete.
+
+How to run
+  bash setup.sh                 # checks python3/sqlite3, prepares DATA_DIR (no packages needed)
+  PORT=8000 bash run.sh         # serves http://127.0.0.1:8000 in the foreground
+  DATA_DIR (optional, default ./data) holds species.db; sample species are loaded when empty.
+
+Files
+  server.py   Python standard-library HTTP server + SQLite, server-rendered HTML (no JS framework)
+  setup.sh    dependency/runtime check and data-directory preparation
+  run.sh      starts server.py with PORT and DATA_DIR (default 8000 / ./data)
+
+Features (all reachable from the menu in the header)
+  Home           counts (records, threatened species, kingdoms), browse-by-kingdom links, featured species
+  Browse & Search list of species; search text matches common/scientific name, family, class, description;
+                 filters for kingdom, conservation status, habitat, diet; sort by name, scientific name,
+                 length, lifespan; shows "Showing X of Y species"
+  Species detail full record, with Edit record and Delete record (with confirmation)
+  Add Species    form with validation (required fields, allowed options, numeric values >= 0, unique scientific name)
+  Edit           same form pre-filled, validated the same way
+  About          describes the data and how to use the site
+
+Design choices (made without asking)
+  - Base background: linen (#FAF0E6). Maroon (#800000) for the header/nav, buttons, table headers,
+    badges, card borders, headings, links, flash and error boxes, footer.
+  - Storage: SQLite file in DATA_DIR; 13 sample species seeded when the table is empty.
+  - Pages are plain server-rendered HTML forms, so they work in Chromium without JavaScript
+    (the only script is a delete confirmation).
+
+Verification performed
+  - setup.sh and run.sh executed; server started on a chosen PORT and stayed in the foreground.
+  - All pages return 200 (/, /species, filtered/search URLs, /species/<id>, /species/<id>/edit,
+    /species/new, /about); unknown routes return 404.
+  - Create (including validation errors and duplicate-name rejection), edit, and delete via POST all
+    redirected correctly; search and filter results matched expected counts.
+  - Headless Chrome screenshot of the Browse & Search page rendered with linen background and maroon components.
+  - The test server was stopped by its PID; the test data directory was removed.
+  - Not verified: Python 3.12 specifically (local python3 is 3.9.6; code avoids newer-only syntax).

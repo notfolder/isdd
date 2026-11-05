@@ -1,0 +1,176 @@
+/* Background light yellow (#FFFFE0); components (header, navigation, headings, buttons, cards, result bars) dark slate gray (#2F4F4F). */
+:root {
+  --light-yellow: #FFFFE0;
+  --dark-slate: #2F4F4F;
+  --bg: var(--light-yellow);
+  --text: var(--dark-slate);
+  --on-dark: var(--light-yellow);
+  --muted: var(--dark-slate);
+  --error: #8B0000;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+a { color: var(--dark-slate); }
+
+.site-header {
+  background: var(--dark-slate);
+  color: var(--on-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.5rem;
+}
+
+.brand {
+  color: var(--on-dark);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-nav { display: flex; gap: 1rem; }
+
+.site-nav a {
+  color: var(--on-dark);
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 3px solid transparent;
+}
+
+.site-nav a:hover { border-bottom-color: var(--on-dark); }
+
+.site-nav a.active { border-bottom-color: var(--on-dark); font-weight: 700; }
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+h1, h2 { color: var(--dark-slate); }
+
+h1 { margin-top: 0; }
+
+.lead { color: var(--muted); }
+
+.meta { color: var(--muted); margin: 0.25rem 0 0.75rem; }
+
+.card-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+
+.card {
+  border: 2px solid var(--dark-slate);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  background: var(--dark-slate);
+  color: var(--on-dark);
+}
+
+.card h2 { margin: 0; font-size: 1.15rem; color: var(--on-dark); }
+
+.card .meta { color: var(--on-dark); }
+
+.card .button { background: var(--light-yellow); color: var(--dark-slate); border-color: var(--light-yellow); }
+
+.card .button-outline { background: transparent; color: var(--on-dark); border-color: var(--on-dark); }
+
+.actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem; }
+
+.button {
+  display: inline-block;
+  background: var(--dark-slate);
+  color: var(--on-dark);
+  border: 2px solid var(--dark-slate);
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover { opacity: 0.9; }
+
+.button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.button-outline { background: var(--light-yellow); color: var(--dark-slate); }
+
+fieldset {
+  border: 2px solid var(--dark-slate);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 0 0 1rem;
+}
+
+legend { color: var(--dark-slate); font-weight: 700; padding: 0 0.25rem; }
+
+.option { display: block; padding: 0.35rem 0; cursor: pointer; }
+
+.option input { accent-color: var(--dark-slate); margin-right: 0.4rem; }
+
+.option:has(input:disabled) { cursor: default; opacity: 0.6; }
+
+.error {
+  color: var(--error);
+  border: 2px solid var(--error);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  background: var(--light-yellow);
+}
+
+.success {
+  color: var(--on-dark);
+  background: var(--dark-slate);
+  border: 2px solid var(--dark-slate);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+}
+
+.notice {
+  color: var(--on-dark);
+  background: var(--dark-slate);
+  border: 2px solid var(--dark-slate);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+}
+
+table.results {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+table.results th,
+table.results td {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--dark-slate);
+  vertical-align: middle;
+}
+
+table.results th { color: var(--on-dark); background: var(--dark-slate); border-bottom: 2px solid var(--dark-slate); }
+
+.bar-cell { width: 40%; }
+
+.bar-cell .bar-track {
+  background: var(--light-yellow);
+  border: 1px solid var(--dark-slate);
+  border-radius: 3px;
+}
+
+.bar {
+  height: 14px;
+  background: var(--dark-slate);
+  border-radius: 3px;
+  min-width: 2px;
+}

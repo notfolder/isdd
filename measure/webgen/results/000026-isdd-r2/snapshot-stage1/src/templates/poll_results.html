@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Results: {{ result.title }}{% endblock %}
+{% block content %}
+<p class="breadcrumb"><a href="{{ url_for('web.results_list_page') }}">Results</a> / {{ result.title }}</p>
+<h1>{{ result.title }}</h1>
+<p class="meta">Total votes: {{ result.total_votes }}</p>
+{% if result.total_votes == 0 %}
+<p class="notice notice-info">No votes yet.</p>
+{% endif %}
+<table class="results">
+  <thead>
+    <tr><th scope="col">Option</th><th scope="col">Votes</th><th scope="col">Share</th><th scope="col">Chart</th></tr>
+  </thead>
+  <tbody>
+    {% for row in result.results %}
+    <tr>
+      <td>{{ row.text }}</td>
+      <td>{{ row.votes }}</td>
+      <td>{{ "%.1f"|format(row.percent) }}%</td>
+      <td class="bar-cell"><div class="bar"><span style="width: {{ '%.1f'|format(row.percent) }}%"></span></div></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p><a class="button" href="{{ url_for('web.poll_detail_page', poll_id=result.id) }}">Vote in this poll</a></p>
+{% endblock %}

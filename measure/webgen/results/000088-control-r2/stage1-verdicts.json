@@ -1,0 +1,38 @@
+{
+  "000088-1": {
+    "verdict": "PARTIAL",
+    "reason": "PARTIAL: The Browse & Search page lists all 23 species with their biological information (kingdom, habitat, feeding mode, conserv / PARTIAL: /species shows 23 species with kingdom, habitat, feeding mode, status, length, and lifespan, but the Lifespan column sho / PARTIAL: /species lists all 23 species with kingdom, habitat, feeding mode, status, length and lifespan, but 4 rows (Fly agaric, ",
+    "votes": [
+      "PARTIAL",
+      "PARTIAL",
+      "PARTIAL"
+    ]
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "YES: Searching for 'panda' shows 'Showing 2 of 23 species' and displays only Giant panda and Red panda, with no unrelated spe / YES: Searching 'panda' returned only Giant panda and Red panda (2 of 23), and searching 'Lion' returned only Lion (1 of 23);  / YES: Searching 'panda' returned only Giant panda and Red panda (2 of 23), and 'Ursus maritimus' returned only Polar bear; no ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "YES: With Habitat=Forest applied, the list shows 5 species, all with habitat Forest, and no entries that don't match. / YES: Filtering by Habitat=Forest showed 5 of 23 species, and every row has habitat Forest; no non-matching rows appeared. / YES: Applying Habitat = Forest updated the list to 5 of 23 species, all with habitat Forest and no non-matching entries.",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-4": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(250,240,230), which is linen. The header background rgb(128,0,0), the main button background  / YES: The body background is rgb(250,240,230), which is linen. The header background, the main button background (.btn / submi / YES: Body background is rgb(250,240,230) (linen); header background, primary .btn background and h1/h2 text are all rgb(128,0",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With 'Alice', the wheel-face rotated (transform changed over several seconds, then stopped) and 'You won Sticker Pack / Recorded for Alice at ...' was shown with no page errors. With an empty name, the message 'Please enter your name (1-30 characters).' appeared and the wheel stayed at rotate(0deg)."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 8 prizes with their chances (Gift Card $50 through Grand Prize Headphones), which matches the 8 prize labels on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "Searching 'Alice' on My Winnings lists the new win in the top row: Alice / Sticker Pack / Nov 5, 2026, 6:06 AM, so the player name, prize and date are all present."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background rgb(0,100,0) and the h2 heading text rgb(0,100,0) are all within 40 per channel of dark green, so the background and all 3 component types match."}
+}

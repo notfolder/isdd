@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Spinボタンを押すと「Spinning...」表示とともにホイールが回転し、ポインタ位置のSticker Packのセグメントで停止して「You won: Sticker Pack!」と表示された。ページエラー・コンソールエラーは無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "Prizesページに8件の賞品（名称・説明・確率）が一覧表示され、ホイールの8セグメント（10% Off Coupon, Free Coffee, Tote Bag, $5 Gift Card, Free Shipping, Mystery Gift, Sticker Pack, Better Luck Next Time）と一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "回転前のMy Winningsは「no winnings yet」だったが、回転後には日時（11/5/2026, 6:56:30 AM）・賞品（Sticker Pack）・名前（Guest）の行が追加され、獲得した賞品と一致した。"},
+  "000010-4": {"verdict": "YES", "reason": "bodyの背景はrgb(230,230,230)で、light gray(211,211,211)との各成分差は40以内。ヘッダーの背景・Spinボタンの背景・h2見出しの文字色はいずれもrgb(139,0,0)でdark redと一致し、背景と部品3種類がすべて合った。"}
+}

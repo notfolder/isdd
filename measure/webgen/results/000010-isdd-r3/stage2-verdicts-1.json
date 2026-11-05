@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With the name 'Alice' entered, the wheel spun, stopped on a segment and showed 'You won: Free Shipping!' (a spin that landed on 'Try again' also displayed that) with no JS errors. With the name empty, the message 'Please enter a name of 1 to 20 characters.' appeared and the wheel canvas did not change."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 7 prizes with descriptions and chances, and they match the 7 segments on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After Alice won, My Winning Records showed a row with Player 'Alice', Prize 'Free Shipping' and Won at '2026-11-05 07:03:22'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background rgb(0,100,0) and the h2 heading color rgb(0,100,0) all match dark green."}
+}

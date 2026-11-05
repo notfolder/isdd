@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "ホームの Vote ボタンから /polls/1 の投票ページへエラーなく移動でき、4 つの選択肢（Python, JavaScript, Go, Rust）がすべてラジオボタンで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "投票しなくてもホームで各投票が一覧表示され、名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 31）が示され、投票ページでは各選択肢がはっきり表示された。"},
+  "000026-3": {"verdict": "YES", "reason": "JavaScript を選んで Submit vote を押すと、結果ページに『Your vote has been recorded.』と表示され、総投票数が 31 から 32 に増えて投票が記録されたことを確認できた。"},
+  "000026-4": {"verdict": "YES", "reason": "/results と各投票の結果ページで、選択肢ごとの票数・割合（%）・総投票数と棒グラフが表示され、直前に投じた票も反映されていた。"},
+  "000026-5": {"verdict": "YES", "reason": "body 背景 rgb(255,255,255) は white に一致し、ナビ背景 rgb(0,0,128)、主要ボタン背景 rgb(0,0,128)、見出し文字色 rgb(0,0,128) の 3 種類がすべて navy に一致した。"}
+}

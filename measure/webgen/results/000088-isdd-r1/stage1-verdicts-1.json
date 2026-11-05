@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "The list shows 12 species, each with common name, scientific name, class, habitat, diet and conservation status, and no row has an empty or placeholder value. Each detail page (e.g. Gray wolf) also shows lifespan, body mass and a description."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'wolf' returned only Gray wolf, and searching 'Panthera' returned only Snow leopard; no unrelated species appeared."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by habitat Forest showed only the 3 Forest entries (Asian elephant, Bald eagle, Gray wolf); no other habitat appeared."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which is linen. The header background, the main button (Search) background and the h1 text are all rgb(128,0,0), which is maroon."}
+}

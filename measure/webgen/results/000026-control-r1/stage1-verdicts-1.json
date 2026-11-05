@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the homepage opened /polls/3 with no errors, and all four options (Dark mode, Offline support, Calendar sync, Mobile app) were shown as radio choices."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists the polls without needing a vote, and each one shows its name plus a description and option/vote counts (for example '4 options · 18 votes'), which counts as relevant information."},
+  "000026-3": {"verdict": "YES", "reason": "Picking an option and pressing 'Cast my vote' raised the total from 18 to 19, and right away the page showed 'Thanks! Your vote has been recorded.'"},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows the current total, each option's vote count and percentage, and navy bar fills sized to each share, so it has both statistics and a graphic."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255), which is white. The header background (0,0,128), the main .button background (0,0,128) and the h1/h2 text colour (0,0,128) all match navy."}
+}

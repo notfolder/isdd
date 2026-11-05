@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the home page (/surveys), clicking a survey link opens the voting page (/surveys/1) with status 200 and no errors, and all options (Python, JavaScript, Go, Rust) are shown as radio buttons with a Vote button."},
+  "000026-2": {"verdict": "YES", "reason": "Without voting, the survey list shows each survey with a description and its option and vote counts, and 'View results' lists every option with its vote count and share, so each entry has information beyond its name."},
+  "000026-3": {"verdict": "PARTIAL", "reason": "The first vote was counted (11→12) and on returning the radios and Vote button were disabled with 'You have already voted in this survey.' shown; a forced second POST got 409 and was not counted. However, right after voting the page only moved to the results screen and showed no confirmation message."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows the current total, each option's votes and percentage share, and a bar chart, and it updated right after a vote (Total votes 7→8)."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The header background, the main button background and the h1 text are all rgb(47,79,79), which is dark slate gray, so all three components match."},
+  "000026-rename": {"verdict": "YES", "reason": "No 'poll' or its plurals appeared in the body text or title of the home, survey list, voting, results list or individual results pages. Navigation, headings, buttons and messages all say 'Survey', and every page worked."}
+}

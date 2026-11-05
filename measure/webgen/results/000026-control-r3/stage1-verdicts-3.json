@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking the poll title on the homepage opened the voting page /polls/2 without errors, and all four options (Mountain cabin, Beach resort, City break, Stay at home and hack) appeared as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists three polls without requiring a vote. Each poll shows its name plus related information: a description, the number of options and the number of votes so far. The voting page for each poll shows all of its options."},
+  "000026-3": {"verdict": "YES", "reason": "After choosing Beach resort and clicking Submit vote, the page showed 'Thanks! Your vote has been recorded.' and 'You voted for Beach resort.' The Beach resort count changed from 0 to 1 vote, so the vote was recorded."},
+  "000026-4": {"verdict": "YES", "reason": "/results and /polls/2/results show the current results: the total vote count, each option's votes and percentage, and a bar graph (div.fill whose width matches the percentage). The vote just cast was included in the results."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255) (white). The header background, the main button (.btn) background and the h1/h2 text are all rgb(0,0,128) (navy), so the background and all three components match."}
+}

@@ -1,0 +1,18 @@
+Species Biological Information Database — 完了
+
+起動: bash setup.sh → PORT=8000 bash run.sh （http://127.0.0.1:$PORT）
+実装: app.py（Python 標準ライブラリのみ、SQLite）、setup.sh、run.sh、.gitignore
+データ: DATA_DIR（既定 ./data）の species.db。空なら 23 種のサンプルを自動投入。
+
+画面（英語 UI、ナビゲーション: Home / Browse & Search / Add Species / About）
+- Home: 件数の統計、生息地別・保全状態別の絞り込みリンク、注目の種
+- Browse & Search (/species): キーワード検索（名前・綱・説明）、Kingdom・Habitat・Feeding mode・Conservation status の絞り込み、並べ替え（名前・体長・寿命）、件数表示
+- 詳細 (/species/<id>): 全項目の表示、編集・削除
+- Add Species / Edit: 入力、必須と数値の検証、重複名の検出
+- Delete: 確認ダイアログ付き
+- About: 使い方
+
+色: ベースは linen (#FAF0E6)、コンポーネントは maroon (#800000) で統一（ナビ、ボタン、表ヘッダ、バッジ、枠線、見出し、フォーカス枠）。
+
+確認済み: 全主要ページ 200、存在しない ID は 404、追加・重複・検証エラー・編集・検索・絞り込み・削除、Chrome のヘッドレス表示（スクリーンショットで目視）。
+未確認: 実際のブラウザでの手動操作の全件（クリック遷移は curl で代替）。

@@ -1,0 +1,43 @@
+{
+  "base_url": "http://127.0.0.1:60602",
+  "cases": [
+    {
+      "id": "000026-1",
+      "category": "Data Display Testing",
+      "task": "Test the navigation to the voting page from the homepage.",
+      "expected": "The user can navigate to the voting page without errors, and all voting options are displayed."
+    },
+    {
+      "id": "000026-2",
+      "category": "Functional Testing",
+      "task": "Check the ability to browse different voting options without casting a vote.",
+      "expected": "The user can view a list of voting options, and each option should be clearly displayed with relevant information."
+    },
+    {
+      "id": "000026-3",
+      "category": "Functional Testing",
+      "task": "Cast a vote in a survey, then return to the same survey in the same browser and try to vote again.",
+      "expected": "The first vote is recorded with a confirmation notification; on returning, the voting controls are disabled and the message 'You have already voted' is shown; no second vote is counted.",
+      "change": true
+    },
+    {
+      "id": "000026-4",
+      "category": "Data Display Testing",
+      "task": "Check the voting results page for the display of current voting results.",
+      "expected": "The user can view the up-to-date voting results, including relevant statistics or graphical representations."
+    },
+    {
+      "id": "000026-design",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'light yellow' as the background color and 'dark slate gray' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'light yellow' and components (such as buttons, cards, headers, etc.) are styled with the color 'dark slate gray', accurately reflecting the design instruction."
+    },
+    {
+      "id": "000026-rename",
+      "category": "Functional Testing",
+      "change": true,
+      "task": "Open every main page (home, voting page, results page) and read all visible text, navigation labels, headings, buttons and messages.",
+      "expected": "The word 'poll' (and its plural) no longer appears anywhere; the concept is called 'survey' everywhere (navigation, headings, buttons, messages), and the pages still work."
+    }
+  ]
+}

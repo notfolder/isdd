@@ -1,0 +1,178 @@
+{
+  "site": "000026",
+  "arm": "isdd-r3",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 434.6,
+      "agent_tokens": 5966071,
+      "usage": {
+        "input_tokens": 84,
+        "output_tokens": 99952,
+        "cache_creation_input_tokens": 196010,
+        "cache_read_input_tokens": 5670025
+      },
+      "tool_uses": 46,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: Clicking 'Vote' on the homepage opened /polls/1 (HTTP 200, no errors), and all four options (Python, JavaScript, Go, Rus / YES: ホームの「Vote」リンクから /polls/1 へエラーなく移動でき、選択肢 4 つ（Python, JavaScript, Go, Rust）がすべてラジオボタンで表示された。 / YES: ホームの Vote ボタンから /polls/1 の投票ページへエラーなく移動でき、4 つの選択肢（Python, JavaScript, Go, Rust）がすべてラジオボタンで表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: Without voting, the homepage lists 3 polls, each with its name plus details (option count and total votes, e.g. 'Options / YES: 投票せずにホームで 3 つの投票を一覧でき、各投票に名称に加えて選択肢数・総投票数（関連情報）があり、投票ページでも全選択肢が見られた。 / YES: 投票しなくてもホームで各投票が一覧表示され、名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 31）が示され、投票ページでは各選択肢がはっきり表示された。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: After picking Go and clicking Submit vote, the page showed 'Your vote has been recorded.', Go went from 5 to 6 votes, an / YES: 選択肢を選んで送信した直後に「Your vote has been recorded.」という成功の文が表示され、総投票数が 30 から 31 に増えて記録を確認できた。 / YES: JavaScript を選んで Submit vote を押すと、結果ページに『Your vote has been recorded.』と表示され、総投票数が 31 から 32 に増えて投票が記録されたことを確認できた。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: /results and /polls/1/results show votes, percentage share, totals and a bar chart for each option, and the numbers incl / YES: /results に各投票の票数・割合(%)・総投票数と棒グラフが表示され、直前の投票（総数 31）も反映されていた。 / YES: /results と各投票の結果ページで、選択肢ごとの票数・割合（%）・総投票数と棒グラフが表示され、直前に投じた票も反映されていた。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-5": {
+          "verdict": "YES",
+          "reason": "YES: Body background is rgb(255,255,255) (white). Nav background rgb(0,0,128), the main button background rgb(0,0,128) and h1 / YES: body の背景が rgb(255,255,255)（white）で、ナビ・主要ボタン（Vote/Submit vote）・見出し（h1/h2）がすべて rgb(0,0,128)（navy）であり、背景と部品 3 種類がすべて合った。 / YES: body 背景 rgb(255,255,255) は white に一致し、ナビ背景 rgb(0,0,128)、主要ボタン背景 rgb(0,0,128)、見出し文字色 rgb(0,0,128) の 3 種類がすべて navy に一致した。",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 536,
+        "public_functions": 28
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 631.9,
+      "agent_tokens": 10923620,
+      "usage": {
+        "input_tokens": 126,
+        "output_tokens": 135095,
+        "cache_creation_input_tokens": 254172,
+        "cache_read_input_tokens": 10534227
+      },
+      "tool_uses": 67,
+      "rounds": 1,
+      "skills_called": [
+        "isdd-spec",
+        "isdd-build"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 1,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: トップの「Vote」リンクから /polls/1 にエラーなく遷移し、全選択肢（Python/JavaScript/Go/Rust）がラジオボタンと投票ボタン付きで表示された。 / YES: ホームの Vote ボタンから /polls/1 にエラーなく移動でき、選択肢 4 件（Python, JavaScript, Go, Rust）がすべてラジオボタンで表示された。 / YES: トップページの『Vote』ボタンから /polls/1 にエラーなく移動でき、全選択肢（Python, JavaScript, Go, Rust）がラジオボタンで表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: トップに 3 件の投票が一覧表示され、各投票に名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 29）が示され、投票せずに各投票ページ・結果ページを閲覧できた。 / YES: 投票せずにホームで投票 3 件の一覧が見られ、各投票に名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 29）が表示され、関連情報の基準を満たす。 / YES: 投票せずに一覧で各投票（poll）が名称に加えて選択肢数・総投票数付きで表示され、各投票ページでも選択肢を閲覧できた（関連情報の基準を満たす）。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: 投票直後に「Your vote has been recorded.」と表示され Spring が 7→8、総数 23→24 になった。同じブラウザで再訪すると「You have already voted.」が表示され、ラジオと Subm / YES: Poll 2 で投票すると直後に『Your vote has been recorded.』が表示され、Spring が 8→9、総数が 24→25 になった。同じブラウザで戻ると『You have already voted.』が表示され / YES: 投票直後に『Your vote has been recorded.』が表示され Italian が 6→7 票に増えた。同じブラウザで戻ると『You have already voted.』が表示され、ラジオボタンと送信ボタンがすべて d",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: /results に全投票の選択肢ごとの票数・割合（%）・総投票数と、票数に比例した幅の棒グラフが表示され、投票後の値も反映されていた。 / YES: /results に各投票の選択肢ごとの票数・割合・総投票数と棒グラフ（bar-fill の幅が割合と一致）が表示され、投票後の値も反映された最新の結果だった。 / YES: /results に全投票の選択肢ごとの票数・割合（%）・棒グラフ列・総投票数が表示され、直前の投票も反映された最新の結果だった。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "YES: body 背景 rgb(255,255,224) は light yellow と一致し、ナビ背景 rgb(47,79,79)・主要ボタン背景 rgb(47,79,79)・見出し h1 文字色 rgb(47,79,79) がいずれも dar / YES: body 背景 rgb(255,255,224) は light yellow と一致。ナビ背景・主要ボタン背景・見出し色はすべて rgb(47,79,79) で dark slate gray と一致した。 / YES: body 背景 rgb(255,255,224)=light yellow、ナビ背景・主要ボタン背景・見出し文字色がいずれも rgb(47,79,79)=dark slate gray で、背景と部品 3 種類がすべて一致した。",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 628,
+        "public_functions": 31
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 360.1,
+      "agent_tokens": 5739617,
+      "usage": {
+        "input_tokens": 80,
+        "output_tokens": 85543,
+        "cache_creation_input_tokens": 208986,
+        "cache_read_input_tokens": 5445008
+      },
+      "tool_uses": 43,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": ""
+    }
+  },
+  "runner": "claude -p"
+}

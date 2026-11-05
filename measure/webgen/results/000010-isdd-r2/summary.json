@@ -1,0 +1,220 @@
+{
+  "site": "000010",
+  "arm": "isdd-r2",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 458.9,
+      "agent_tokens": 2928933,
+      "usage": {
+        "input_tokens": 54,
+        "output_tokens": 63160,
+        "cache_creation_input_tokens": 175757,
+        "cache_read_input_tokens": 2689962
+      },
+      "tool_uses": 38,
+      "rounds": 2,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: 名前を入力して Spin を押すと 'Spinning...' 表示の後ホイールが止まり、ポインター位置の区画（Movie Ticket Pair）と同じ 'You won Movie Ticket Pair!' が表示され、ページエラーも / YES: 名前を入れて Spin を押すと「Spinning...」の表示とともにホイールが回転し、10% Off Coupon の区画（ポインター位置）で止まって「You won 10% Off Coupon!」と表示された。ページエラーは出なかっ / YES: After entering a name and pressing Spin, the canvas rotated (its transform changed), stopped with the pointer on a segme",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: Prize List ページに 6 件の賞品（Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair, Mystery Gift）が説明付きで表 / YES: /prizes に 6 件の賞品（Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair, Mystery Gift）が説明付きで表示され、ホイ / YES: The /prizes page lists '6 prizes': Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair and Myste",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: スピン後に My Winnings を開くと Tester1 の記録 1 件として日時 'Nov 5, 2026, 6:40 AM' と賞品 'Movie Ticket Pair' が表示され、直前の当選と一致した。 / YES: 回した後に My Winnings を開くと、GraderBob の記録が 1 件追加され、日時「Nov 5, 2026, 6:41 AM」と賞品「10% Off Coupon」が表示され、当たった賞品と一致した。 / YES: After a spin, entering the same name on My Winnings showed the latest prize (e.g. 'Nov 5, 2026, 6:40 AM | Free Coffee') ",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-4": {
+          "verdict": "YES",
+          "reason": "YES: body 背景 rgb(211,211,211)=light gray、ヘッダー背景・主要ボタン背景・見出し文字色がすべて rgb(139,0,0)=dark red で、背景と部品 3 種類とも許容差内だった。 / YES: body の背景は rgb(211,211,211)（light gray と一致）。ヘッダー背景・Spin ボタン背景・h1 の文字色はどれも rgb(139,0,0)（dark red と一致）で、部品 3 種類すべてが合った。 / YES: The body background is rgb(211,211,211), which is light gray, and the header background, main button background and h1 t",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 4,
+        "lines": 402,
+        "public_functions": 17
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 721.6,
+      "agent_tokens": 14766301,
+      "usage": {
+        "input_tokens": 142,
+        "output_tokens": 137292,
+        "cache_creation_input_tokens": 301865,
+        "cache_read_input_tokens": 14327002
+      },
+      "tool_uses": 82,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 2,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: With the name Alice, the wheel spun and stopped on '10% Off Coupon', and the page showed 'You won 10% Off Coupon!' with  / NO: The page could not be opened: http://127.0.0.1:62396 refused the connection (ERR_CONNECTION_REFUSED) on every retry over / YES: With name Alice the wheel rotated (canvas transform changed), stopped at Free Tote Bag under the pointer, and showed 'Yo",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: The Prize List page shows 6 prizes with descriptions (Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ti / NO: The page could not be opened (connection refused at http://127.0.0.1:62396), so no prize list could be seen. / YES: The Prize List page shows 6 prizes with descriptions (Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ti",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After spinning as Alice, My Winnings for Alice shows 1 record with Player Alice, Prize 10% Off Coupon and Date won Nov 5 / NO: The page could not be opened (connection refused at http://127.0.0.1:62396), so it was impossible to spin or view winnin / YES: After the spin, My Winnings for Alice shows a row 'Alice | Free Tote Bag | Nov 5, 2026, 6:53 AM' with the player name, p",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button rgb(0,77,0) / NO: The page could not be opened (connection refused at http://127.0.0.1:62396), so the body background color and component  / YES: The body background is rgb(255,255,240) (ivory). The header background, Spin button background and h1 color are all rgb(",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 4,
+        "lines": 405,
+        "public_functions": 17
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 258.0,
+      "agent_tokens": 2701604,
+      "usage": {
+        "input_tokens": 54,
+        "output_tokens": 28019,
+        "cache_creation_input_tokens": 114012,
+        "cache_read_input_tokens": 2559519
+      },
+      "tool_uses": 30,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [
+        "000010-1",
+        "000010-3",
+        "000010-rename"
+      ],
+      "change_total": 3,
+      "cases": {
+        "000010-1": {
+          "verdict": "NO",
+          "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: http://127.0.0.1:49612 への接続が拒否され（ERR_CONNECTION_REFUSED）ページが開けないため、基準の『ページが開けない』により NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "NO",
+          "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）報酬一覧ページを開けないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "NO",
+          "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）スピンも当選記録の確認もできないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "NO",
+          "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）body の背景色も部品の色も取得できないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+          "category": "Design Validation Testing",
+          "change": false
+        },
+        "000010-rename": {
+          "verdict": "NO",
+          "reason": "NO: http://127.0.0.1:49612 への接続が ERR_CONNECTION_REFUSED となり（約1.5分再試行、ポートで待ち受けるプロセスも無し）、ページが開けないため基準により NO。 / NO: サイトに接続できず（ERR_CONNECTION_REFUSED）どのページも開けず、ページが動くことを確認できないため NO。 / NO: The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries",
+          "category": "Functional Testing",
+          "change": true
+        }
+      },
+      "score": 0.0,
+      "n_cases": 5,
+      "accuracy": 0.0,
+      "regressions": [
+        "000010-1",
+        "000010-2",
+        "000010-3",
+        "000010-design"
+      ],
+      "started": true,
+      "overbuild": {
+        "source_files": 4,
+        "lines": 419,
+        "public_functions": 17
+      }
+    }
+  },
+  "runner": "claude -p"
+}

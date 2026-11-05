@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Polls{% endblock %}
+{% block content %}
+<h1>Polls</h1>
+<p class="lead">Choose a poll to see its options and vote.</p>
+{% if polls %}
+<ul class="card-list">
+  {% for poll in polls %}
+  <li class="card">
+    <h2><a href="{{ url_for('web.poll_detail_page', poll_id=poll.id) }}">{{ poll.title }}</a></h2>
+    {% if poll.description %}<p>{{ poll.description }}</p>{% endif %}
+    <p class="meta">{{ poll.option_count }} options &middot; {{ poll.total_votes }} votes</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No polls yet.</p>
+{% endif %}
+{% endblock %}

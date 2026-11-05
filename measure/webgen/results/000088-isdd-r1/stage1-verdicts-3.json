@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "The Browse page lists 12 species, and every row has a value in all 6 columns (common name, scientific name, class, habitat, diet, conservation status) with no blank placeholders. The detail page also shows biological information such as lifespan, body mass and a description."},
+  "000088-2": {"verdict": "YES", "reason": "Searching for 'wolf' returned only Gray wolf (1 species), and searching for 'Panthera' returned only Snow leopard, so no unrelated species appeared."},
+  "000088-3": {"verdict": "YES", "reason": "The habitat=Forest filter showed only 3 Forest species, and Marine showed only 2 Marine species. No entries that fail the condition were shown."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which matches linen. The header background rgb(128,0,0), the main Search button background rgb(128,0,0) and the h1 text color rgb(128,0,0) all match maroon."}
+}

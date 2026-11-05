@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "The browse page lists 12 species, each with common name, scientific name, class, habitat, diet and conservation status, and no row has an empty or placeholder value. The detail page (Gray wolf) shows lifespan, body mass and a description, with no display errors."},
+  "000088-2": {"verdict": "YES", "reason": "Searching for 'wolf' returned only 1 species, Gray wolf (Canis lupus), and no unrelated species."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by Habitat=Forest showed only Asian elephant, Bald eagle and Gray wolf, all with habitat Forest, and no non-matching entries."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which is linen. The header, the main Search button and the h1 heading are all rgb(128,0,0), which is maroon, so every RGB component is within 40 of the named color."}
+}

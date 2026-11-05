@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote now' on the homepage opened /polls/1 with no errors, and all four options (Python, TypeScript, Rust, Go) appeared as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists four polls, and each one shows a description and vote/option counts besides its name, so the related-information rule is met. Opening a poll shows its options without casting a vote."},
+  "000026-3": {"verdict": "YES", "reason": "After voting, the page showed 'Thank you for voting! You voted for Hiking.' On returning, the radios and button were disabled with the message 'You have already voted in this poll.', and a forced POST left the total at 1."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows total votes, the leading option, and each option's vote count and percentage, plus bar graphs (bar-fill widths match the percentages)."},
+  "000026-design": {"verdict": "YES", "reason": "Body background rgb(255,255,224) matches light yellow. Header background, .btn background and h1/h2 text color are all rgb(47,79,79), which matches dark slate gray."}
+}

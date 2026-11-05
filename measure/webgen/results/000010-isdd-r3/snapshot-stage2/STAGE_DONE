@@ -1,0 +1,46 @@
+STAGE DONE: 変更依頼 1（配色、利用者名の必須化、当選履歴への利用者名の表示）
+
+フロー: isdd-spec（変更フロー）→ isdd-build（実装 → 実装後レビューで正本へ反映）。
+ユーザー不在のため ANSWERS.md の固定回答に従い、承認はすべて与えられたものとして進めた。
+
+■ 変更の内容
+1. 配色: 背景 ivory（#FFFFF0）、部品 dark green（#006400）。light gray（#D3D3D3）と dark red（#8B0000）を CSS と JavaScript（ルーレットの区分、枠、中央の円）から除いた。検証とエラーの文字は dark green の太字。
+2. 景品ルーレット画面: 利用者名の入力欄を Spin ボタンの左隣の同じ行に置いた（必須）。空欄・空白だけ・21 文字以上で Spin を押すと、ルーレットは回らず、入力欄の下に「Please enter a name of 1 to 20 characters.」を出し、/api/spin を呼ばない。サーバー側の検証（400）は残した。
+3. 当選履歴画面: 表の列を Player / Prize / Won at の 3 列にした。/api/records の各要素に player_name を追加した（DB の変更は無し）。
+
+■ 文書（isdd の正本と変更の記録）
+- 変更の記録: .history/20261105-theme-player-name-records/（change_requirements.md、change_detail_design.md、tasks.md）
+- 正本へ反映済み: docs/requirements.md（RQ-NF-COLOR-THEME → RQ-NF-COLOR-THEME-IVORY-GREEN、RQ-UI-MY-RECORDS-SCREEN → RQ-UI-RECORDS-SCREEN、RQ-UI-SPIN-NAME-FIELD を追加、RQ-TS-NAVIGATION / RQ-TS-NAME-VALIDATION / RQ-TS-VIEW-OWN-RECORDS を更新、1-2 に変更の決め事 9 件を追加）
+- 正本へ反映済み: docs/detail_design.md（DS-IF-SPIN-SCREEN → DS-IF-SPIN-SCREEN-NAME-FIELD、DS-FN-START-SPIN → DS-FN-START-SPIN-WITH-NAME-CHECK、DS-FN-DRAW-WHEEL → DS-FN-DRAW-WHEEL-THEMED、DS-IF-RECORDS-SCREEN → DS-IF-RECORDS-SCREEN-PLAYER-COLUMN、DS-FN-LOAD-RECORDS → DS-FN-LOAD-RECORDS-WITH-PLAYER、DS-IF-RECORDS-API → DS-IF-RECORDS-API-WITH-PLAYER、DS-TS-*-E2E の 3 件を差し替え）
+- docs/trace_map.md を新しい DS-ID に合わせた。docs/active_change は反映後に削除した。docs/proposals.md は無い。
+- README.md の画面の説明を更新した。
+- 旧い ID（deprecated）は正本から削除済み。変更の記録（.history/）は書き換えていない。
+
+■ 検証（実行した結果）
+- python3 -m unittest discover -s tests/unit -p "test_*.py" → Ran 17 tests OK
+- python3 scripts/isdd/unittest_junit.py -s e2e -t . -o e2e/results/e2e.xml → Ran 6 tests OK（JUnit: tests=6 failures=0 errors=0）
+- bash scripts/isdd/check.sh --strict → 対応表 エラー 0 / 警告 0、依存チェック 合格、受け入れ判定 合格（DS-TS 6/6、要件 13/13 実装済み）
+- rq_integrity_checker.py docs/requirements.md → 問題 0 件
+- rq_ds_link_checker.py docs/requirements.md docs/detail_design.md → 問題 0 件
+- rq_integrity_checker.py（変更要件定義書）と rq_ds_link_checker.py（変更の組み合わせ, --base）→ 問題 0 件
+- implementation_completeness_checker.py . → 4/4 項目 OK
+- scripts/isdd/VERSION（v2.2.0）と isdd-build の metadata.version（v2.2.0）は一致
+- 起動確認: bash setup.sh → 終了コード 0。PORT=8765 DATA_DIR=(空の一時ディレクトリ) bash run.sh で起動し、/ /prizes /records /static/* が 200、/api/prizes は 7 件、/api/records は Sample Player の 2 件（player_name 付き）、空の名前の /api/spin は 400。起動したプロセス（PID 16775）だけを TERM で止め、ポートが閉じたことを確認した。
+- ヘッドレス Chrome のスクリーンショットで、ivory の背景、dark green の部品、抽選ボタンの左隣の利用者名欄、当選履歴の 3 列を目で確認した。
+- 画面の JavaScript（common.js と wheel.js を実際に読み込み、DOM と fetch を模擬）で、空・空白・21 文字では fetch が呼ばれず、20 文字と前後空白つきの名前では回ることを確認した（ALL OK）。
+
+■ 未マッピング一覧（isdd-build 実装後レビュー）
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+要件なし（作りすぎ）: 0 件（check.sh の未登録の警告 0 件）
+
+■ 要件ごとの実装済み判定（check.sh --strict の受け入れ判定）
+実装済み 13 / 不合格 0 / 未検証 0（全 13）。DS-TS は 6 件すべて合格。
+
+■ 残っている確認事項・判断（ユーザーが後で見直せる点）
+- 検証とエラーの文字色を dark green の太字にした（dark red を全画面から外す依頼に従ったため。赤系の警告色は使っていない）。
+- 利用者名の空欄時の文言は既存の「Please enter a name of 1 to 20 characters.」を使った（新しい文言は足していない）。
+- 当選履歴の列の順は Player / Prize / Won at。
+- 画面の見た目は目視（スクリーンショット）で確認した。ブラウザでの手操作による最終確認は、依頼者が行うこと。
+- 既存の .history/20261105-prize-wheel/ は段 1 の記録としてそのまま残した。

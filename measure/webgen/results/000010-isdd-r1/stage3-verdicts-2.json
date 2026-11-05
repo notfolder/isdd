@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel rotated (transform changed and settled) and showed 'You won Keychain / Recorded for Alice at ...' with no JS errors; spinning with an empty name showed 'Please enter your name (1-30 characters).' and the wheel transform stayed unchanged."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows 8 rewards with their chances, and they are exactly the same 8 rewards shown on the wheel segments."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winnings for Alice lists the new win at the top with player 'Alice', the reward (Sticker Pack) and the date/time 'Nov 5, 2026, 6:16 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "Body background rgb(255,255,240) = ivory; header bg rgb(0,100,0), Spin button bg rgb(0,100,0) and h2 text rgb(0,100,0) all match dark green within 40 per channel."},
+  "000010-rename": {"verdict": "YES", "reason": "The visible text on the spin, reward list and winnings pages (nav, headings, buttons, messages, title) contains no 'prize'/'prizes'; 'Reward' is used throughout and all pages worked."}
+}

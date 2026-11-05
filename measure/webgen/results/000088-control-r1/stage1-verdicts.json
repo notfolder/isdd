@@ -1,0 +1,38 @@
+{
+  "000088-1": {
+    "verdict": "YES",
+    "reason": "YES: /species lists all 13 species with every column filled (scientific name, kingdom, class, habitat, diet, status, length,  / YES: /species lists all 13 species with 9 columns (name, scientific name, kingdom, class, habitat, diet, status, length, life / YES: /species で 13 種が一覧表示され、全 13 行の 9 列（学名・界・綱・生息地・食性・保全状況・体長・寿命）すべてに値があり、空欄表示は無い。表は横スクロール枠に入っていて、表示が崩れている箇所も無い。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "YES: Searching 'Panda' showed only Giant Panda ('Showing 1 of 13 species'), with no unrelated species. / YES: Searching 'Panda' returned only Giant Panda (Showing 1 of 13), and searching 'bear' returned only Polar Bear; no unrelat / YES: 検索欄に「Panda」と入れて Apply filters を押すと「Showing 1 of 13 species」となり、Giant Panda だけが表示された。関係ない種は出ていない。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "YES: Filtering by Habitat = Marine showed only Blue Whale and Green Sea Turtle, both Marine, and no rows from other habitats. / YES: With Habitat=Forest, the list showed only the 4 Forest entries (Corpse Flower, English Oak, Fly Agaric, Giant Panda); no / YES: Habitat=Forest で絞ると Forest の 4 種だけ、Marine で絞ると Marine の 2 種だけが表示され、条件に合わない種は出なかった。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-4": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(250,240,230), which is linen. The header background, main button (.btn) background and headin / YES: The body background is rgb(250,240,230), which is linen. The header background (128,0,0), the main button (.btn) backgro / YES: body の背景は rgb(250,240,230) で linen と一致した。部品はヘッダー背景 rgb(128,0,0)、主要ボタン背景 rgb(128,0,0)、見出しの文字色 rgb(128,0,0) で、3 つとも maroon",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

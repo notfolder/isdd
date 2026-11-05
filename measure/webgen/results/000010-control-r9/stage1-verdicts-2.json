@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin rotated the wheel group (rotate 0 → ~1821°), it then stopped, and the result area showed the prize ('Better Luck Next Time – No prize this time. Spin again!'). No page or console errors occurred."},
+  "000010-2": {"verdict": "YES", "reason": "/prizes lists 7 prizes, each with a description and a chance %. They match the 7 segment labels on the wheel exactly."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning, My Winning Records for 'Tester' showed the latest spin at the top (Nov 5, 2026, 6:45 AM – Better Luck Next Time), in date and prize columns, and the spin count was updated."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(228,228,228), within 40 per component of light gray (211,211,211). The header background, Spin button background and h1/h2 headings are all rgb(139,0,0), which matches dark red."}
+}

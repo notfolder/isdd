@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reward Wheel - Spin Wheel</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Reward Wheel</h1>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/" class="current" aria-current="page">Spin Wheel</a>
+      <a href="/rewards">Reward List</a>
+      <a href="/records">My Winning Records</a>
+    </nav>
+  </header>
+  <main>
+    <section class="panel">
+      <h2>Spin the wheel</h2>
+      <label for="player-name">Your name (required)</label>
+      <div class="inline-form spin-row">
+        <input id="player-name" type="text" required placeholder="Enter your name" autocomplete="nickname" aria-describedby="error-message">
+        <button id="spin-button" type="button">Spin</button>
+      </div>
+      <p id="error-message" class="error" role="alert"></p>
+      <canvas id="wheel" width="420" height="420" aria-label="Reward wheel"></canvas>
+      <p id="result" class="result" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/wheel.js"></script>
+</body>
+</html>

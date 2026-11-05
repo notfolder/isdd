@@ -1,0 +1,38 @@
+{
+  "000088-1": {
+    "verdict": "YES",
+    "reason": "YES: The list shows 12 species, each with common name, scientific name, class, habitat, diet and conservation status, and no  / YES: The browse page lists 12 species, each with common name, scientific name, class, habitat, diet and conservation status,  / YES: The Browse page lists 12 species, and every row has a value in all 6 columns (common name, scientific name, class, habit",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-2": {
+    "verdict": "YES",
+    "reason": "YES: Searching 'wolf' returned only Gray wolf, and searching 'Panthera' returned only Snow leopard; no unrelated species appe / YES: Searching for 'wolf' returned only 1 species, Gray wolf (Canis lupus), and no unrelated species. / YES: Searching for 'wolf' returned only Gray wolf (1 species), and searching for 'Panthera' returned only Snow leopard, so no",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-3": {
+    "verdict": "YES",
+    "reason": "YES: Filtering by habitat Forest showed only the 3 Forest entries (Asian elephant, Bald eagle, Gray wolf); no other habitat a / YES: Filtering by Habitat=Forest showed only Asian elephant, Bald eagle and Gray wolf, all with habitat Forest, and no non-ma / YES: The habitat=Forest filter showed only 3 Forest species, and Marine showed only 2 Marine species. No entries that fail th",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000088-4": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(250,240,230), which is linen. The header background, the main button (Search) background and  / YES: The body background is rgb(250,240,230), which is linen. The header, the main Search button and the h1 heading are all r / YES: The body background is rgb(250,240,230), which matches linen. The header background rgb(128,0,0), the main Search button",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

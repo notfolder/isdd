@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the homepage, clicking 'Vote' opened /polls/3 with no errors. The page showed all 5 options (Kyoto, Lisbon, Toronto, Cape Town, Reykjavik) as radio buttons, plus a 'Cast vote' button."},
+  "000026-2": {"verdict": "YES", "reason": "Browse Polls (/polls) lists 3 polls without asking for a vote. Each one shows its question plus other information (number of options and total votes), so the 'relevant information' requirement is met."},
+  "000026-3": {"verdict": "YES", "reason": "After choosing an option on poll #2 and clicking 'Cast vote', the page showed 'Thank you! Your vote has been recorded.' and the total went from 40 to 41, so the vote was recorded and a confirmation message appeared."},
+  "000026-4": {"verdict": "YES", "reason": "/results shows a summary table (total votes and leading option for each poll). Each poll's results page shows vote counts, percentages and navy bar charts, and the counts reflect the latest vote (41 votes)."},
+  "000026-5": {"verdict": "YES", "reason": "The body background is rgb(255,255,255), which counts as white. The header, the main button (.btn) and the headings (h1–h3) are all rgb(0,0,128), which counts as navy, so the background and all 3 parts match."}
+}

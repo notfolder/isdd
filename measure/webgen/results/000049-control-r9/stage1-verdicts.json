@@ -1,0 +1,38 @@
+{
+  "000049-1": {
+    "verdict": "YES",
+    "reason": "YES: Submitting /barbers/new with valid data redirected to the barber list, which showed the message 'The new barber was adde / YES: Saving the barber form showed the message 'The new barber was added.' on /barbers, and the new barber 'Grader Tomlin' ap / YES: Submitting the Add barber form redirected to /barbers with the message 'The new barber was added.', and 'Grader Barber Z",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000049-2": {
+    "verdict": "YES",
+    "reason": "YES: Submitting /services/new with valid data redirected to the services list, which showed the message 'The new service was  / YES: Saving the service form showed the message 'The new service was added.' on /services, and the new service 'Grader Kids C / YES: Submitting the Add service form redirected to /services with the message 'The new service was added.', and 'Grader Frost",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000049-3": {
+    "verdict": "YES",
+    "reason": "YES: From the dashboard, the top navigation links Barbers, Services and Home each returned HTTP 200 and loaded the right page / YES: From the dashboard, the nav links Barbers, Services and Home each opened the right page (/barbers, /services, /) with ma / YES: Clicking Barbers, Services and Home in the header nav loaded /barbers, /services and / with matching titles and h1 headi",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000049-4": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,250,250) (snow). The header and the main button are rgb(105,105,105), and the h1 heading  / YES: Body background is rgb(255,250,250), which is snow. Header background rgb(105,105,105), main button background rgb(105,1 / YES: body background rgb(255,250,250) = snow; header background rgb(105,105,105), primary button background rgb(105,105,105) ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

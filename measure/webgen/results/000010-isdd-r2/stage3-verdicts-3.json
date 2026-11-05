@@ -1,0 +1,22 @@
+{
+  "000010-1": {
+    "verdict": "NO",
+    "reason": "The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries over ~2 minutes also refused, no process listening on the port), so per the criterion 'page cannot be opened' this is NO."
+  },
+  "000010-2": {
+    "verdict": "NO",
+    "reason": "The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries over ~2 minutes also refused, no process listening on the port), so per the criterion 'page cannot be opened' this is NO."
+  },
+  "000010-3": {
+    "verdict": "NO",
+    "reason": "The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries over ~2 minutes also refused, no process listening on the port), so per the criterion 'page cannot be opened' this is NO."
+  },
+  "000010-design": {
+    "verdict": "NO",
+    "reason": "The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries over ~2 minutes also refused, no process listening on the port), so per the criterion 'page cannot be opened' this is NO."
+  },
+  "000010-rename": {
+    "verdict": "NO",
+    "reason": "The site at http://127.0.0.1:49612 could not be opened (net::ERR_CONNECTION_REFUSED in Playwright; repeated curl retries over ~2 minutes also refused, no process listening on the port), so per the criterion 'page cannot be opened' this is NO."
+  }
+}

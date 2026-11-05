@@ -1,0 +1,21 @@
+REQUEST.md change request 1 — done.
+
+1. Color theme
+   - Base background: honeydew (#F0FFF0). All components use dark olive green (#556B2F): header, nav, buttons, table headers, badges, stat tiles, flash messages, footer, labels, links, and borders.
+   - Maroon and linen are gone from app.py (CSS variables renamed to --honeydew / --olive / --olive-dark).
+   - Supporting shades chosen by me: card #FFFFFF, row stripe #E3EFDA, borders #B9C9A6, text #1E2A14, muted text #4B5A3A, hover #3E5020.
+
+2. Search matches names only
+   - The search clause now checks only scientific_name and common_name. taxonomic_class, habitat, diet and description are no longer searched.
+   - Search label, placeholder, the home page intro and the About text were updated to match.
+   - Filters and sorting are unchanged.
+
+Verified (bash setup.sh, then PORT=8765 DATA_DIR=<temp> bash run.sh):
+   - Name searches work: "Blue", "Balaenoptera", "Blue whale", "Panthera" each return results.
+   - Description/habitat/diet-only words return no results: "krill", "Marine", "Forest", "Grassland", "Herbivore", "sierra".
+   - Filters work: habitat=Marine gives 2 results; q=lion with habitat=Grassland gives 1; status+diet+sort combination works.
+   - Pages return 200: /, /species, /species/new, /about, /species/1, /species/1/edit; unknown id returns 404.
+   - No maroon/linen colors remain in the served page.
+Server was stopped by its PID. Temp data was removed. No commits made.
+Not checked: visual rendering in a real browser (checked by reading the CSS and the served HTML).
+Note: this sandbox has python3 3.9.6, not 3.12. The app only uses the standard library.

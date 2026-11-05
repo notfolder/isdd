@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: Spin を押すとホイールが回転して 1 つの区画で止まり、結果が「Try again」「You won: 10% Off Coupon!」のように表示されました。ページエラーやコンソールエラーは出ませんでした。 / YES: Clicking Spin disabled the button while the wheel spun. The wheel then stopped on a segment and showed the result (\"Try  / YES: Clicking Spin rotated the wheel (it was mid-turn in a screenshot after 1 s). It then stopped under the pointer, and the ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: Prize List ページに 7 つの賞品が説明と当選確率つきで並び、ホイールの 7 区画（10% Off Coupon、Free Coffee、Free Shipping、$5 Voucher、Mystery Gift、Grand Pr / YES: The Prize List page shows all 7 prizes with descriptions and chances, and they match the 7 segments drawn on the wheel. / YES: Before any spin, the Prize List page shows 7 prizes, each with a description and a chance. They are the same 7 segments ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: 10% Off Coupon が当たった後、My Winning Records で名前を入れて表示すると、日時 2026-11-05 06:49:40 と賞品 10% Off Coupon の行が追加されていました。日時は実際の時刻と合っ / YES: After winning Free Shipping, My Winning Records showed it at the top with date and time (2026-11-05 06:50:44) and the pr / YES: After winning '$5 Voucher', My Winning Records added a new row: 2026-11-05 06:51:47, $5 Voucher. Both the date and the p",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-4": {
+    "verdict": "YES",
+    "reason": "YES: body の背景は rgb(211,211,211) で light gray に一致しました。ヘッダー背景、Spin ボタン背景、見出し h2 の文字色はいずれも rgb(139,0,0) で dark red に一致し、背景と部品 3  / YES: The body background is rgb(211,211,211), which is light gray. The header, the Spin button (idle) and the h2 heading are  / YES: The body background is rgb(211,211,211), which is light gray. The header background, the Spin button and the h2 heading ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

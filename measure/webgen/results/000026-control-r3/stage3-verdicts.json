@@ -1,0 +1,56 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: From the homepage, the 'Vote' link opens /surveys/1 without errors, and all 5 options (Python, JavaScript, Rust, Go, Oth / YES: ホームの「Vote」リンクから /surveys/3 の投票ページへエラーなく移動でき、4つの選択肢（Dark mode 等）がすべてラジオボタンで表示された。 / YES: From the homepage, the 'Vote' link opened /surveys/3 without errors, and all four options (Dark mode, Offline support, E",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: The homepage lists 3 surveys with a description, option count and vote count each, and every survey page shows its optio / YES: 投票せずにホームで3つのサーベイを一覧でき、各項目に名称のほか説明文・選択肢数・投票数が表示され、各投票ページで選択肢も閲覧できた。 / YES: Without voting, the homepage lists all three surveys with their titles plus a description, option count and vote count (",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: After the first vote, 'Thanks! Your vote has been recorded.' is shown. On returning, the radio buttons and Submit button / YES: 1回目の投票後に「Thanks! Your vote has been recorded.」が表示され、再訪時はラジオとSubmitボタンが disabled で「You have already voted in this survey. / YES: Right after the vote, 'Thanks! Your vote has been recorded.' appeared and the total went from 1 to 2. On returning, the ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: /results and each survey's results page show the total votes, the count and percentage for each option, and a progress b / YES: Results ページで各サーベイの総投票数、選択肢ごとの票数・百分率と棒グラフが表示され、投票直後の結果も反映されていた。 / YES: /results and /surveys/N/results show the latest total votes, vote counts and percentages for each option, and horizontal",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,224) (light yellow). The header, main button and headings are all rgb(47,79,79) (dark / YES: body 背景が rgb(255,255,224)（light yellow と一致）、ヘッダー背景・主要ボタン背景・見出し文字色がすべて rgb(47,79,79)（dark slate gray と一致）。 / YES: The body background is rgb(255,255,224), which is light yellow. The header background, main button background and h1/h2 ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-rename": {
+    "verdict": "YES",
+    "reason": "YES: The visible text on home, the voting page, results, the after-vote page and create contains no 'poll'. Navigation, headi / YES: ホーム・投票ページ・結果ページ（作成ページ含む）の本文とタイトルに 'poll(s)' は一度も現れず、ナビ・見出し・ボタン・メッセージはすべて 'survey' 表記で、ページも正常に動作した。 / YES: On the home, voting, results, per-survey results and create pages, plus the messages after voting, re-voting and an empt",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

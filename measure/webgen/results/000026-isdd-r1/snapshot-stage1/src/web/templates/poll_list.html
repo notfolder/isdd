@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Polls{% endblock %}
+{% block content %}
+<h1>Polls</h1>
+<p class="lead">Choose a poll to vote, or look at the results.</p>
+{% if polls %}
+<ul class="card-list">
+  {% for poll in polls %}
+  <li class="card">
+    <h2>{{ poll.question }}</h2>
+    <p class="meta">{{ poll.option_count }} options &middot; {{ poll.total }} vote{{ '' if poll.total == 1 else 's' }}</p>
+    <div class="actions">
+      <a class="button" href="{{ url_for('show_poll_detail', poll_id=poll.id) }}">Vote</a>
+      <a class="button button-outline" href="{{ url_for('show_poll_results', poll_id=poll.id) }}">Results</a>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No polls yet.</p>
+{% endif %}
+{% endblock %}

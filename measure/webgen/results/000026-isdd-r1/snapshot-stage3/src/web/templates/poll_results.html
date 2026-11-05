@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Results: {{ poll.question }}{% endblock %}
+{% block content %}
+<h1>{{ poll.question }}</h1>
+{% if voted %}<p class="success" role="status">Thank you for voting.</p>{% endif %}
+<p class="meta">Total votes: {{ poll.total }}</p>
+{% if poll.total == 0 %}
+<p>No votes yet</p>
+{% endif %}
+<table class="results">
+  <thead>
+    <tr><th>Option</th><th>Votes</th><th>Share</th><th>Chart</th></tr>
+  </thead>
+  <tbody>
+    {% for option in poll.options %}
+    <tr>
+      <td>{{ option.text }}</td>
+      <td>{{ option.votes }}</td>
+      <td>{{ '%.1f'|format(option.percent) }}%</td>
+      <td class="bar-cell"><div class="bar-track"><div class="bar" style="width: {{ option.percent }}%"></div></div></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="actions">
+  <a class="button" href="{{ url_for('show_poll_detail', poll_id=poll.id) }}">Vote on this survey</a>
+  <a class="button button-outline" href="{{ url_for('show_poll_list') }}">Back to surveys</a>
+</div>
+{% endblock %}

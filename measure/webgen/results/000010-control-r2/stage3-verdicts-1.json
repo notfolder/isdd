@@ -1,0 +1,7 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With name 'Alice' the wheel rotated (CSS transform changed over time), stopped on the Free Coffee segment and showed 'Alice won: Free Coffee — One free coffee of any size.' with no console errors. With an empty name it showed 'Please enter your name before spinning.' and the wheel did not move."},
+  "000010-2": {"verdict": "YES", "reason": "Before any spin, the Reward List page shows 8 rewards with a description and chance for each. These match the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After Alice's spin, My Winning Records showed a row with Player 'Alice', Reward 'Free Coffee' and Date 'Nov 5, 2026, 06:34 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background, the main button background and the h1 color are all rgb(0,100,0), which is dark green, so the background and all three components match."},
+  "000010-rename": {"verdict": "YES", "reason": "On the spin, reward list and records pages, the visible text contains no 'prize' or 'prizes'. The navigation, headings, buttons and messages all use 'Reward', and spinning and viewing records worked."}
+}

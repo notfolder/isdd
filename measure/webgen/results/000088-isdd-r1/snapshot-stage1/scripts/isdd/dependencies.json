@@ -1,0 +1,6 @@
+{
+  "rules": [
+    {"from": "src/core", "deny": ["src/web"], "reason": "業務層は画面層に依存しない（保存と検証を画面から独立させるため）"},
+    {"from": "src/web", "allow": ["src/core", "src/web"], "reason": "画面層は業務層だけに依存する"}
+  ]
+}

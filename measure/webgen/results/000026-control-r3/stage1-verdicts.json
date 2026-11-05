@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking 'Vote' on the homepage opened /polls/3 with no errors, and the page shows all 4 options as radio buttons (Dark  / YES: Clicking Vote on the homepage opened /polls/1 with no errors, and all 5 options (Python, JavaScript, Rust, Go, Other) we / YES: Clicking the poll title on the homepage opened the voting page /polls/2 without errors, and all four options (Mountain c",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: Without voting, the user can browse 3 polls on the homepage and open each poll's options. Each poll shows information be / YES: The homepage lists 3 polls you can browse without voting. Each shows a description, the option count and the vote count  / YES: The homepage lists three polls without requiring a vote. Each poll shows its name plus related information: a descriptio",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: After choosing 'Offline support' and submitting, the page showed 'Thanks! Your vote has been recorded.' and 'You voted f / YES: After choosing JavaScript and clicking Submit vote, the page showed 'Thanks! Your vote has been recorded.' The count ros / YES: After choosing Beach resort and clicking Submit vote, the page showed 'Thanks! Your vote has been recorded.' and 'You vo",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: /results shows each poll's current results, including the vote just cast. It gives total votes, votes and percentages pe / YES: /results and /polls/1/results show current counts, including the vote just cast, with totals and percentages per option  / YES: /results and /polls/2/results show the current results: the total vote count, each option's votes and percentage, and a ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-5": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,255), which is white. The header (.topbar), the main button (.btn) and the h1 heading / YES: The body background is rgb(255,255,255) (white). The header background, the main button background and the heading text  / YES: The body background is rgb(255,255,255) (white). The header background, the main button (.btn) background and the h1/h2 ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

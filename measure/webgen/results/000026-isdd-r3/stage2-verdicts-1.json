@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "トップの「Vote」リンクから /polls/1 にエラーなく遷移し、全選択肢（Python/JavaScript/Go/Rust）がラジオボタンと投票ボタン付きで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "トップに 3 件の投票が一覧表示され、各投票に名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 29）が示され、投票せずに各投票ページ・結果ページを閲覧できた。"},
+  "000026-3": {"verdict": "YES", "reason": "投票直後に「Your vote has been recorded.」と表示され Spring が 7→8、総数 23→24 になった。同じブラウザで再訪すると「You have already voted.」が表示され、ラジオと Submit ボタンが disabled で、最終的に総数は 24 のまま二重投票はカウントされなかった。"},
+  "000026-4": {"verdict": "YES", "reason": "/results に全投票の選択肢ごとの票数・割合（%）・総投票数と、票数に比例した幅の棒グラフが表示され、投票後の値も反映されていた。"},
+  "000026-design": {"verdict": "YES", "reason": "body 背景 rgb(255,255,224) は light yellow と一致し、ナビ背景 rgb(47,79,79)・主要ボタン背景 rgb(47,79,79)・見出し h1 文字色 rgb(47,79,79) がいずれも dark slate gray と一致した。"}
+}

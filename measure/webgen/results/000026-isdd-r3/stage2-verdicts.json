@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: トップの「Vote」リンクから /polls/1 にエラーなく遷移し、全選択肢（Python/JavaScript/Go/Rust）がラジオボタンと投票ボタン付きで表示された。 / YES: ホームの Vote ボタンから /polls/1 にエラーなく移動でき、選択肢 4 件（Python, JavaScript, Go, Rust）がすべてラジオボタンで表示された。 / YES: トップページの『Vote』ボタンから /polls/1 にエラーなく移動でき、全選択肢（Python, JavaScript, Go, Rust）がラジオボタンで表示された。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: トップに 3 件の投票が一覧表示され、各投票に名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 29）が示され、投票せずに各投票ページ・結果ページを閲覧できた。 / YES: 投票せずにホームで投票 3 件の一覧が見られ、各投票に名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 29）が表示され、関連情報の基準を満たす。 / YES: 投票せずに一覧で各投票（poll）が名称に加えて選択肢数・総投票数付きで表示され、各投票ページでも選択肢を閲覧できた（関連情報の基準を満たす）。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: 投票直後に「Your vote has been recorded.」と表示され Spring が 7→8、総数 23→24 になった。同じブラウザで再訪すると「You have already voted.」が表示され、ラジオと Subm / YES: Poll 2 で投票すると直後に『Your vote has been recorded.』が表示され、Spring が 8→9、総数が 24→25 になった。同じブラウザで戻ると『You have already voted.』が表示され / YES: 投票直後に『Your vote has been recorded.』が表示され Italian が 6→7 票に増えた。同じブラウザで戻ると『You have already voted.』が表示され、ラジオボタンと送信ボタンがすべて d",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: /results に全投票の選択肢ごとの票数・割合（%）・総投票数と、票数に比例した幅の棒グラフが表示され、投票後の値も反映されていた。 / YES: /results に各投票の選択肢ごとの票数・割合・総投票数と棒グラフ（bar-fill の幅が割合と一致）が表示され、投票後の値も反映された最新の結果だった。 / YES: /results に全投票の選択肢ごとの票数・割合（%）・棒グラフ列・総投票数が表示され、直前の投票も反映された最新の結果だった。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "YES: body 背景 rgb(255,255,224) は light yellow と一致し、ナビ背景 rgb(47,79,79)・主要ボタン背景 rgb(47,79,79)・見出し h1 文字色 rgb(47,79,79) がいずれも dar / YES: body 背景 rgb(255,255,224) は light yellow と一致。ナビ背景・主要ボタン背景・見出し色はすべて rgb(47,79,79) で dark slate gray と一致した。 / YES: body 背景 rgb(255,255,224)=light yellow、ナビ背景・主要ボタン背景・見出し文字色がいずれも rgb(47,79,79)=dark slate gray で、背景と部品 3 種類がすべて一致した。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

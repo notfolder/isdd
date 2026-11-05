@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: 名前を入力して Spin を押すと 'Spinning...' 表示の後ホイールが止まり、ポインター位置の区画（Movie Ticket Pair）と同じ 'You won Movie Ticket Pair!' が表示され、ページエラーも / YES: 名前を入れて Spin を押すと「Spinning...」の表示とともにホイールが回転し、10% Off Coupon の区画（ポインター位置）で止まって「You won 10% Off Coupon!」と表示された。ページエラーは出なかっ / YES: After entering a name and pressing Spin, the canvas rotated (its transform changed), stopped with the pointer on a segme",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: Prize List ページに 6 件の賞品（Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair, Mystery Gift）が説明付きで表 / YES: /prizes に 6 件の賞品（Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair, Mystery Gift）が説明付きで表示され、ホイ / YES: The /prizes page lists '6 prizes': Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair and Myste",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: スピン後に My Winnings を開くと Tester1 の記録 1 件として日時 'Nov 5, 2026, 6:40 AM' と賞品 'Movie Ticket Pair' が表示され、直前の当選と一致した。 / YES: 回した後に My Winnings を開くと、GraderBob の記録が 1 件追加され、日時「Nov 5, 2026, 6:41 AM」と賞品「10% Off Coupon」が表示され、当たった賞品と一致した。 / YES: After a spin, entering the same name on My Winnings showed the latest prize (e.g. 'Nov 5, 2026, 6:40 AM | Free Coffee') ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-4": {
+    "verdict": "YES",
+    "reason": "YES: body 背景 rgb(211,211,211)=light gray、ヘッダー背景・主要ボタン背景・見出し文字色がすべて rgb(139,0,0)=dark red で、背景と部品 3 種類とも許容差内だった。 / YES: body の背景は rgb(211,211,211)（light gray と一致）。ヘッダー背景・Spin ボタン背景・h1 の文字色はどれも rgb(139,0,0)（dark red と一致）で、部品 3 種類すべてが合った。 / YES: The body background is rgb(211,211,211), which is light gray, and the header background, main button background and h1 t",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

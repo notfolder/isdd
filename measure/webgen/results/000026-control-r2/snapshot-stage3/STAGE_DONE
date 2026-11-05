@@ -1,0 +1,26 @@
+Change request 2 (rename "poll" to "survey") — done.
+
+What changed (app.py only):
+- Navigation: "Polls" -> "Surveys" (the nav item and the header brand).
+- Page titles: "Polls" -> "Surveys", and "X | Polls" -> "X | Surveys".
+- Headings and text: the home heading, the lead text, "There are no surveys yet.",
+  "Current standings for every survey.", "This survey does not exist.",
+  "You have already voted in this survey.", "Each browser can vote once per survey.",
+  "You have not voted in this survey yet.", "Back to the survey", "Back to all surveys",
+  the breadcrumbs, and the footer text.
+- URLs: /polls/N, /polls/N/results and /polls/N/vote are now /surveys/N,
+  /surveys/N/results and /surveys/N/vote. Old /polls/... links redirect (303) to the new
+  URLs, and /polls redirects to the home page as before.
+
+Deliberately unchanged (not user-visible, and changing them would break existing data):
+- SQLite file name (data/polls.db), table and column names, and the "poll_votes" cookie.
+  Existing votes and data stay valid.
+
+Verified by running `bash setup.sh` and then `PORT=8765 DATA_DIR=<tmp> bash run.sh`:
+- Home, results, survey vote, survey results and 404 pages all return 200/404 as expected.
+- The rendered HTML contains no "poll" text (case-insensitive).
+- Voting works, and a second vote from the same browser is blocked with the
+  "already voted" message. The results page shows "Thank you for voting!".
+- An empty vote returns 400. Theme colours (#ffffe0, #2f4f4f) are present.
+- The server was stopped by its PID. The scratch data directory was removed.
+- Nothing has been committed.

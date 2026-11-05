@@ -1,0 +1,32 @@
+# 完了: 利用者に見える「poll」を「survey」に変更（変更依頼 2）
+
+## 行ったこと（isdd-spec → isdd-build）
+- 変更要件定義書・変更設計書・tasks.md を `.history/20261105-poll-to-survey/` に作成（isdd-spec、ANSWERS.md の固定回答で承認扱い）。
+- 実装（isdd-build 段階 1）: 画面の文字と URL の変更（src/views.py、src/web.py、src/app.py）、単体テスト・E2E の更新、E2E 1 本の追加（test_survey_terminology）、対応表の 1 行追加、README の更新。
+- 実装後レビュー（段階 2）: 変更を正本（docs/requirements.md、docs/detail_design.md、docs/trace_map.md）へ反映し、docs/active_change を削除。
+
+## 変更の中身
+- 利用者に見える文字: 案内メニュー「Surveys / Results」、ページタイトル、見出し、「No surveys available.」、「Vote on this survey」、「Back to surveys」、404 の「Survey not found.」、起動時の表示。
+- URL: `/polls/<id>`、`/polls/<id>/results`、`/polls/<id>/vote` を `/surveys/...` に変更。`/` と `/results` は変えない。
+- 変えていないもの: 要件 ID・設計 ID、コードの識別子（PollService など）、DB ファイル名 `polls.db` と表名（既存データを守るため）、cookie `voter_id`、一票ルール、結果、配色、サンプルデータ。
+- 旧い URL（`/polls/...`）は転送せず 404 にした（最小案）。
+
+## 確認
+- `bash scripts/isdd/check.sh --strict`: エラー 0 件、警告 0 件、対応表・依存・受け入れ判定すべて合格（正本だけで判定）。
+- 単体テスト: 24 件 OK。E2E（`python3 scripts/isdd/unittest_junit.py -s e2e -t . -o e2e/results/e2e.xml`）: 10 件 OK。
+- `rq_integrity_checker.py`（正本）、`rq_ds_link_checker.py`（正本）: 問題 0 件。
+- `implementation_completeness_checker.py`: 4/4 項目通過。
+- `bash setup.sh` → `PORT=18791 bash run.sh`（DATA_DIR は一時ディレクトリ）: `/`、`/surveys/1`、`/surveys/1/results`、`/results` が 200、`/polls/1` が 404。画面の HTML に poll の語は無い。起動した PID だけを止めた。
+
+## 未マッピング一覧（段階 2 の手順 6）
+該当なし。要件なし（作りすぎ）: 0 件（check.sh の未登録の警告は 0 件）。
+
+## 要件ごとの実装済み判定
+- 16 件すべて「実装済み」（DS-TS 10 件合格、不合格 0、未実行 0、要再実行 0）。
+
+## 注意点・残り
+- 実行環境の python3 は 3.9.6。契約は Python 3.12 だが、3.12 では未確認。コードは 3.9 以降の文法に限っている。
+- 実ブラウザでの目視は行っていない。HTTP の応答と E2E（HTML の内容）で確認した。
+- 一覧ページのタイトルは「Surveys - Surveys」と表示される（共通の枠が末尾に名称を付ける。変更前の「Polls - Polls」と同じ作り）。
+- 正本の日本語の用語を「投票テーマ」から「アンケート」に統一した（ID は変えていない）。
+- コミットはしていない（依頼に無いため）。

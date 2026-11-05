@@ -1,0 +1,7 @@
+投票サイト（Polls Website）: isdd の要件定義 → 設計 → 実装 → 実装後レビューまで完了。
+
+起動: bash setup.sh → PORT=<番号> bash run.sh（DATA_DIR 未指定時は ./data）
+画面（英語）: / （投票テーマ一覧）、/polls/<id>（投票）、/polls/<id>/results（結果）、/results（全体の結果）。全画面に Polls / Results の案内メニュー。背景は白、部品は navy（#000080）。
+
+成果物: docs/requirements.md、docs/detail_design.md、docs/trace_map.md、.history/20261105-polls-website/tasks.md、src/、tests/unit/（18 件）、e2e/（7 件、JUnit: e2e/results/e2e.xml）
+検証: check.sh --strict（エラー 0・警告 0・受け入れ判定 12/12 実装済み）、rq_integrity_checker・rq_ds_link_checker 問題 0、implementation_completeness 4/4。

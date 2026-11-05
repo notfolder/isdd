@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: With the name Alice, the wheel spun and stopped on '10% Off Coupon', and the page showed 'You won 10% Off Coupon!' with  / NO: The page could not be opened: http://127.0.0.1:62396 refused the connection (ERR_CONNECTION_REFUSED) on every retry over / YES: With name Alice the wheel rotated (canvas transform changed), stopped at Free Tote Bag under the pointer, and showed 'Yo",
+    "votes": [
+      "YES",
+      "NO",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: The Prize List page shows 6 prizes with descriptions (Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ti / NO: The page could not be opened (connection refused at http://127.0.0.1:62396), so no prize list could be seen. / YES: The Prize List page shows 6 prizes with descriptions (Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ti",
+    "votes": [
+      "YES",
+      "NO",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After spinning as Alice, My Winnings for Alice shows 1 record with Player Alice, Prize 10% Off Coupon and Date won Nov 5 / NO: The page could not be opened (connection refused at http://127.0.0.1:62396), so it was impossible to spin or view winnin / YES: After the spin, My Winnings for Alice shows a row 'Alice | Free Tote Bag | Nov 5, 2026, 6:53 AM' with the player name, p",
+    "votes": [
+      "YES",
+      "NO",
+      "YES"
+    ]
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button rgb(0,77,0) / NO: The page could not be opened (connection refused at http://127.0.0.1:62396), so the body background color and component  / YES: The body background is rgb(255,255,240) (ivory). The header background, Spin button background and h1 color are all rgb(",
+    "votes": [
+      "YES",
+      "NO",
+      "YES"
+    ]
+  }
+}

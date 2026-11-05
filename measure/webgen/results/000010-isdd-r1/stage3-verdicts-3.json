@@ -1,0 +1,7 @@
+{
+ "000010-1": {"verdict": "YES", "reason": "With 'Alice' the wheel rotated (transform changed) and stopped, then showed 'You won Free Dessert — Recorded for Alice at …' with no page errors. Spinning with an empty name showed 'Please enter your name (1-30 characters).' and the wheel transform stayed at identity."},
+ "000010-2": {"verdict": "YES", "reason": "The Reward List page shows 8 rewards with their chances, and they exactly match the 8 segment labels on the wheel (Gift Card $50 … Grand Reward Headphones)."},
+ "000010-3": {"verdict": "YES", "reason": "After entering Alice on My Winnings, the newest row is 'Alice | Free Dessert | Nov 5, 2026, 6:16 AM', which matches the spin just made, with player name, reward and date."},
+ "000010-design": {"verdict": "YES", "reason": "body background rgb(255,255,240) = ivory. Header rgb(0,100,0), the Spin button rgb(0,128,15) and the h2 heading text rgb(0,100,0) are all within 40 per component of dark green (0,100,0)."},
+ "000010-rename": {"verdict": "YES", "reason": "On the spin page, Reward List and My Winnings (including the validation, result and 'no records' messages), the visible text never contains 'prize'. The concept is called 'Reward' throughout, and all pages work."}
+}

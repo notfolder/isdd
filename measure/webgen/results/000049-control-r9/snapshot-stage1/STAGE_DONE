@@ -1,0 +1,34 @@
+Frost & Fade Barbershop - implementation summary
+
+Files (project root):
+- app.py    : the whole website (Python 3 standard library only: http.server + sqlite3)
+- setup.sh  : checks python3, checks app.py parses, creates DATA_DIR (no downloads needed)
+- run.sh    : starts the server in the foreground with exec (PORT default 8000, DATA_DIR default ./data)
+- .gitignore: data/, __pycache__/
+
+Features (all reachable from the navigation menu: Home, Barbers, Services, Clients, WhatsApp Notifications):
+- Barbers: browse cards with search; "+ Add barber" form (name, specialty, phone, years, working days, bio).
+- Services: browse menu grouped by category with search; "+ Add service" form (name, category, duration, price, description).
+- Clients: list and "+ Add client" form (needed as recipients for notifications).
+- WhatsApp notifications: pick a template or write a message ({name} = client's first name), choose recipients
+  (select all supported), then "Prepare WhatsApp messages". The notification page lists one "Open in WhatsApp"
+  link per recipient with the message prefilled (wa.me click-to-chat). History of past notifications is shown.
+
+Choices made:
+- WhatsApp: no paid API or external service is used. Messages are sent through WhatsApp's free click-to-chat
+  links, so the user presses Send in WhatsApp for each client.
+- Styling: snow-white background with animated falling snowflakes; dimgray (#696969) navigation, buttons,
+  table headers and accents.
+- Storage: SQLite at DATA_DIR/barbershop.db. If the tables are empty, sample barbers, services and clients are seeded.
+- Server binds 127.0.0.1 on PORT.
+
+Verification:
+- All pages return 200 (404 for unknown paths). Valid POSTs for barber, service, client and notification
+  redirect correctly; invalid POSTs show validation errors.
+- Screenshots in headless Chrome: home, notifications and add-barber pages render with the intended colors and snow.
+- Fresh empty DATA_DIR starts and shows sample content.
+- Test servers were stopped by their own PIDs.
+
+Not done / notes:
+- Local python3 is 3.9.6; the contract specifies 3.12. The code avoids newer syntax, but it was run only on 3.9.
+- Nothing has been committed to git.

@@ -1,0 +1,36 @@
+# 完了の要約（変更依頼 1: 配色の変更、1 ブラウザ 1 回の投票）
+
+フロー: 変更フロー（isdd-spec → isdd-build 段階 1 実装 → 段階 2 実装後レビューと正本への反映）。
+ユーザー不在のため、質問は ANSWERS.md・REQUEST.md・contract.md の内容で答え、承認はすべて与えられたものとして進めた。
+
+## 変更内容
+1. 配色: 背景 light yellow（#FFFFE0）。ヘッダー・ナビゲーション・見出し・ボタン・カード・表の見出し・結果の横棒を dark slate gray（#2F4F4F）。白と navy を全画面から外した（エラー文言の赤は意味の色として残した）。
+2. 1 ブラウザ 1 回の投票: 投票者 ID（Cookie `voter_id`、HttpOnly、SameSite=Lax、1 年）を投票テーマごとに記録（`poll_voters` テーブル、主キー（投票テーマ, 投票者））。投票済みの詳細画面は選択肢とボタンを無効にし「You have already voted」を表示。直接送信された 2 回目は 409 で記録しない。別の投票テーマ・別のブラウザは従来どおり投票できる。
+   既存の票は消さない。変更前の票には投票者記録が無いので、既存のブラウザも各投票テーマに 1 回は投票できる。
+
+## 文書
+- 変更記録: `.history/20261105-theme-and-one-vote/`（change_requirements.md、change_detail_design.md、tasks.md）
+- 正本を反映: `docs/requirements.md`、`docs/detail_design.md`、`docs/trace_map.md`
+- `docs/active_change` は反映後に削除。`docs/proposals.md` は無い。
+- README.md に投票のルールと配色を追記。
+
+## 検証結果
+- 単体テスト（tests/test_store.py）: 12 件 OK
+- E2E（e2e/test_site.py、JUnit は e2e/results/e2e.xml）: 8 件 OK（旧 `test_cast_vote_and_view_result` を削除し、`test_cast_vote_once_per_poll` と `test_color_theme` を追加）
+- `rq_integrity_checker.py docs/requirements.md`: 問題 0 件
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 問題 0 件
+- `bash scripts/isdd/check.sh --strict`: 対応表エラー 0・警告 0、依存チェック合格、受け入れ判定合格（DS-TS 8/8、要件 14/14 実装済み）
+- `implementation_completeness_checker.py .`: 4/4 OK
+- `bash setup.sh` → `PORT=<空きポート> bash run.sh`: 起動し、一覧・詳細・結果・結果一覧が 200、投票 303、2 回目 409 を確認。確認用のサーバーは PID で停止（他のプロセスには触れていない）
+- ヘッドレス Chrome のスクリーンショットで、一覧と結果画面の配色と「Thank you for voting.」の表示を確認
+
+## 未マッピング一覧 / 作りすぎ
+該当なし（作りすぎ: 0 件）
+
+## 注意・判断
+- 投票者の識別は Cookie（ログインではない）。Cookie を消す、または別のブラウザなら再び投票できる（依頼の「ブラウザごと」に合わせた）。
+- 対応表の更新は段階 1 で行った（build-implement の手順 3 に従う）。isdd-build の SKILL.md は対応表を段階 2 だけの正本として書いているので、その点は規則の書き方の食い違い。
+- 段階 1 の時点では、正本に残る削除済みシナリオのため受け入れ判定の strict が「未検証」を出した。段階 2 で正本を反映して解消した。
+- ローカルの Python は 3.9.6（`.venv`）。契約の推奨は 3.12 だが、3.12 では確認していない。
+- ポート 8123 は別のプロセスが使用中だったため、起動確認は空きポートで行った。他のプロセスは止めていない。
+- 確認用の起動で作られた `data/`（テスト投票を含む）は削除した。

@@ -36,7 +36,159 @@
       },
       "cost_usd": 0.9541,
       "turns": 52,
-      "rounds": 1
+      "rounds": 1,
+      "passed": 8,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 13,
+        "lines": 739,
+        "public_functions": 38,
+        "classes": 0,
+        "templates": 5
+      },
+      "score_error": null
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 11221.2,
+      "started": "2026-11-05T03:14:02",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 83,
+      "tool_names": {
+        "Bash": 34,
+        "Read": 7,
+        "Agent": 2,
+        "Edit": 40
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 1,
+        "output_tokens": 46,
+        "cache_creation_input_tokens": 566,
+        "cache_read_input_tokens": 170093,
+        "total_tokens": 170706
+      },
+      "cost_usd": 0.4646,
+      "turns": 1,
+      "rounds": 1,
+      "passed": 15,
+      "total": 15,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 14,
+        "lines": 951,
+        "public_functions": 47,
+        "classes": 0,
+        "templates": 6
+      },
+      "score_error": null,
+      "regressions": []
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 927.5,
+      "started": "2026-11-05T06:21:03",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 75,
+      "tool_names": {
+        "Bash": 53,
+        "Read": 3,
+        "Write": 6,
+        "Edit": 13
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 152,
+        "output_tokens": 161071,
+        "cache_creation_input_tokens": 345648,
+        "cache_read_input_tokens": 17121201,
+        "total_tokens": 17628072
+      },
+      "cost_usd": 1.5239,
+      "turns": 76,
+      "rounds": 1,
+      "passed": 23,
+      "total": 23,
+      "tests": {
+        "test_employee_restrictions[chromium]": "pass",
+        "test_staff_role_change[chromium]": "pass",
+        "test_password_reset[chromium]": "pass",
+        "test_account_delete[chromium]": "pass",
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_role_renamed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_stale_equipment_update[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_concurrent_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_duplicate_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 14,
+        "lines": 1101,
+        "public_functions": 55,
+        "classes": 0,
+        "templates": 7
+      },
+      "score_error": null,
+      "regressions": []
     }
   },
   "runner": "claude -p"

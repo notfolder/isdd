@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "ホームの「Vote now」から /polls/1 の投票ページにエラーなく移動でき、4つの選択肢（Python/TypeScript/Rust/Go）がすべてラジオボタンで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "ホームに投票一覧（4件）が表示され、各投票に名称に加えて説明文・票数・選択肢数があり、「See results without voting」で投票せずに結果も閲覧できた。"},
+  "000026-3": {"verdict": "YES", "reason": "TypeScript を選んで「Cast my vote」すると票数が124→125に増え、直後に「Thank you for voting! You voted for TypeScript.」という確認文が表示された。"},
+  "000026-4": {"verdict": "YES", "reason": "/results に各投票の総票数と首位が表示され、個別結果ページには投票直後の最新値（総数125）、各選択肢の票数・割合と割合に応じた横棒グラフが表示された。"},
+  "000026-5": {"verdict": "YES", "reason": "body 背景 rgb(255,255,255) で white に一致し、ヘッダー背景・主要ボタン背景・見出し文字色がいずれも rgb(0,0,128) で navy に一致した。"}
+}

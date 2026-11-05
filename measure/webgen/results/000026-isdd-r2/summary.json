@@ -1,0 +1,233 @@
+{
+  "site": "000026",
+  "arm": "isdd-r2",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 513.8,
+      "agent_tokens": 7462554,
+      "usage": {
+        "input_tokens": 96,
+        "output_tokens": 97560,
+        "cache_creation_input_tokens": 203483,
+        "cache_read_input_tokens": 7161415
+      },
+      "tool_uses": 69,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: トップ（/polls）から投票ページ /polls/1 へエラーなく遷移でき、全選択肢（Python, JavaScript, Go, Rust）がラジオボタンと投票ボタン付きで表示された。 / YES: Clicking a poll on the homepage (/ → /polls) opened /polls/3 without errors, and all 4 options (Noodle bar, Sandwich sho / YES: ホーム（/polls）の投票リンクから /polls/1 にエラーなく移動でき、選択肢 Python・JavaScript・Go・Rust がすべてラジオボタンで表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: 投票せずに投票一覧を閲覧でき、各投票に名称に加えて説明文・選択肢数・票数（例: 4 options · 11 votes）が表示され、各投票ページで選択肢も確認できた。 / YES: The poll list shows each voting option with information besides its name: a description plus option and vote counts (e.g / YES: 投票しなくても投票の一覧を閲覧でき、各項目に名称に加えて説明文と件数（例: 4 options · 13 votes）が表示されており、関連情報の基準を満たす。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "PARTIAL",
+          "reason": "PARTIAL: Go に投票すると総票数が 11→12 に増え記録は確認できたが、投票直後は結果画面に移るだけで投票完了を伝える確認の文が表示されなかった。 / PARTIAL: After voting for Go, Go went from 2 to 3 votes and the total from 12 to 13, so the vote was recorded. But the page only  / PARTIAL: 投票後に結果画面へ移り、総票数が 13 から 14 に増えたので記録は確認できた。しかし投票直後に成功を伝える文が表示されず（結果画面に移るだけ）、確認の知らせは満たさない。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: 結果ページで最新の票数（投票後の 12 票を反映）、各選択肢の票数・割合（%）・棒グラフが表示された。 / YES: The results page shows the total vote count and, for each option, votes, share (%) and a bar chart. The counts updated r / YES: 結果ページに最新の総票数（Total votes: 14）、選択肢ごとの票数・割合、横棒グラフが表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-5": {
+          "verdict": "YES",
+          "reason": "YES: body 背景 rgb(255,255,255)=white、ヘッダー背景 rgb(0,0,128)、主要ボタン背景 rgb(0,0,128)、見出し h1 文字色 rgb(0,0,128) で、部品 3 種類すべて navy に一致した。 / YES: Body background is rgb(255,255,255), which matches white. Header background rgb(0,0,128), main button background rgb(0,0 / YES: body の背景は rgb(255,255,255)（white）。ヘッダー rgb(0,0,128)、主要ボタン rgb(0,0,128)、見出し h1 の文字色 rgb(0,0,128) で、3 種類とも navy と一致した。",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.5,
+      "n_cases": 5,
+      "accuracy": 0.9,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 6,
+        "lines": 443,
+        "public_functions": 19
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 481.7,
+      "agent_tokens": 7591215,
+      "usage": {
+        "input_tokens": 86,
+        "output_tokens": 116670,
+        "cache_creation_input_tokens": 239087,
+        "cache_read_input_tokens": 7235372
+      },
+      "tool_uses": 46,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [
+        "000026-3"
+      ],
+      "change_total": 1,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: From the homepage (which redirects to /polls), clicking a poll opened /polls/1 without errors, and all four options (Pyt / YES: トップ(/polls)から投票ページ(/polls/1)へリンクでエラーなく遷移でき、全選択肢(Python/JavaScript/Go/Rust)がラジオボタンで表示された。 / YES: トップ(/polls)の投票リンクから /polls/1 へエラーなく遷移でき、Python/JavaScript/Go/Rust の全選択肢がラジオボタンで表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: The poll list shows each poll's title along with a description, option count, and vote count (e.g. '4 options · 11 votes / YES: 投票せずに投票一覧を閲覧でき、各投票に名称に加えて説明文と選択肢数・投票数(例: 4 options · 11 votes)という関連情報が表示された。 / YES: 投票せずに一覧で各投票の名称に加え説明文・選択肢数・投票数が表示され、各投票ページで選択肢を閲覧できた（関連情報あり）。",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "PARTIAL",
+          "reason": "PARTIAL: After the vote, the page went to the results page and the count rose by 1 (7→8), but no message confirming the vote appe / PARTIAL: 投票は記録され(7→8票)、再訪時は操作部品が無効化され『You have already voted in this poll.』が表示、強制POSTも409で票は増えなかったが、投票直後は結果画面に移るだけで成功を伝える確認の文が表示さ / PARTIAL: 投票は記録され（11→12票）、再訪時に操作が無効化され『You have already voted in this poll.』が表示、再送信は409で票数も増えなかったが、投票直後は結果画面に移るだけで成功を伝える確認の文が表示されな",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: Each poll's results page shows the total vote count and each option's votes and percentage share in a table with bar cha / YES: 結果ページで各投票の最新票数、各選択肢の票数・割合(%)・合計票数と棒グラフが表示され、自分の投票も反映されていた。 / YES: 結果ページで最新の総票数・各選択肢の票数・割合(%)・棒グラフが表示され、投票直後の値も反映されていた。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,224), which is light yellow. The header background, the main button background, and t / YES: body背景 rgb(255,255,224)=light yellow、ヘッダー背景・主要ボタン背景・見出し文字色がいずれも rgb(47,79,79)=dark slate gray で、背景と部品3種がすべて一致した。 / YES: body背景 rgb(255,255,224)=light yellow、ヘッダー背景・主要ボタン背景・見出し文字色がいずれも rgb(47,79,79)=dark slate gray で、背景と部品3種がすべて一致した。",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.5,
+      "n_cases": 5,
+      "accuracy": 0.9,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 6,
+        "lines": 445,
+        "public_functions": 19
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 337.0,
+      "agent_tokens": 5290545,
+      "usage": {
+        "input_tokens": 84,
+        "output_tokens": 84365,
+        "cache_creation_input_tokens": 199710,
+        "cache_read_input_tokens": 5006386
+      },
+      "tool_uses": 41,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [
+        "000026-3"
+      ],
+      "change_total": 2,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: The homepage (/surveys) links to each survey's voting page, which opens without errors and shows every option as a radio / YES: From the home page (/surveys), clicking a survey link opens the voting page (/surveys/1) with status 200 and no errors,  / YES: From the homepage (/surveys), clicking a survey opened its voting page (/surveys/1) with HTTP 200, and every option was ",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: The survey list shows each survey with a description and its option and vote counts (e.g. '4 options · 11 votes'), and t / YES: Without voting, the survey list shows each survey with a description and its option and vote counts, and 'View results'  / YES: The survey list and each survey page could be browsed without voting. Every survey shows its name plus details: a descri",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "PARTIAL",
+          "reason": "PARTIAL: The vote was counted (7→8), and on return the radios and Vote button were disabled with 'You have already voted in this  / PARTIAL: The first vote was counted (11→12) and on returning the radios and Vote button were disabled with 'You have already vote / PARTIAL: The vote was counted (9→10) and the browser was sent to the results page, but no message confirming the vote appeared th",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: The results page shows up-to-date statistics (total votes, votes and share % per option) and bar charts, and it reflecte / YES: The results page shows the current total, each option's votes and percentage share, and a bar chart, and it updated righ / YES: The results page shows total votes, each option's votes and share (%), and bar charts. The count went up right after a v",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,224), which equals light yellow, and the header background, the main button backgroun / YES: The body background is rgb(255,255,224), which is light yellow. The header background, the main button background and th / YES: The body background is rgb(255,255,224), a match for light yellow. The header background, the main button background and",
+          "category": "Design Validation Testing",
+          "change": false
+        },
+        "000026-rename": {
+          "verdict": "YES",
+          "reason": "YES: No page text or title on the home, voting or results pages contains 'poll' or 'polls'; navigation, headings, buttons and / YES: No 'poll' or its plurals appeared in the body text or title of the home, survey list, voting, results list or individual / YES: The visible text and titles of home (/surveys), the voting page, /results and the per-survey results page contain no 'po",
+          "category": "Functional Testing",
+          "change": true
+        }
+      },
+      "score": 5.5,
+      "n_cases": 6,
+      "accuracy": 0.917,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 6,
+        "lines": 453,
+        "public_functions": 20
+      }
+    }
+  },
+  "runner": "claude -p"
+}

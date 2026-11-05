@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking a 'Vote' link on the homepage opened /polls/1 with no page errors, and all 5 options (Python, JavaScript, Go, Rust, Other) appeared as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists all 3 polls without voting. Each poll shows its name plus details: a description, the option count and the vote count (e.g. '4 options · 18 votes'). Each poll page shows its options without requiring a vote."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote the page showed 'Thanks! Your vote has been recorded.' and the total went from 18 to 19. On returning, the radios and 'Cast my vote' button were disabled with 'You have already voted in this poll.' A forced resubmit left the total at 19."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows the current total (it updated to 19 after voting), plus each option's vote count and percentage with a bar graph."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The header background, main button background and h1/h2 text are all rgb(47,79,79), which is dark slate gray, so all three components match."}
+}

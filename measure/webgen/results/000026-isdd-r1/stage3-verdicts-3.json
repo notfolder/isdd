@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the home page opened /surveys/1 without errors, and all four options (Python, JavaScript, Go, Rust) were shown as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The home page lists each survey with its title plus details ('4 options · 10 votes'), and each voting page shows a description and its options; you can browse all of this without voting."},
+  "000026-3": {"verdict": "YES", "reason": "The first vote raised Python from 4 to 5 and showed 'Thank you for voting.' Back on the survey, the radios and Vote button were disabled and 'You have already voted' appeared. A forced re-submit left the total at 11."},
+  "000026-4": {"verdict": "YES", "reason": "The results pages show the current totals (they went up right after a vote), per-option votes and share %, bar charts, and a summary table with the leading option."},
+  "000026-design": {"verdict": "YES", "reason": "Body background is rgb(255,255,224) (light yellow). The header bg (47,79,79), the main Vote button bg (47,79,79) and the h1 text color (47,79,79) all match dark slate gray."},
+  "000026-rename": {"verdict": "YES", "reason": "'poll' did not appear in the visible text or page titles of home, the voting pages or the results pages. Navigation, headings and buttons use 'Survey(s)', and every page worked."}
+}

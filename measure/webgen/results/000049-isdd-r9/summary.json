@@ -1,0 +1,31 @@
+{
+  "site": "000049",
+  "arm": "isdd-r9",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 760.6,
+      "agent_tokens": 7344978,
+      "usage": {
+        "input_tokens": 88,
+        "output_tokens": 130874,
+        "cache_creation_input_tokens": 224758,
+        "cache_read_input_tokens": 6989258
+      },
+      "tool_uses": 50,
+      "rounds": 2,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": true,
+      "questions_rounds": 1,
+      "note": ""
+    }
+  },
+  "runner": "claude -p"
+}

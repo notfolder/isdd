@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "/species lists 12 species with common/scientific name, class, habitat, diet and conservation status; all cells are filled (no blank or '—' values) and the layout renders correctly; detail pages add family, lifespan, mass and description."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'panda' returned 'Showing 1 of 12 species' with only Giant panda, no unrelated species."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering Habitat=Marine showed 3 of 12 species (Blue whale, Emperor penguin, Green sea turtle), all Marine, with no non-matching entries."},
+  "000088-4": {"verdict": "YES", "reason": "body background rgb(250,240,230) = linen; nav background, Search button background and h1 text are all rgb(128,0,0) = maroon, within 40 per channel."}
+}

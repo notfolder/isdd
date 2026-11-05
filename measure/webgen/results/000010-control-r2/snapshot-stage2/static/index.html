@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wheel of Fortune</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">Wheel of Fortune</div>
+    <nav class="main-nav" aria-label="Main">
+      <a href="#/wheel" data-nav="wheel">Spin the Wheel</a>
+      <a href="#/rewards" data-nav="rewards">Reward List</a>
+      <a href="#/records" data-nav="records">My Winning Records</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Spin the wheel -->
+    <section id="view-wheel" class="view" aria-labelledby="wheel-title">
+      <h1 id="wheel-title">Spin the Wheel</h1>
+      <p class="intro">Enter your name, spin the wheel and see what you win. Every spin is saved to your winning records.</p>
+      <div class="wheel-layout">
+        <div class="wheel-wrap">
+          <div class="pointer" aria-hidden="true"></div>
+          <canvas id="wheel" width="480" height="480" aria-label="Reward wheel"></canvas>
+        </div>
+        <div class="panel spin-panel">
+          <label for="player-name">Player name <span class="required-mark" aria-hidden="true">*</span></label>
+          <input id="player-name" type="text" maxlength="40" placeholder="e.g. Alex" autocomplete="name" required aria-required="true" aria-describedby="name-hint name-error">
+          <p id="name-hint" class="hint">Required. Enter your name before you spin.</p>
+          <p id="name-error" class="field-error" role="alert" hidden>Please enter your name before spinning.</p>
+          <button id="spin-btn" class="btn btn-primary" type="button">Spin the Wheel</button>
+          <p id="result" class="result" role="status" aria-live="polite"></p>
+          <p class="hint">Want to see past wins? Open <a href="#/records">My Winning Records</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reward list -->
+    <section id="view-rewards" class="view" aria-labelledby="rewards-title" hidden>
+      <h1 id="rewards-title">Reward List</h1>
+      <p class="intro">These are all the rewards on the wheel. The chance column shows how likely each reward is on a spin.</p>
+      <div class="panel table-panel">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Reward</th>
+              <th scope="col">Description</th>
+              <th scope="col" class="num">Chance</th>
+            </tr>
+          </thead>
+          <tbody id="reward-body"></tbody>
+        </table>
+        <p id="reward-status" class="status"></p>
+      </div>
+    </section>
+
+    <!-- Winning records -->
+    <section id="view-records" class="view" aria-labelledby="records-title" hidden>
+      <h1 id="records-title">My Winning Records</h1>
+      <p class="intro">Enter the name you spin with to see every reward recorded for it.</p>
+      <form id="records-form" class="panel search-row">
+        <label for="records-name">Name</label>
+        <input id="records-name" type="text" maxlength="40" placeholder="Your name">
+        <button class="btn btn-primary" type="submit">Show my records</button>
+      </form>
+      <div class="panel table-panel">
+        <p id="records-summary" class="status"></p>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Player</th>
+              <th scope="col">Reward</th>
+              <th scope="col">Date and time</th>
+            </tr>
+          </thead>
+          <tbody id="records-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">Wheel of Fortune &middot; spin responsibly</footer>
+  <script src="/app.js"></script>
+</body>
+</html>

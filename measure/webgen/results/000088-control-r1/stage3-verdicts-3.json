@@ -1,0 +1,7 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "The /organisms list shows all 13 organisms with 9 columns of biological information (scientific name, kingdom, class, habitat, diet, status, length, lifespan), and every column in every row has a value; there are no placeholder entries like '—' or 'N/A'."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'pand' returned only Giant Panda (1 of 13). Searching habitat or description words ('Marine', 'Grassland', 'bamboo', 'savannas') returned 0 results with the message 'No organisms match these filters.'"},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by Habitat=Forest returned 4 of 13 entries, and all of them have Forest as their habitat; no non-matching entries were shown."},
+  "000088-design": {"verdict": "YES", "reason": "The body background is rgb(240,255,240), which equals honeydew. The header, the main button (Apply filters) and the h1 heading are all rgb(85,107,47), which equals dark olive green. Background and all 3 component types match."},
+  "000088-rename": {"verdict": "YES", "reason": "I searched the text and titles of the home, browse/search, no-results, filter, add (including the validation-error view), edit, detail, about and 404 pages: 'species' never appears, 'organism' is used consistently, and every page worked."}
+}

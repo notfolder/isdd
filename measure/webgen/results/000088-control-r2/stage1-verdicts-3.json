@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "PARTIAL", "reason": "/species lists all 23 species with kingdom, habitat, feeding mode, status, length and lifespan, but 4 rows (Fly agaric, Common hydra, Strawberry poison-dart frog, Corpse flower) show '—' in the Lifespan column, so the 'no missing data' criterion is not fully met."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'panda' returned only Giant panda and Red panda (2 of 23), and 'Ursus maritimus' returned only Polar bear; no unrelated species appeared."},
+  "000088-3": {"verdict": "YES", "reason": "Applying Habitat = Forest updated the list to 5 of 23 species, all with habitat Forest and no non-matching entries."},
+  "000088-4": {"verdict": "YES", "reason": "Body background is rgb(250,240,230) (linen); header background, primary .btn background and h1/h2 text are all rgb(128,0,0) (maroon), all within 40 per channel."}
+}

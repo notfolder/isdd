@@ -67,6 +67,144 @@
         "lines": 674,
         "public_functions": 0
       }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 9740.8,
+      "agent_tokens": 2783475,
+      "usage": {
+        "input_tokens": 62,
+        "output_tokens": 34205,
+        "cache_creation_input_tokens": 125363,
+        "cache_read_input_tokens": 2623845
+      },
+      "tool_uses": 40,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 2,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: With name 'Alice' the wheel animated (rotate 0deg→2047.5deg), stopped, and showed 'You won Free Dessert / Recorded for A / YES: With 'Alice', the wheel-face rotated (transform changed over several seconds, then stopped) and 'You won Sticker Pack /  / YES: With 'Alice' the wheel rotated (transform changed), stopped with the pointer on 'Gift Card $50', and showed 'You won Gif",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: Before spinning, the Prize List page showed 8 prizes with chances, and they matched the 8 slice labels on the wheel exac / YES: The Prize List page shows all 8 prizes with their chances (Gift Card $50 through Grand Prize Headphones), which matches  / YES: The Prize List page shows 8 prizes with their chances, and they match the 8 segments on the wheel exactly.",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After spinning as Alice, entering Alice on My Winnings showed new rows with player 'Alice', prize 'Free Dessert' and the / YES: Searching 'Alice' on My Winnings lists the new win in the top row: Alice / Sticker Pack / Nov 5, 2026, 6:06 AM, so the p / YES: After spinning as Alice, My Winnings for 'Alice' lists the new win at the top (Alice / Coffee Voucher / Nov 5, 2026, 6:0",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header, Spin button and h2 heading are all rgb(0,100,0), wh / YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background  / YES: Body background rgb(255,255,240) matches ivory. Header rgb(0,100,0), main button rgb(0,128,15) and heading color rgb(0,1",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 699,
+        "public_functions": 0
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 332.3,
+      "agent_tokens": 5800574,
+      "usage": {
+        "input_tokens": 96,
+        "output_tokens": 64370,
+        "cache_creation_input_tokens": 164933,
+        "cache_read_input_tokens": 5571175
+      },
+      "tool_uses": 50,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 3,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: Spinning with 'Alice' rotated the wheel (rotate 0deg -> 2002.5deg), it stopped and showed 'You won Free Dessert / Record / YES: With name 'Alice' the wheel rotated (transform changed and settled) and showed 'You won Keychain / Recorded for Alice at / YES: With 'Alice' the wheel rotated (transform changed) and stopped, then showed 'You won Free Dessert — Recorded for Alice a",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: The Reward List page shows all 8 rewards with their chances, and they match the 8 segments on the wheel (Gift Card $50,  / YES: The Reward List page shows 8 rewards with their chances, and they are exactly the same 8 rewards shown on the wheel segm / YES: The Reward List page shows 8 rewards with their chances, and they exactly match the 8 segment labels on the wheel (Gift ",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After spinning as Alice, My Winnings for Alice showed the row 'Alice | Free Dessert | Nov 5, 2026, 6:14 AM', with the pl / YES: After spinning as Alice, My Winnings for Alice lists the new win at the top with player 'Alice', the reward (Sticker Pac / YES: After entering Alice on My Winnings, the newest row is 'Alice | Free Dessert | Nov 5, 2026, 6:16 AM', which matches the ",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background  / YES: Body background rgb(255,255,240) = ivory; header bg rgb(0,100,0), Spin button bg rgb(0,100,0) and h2 text rgb(0,100,0) a / YES: body background rgb(255,255,240) = ivory. Header rgb(0,100,0), the Spin button rgb(0,128,15) and the h2 heading text rgb",
+          "category": "Design Validation Testing",
+          "change": false
+        },
+        "000010-rename": {
+          "verdict": "YES",
+          "reason": "YES: On the spin, reward list and winnings pages, 'prize' appears nowhere in the visible text (navigation, headings, buttons, / YES: The visible text on the spin, reward list and winnings pages (nav, headings, buttons, messages, title) contains no 'priz / YES: On the spin page, Reward List and My Winnings (including the validation, result and 'no records' messages), the visible ",
+          "category": "Functional Testing",
+          "change": true
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 5,
+        "lines": 699,
+        "public_functions": 0
+      }
     }
   },
   "runner": "claude -p"

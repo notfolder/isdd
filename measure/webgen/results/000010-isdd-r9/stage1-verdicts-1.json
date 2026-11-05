@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin shows 'Spinning...', the wheel rotates and stops with the pointer on a segment (e.g. Free Shipping), and the matching result 'You won: Free Shipping!' appears with no page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prizes page lists all 8 prizes with description and chance, and they match the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After winning Free Shipping, My Winnings went from 'no winnings yet' to a row with the date/time (11/5/2026, 6:55:52 AM), the prize (Free Shipping) and the name (Guest)."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(230,230,230), within 40 of light gray (211,211,211). The header background, Spin button background and h2 heading text are all rgb(139,0,0), which is dark red."}
+}

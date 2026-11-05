@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "ホームの Vote ボタンから /polls/1 にエラーなく移動でき、選択肢 4 件（Python, JavaScript, Go, Rust）がすべてラジオボタンで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "投票せずにホームで投票 3 件の一覧が見られ、各投票に名称に加えて選択肢数と総投票数（例: Options: 4 · Total votes: 29）が表示され、関連情報の基準を満たす。"},
+  "000026-3": {"verdict": "YES", "reason": "Poll 2 で投票すると直後に『Your vote has been recorded.』が表示され、Spring が 8→9、総数が 24→25 になった。同じブラウザで戻ると『You have already voted.』が表示され、ラジオと送信ボタンは disabled、POST を直接送っても総数は 25 のままで 2 回目は数えられなかった。"},
+  "000026-4": {"verdict": "YES", "reason": "/results に各投票の選択肢ごとの票数・割合・総投票数と棒グラフ（bar-fill の幅が割合と一致）が表示され、投票後の値も反映された最新の結果だった。"},
+  "000026-design": {"verdict": "YES", "reason": "body 背景 rgb(255,255,224) は light yellow と一致。ナビ背景・主要ボタン背景・見出し色はすべて rgb(47,79,79) で dark slate gray と一致した。"}
+}

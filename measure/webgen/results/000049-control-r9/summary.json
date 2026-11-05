@@ -1,0 +1,68 @@
+{
+  "site": "000049",
+  "arm": "control-r9",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 202.9,
+      "agent_tokens": 885875,
+      "usage": {
+        "input_tokens": 28,
+        "output_tokens": 45127,
+        "cache_creation_input_tokens": 61993,
+        "cache_read_input_tokens": 778727
+      },
+      "tool_uses": 15,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": true,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000049-1": {
+          "verdict": "YES",
+          "reason": "YES: Submitting /barbers/new with valid data redirected to the barber list, which showed the message 'The new barber was adde / YES: Saving the barber form showed the message 'The new barber was added.' on /barbers, and the new barber 'Grader Tomlin' ap / YES: Submitting the Add barber form redirected to /barbers with the message 'The new barber was added.', and 'Grader Barber Z",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000049-2": {
+          "verdict": "YES",
+          "reason": "YES: Submitting /services/new with valid data redirected to the services list, which showed the message 'The new service was  / YES: Saving the service form showed the message 'The new service was added.' on /services, and the new service 'Grader Kids C / YES: Submitting the Add service form redirected to /services with the message 'The new service was added.', and 'Grader Frost",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000049-3": {
+          "verdict": "YES",
+          "reason": "YES: From the dashboard, the top navigation links Barbers, Services and Home each returned HTTP 200 and loaded the right page / YES: From the dashboard, the nav links Barbers, Services and Home each opened the right page (/barbers, /services, /) with ma / YES: Clicking Barbers, Services and Home in the header nav loaded /barbers, /services and / with matching titles and h1 headi",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000049-4": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,250,250) (snow). The header and the main button are rgb(105,105,105), and the h1 heading  / YES: Body background is rgb(255,250,250), which is snow. Header background rgb(105,105,105), main button background rgb(105,1 / YES: body background rgb(255,250,250) = snow; header background rgb(105,105,105), primary button background rgb(105,105,105) ",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 911,
+        "public_functions": 41
+      }
+    }
+  },
+  "runner": "claude -p"
+}

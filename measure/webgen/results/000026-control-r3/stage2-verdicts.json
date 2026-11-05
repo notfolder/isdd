@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking 'Vote' on the homepage opens /polls/3 without errors, and all 4 options (Dark mode, Offline support, Export to  / YES: Clicking 'Vote' on the homepage opened /polls/3 without errors, and all 4 options (Dark mode, Offline support, Export to / YES: Clicking 'Vote' on the homepage opened /polls/3 with no errors, and all 4 options (Dark mode, Offline support, Export to",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: Without voting, the homepage lists 3 polls, each with a description, option count and vote count (details beyond the nam / YES: The homepage lists 3 polls without needing to vote. Each one shows its title plus a description, the number of options a / YES: The homepage lists the 3 polls without voting. Each one shows its name plus a description, the number of options and the",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: After the first vote, 'Thanks! Your vote has been recorded.' was shown and the count became 1. Returning to the poll in  / YES: Right after voting, the page showed 'Thanks! Your vote has been recorded.' On returning, every radio button and the Subm / YES: After the first vote the page showed 'Thanks! Your vote has been recorded.' On returning, every radio button and the sub",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: /results and /polls/3/results show the latest totals, per-option vote counts and percentages, plus bar graphs, and the v / YES: /results and each poll's results page show up-to-date counts (they reflected the new vote right away), the total vote co / YES: The results page and each poll's results page show the current figures: total votes plus a count and percentage for ever",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,224) = light yellow. The header background rgb(47,79,79), the main button (Submit vot / YES: The body background is rgb(255,255,224), which is light yellow. The header background (47,79,79), the .btn background (4 / YES: The body background is rgb(255,255,224), which is light yellow. The header background, the main button background (Submi",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

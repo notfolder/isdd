@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking 'Vote now' on the homepage opened /polls/1 with no errors, and all four options (Python, TypeScript, Rust, Go)  / YES: ホームの「Vote now」から /polls/3 へエラーなく移動でき、全選択肢（Ramen shop・Italian bistro・Food truck park・Bring your own）がラジオボタンと「Cast my vote / YES: Clicking 'Vote now' on the homepage opened /polls/2 without errors, and all four options (Spring/Summer/Autumn/Winter) a",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: The homepage lists four polls, and each one shows a description and vote/option counts besides its name, so the related- / YES: 投票せずにホームで 4 件の投票一覧を見られ、各項目に名称のほか説明文・票数・選択肢数（例: 122 votes · 4 options）があり、関連情報の基準を満たす。 / YES: The homepage lists 4 polls without voting. Each one shows the title plus a description and vote/option counts (e.g. '76 ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: After voting, the page showed 'Thank you for voting! You voted for Hiking.' On returning, the radios and button were dis / YES: 投票直後に「Thank you for voting! You voted for Ramen shop.」と表示され、総票数が 26→27 になった。同じブラウザで戻ると「You have already voted in this po / YES: Right after voting, 'Thank you for voting! You voted for Spring.' appeared and the total went from 76 to 77. On returnin",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: The results page shows total votes, the leading option, and each option's vote count and percentage, plus bar graphs (ba / YES: /results と各投票の結果ページに総票数・最多選択肢・選択肢ごとの票数と % が棒グラフ付きで表示され、投票直後の値（26→27）も反映されていた。 / YES: The results page shows the current total (updated right after the vote), the leading option, and each option's vote coun",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "YES: Body background rgb(255,255,224) matches light yellow. Header background, .btn background and h1/h2 text color are all r / YES: body の背景は rgb(255,255,224) で light yellow に一致。ヘッダー・主要ボタン（.btn）・見出し（h1）はどれも rgb(47,79,79) で dark slate gray に一致し、背景と部品 3  / YES: The body background is rgb(255,255,224), which matches light yellow. The header background, main button background and h",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

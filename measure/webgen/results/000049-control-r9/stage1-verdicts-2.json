@@ -1,0 +1,6 @@
+{
+  "000049-1": {"verdict": "YES", "reason": "Saving the barber form showed the message 'The new barber was added.' on /barbers, and the new barber 'Grader Tomlin' appeared in the barber list."},
+  "000049-2": {"verdict": "YES", "reason": "Saving the service form showed the message 'The new service was added.' on /services, and the new service 'Grader Kids Cut' ($18.00, Haircut, 25 min) appeared in the service list."},
+  "000049-3": {"verdict": "YES", "reason": "From the dashboard, the nav links Barbers, Services and Home each opened the right page (/barbers, /services, /) with matching titles and headings and no errors; the same header nav appears on every page."},
+  "000049-4": {"verdict": "YES", "reason": "Body background is rgb(255,250,250), which is snow. Header background rgb(105,105,105), main button background rgb(105,105,105) and heading color rgb(79,79,79) are all within 40 per channel of dim gray (105,105,105)."}
+}

@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "ホームの「Vote」リンクから /surveys/3 の投票ページへエラーなく移動でき、4つの選択肢（Dark mode 等）がすべてラジオボタンで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "投票せずにホームで3つのサーベイを一覧でき、各項目に名称のほか説明文・選択肢数・投票数が表示され、各投票ページで選択肢も閲覧できた。"},
+  "000026-3": {"verdict": "YES", "reason": "1回目の投票後に「Thanks! Your vote has been recorded.」が表示され、再訪時はラジオとSubmitボタンが disabled で「You have already voted in this survey.」が表示された。JSで無効化を外して再送信しても『already voted』となり、票数は1のまま増えなかった。"},
+  "000026-4": {"verdict": "YES", "reason": "Results ページで各サーベイの総投票数、選択肢ごとの票数・百分率と棒グラフが表示され、投票直後の結果も反映されていた。"},
+  "000026-design": {"verdict": "YES", "reason": "body 背景が rgb(255,255,224)（light yellow と一致）、ヘッダー背景・主要ボタン背景・見出し文字色がすべて rgb(47,79,79)（dark slate gray と一致）。"},
+  "000026-rename": {"verdict": "YES", "reason": "ホーム・投票ページ・結果ページ（作成ページ含む）の本文とタイトルに 'poll(s)' は一度も現れず、ナビ・見出し・ボタン・メッセージはすべて 'survey' 表記で、ページも正常に動作した。"}
+}

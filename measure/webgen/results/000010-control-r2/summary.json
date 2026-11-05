@@ -1,0 +1,196 @@
+{
+  "site": "000010",
+  "arm": "control-r2",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 201.7,
+      "agent_tokens": 1072240,
+      "usage": {
+        "input_tokens": 34,
+        "output_tokens": 54570,
+        "cache_creation_input_tokens": 72965,
+        "cache_read_input_tokens": 944671
+      },
+      "tool_uses": 28,
+      "rounds": 2,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: Spin showed 'Spinning…', the wheel stopped with the pointer on the Mystery Gift Box segment, and the page displayed 'Ale / YES: Spinning showed 'Spinning...' with the wheel rotating, then it stopped with the pointer on 'Free Coffee' and showed 'Tes / YES: 名前を入力してSpin the Wheelを押すと「Spinning…」と表示されてホイールが回転し、「20% Off Coupon」の区画で止まって「Tester won: 20% Off Coupon — 20% off your ne",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel. / YES: The Reward List shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel. / YES: Reward Listに8種類の賞品が説明・確率付きで表示され、ホイールの8区画と完全に一致した。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After the spin, My Winning Records listed Alex / Mystery Gift Box / Nov 5, 2026, 06:25 AM, so it has the latest prize an / YES: After the spin, My Winning Records listed 'Tester | Free Coffee | Nov 5, 2026, 06:26 AM', so the latest prize appeared w / YES: My Winning Recordsの先頭に、最新のスピン（Tester、20% Off Coupon、Nov 5, 2026, 06:27 AM）がプレイヤー名・賞品・日時付きで表示された。",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-4": {
+          "verdict": "NO",
+          "reason": "NO: The body background is rgb(255,255,240), not light gray (211,211,211): the R, G and B differences of 44, 44 and 29 excee / NO: The body background is rgb(255,255,240), which differs from light gray (211,211,211) by more than 40 per channel. The he / NO: bodyの背景色はrgb(255,255,240)で、light gray(211,211,211)との差が40を超える。ヘッダー・ボタン・見出しは濃い緑（rgb(0,100,0)/rgb(0,74,0)）で、dark red(139,0,",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 3.0,
+      "n_cases": 4,
+      "accuracy": 0.75,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 293,
+        "public_functions": 18
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 89.8,
+      "agent_tokens": 628356,
+      "usage": {
+        "input_tokens": 26,
+        "output_tokens": 12762,
+        "cache_creation_input_tokens": 41740,
+        "cache_read_input_tokens": 573828
+      },
+      "tool_uses": 16,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 2,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: With 'Alice' the wheel visibly rotated, stopped with the pointer on 'Better Luck Next Time', and showed 'Alice won: Bett / YES: With 'Alice' entered, the wheel canvas rotated, stopped with '20% Off Coupon' under the pointer, and showed 'Alice won:  / YES: With 'Alice' the wheel rotated (transform changed), stopped with the pointer on Free Coffee and showed 'Alice won: Free ",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel. / YES: The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments on the wheel (Grand Re / YES: The Reward List page shows all 8 rewards with descriptions and chances, and these match the 8 segments on the wheel exac",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After spinning as Alice, My Winning Records shows a row with Player 'Alice', Reward 'Better Luck Next Time' and Date 'No / YES: After spinning as Alice, My Winning Records showed the new win as a row 'Alice | 20% Off Coupon | Nov 5, 2026, 06:31 AM' / YES: Searching 'Alice' under My Winning Records lists the new win at the top: Player 'Alice', Reward 'Free Coffee', date 'Nov",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,240), which matches ivory. The header background, primary button background and h1 co / YES: The body background is rgb(255,255,240), which is ivory. The header, the main button (#spin-btn) and the h1 are all rgb( / YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the main button background ",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 293,
+        "public_functions": 18
+      }
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 128.0,
+      "agent_tokens": 766587,
+      "usage": {
+        "input_tokens": 32,
+        "output_tokens": 15740,
+        "cache_creation_input_tokens": 40278,
+        "cache_read_input_tokens": 710537
+      },
+      "tool_uses": 20,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 3,
+      "cases": {
+        "000010-1": {
+          "verdict": "YES",
+          "reason": "YES: With name 'Alice' the wheel rotated (CSS transform changed over time), stopped on the Free Coffee segment and showed 'Al / YES: With name 'Alice' the wheel canvas rotated and stopped with the pointer on Free Shipping, showing 'Alice won: Free Shipp / YES: With 'Alice' the canvas wheel rotated ('Spinning...'), stopped and showed 'Alice won: Sticker Pack — ...' with no errors",
+          "category": "Functional Testing",
+          "change": true
+        },
+        "000010-2": {
+          "verdict": "YES",
+          "reason": "YES: Before any spin, the Reward List page shows 8 rewards with a description and chance for each. These match the 8 segments / YES: The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel (Gr / YES: Reward List shows 8 rewards with description and chance, and they match the 8 segments drawn on the wheel (Grand Reward,",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000010-3": {
+          "verdict": "YES",
+          "reason": "YES: After Alice's spin, My Winning Records showed a row with Player 'Alice', Reward 'Free Coffee' and Date 'Nov 5, 2026, 06: / YES: After the spin, My Winning Records for Alice lists the new win as 'Alice | Free Shipping | Nov 5, 2026, 06:35 AM', with  / YES: After spinning as Alice, My Winning Records lists the new row 'Alice | Sticker Pack | Nov 5, 2026, 06:37 AM' with player",
+          "category": "Data Display Testing",
+          "change": true
+        },
+        "000010-design": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header background, the main button background and the h1 co / YES: Body background is rgb(255,255,240), which is ivory. Header rgb(0,100,0), the main Spin button rgb(0,100,0) and headings / YES: body background rgb(255,255,240) = ivory; header rgb(0,100,0), primary button rgb(0,100,0), and h1 text rgb(0,100,0) all",
+          "category": "Design Validation Testing",
+          "change": false
+        },
+        "000010-rename": {
+          "verdict": "YES",
+          "reason": "YES: On the spin, reward list and records pages, the visible text contains no 'prize' or 'prizes'. The navigation, headings,  / YES: On the spin, reward list and records pages (including the empty-records state, title, placeholders and aria-labels), 'pr / YES: The spin, Reward List and Winning Records pages (visible text and HTML) contain no 'prize'; navigation, headings, button",
+          "category": "Functional Testing",
+          "change": true
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 308,
+        "public_functions": 19
+      }
+    }
+  },
+  "runner": "claude -p"
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spin the Wheel · Wheel of Fortune</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Wheel of Fortune</a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="/" class="active" aria-current="page">Spin the Wheel</a>
+      <a href="/prizes">Prize List</a>
+      <a href="/my-records">My Winning Records</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Spin the Wheel</h1>
+    <p class="lead">Enter your name, spin the wheel and see what you win. Every spin is saved to your winning records.</p>
+
+    <div class="spin-layout">
+      <section class="card" aria-label="Wheel">
+        <div class="wheel-wrap">
+          <svg id="wheel" viewBox="-110 -110 220 220" role="img" aria-label="Prize wheel"></svg>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Spin controls">
+        <label for="player">Your name</label>
+        <input id="player" type="text" maxlength="30" placeholder="e.g. Alex" autocomplete="nickname">
+        <button id="spin-btn" class="btn btn-large" type="button">Spin</button>
+        <div id="result" class="result" aria-live="polite">Press Spin to try your luck!</div>
+        <p class="hint">
+          <a href="/prizes">See the full prize list</a> ·
+          <a href="/my-records">View my winning records</a>
+        </p>
+      </section>
+    </div>
+
+    <section class="card" aria-label="Recent winners">
+      <h2>Recent winners</h2>
+      <ul id="recent" class="simple-list"><li class="muted">Loading…</li></ul>
+    </section>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/wheel.js"></script>
+</body>
+</html>

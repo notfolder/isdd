@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Winning Records - Wheel of Fortune</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="/">Wheel of Fortune</a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="/">Spin the Wheel</a></li>
+          <li><a href="/prizes">Prize List</a></li>
+          <li><a href="/records" aria-current="page">My Winning Records</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>My Winning Records</h1>
+    <p class="lead">Look up the prizes won by your name.</p>
+
+    <div class="grid">
+      <section class="card" aria-labelledby="lookup-title">
+        <h2 id="lookup-title">Find Your Records</h2>
+        <form id="lookup-form" autocomplete="off">
+          <label for="lookup-name">Your name</label>
+          <div class="row">
+            <div>
+              <input id="lookup-name" type="text" maxlength="40" placeholder="e.g. Alex" required>
+            </div>
+            <button type="submit">View My Records</button>
+          </div>
+        </form>
+        <div id="summary"></div>
+      </section>
+
+      <section class="card" aria-labelledby="recent-title">
+        <h2 id="recent-title">Recent Winners</h2>
+        <div id="recent"><p class="empty">Loading...</p></div>
+      </section>
+    </div>
+
+    <section class="card section-gap" aria-labelledby="wins-title">
+      <h2 id="wins-title">My Wins</h2>
+      <div id="wins"><p class="empty">Enter your name above to see your winning records.</p></div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+  <script src="/static/records.js"></script>
+</body>
+</html>

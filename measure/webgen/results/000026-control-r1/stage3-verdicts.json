@@ -1,0 +1,56 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: From the homepage, the Vote link opened /surveys/1 with status 200 and no errors, and all five options (Python, JavaScri / YES: From the homepage, the 'Vote' link opened /surveys/2 without errors, and all 4 options (Kyoto, Lisbon, Toronto, Cape Tow / YES: Clicking 'Vote' on the homepage opened /surveys/2 without errors, and all 4 options (Kyoto, Lisbon, Toronto, Cape Town) ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: The homepage lists every survey without voting. Each one shows its name plus a description and option and vote counts (e / YES: The homepage lists each survey without voting. Each has its question plus other information (description, option count,  / YES: The homepage lists every survey with its title, a description, and the option and vote counts. Each survey page shows it",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: Right after the first vote, 'Thanks! Your vote has been recorded.' appeared and the total went from 19 to 20. On returni / YES: Right after voting, the page showed 'Thanks! Your vote has been recorded.' and the total went from 18 to 19. On returnin / YES: The first vote showed 'Thanks! Your vote has been recorded.' and the total went from 26 to 27. Back on the survey, the r",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: The results page shows current figures: a total and each option's vote count and percentage. After voting it immediately / YES: The results page shows the total vote count, each option's votes and percentage, and bar graphs. The figures updated rig / YES: The results page shows the total votes, each option's count and percentage, and bar graphs (.fill). The counts reflected",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,224), which matches light yellow. The header background, the main buttons and the hea / YES: The body background is rgb(255,255,224), which matches light yellow. The header, main button, and h1/h2 headings are all / YES: The body background is rgb(255,255,224), which is light yellow. The header background, main button background and h1/h2 ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-rename": {
+    "verdict": "YES",
+    "reason": "YES: The visible text and page titles of home, voting, results, create and not-found pages do not contain the words poll or p / YES: On the home, voting, results, results-list, and create pages, 'poll' did not appear once (case-insensitive check). Navig / YES: Across home, survey pages, results, results detail and create (body text plus titles), 'poll' appeared 0 times. Navigati",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

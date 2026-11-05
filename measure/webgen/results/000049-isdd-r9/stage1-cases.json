@@ -1,0 +1,29 @@
+{
+  "base_url": "http://127.0.0.1:53804",
+  "cases": [
+    {
+      "id": "000049-1",
+      "category": "Functional Testing",
+      "task": "Add a new barber using the provided form with valid information.",
+      "expected": "The barber should be successfully added, and a confirmation message should appear. The new barber should be visible in the barber list."
+    },
+    {
+      "id": "000049-2",
+      "category": "Functional Testing",
+      "task": "Add a new service using the provided form with valid details.",
+      "expected": "The service should be successfully added, and a confirmation message should appear. The new service should be listed under available services."
+    },
+    {
+      "id": "000049-3",
+      "category": "Data Display Testing",
+      "task": "Navigate through the website from the dashboard to the barbers and services section using a navigation menu.",
+      "expected": "Each navigation action should lead to the correct page without errors, maintaining a consistent and intuitive navigation experience."
+    },
+    {
+      "id": "000049-4",
+      "category": "Design Validation Testing",
+      "task": "Verify that the website uses 'snow' as the background color and 'dim gray' as the component color, as specified in the design requirements.",
+      "expected": "The website has a background color of 'snow' and components (such as buttons, cards, headers, etc.) are styled with the color 'dim gray', accurately reflecting the design instruction."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "The homepage (/surveys) links to each survey's voting page, which opens without errors and shows every option as a radio button (e.g. Python/JavaScript/Go/Rust) with a Vote button."},
+  "000026-2": {"verdict": "YES", "reason": "The survey list shows each survey with a description and its option and vote counts (e.g. '4 options · 11 votes'), and the voting pages list the options without requiring a vote, so details beyond the name are present."},
+  "000026-3": {"verdict": "PARTIAL", "reason": "The vote was counted (7→8), and on return the radios and Vote button were disabled with 'You have already voted in this survey.' shown; a forced second POST returned 409 and the count stayed 8. However, after voting the site only redirected to the results page with no confirmation text, so the confirmation notification is not met."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows up-to-date statistics (total votes, votes and share % per option) and bar charts, and it reflected the vote just cast immediately."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which equals light yellow, and the header background, the main button background and the h1 text color are all rgb(47,79,79), which equals dark slate gray."},
+  "000026-rename": {"verdict": "YES", "reason": "No page text or title on the home, voting or results pages contains 'poll' or 'polls'; navigation, headings, buttons and messages all use 'Survey', and every page works."}
+}

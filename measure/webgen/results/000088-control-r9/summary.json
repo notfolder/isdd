@@ -1,0 +1,68 @@
+{
+  "site": "000088",
+  "arm": "control-r9",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 362.2,
+      "agent_tokens": 1387655,
+      "usage": {
+        "input_tokens": 34,
+        "output_tokens": 65043,
+        "cache_creation_input_tokens": 82786,
+        "cache_read_input_tokens": 1239792
+      },
+      "tool_uses": 17,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": true,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000088-1": {
+          "verdict": "PARTIAL",
+          "reason": "PARTIAL: The /species list shows 17 species across 2 pages with scientific name, common name, kingdom, habitat, diet, status and  / PARTIAL: The species list (17 entries over 2 pages) shows biological information, but several rows display '—' in the Lifespan co / PARTIAL: /species shows a list of species with biological info columns (kingdom, habitat, diet, status, lifespan), but the Lifesp",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "YES: Searching 'wolf' returned only Canis lupus (Gray wolf), 1 of 17. Searching 'Panthera' from the home page returned only P / YES: Searching 'Panda' returned only Giant panda (1 of 17), and searching 'wolf' returned only Gray wolf (1 of 17). No unrela / YES: Searching 'whale' returned exactly 1 result, Blue whale (Balaenoptera musculus), and no unrelated species.",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "YES: Setting Habitat=Marine and clicking Apply filters gave 4 of 17 entries (Blue whale, Green sea turtle, Common dolphin, Co / YES: Filtering by Habitat = Marine showed 4 of 17 entries (Blue whale, Green sea turtle, Common dolphin, Common octopus), all / YES: Filtering by habitat Marine returned 4 of 17 species, and every row has habitat Marine. No non-matching entries were sho",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-4": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(250,240,230), which is linen. The header background (rgb(128,0,0)), main button background (r / YES: The body background is rgb(250,240,230), which is linen. The header, the main button (Apply filters) and the h1 heading  / YES: body background is rgb(250,240,230) (linen). Header background rgb(128,0,0), .btn background rgb(128,0,0) and h1 color r",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 3.5,
+      "n_cases": 4,
+      "accuracy": 0.875,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 1059,
+        "public_functions": 44
+      }
+    }
+  },
+  "runner": "claude -p"
+}

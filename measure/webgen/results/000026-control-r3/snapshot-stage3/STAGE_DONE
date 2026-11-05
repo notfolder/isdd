@@ -1,0 +1,15 @@
+STAGE_DONE: change request 2 (rename "poll" to "survey" in the UI) implemented.
+
+Summary
+- Every user-visible use of "poll" is now "survey": nav labels (Surveys / Create Survey / Results), brand, page titles (e.g. "Create survey · Surveys"), headings, buttons ("Create survey", "View survey"), empty states, notices ("Your survey was created", "You have already voted in this survey"), the Results page text, and the create-form help text.
+- URLs changed from /polls/... to /surveys/...; old /polls links redirect (303) to the new addresses, and /polls redirects to /.
+- Behaviour unchanged: one vote per survey per browser (cookie), confirmation notice, results pages, light yellow / dark slate gray theme (CSS untouched).
+- Internal names kept on purpose: SQLite file data/polls.db, table names, and Python identifiers. Renaming the DB would have required a data migration and is not visible in the UI.
+- run.sh comment updated.
+
+Verification
+- bash setup.sh ran OK; PORT=8765 bash run.sh started and was stopped by its own PID.
+- Fetched home, results, create, survey, survey results, and a newly created survey pages: no "poll" text in any HTML; H1s, titles and nav are correct.
+- Vote POST redirected with msg=voted; create POST redirected with msg=created; legacy /polls URLs redirected.
+- The test survey and test vote I created were removed from data/polls.db; the three sample surveys are unchanged.
+- Note: port 8123 was already in use by another process on this machine (not mine); I did not touch it.

@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "PARTIAL", "reason": "/species shows 23 species with kingdom, habitat, feeding mode, status, length, and lifespan, but the Lifespan column shows '—' for 4 rows (Fly agaric, Common hydra, Strawberry poison-dart frog, Corpse flower), so under the 'no missing data' rule this is PARTIAL."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'panda' returned only Giant panda and Red panda (2 of 23), and searching 'Lion' returned only Lion (1 of 23); no unrelated species appeared."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by Habitat=Forest showed 5 of 23 species, and every row has habitat Forest; no non-matching rows appeared."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which is linen. The header background, the main button background (.btn / submit), and the h1/h2 text are all rgb(128,0,0), which is maroon, so the background and all 3 components match."}
+}

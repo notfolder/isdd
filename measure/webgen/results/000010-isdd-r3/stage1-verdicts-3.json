@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin rotated the wheel (it was mid-turn in a screenshot after 1 s). It then stopped under the pointer, and the result showed 'Try again' (another run showed 'You won: $5 Voucher!'), with no JS errors."},
+  "000010-2": {"verdict": "YES", "reason": "Before any spin, the Prize List page shows 7 prizes, each with a description and a chance. They are the same 7 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After winning '$5 Voucher', My Winning Records added a new row: 2026-11-05 06:51:47, $5 Voucher. Both the date and the prize are correct."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(211,211,211), which is light gray. The header background, the Spin button and the h2 heading are all rgb(139,0,0), which is dark red, so the background and all 3 component types match."}
+}

@@ -1,0 +1,23 @@
+Polls website: implementation complete.
+
+Start:  bash setup.sh   then   PORT=8000 bash run.sh   -> http://127.0.0.1:8000
+Data:   DATA_DIR (default ./data) holds polls.db (SQLite). Created on start;
+        if it has no polls, sample polls with votes are seeded.
+
+Files:  server.py (stdlib only: http.server + sqlite3), setup.sh, run.sh, .gitignore
+
+Screens (English, visible navigation: Home | Browse Polls | Results | Create Poll):
+- Home: welcome section and latest polls.
+- Browse Polls: all polls as cards with option/vote counts, Vote and View results buttons.
+- Poll page (/polls/<id>): choose one option and Cast vote. After voting, shows that the vote is in.
+- Results (/polls/<id>/results): total votes, bar chart with counts and percentages, Leading badge.
+- Results (/results): summary table of every poll with its leading option.
+- Create Poll: question plus 2-10 options (one per line), with validation messages.
+
+Choices made:
+- One vote per poll per browser (voter ID in an HttpOnly cookie, enforced in the DB by a UNIQUE constraint). No accounts.
+- Added Create Poll, since otherwise the site has no way to add polls.
+- Colors: white page background; navy (#000080) for the header, nav, buttons, headings, cards, borders, bars and table headers.
+
+Verified: setup.sh and run.sh on an empty DATA_DIR. All pages return 200 (404 for unknown pages). Vote, duplicate-vote blocking, invalid-option handling, poll creation with validation, HTML escaping of user input, and voter cookie were checked with curl. The server was stopped by its PID.
+Not verified: no Chromium is installed here, so browser clicks were not tested. The local python3 is 3.9; the code also avoids features newer than 3.8.

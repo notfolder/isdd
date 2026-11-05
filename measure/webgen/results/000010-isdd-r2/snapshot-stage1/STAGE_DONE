@@ -1,0 +1,22 @@
+STAGE DONE: Wheel of Fortune (isdd-spec -> isdd-build, new flow)
+
+Start: bash setup.sh ; PORT=<n> bash run.sh  (serves http://127.0.0.1:$PORT, DATA_DIR default ./data)
+
+Spec: docs/requirements.md (RQ 29), docs/detail_design.md (DS 40), .history/20261105-wheel-of-fortune/tasks.md
+Trace: docs/trace_map.md (37 rows, granularity function)
+Code: app/ (Python 3.9+ stdlib, sqlite3), web/ (English UI, light gray #D3D3D3 background, dark red #8B0000 components)
+
+Verified:
+- bash scripts/isdd/check.sh --strict: errors 0, warnings 0, acceptance 8/8 DS-TS passed, 11/11 requirements
+- rq_integrity_checker / rq_ds_link_checker: pass
+- implementation_completeness_checker: 4/4
+- unittest (tests/): 18 pass
+- E2E (e2e/, JUnit at e2e/results/e2e.xml): 8 pass
+- run.sh started on a free port; all pages and APIs returned 200; server stopped by its own PID
+
+Not verified / limits:
+- No browser available: the JavaScript is only syntax-checked (node --check). Browser behavior is unverified.
+- Python 3.12 not available locally; tested on 3.9.6.
+- python.org release status not fetched (WebFetch permission denied).
+- Section 1-2 of requirements lists decisions made without the user's confirmation; the user's later "approve all" was taken as approval.
+- The directory was wiped once by a parallel run and rebuilt; other sessions also used this directory.

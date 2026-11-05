@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "/species lists all 13 species with every column filled (scientific name, kingdom, class, habitat, diet, status, length, lifespan). No empty-value markers like '—' or 'N/A' appear."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'Panda' showed only Giant Panda ('Showing 1 of 13 species'), with no unrelated species."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by Habitat = Marine showed only Blue Whale and Green Sea Turtle, both Marine, and no rows from other habitats."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which is linen. The header background, main button (.btn) background and heading color are all rgb(128,0,0), which is maroon. All four match within 40 per channel."}
+}

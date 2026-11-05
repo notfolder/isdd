@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the homepage opened /surveys/2 without errors, and all 4 options (Kyoto, Lisbon, Toronto, Cape Town) were shown as selectable radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists every survey with its title, a description, and the option and vote counts. Each survey page shows its options, and nothing is voted unless you submit."},
+  "000026-3": {"verdict": "YES", "reason": "The first vote showed 'Thanks! Your vote has been recorded.' and the total went from 26 to 27. Back on the survey, the radios and button were disabled with 'You have already voted in this survey.' A forced resubmit left the total at 27."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows the total votes, each option's count and percentage, and bar graphs (.fill). The counts reflected the vote right after it was cast."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The header background, main button background and h1/h2 text are all rgb(47,79,79), which is dark slate gray. The background and all 3 parts match."},
+  "000026-rename": {"verdict": "YES", "reason": "Across home, survey pages, results, results detail and create (body text plus titles), 'poll' appeared 0 times. Navigation, headings and messages use 'Survey', and the pages worked normally."}
+}

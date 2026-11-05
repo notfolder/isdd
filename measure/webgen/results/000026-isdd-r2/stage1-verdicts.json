@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: トップ（/polls）から投票ページ /polls/1 へエラーなく遷移でき、全選択肢（Python, JavaScript, Go, Rust）がラジオボタンと投票ボタン付きで表示された。 / YES: Clicking a poll on the homepage (/ → /polls) opened /polls/3 without errors, and all 4 options (Noodle bar, Sandwich sho / YES: ホーム（/polls）の投票リンクから /polls/1 にエラーなく移動でき、選択肢 Python・JavaScript・Go・Rust がすべてラジオボタンで表示された。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: 投票せずに投票一覧を閲覧でき、各投票に名称に加えて説明文・選択肢数・票数（例: 4 options · 11 votes）が表示され、各投票ページで選択肢も確認できた。 / YES: The poll list shows each voting option with information besides its name: a description plus option and vote counts (e.g / YES: 投票しなくても投票の一覧を閲覧でき、各項目に名称に加えて説明文と件数（例: 4 options · 13 votes）が表示されており、関連情報の基準を満たす。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "PARTIAL",
+    "reason": "PARTIAL: Go に投票すると総票数が 11→12 に増え記録は確認できたが、投票直後は結果画面に移るだけで投票完了を伝える確認の文が表示されなかった。 / PARTIAL: After voting for Go, Go went from 2 to 3 votes and the total from 12 to 13, so the vote was recorded. But the page only  / PARTIAL: 投票後に結果画面へ移り、総票数が 13 から 14 に増えたので記録は確認できた。しかし投票直後に成功を伝える文が表示されず（結果画面に移るだけ）、確認の知らせは満たさない。",
+    "votes": [
+      "PARTIAL",
+      "PARTIAL",
+      "PARTIAL"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: 結果ページで最新の票数（投票後の 12 票を反映）、各選択肢の票数・割合（%）・棒グラフが表示された。 / YES: The results page shows the total vote count and, for each option, votes, share (%) and a bar chart. The counts updated r / YES: 結果ページに最新の総票数（Total votes: 14）、選択肢ごとの票数・割合、横棒グラフが表示された。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-5": {
+    "verdict": "YES",
+    "reason": "YES: body 背景 rgb(255,255,255)=white、ヘッダー背景 rgb(0,0,128)、主要ボタン背景 rgb(0,0,128)、見出し h1 文字色 rgb(0,0,128) で、部品 3 種類すべて navy に一致した。 / YES: Body background is rgb(255,255,255), which matches white. Header background rgb(0,0,128), main button background rgb(0,0 / YES: body の背景は rgb(255,255,255)（white）。ヘッダー rgb(0,0,128)、主要ボタン rgb(0,0,128)、見出し h1 の文字色 rgb(0,0,128) で、3 種類とも navy と一致した。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

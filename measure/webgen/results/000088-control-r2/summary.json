@@ -1,0 +1,87 @@
+{
+  "site": "000088",
+  "arm": "control-r2",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 199.1,
+      "agent_tokens": 1080197,
+      "usage": {
+        "input_tokens": 36,
+        "output_tokens": 43489,
+        "cache_creation_input_tokens": 62351,
+        "cache_read_input_tokens": 974321
+      },
+      "tool_uses": 19,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000088-1": {
+          "verdict": "PARTIAL",
+          "reason": "PARTIAL: The Browse & Search page lists all 23 species with their biological information (kingdom, habitat, feeding mode, conserv / PARTIAL: /species shows 23 species with kingdom, habitat, feeding mode, status, length, and lifespan, but the Lifespan column sho / PARTIAL: /species lists all 23 species with kingdom, habitat, feeding mode, status, length and lifespan, but 4 rows (Fly agaric, ",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "YES: Searching for 'panda' shows 'Showing 2 of 23 species' and displays only Giant panda and Red panda, with no unrelated spe / YES: Searching 'panda' returned only Giant panda and Red panda (2 of 23), and searching 'Lion' returned only Lion (1 of 23);  / YES: Searching 'panda' returned only Giant panda and Red panda (2 of 23), and 'Ursus maritimus' returned only Polar bear; no ",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "YES: With Habitat=Forest applied, the list shows 5 species, all with habitat Forest, and no entries that don't match. / YES: Filtering by Habitat=Forest showed 5 of 23 species, and every row has habitat Forest; no non-matching rows appeared. / YES: Applying Habitat = Forest updated the list to 5 of 23 species, all with habitat Forest and no non-matching entries.",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-4": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(250,240,230), which is linen. The header background rgb(128,0,0), the main button background  / YES: The body background is rgb(250,240,230), which is linen. The header background, the main button background (.btn / submi / YES: Body background is rgb(250,240,230) (linen); header background, primary .btn background and h1/h2 text are all rgb(128,0",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 3.5,
+      "n_cases": 4,
+      "accuracy": 0.875,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 794,
+        "public_functions": 30
+      }
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 53.5,
+      "agent_tokens": 388052,
+      "usage": {
+        "input_tokens": 18,
+        "output_tokens": 8696,
+        "cache_creation_input_tokens": 35759,
+        "cache_read_input_tokens": 343579
+      },
+      "tool_uses": 15,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": ""
+    }
+  },
+  "runner": "claude -p"
+}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
+{% block content %}
+<h1>Results</h1>
+<p class="lead">Totals and the leading option for every poll.</p>
+{% if polls %}
+<table class="results">
+  <thead>
+    <tr><th>Poll</th><th>Total votes</th><th>Leading option</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for poll in polls %}
+    <tr>
+      <td>{{ poll.question }}</td>
+      <td>{{ poll.total }}</td>
+      <td>{{ poll.leader if poll.leader else 'No votes yet' }}</td>
+      <td><a class="button button-outline" href="{{ url_for('show_poll_results', poll_id=poll.id) }}">Details</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No polls yet.</p>
+{% endif %}
+{% endblock %}

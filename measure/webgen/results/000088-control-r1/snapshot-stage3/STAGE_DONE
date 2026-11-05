@@ -1,0 +1,19 @@
+STAGE DONE: change request 2 (rename "species" -> "organism" in the UI)
+
+Summary of changes (server.py only; run.sh comment updated):
+- Navigation: "Home", "Browse & Search", "Add Organism", "About" (was "Add Species").
+- Page titles, brand, footer, and headings: "Organism Database", "Organism Biological Information Database", "Featured organisms", "Threatened organisms", "Organism records", "Add an organism", "Edit organism".
+- Buttons and messages: "Save organism", "Delete this organism record?", "No organisms match these filters.", "Showing N of M organisms", "The organism record was created/updated/deleted.", "No organisms yet.", and the About page text.
+- URLs: /species... -> /organisms... (the path is visible in the address bar). Old /species URLs return 301 redirects to /organisms, so bookmarks still work.
+- Stored text: at start-up, existing record descriptions containing "species" are changed to "organisms" (one-time and idempotent; applied to the sample "Quercus robur" record in data/species.db on the next start).
+- Kept unchanged: the internal SQL table name "species", the file name data/species.db, and Python identifiers. None of these are visible in the UI, and renaming them would break existing data.
+
+Unchanged: browse, name-only search, kingdom/status/habitat/diet filters, sort, add/edit/delete, validation, and the honeydew / dark olive green theme (CSS not modified).
+
+Verification (on a copy of the data, port 8765, server stopped by PID afterwards):
+- bash setup.sh ok; PORT=8765 DATA_DIR=<copy> bash run.sh started and served.
+- Pages /, /organisms, /organisms/new, /organisms/1, /organisms/1/edit, /about, filter/search URLs return 200. Served HTML contains no "species" (case-insensitive) on those pages.
+- Create, validation error, edit, and delete work and redirect correctly. Filters work (kingdom=Animalia: 9 of 13; conservation_status=Endangered: 3 of 13; q=lion: 1 of 13).
+- /species and /species/1/edit redirect to /organisms.
+
+Notes: the environment's python3 is 3.9 (the contract's 3.12 target is compatible with this code). Nothing in the working tree is committed (all files are untracked, as before).

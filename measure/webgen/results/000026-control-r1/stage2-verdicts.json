@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking a 'Vote' link on the homepage opened /polls/1 with no page errors, and all 5 options (Python, JavaScript, Go, R / YES: ホームの「Vote」リンクから /polls/3 の投票ページへエラーなく移動でき、4 つの選択肢（Dark mode, Offline support, Calendar sync, Mobile app）がすべてラジオボタンで表示された / YES: From the homepage, clicking a poll's 'Vote' link opens /polls/1 with status 200 and no errors, and all 5 options (Python",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: The homepage lists all 3 polls without voting. Each poll shows its name plus details: a description, the option count an / YES: 投票せずにホームの投票一覧と各投票ページを閲覧でき、各投票には名称に加えて説明文・選択肢数・投票数（例: 4 options · 19 votes）が表示されており、関連情報の基準を満たす。 / YES: The homepage lists every poll with its title, a description, and option/vote counts (e.g. '5 options · 27 votes'), so de",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: After the first vote the page showed 'Thanks! Your vote has been recorded.' and the total went from 18 to 19. On returni / YES: 投票直後に「Thanks! Your vote has been recorded.」が表示されて合計が 26→27 になった。同じブラウザで戻るとラジオと「Cast my vote」ボタンが disabled になり「You have a / YES: After the first vote the page showed 'Thanks! Your vote has been recorded.' and the count went from 19 to 20. On returni",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: The results page shows the current total (it updated to 19 after voting), plus each option's vote count and percentage w / YES: 結果ページに合計票数、各選択肢の票数と割合、横棒グラフが表示され、投票直後の票が反映された最新の値になっていた。 / YES: The results page shows the total vote count, each option's votes and percentage, and bar graphs, and it updated right af",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,224), which is light yellow. The header background, main button background and h1/h2  / YES: body の背景は rgb(255,255,224) で light yellow と一致。ヘッダー背景・主要ボタン背景・見出しの文字色はすべて rgb(47,79,79) で dark slate gray と一致した。 / YES: The body background is rgb(255,255,224), which matches light yellow. The header background, the main button background, ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

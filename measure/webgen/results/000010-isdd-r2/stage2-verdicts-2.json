@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "NO", "reason": "The page could not be opened: http://127.0.0.1:62396 refused the connection (ERR_CONNECTION_REFUSED) on every retry over about 60 seconds, so neither the spin nor the empty-name validation could be checked."},
+  "000010-2": {"verdict": "NO", "reason": "The page could not be opened (connection refused at http://127.0.0.1:62396), so no prize list could be seen."},
+  "000010-3": {"verdict": "NO", "reason": "The page could not be opened (connection refused at http://127.0.0.1:62396), so it was impossible to spin or view winning records."},
+  "000010-design": {"verdict": "NO", "reason": "The page could not be opened (connection refused at http://127.0.0.1:62396), so the body background color and component colors could not be measured."}
+}

@@ -1,0 +1,138 @@
+# STAGE_DONE: 景品ルーレット Web サイト（isdd-spec → isdd-setup → isdd-build 完了）
+
+依頼（REQUEST.md）、契約（contract.md）、固定回答（ANSWERS.md）に従い、要件定義 → 設計 → 実装 → 実装後レビューまで完了した。ユーザーは不在のため、ANSWERS.md の方針で決めた項目は「承認: 未確認」として残してある。
+
+## 起動
+
+```bash
+bash setup.sh
+PORT=8000 bash run.sh      # http://127.0.0.1:8000 を開く。停止は Ctrl+C
+```
+
+- 画面（英語）: Spin Wheel（`/`）、Prize List（`/prizes`）、My Winning Records（`/records`）。3 画面の上部に共通メニュー。
+- 配色: 背景 light gray（#D3D3D3）、部品 dark red（#8B0000）。
+- データ: `DATA_DIR`（既定はリポジトリ直下の `data/`）に SQLite の `wheel.db`。空なら景品 7 件と「Sample Player」の当選記録 2 件を入れる。
+- 技術: Python 3 標準ライブラリ（`http.server` の ThreadingHTTPServer、`sqlite3`）と素の HTML・CSS・JavaScript。外部パッケージは使わない。
+
+## 作った文書
+
+- `docs/requirements.md`（要件定義書。RQ-* 29 件）
+- `docs/detail_design.md`（詳細設計書。DS-* 49 件、第 11 章に要件と設計の対応表）
+- `.history/20261105-prize-wheel/tasks.md`（実装タスク）
+- `docs/trace_map.md`（対応表。粒度 class）
+- `README.md`、`setup.sh`、`run.sh`
+
+## 実装
+
+- `src/server.py`（起動の入口）、`src/web/`（HTTP の振り分け、API、画面）、`src/service/`（利用者名の検証、抽選、当選記録）、`src/store/`（SQLite、リポジトリ、初期データ）
+- `src/web/static/`（3 画面の HTML、`styles.css`、`js/` の 4 ファイル）
+- テスト: `tests/unit/`（単体・結合 16 件）、`e2e/test_wheel_e2e.py`（E2E 6 件。実サーバーを子プロセスで起動し HTTP で確かめる）
+
+## 採った判断（依頼・固定回答に無かったこと）
+
+要件定義書 1-2 の表のとおり。承認はすべて「未確認」。
+
+### 依頼に無く自分で決めた項目
+
+| 項目 | 決めた内容 | 根拠（最小案か、依頼のどこから推測したか） | 承認（承認済 / 未確認） |
+|---|---|---|---|
+| 利用者の識別 | ログインは作らない。抽選時に利用者名を入力し、その名前で当選記録を残す。当選履歴は利用者名で絞り込んで表示する | 依頼の「自分の当選記録を見られる」を満たす最小の方法。固定回答「ログインは不要」 | 未確認 |
+| 利用者名の規則 | 前後の空白を除いて 1〜20 文字。空欄・空白だけ・21 文字以上は抽選せず、「Please enter a name of 1 to 20 characters.」と表示する | 最小の規則。桁数は表示欄に収まる長さ | 未確認 |
+| 抽選回数の上限 | 上限は無い（何回でも回せる） | 依頼に制限の記述が無い | 未確認 |
+| 景品の確率 | 景品ごとに重み（整数 1〜100）を持つ。当選確率は重みの比。景品一覧に % で表示する | 依頼の「抽選」を満たす最小の仕組み | 未確認 |
+| はずれ区分 | 「Try again」をはずれの区分としてルーレットに入れる。はずれは当選記録に残さない | 依頼の「当選記録」は当選したものを指すと解釈した | 未確認 |
+| 当選履歴の表示 | 利用者名が一致する記録を新しい順に表示する。0 件のときは「No winning records yet.」 | 依頼の「自分の当選記録を見られる」の最小形 | 未確認 |
+| 初期データ | 景品 7 件（はずれ 1 件を含む）と、「Sample Player」の当選記録 2 件を、景品が 0 件のときに起動時に入れる | 契約: 空の DATA_DIR でも全機能を試せるサンプルを置く | 未確認 |
+| 景品の追加・編集 | 作らない（画面も API も無い） | 依頼に景品の管理は書かれていない | 未確認 |
+| 連続操作 | 抽選中は抽選ボタンを無効にし、1 回の抽選が終わるまで次は始めない | 依頼に無い操作の同時実行。二重記録を防ぐ最小の扱い | 未確認 |
+| 通信エラー時 | 「Something went wrong. Please try again.」を表示し、当選記録は残さない | 依頼に無いエラー時の扱い。最小の表示 | 未確認 |
+
+### 承認の扱い（ANSWERS.md の方針で進めた）
+
+- 技術選定（Python 標準ライブラリ＋SQLite）: 固定回答「推奨の案でよい」に従う。候補の出典は Python 3.12 公式ドキュメント（`http.server`、`sqlite3`）と Flask 3.1.x の公式ページで、確認日は 2026-11-05。
+- E2E の実行手段: 標準の `unittest` と `urllib`（HTTP で実サーバーを確かめる）。ブラウザ自動化のツールは入れていない。
+- 連携ライブラリ・モック・要件の除外: 該当なし。
+
+## 完了条件の確認（実行ログの要約）
+
+### 対応表・依存・受け入れ判定（`bash scripts/isdd/check.sh --strict`）
+
+```
+対応表チェック: 検出: 設計ID 49 件 / 対応表 46 行 ... エラー: 0 件 / 警告: 0 件 ✓
+依存チェック: 規則 3 件 / 確かめたファイル 11 件 ✓
+受け入れ判定: DS-TS: 合格 6 / 不合格 0 / 未実行 0 / 要再実行 0（全 6）
+              要件: 実装済み 12 / 不合格 0 / 未検証 0（全 12）✓
+CHECK_EXIT=0
+```
+
+### 要件・設計の整合
+
+- `rq_integrity_checker.py docs/requirements.md`: 全てのチェックに合格（RQ 29 件、BK マッピング欠落 0、孤立 BK 0、受け入れテスト欠落 0）。終了コード 0。
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 全てのチェックに合格（欠落 0、不整合 0）。終了コード 0。
+
+### 実装完了チェック（`python3 scripts/isdd/implementation_completeness_checker.py .`）
+
+```
+実行形態: server / 認証: なし / 外部連携: なし / E2E ディレクトリ: e2e
+結果: 4 / 4 項目通過。全チェック通過。
+```
+
+### テスト
+
+- 単体・結合: `python3 -m unittest discover -s tests/unit -p "test_*.py"` → Ran 16 tests, OK
+- E2E: `python3 scripts/isdd/unittest_junit.py -s e2e -t . -o e2e/results/e2e.xml` → Ran 6 tests, OK（`e2e/results/e2e.xml`、6 件）
+
+### 起動と画面の確認
+
+- `bash setup.sh` → 完了。`PORT=18771 bash run.sh` で起動し、`/`・`/prizes`・`/records`・`/api/prizes` がすべて 200。確認後、起動したプロセスを PID で停止（ほかのプロセスには触れていない）。
+- Chrome ヘッドレス（DevTools 経由）で操作を確かめた。利用者名「  Browser Tester  」で Spin → 回転中はボタンが無効 → 結果「Try again」→ ボタンが戻る。空の名前ではエラー表示。履歴画面で 0 件の表示、「Sample Player」は 2 件、景品一覧は 7 件。
+- スクリーンショットで、背景の light gray、dark red の部品、ルーレットの文字（長い景品名は縮め、左半分は読める向き）を確認。
+
+## 未マッピング一覧（実装後レビュー）
+
+### 未マッピング一覧
+
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| `src/server.py::read_port` | `DS-FN-READ-PORT`（追加） | なし → 追加 | `RQ-OP-CONFIG-ENV` | あり | 設計未定義（追加で解消） |
+| `src/web/static/js/common.js::fetchJson` | `DS-FN-FETCH-JSON`（追加） | なし → 追加 | `RQ-FT-SPIN-WHEEL`, `RQ-FT-LIST-PRIZES`, `RQ-FT-VIEW-OWN-RECORDS` | あり | 設計未定義（追加で解消） |
+| `src/web/static/js/common.js::escapeHtml` | `DS-FN-ESCAPE-HTML`（追加） | なし → 追加 | `RQ-FT-LIST-PRIZES`, `RQ-FT-VIEW-OWN-RECORDS` | あり | 設計未定義（追加で解消） |
+| `src/web/static/js/wheel.js::drawWheel` | `DS-FN-DRAW-WHEEL`（追加） | なし → 追加 | `RQ-FT-SPIN-WHEEL` | あり | 設計未定義（追加で解消） |
+| `src/web/static/js/wheel.js::drawSegmentLabel` | `DS-FN-DRAW-SEGMENT-LABEL`（追加） | なし → 追加 | `RQ-FT-SPIN-WHEEL` | あり | 設計未定義（追加で解消） |
+| `src/web/static/js/wheel.js::animateWheelTo` | `DS-FN-ANIMATE-WHEEL-TO`（追加） | なし → 追加 | `RQ-FT-SPIN-WHEEL` | あり | 設計未定義（追加で解消） |
+| `src/store/database.py::Database.path` | ― | なし | ― | ― | 要件なし（作りすぎ）（削除で解消） |
+
+要件なし（作りすぎ）: 1 件（`Database.path`。未使用のため削除した）。上の 6 件は設計へ「追加」し、対応表に登録した。どれも要件に結びつくため、削除はしていない。
+
+### 要件ごとの実装済み判定
+
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| `RQ-FT-DRAW-BY-WEIGHT` | `RQ-TS-SPIN-AND-RECORD` | `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_spin_and_record` | 実装済み |
+| `RQ-FT-LIST-PRIZES` | `RQ-TS-VIEW-PRIZES` | `DS-TS-VIEW-PRIZES-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_view_prizes` | 実装済み |
+| `RQ-FT-MISS-NOT-RECORDED` | `RQ-TS-SPIN-AND-RECORD` | `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_spin_and_record` | 実装済み |
+| `RQ-FT-PLAYER-NAME-REQUIRED` | `RQ-TS-NAME-VALIDATION` | `DS-TS-NAME-VALIDATION-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_name_validation` | 実装済み |
+| `RQ-FT-RECORD-WINNING` | `RQ-TS-SPIN-AND-RECORD` | `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_spin_and_record` | 実装済み |
+| `RQ-FT-SPIN-WHEEL` | `RQ-TS-SPIN-AND-RECORD` | `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_spin_and_record` | 実装済み |
+| `RQ-FT-VIEW-OWN-RECORDS` | `RQ-TS-VIEW-OWN-RECORDS` | `DS-TS-VIEW-OWN-RECORDS-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_view_own_records` | 実装済み |
+| `RQ-NF-COLOR-THEME` | `RQ-TS-NAVIGATION` | `DS-TS-NAVIGATION-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_navigation` | 実装済み |
+| `RQ-NF-ENGLISH-UI` | `RQ-TS-NAVIGATION` | `DS-TS-NAVIGATION-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_navigation` | 実装済み |
+| `RQ-UI-MY-RECORDS-SCREEN` | `RQ-TS-NAVIGATION`, `RQ-TS-VIEW-OWN-RECORDS` | `DS-TS-NAVIGATION-E2E`, `DS-TS-VIEW-OWN-RECORDS-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_navigation`, `e2e/test_wheel_e2e.py::WheelE2ETest.test_view_own_records` | 実装済み |
+| `RQ-UI-PRIZE-LIST-SCREEN` | `RQ-TS-NAVIGATION`, `RQ-TS-VIEW-PRIZES` | `DS-TS-NAVIGATION-E2E`, `DS-TS-VIEW-PRIZES-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_navigation`, `e2e/test_wheel_e2e.py::WheelE2ETest.test_view_prizes` | 実装済み |
+| `RQ-UI-SPIN-SCREEN` | `RQ-TS-NAME-VALIDATION`, `RQ-TS-NAVIGATION`, `RQ-TS-SPIN-AND-RECORD` | `DS-TS-NAME-VALIDATION-E2E`, `DS-TS-NAVIGATION-E2E`, `DS-TS-SPIN-AND-RECORD-E2E` | `e2e/test_wheel_e2e.py::WheelE2ETest.test_name_validation`, `e2e/test_wheel_e2e.py::WheelE2ETest.test_navigation`, `e2e/test_wheel_e2e.py::WheelE2ETest.test_spin_and_record` | 実装済み |
+
+## isdd-setup の結果
+
+- 実行: `python3 .claude/skills/isdd-setup/scripts/isdd_setup.py --src src --runtime server --no-auth --no-external --granularity class`
+- 版: `scripts/isdd/VERSION` は v2.2.0。isdd-build の `metadata.version` も v2.2.0 で一致。
+- 複製・生成: `scripts/isdd/`（チェッカー群、`check.sh`、`completeness.json`、`dependencies.json`、`pre-commit`、`VERSION`）、`.gitignore` に `e2e/results/`、`AGENTS.md`・`CLAUDE.md` の規則ブロック、`.git/hooks/pre-commit`。
+- `dependencies.json`: 第 7 章の依存の規則 3 件を書き写した。
+- エージェントのフック: 作らなかった。理由: 応答終了時にフックを設定すると、不在のユーザーの実行環境の設定（`.claude/` 配下）を変えることになるため。`check.sh --strict` は手動で実行済み。
+
+## 残っている確認事項・未実施
+
+- 1-2 の表の項目（上の 10 件）はすべて「承認: 未確認」。ユーザーが変えたいものがあれば、要件定義書の該当箇所を直す。
+- git commit はしていない（依頼に無いため）。
+- Python 3.12 では動かしていない。この環境の `python3` は 3.9.6 で、単体・E2E はそれで通した。`setup.sh` は実行環境の sqlite3 の有無を確かめる。
+- 画面の操作は、Chrome の DevTools 経由で実ブラウザから行い確認した。E2E テスト自体は HTTP で実サーバーを確かめる方式（ANSWERS.md の方針）。
+- 起動したサーバーは、確認のたびに起動した PID で停止した。`data/` は確認に使ったため削除し、空の状態に戻してある（次回起動時に初期データが入る）。

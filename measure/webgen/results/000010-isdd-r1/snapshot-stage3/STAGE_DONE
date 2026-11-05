@@ -1,0 +1,39 @@
+STAGE DONE: 変更依頼 2「prize → reward」（isdd-spec → isdd-build、実装後レビューまで完了）
+
+## 変更内容（画面に見える語）
+- 上部メニュー: 「Prize List」→「Reward List」、リンク先 `#/prizes` → `#/rewards`
+- 報酬一覧の見出し・説明文、表の見出し「Prize」→「Reward」
+- 当選記録（My Winnings）の表の見出し「Player / Reward / Won at」
+- ホイールの aria-label「Reward wheel」
+- 景品 0 件のときの文言「No rewards are available.」
+- 初期サンプル名「Grand Prize Headphones」→「Grand Reward Headphones」
+- README.md・package.json の説明も同じ語に変更
+- 動作は変えていない（名前必須、名前ごとの記録、ivory / dark green の配色はそのまま）
+
+## 変えなかったもの（画面に出ない内部の識別子）
+- 要件 ID・設計 ID（例: RQ-FT-VIEW-PRIZE-LIST、DS-IF-PRIZE-LIST-SCREEN）。意味が変わらないため据え置いた
+- API のパス `/api/prizes` と JSON のキー（`prize`、`prizeName`）、DB の表名（`prize`、`prize_name`）、関数名（`listPrizes` など）
+
+## 検査・テスト（すべて合格）
+- `node --test 'tests/unit/*.test.js'`: 10 件合格
+- E2E（JUnit XML: e2e/results/e2e.xml）: 全件合格、failure 0
+- `bash scripts/isdd/check.sh --strict`: エラー 0・警告 0、受け入れ判定 DS-TS 10/10、要件 13/13 実装済み
+- `rq_integrity_checker.py docs/requirements.md`、`rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 問題 0
+- `implementation_completeness_checker.py .`: 4/4 項目通過
+
+## 実装後レビュー（正本への反映）
+- 変更記録: `.history/20261105-reward-rename/`（change_requirements.md、change_detail_design.md、tasks.md）
+- 正本へ反映: docs/requirements.md、docs/detail_design.md、docs/trace_map.md。追加は RQ-TS-REWARD-WORDING と DS-TS-REWARD-WORDING-E2E（`e2e/reward-wording.test.js`）の 1 組
+- `docs/active_change` は削除済み
+
+## 起動確認
+- `bash setup.sh`: OK（Node v24.19.0）
+- `PORT=8131 DATA_DIR=<空の一時ディレクトリ> bash run.sh`: `/`、`/app.js`、`/style.css`、`/api/prizes`、`/api/spin`（空の名前は 400）、`/api/winnings` を確認
+- Chrome ヘッドレスで 3 画面（Spin the Wheel、Reward List、My Winnings）をスクリーンショットで確認。背景は ivory、部品は dark green、見える語は Reward に統一
+- 起動したサーバー（PID 69665）は確認後に PID だけで停止。一時データは削除
+
+## 注意点（ユーザーが確認すべきこと）
+1. 8123 番ポートは最初の確認で使えなかった。別プロジェクトの waitress（PID 61005）と、この作業ディレクトリで起動された古い `node src/server.js`（PID 60237）が使っていた。これらは私が起動したものではないので止めていない。
+2. その誤りで、私の確認用の `POST /api/spin {"name":"Alice"}` と `GET /api/winnings?name=Alice` が PID 60237 に届き、そのサーバーの DATA_DIR に Alice の当選記録が 1 件増えた。PID 60237 は前段の残りと思われる。必要なら確認のうえ止めてデータを戻してほしい。
+3. 既存の DATA_DIR に保存済みの旧名（「Grand Prize Headphones」など）は書き換えていない。契約どおり空の DATA_DIR で起動すれば新しい名前になる。
+4. git にはコミットしていない（リポジトリに未コミットのファイルが多い状態のまま）。

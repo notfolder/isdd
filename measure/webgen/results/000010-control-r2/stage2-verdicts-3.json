@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With 'Alice' the wheel rotated (transform changed), stopped with the pointer on Free Coffee and showed 'Alice won: Free Coffee — One free coffee of any size.' with no page errors; spinning with the name empty showed 'Please enter your name before spinning.' and the wheel's transform stayed at identity."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows all 8 rewards with descriptions and chances, and these match the 8 segments on the wheel exactly ('8 rewards on the wheel')."},
+  "000010-3": {"verdict": "YES", "reason": "Searching 'Alice' under My Winning Records lists the new win at the top: Player 'Alice', Reward 'Free Coffee', date 'Nov 5, 2026, 06:31 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the main button background rgb(0,100,0) and the h1 text rgb(0,100,0) all match dark green within 40 per component."}
+}

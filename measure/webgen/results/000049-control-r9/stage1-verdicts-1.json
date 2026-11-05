@@ -1,0 +1,6 @@
+{
+  "000049-1": {"verdict": "YES", "reason": "Submitting /barbers/new with valid data redirected to the barber list, which showed the message 'The new barber was added.', and the new barber 'Jordan Blake' appears in the list."},
+  "000049-2": {"verdict": "YES", "reason": "Submitting /services/new with valid data redirected to the services list, which showed the message 'The new service was added.', and 'Scalp Massage' ($20.00, Treatment, 25 min) appears in the list."},
+  "000049-3": {"verdict": "YES", "reason": "From the dashboard, the top navigation links Barbers, Services and Home each returned HTTP 200 and loaded the right page (matching h1), with no errors and the current menu item highlighted the same way on every page."},
+  "000049-4": {"verdict": "YES", "reason": "The body background is rgb(255,250,250) (snow). The header and the main button are rgb(105,105,105), and the h1 heading is rgb(79,79,79). All three are within 40 of dim gray rgb(105,105,105) on every channel."}
+}

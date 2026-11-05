@@ -1,0 +1,7 @@
+{
+  "rules": [
+    {"from": "src/store", "deny": ["src/service", "src/web"], "reason": "データ層は業務と HTTP を知らない"},
+    {"from": "src/service", "deny": ["src/web"], "reason": "業務は HTTP の形式を知らない"},
+    {"from": "src/web", "deny": ["src/store"], "reason": "画面と API はデータ層を直接触らず、サービス層を通す"}
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "000049-1": {"verdict": "PARTIAL", "reason": "Submitting the Add barber form added 'Grader V2 Barber Two' and it appears in the barber list, but the page only redirected to /barbers. No confirmation text about the result was shown, so the confirmation-message part is not met."},
+  "000049-2": {"verdict": "PARTIAL", "reason": "Submitting the Add service form added 'Grader V2 Shampoo' (9.50, 10 min) and it appears in the services list, but the page only redirected to /services. No confirmation text about the result was shown."},
+  "000049-3": {"verdict": "YES", "reason": "Clicking Barbers, Services and Home in the header nav opened /barbers, /services and / without errors. Each page had a matching h1 and title, and the current nav item was highlighted, so navigation was consistent."},
+  "000049-4": {"verdict": "YES", "reason": "The body background is a gradient from rgb(247,250,252) to rgb(221,229,236), both ends within 40 of snow (255,250,250). The header, the main button (Add barber/Save barber) and the h1 are all rgb(105,105,105), which is dim gray."}
+}

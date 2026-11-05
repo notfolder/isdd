@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
+{% block content %}
+<h1>Results</h1>
+<p class="lead">Select a poll to see its vote counts.</p>
+{% if summaries %}
+<ul class="card-list">
+  {% for poll in summaries %}
+  <li class="card">
+    <h2><a href="{{ url_for('web.poll_results_page', poll_id=poll.id) }}">{{ poll.title }}</a></h2>
+    <p class="meta">{{ poll.total_votes }} votes</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No polls yet.</p>
+{% endif %}
+{% endblock %}

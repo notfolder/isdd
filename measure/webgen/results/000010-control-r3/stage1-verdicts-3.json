@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "SPINを押すと「Spinning...」の後にホイールが停止し、ポインタ位置の区画（Mystery Gift）と一致する「You won: Mystery Gift!」が表示され、JSエラーも無かった。"},
+  "000010-2": {"verdict": "YES", "reason": "Prize Listページに8件の賞品（名称・説明・結果・確率）が表示され、ホイール上の8区画の名称と完全に一致した。"},
+  "000010-3": {"verdict": "YES", "reason": "スピン後にMy Winning Recordsを開くと、My Winsに「Nov 5, 2026, 6:27 AM / Mystery Gift」と最新の当選が日付付きで追加されていた。"},
+  "000010-4": {"verdict": "YES", "reason": "bodyの背景はrgb(211,211,211)（light gray）、ヘッダー背景・SPINボタン背景・見出し文字色はすべてrgb(139,0,0)（dark red）で、背景と部品3種類がすべて一致した。"}
+}

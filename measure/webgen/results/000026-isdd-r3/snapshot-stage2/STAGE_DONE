@@ -1,0 +1,36 @@
+STAGE DONE: REQUEST.md change request 1 (isdd change flow: spec -> design -> build -> post-implementation review)
+
+Summary
+- Colour theme: background light yellow (#FFFFE0), components (nav bar, headings, buttons, cards, table lines, bars) dark slate gray (#2F4F4F). Text on dark components is white. No white or navy backgrounds remain.
+- One vote per poll per browser: a cookie voter_id (32 hex, HttpOnly, SameSite=Lax, 1 year) identifies the browser. A ballots table (poll_id, voter_id; primary key) records each browser's vote; the vote and the ballot are written in one transaction, so a direct POST is refused too.
+  - Vote page after voting: options and submit button disabled, "You have already voted." shown, link to results.
+  - Repeated POST: not counted, page re-rendered with "You have already voted." (HTTP 200).
+- Existing functions kept: poll list, vote with confirmation, results, all-results, 404 page, navigation menu, sample data.
+
+Files
+- Change documents: .history/20261105-poll-theme-and-one-vote/ (change_requirements.md, change_detail_design.md, tasks.md). Kept as the change record.
+- Canonical docs updated after review: docs/requirements.md, docs/detail_design.md, docs/trace_map.md. docs/active_change removed. docs/proposals.md does not exist.
+- Code: src/storage.py, src/poll_service.py, src/web.py, src/views.py. Tests: tests/unit/* (updated), e2e/test_polls_e2e.py (2 tests added, cookie jar per test). README.md updated.
+
+Checks (final run)
+- bash scripts/isdd/check.sh --strict: exit 0, errors 0, warnings 0. Dependency check passed. Acceptance: DS-TS 9/9 passed, requirements 15/15 implemented.
+- rq_integrity_checker.py docs/requirements.md: passed (38 RQ IDs, 5 BK, 9 scenarios).
+- rq_ds_link_checker.py docs/requirements.md docs/detail_design.md: passed (57 DS IDs, 0 missing, 0 inconsistent).
+- rq_ds_link_checker.py on change docs with --base: passed.
+- implementation_completeness_checker.py: 4/4 passed.
+- Unit tests: 24 OK. E2E (unittest over HTTP): 9 OK, JUnit at e2e/results/e2e.xml.
+- Startup: bash setup.sh, then PORT=<free> bash run.sh; / /polls/N /polls/N/results /results return 200; /polls/9999 returns 404; voter cookie issued; second vote refused. Server stopped by its PID only.
+- Old DB without ballots: opened and the ballots table added, existing votes kept.
+
+Decisions and deviations (please review)
+- Browser identity by cookie: clearing cookies lets the browser vote again. Accepted as the limit of a cookie-based rule without login.
+- Renamed design element DS-FN-VOTER-ID to DS-FN-READ-VOTER-COOKIE during build. Reason: trace_map_checker treats any DS ID ending in "-ID" as a header label and rejects it. This is an ID created during the build stage, which the build rules normally forbid; it was needed to pass the checker.
+- Local Python is 3.9.6; the contract asks for 3.12. Code uses only 3.9-compatible syntax; not tested on 3.12 here.
+- No browser automation was available; E2E checks run over HTTP against the real server (as ANSWERS.md allows). The colour check is a CSS-string check, not a visual check.
+- No git commit was made.
+
+Unmapped list (build-review step 6)
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+要件なし（作りすぎ）: 0 件（check.sh の警告 0 件から導出）

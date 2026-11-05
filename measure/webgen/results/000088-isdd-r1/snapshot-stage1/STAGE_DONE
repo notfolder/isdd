@@ -1,0 +1,68 @@
+STAGE_DONE: 生物種情報データベース（isdd-spec → isdd-build 完了）
+
+■ 起動
+  bash setup.sh
+  PORT=任意 bash run.sh      → http://127.0.0.1:$PORT/
+  DATA_DIR 既定: プロジェクトの data/（空なら作成し、サンプル生物種 12 件を投入）
+  Python 3.9 以上で動作（標準ライブラリのみ。契約の 3.12 は未検証。ローカルは 3.9.6）
+
+■ 機能（画面はすべて英語。ナビゲーションは上部の Browse species / Add species）
+  - 一覧 /：キーワード検索（学名・和名・説明）、分類群・生息環境・食性・保全状況の絞り込み、Clear
+  - 詳細 /species/<id>：全項目表示（空欄は Unknown）、Edit、Delete（確認ダイアログ付き）
+  - 登録 /species/new、修正 /species/<id>/edit：入力チェック（英語のエラー文言、入力値は残る）
+  - 配色：背景 linen（#FAF0E6）、部品 maroon（#800000）。Chrome ヘッドレスのスクリーンショットで確認済み
+
+■ 作ったもの
+  - docs/requirements.md（RQ 32 件）、docs/detail_design.md（DS 44 件）、docs/trace_map.md
+  - .history/20261105-species-biology-database/tasks.md
+  - src/core（vocabulary, seed_data, validation, store）、src/web（server, views, static/style.css）
+  - tests/（単体テスト 17 件）、e2e/（E2E 11 件、JUnit XML: e2e/results/e2e.xml）
+  - setup.sh、run.sh、README.md、scripts/isdd/（isdd-setup v2.2.0 で導入。版は SKILL.md と一致）
+
+■ 検証結果
+  - 単体テスト: 17 件 合格
+  - E2E: 11 件 合格（実サーバーを run.sh で起動して HTTP で確認）
+  - bash scripts/isdd/check.sh --strict: エラー 0 / 警告 0、受け入れ判定 DS-TS 10/10 合格、要件 13/13 実装済み
+  - rq_integrity_checker / rq_ds_link_checker: 問題 0 件
+  - implementation_completeness_checker: 4/4 項目通過
+  - 起動確認: bash setup.sh → PORT=18777 bash run.sh で / ・ /species/1 ・ /species/new ・ /species/1/edit ・ /?q=wolf ・ /static/style.css が 200 を返すことを確認後、自分の PID のみ停止
+
+■ 実装後レビュー（isdd-build 段階 2）
+  新規フローのため変更の正本反映は無し。docs/proposals.md と docs/active_change は無い（確認済み）。
+
+### 未マッピング一覧
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| 該当なし | ― | ― | ― | ― | ― |
+
+要件なし（作りすぎ）: 0 件
+
+### 要件ごとの実装済み判定
+（check.sh --strict の受け入れ判定の表。13 件すべて「実装済み」）
+| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |
+|---|---|---|---|---|
+| RQ-FT-BROWSE-SPECIES-LIST | RQ-TS-BROWSE-SPECIES-LIST, RQ-TS-FRESH-START | DS-TS-BROWSE-SPECIES-LIST, DS-TS-FRESH-START | test_browse_species_list, test_fresh_start_shows_samples_and_keeps_them_after_restart | 実装済み |
+| RQ-FT-CREATE-SPECIES | RQ-TS-CREATE-SPECIES | DS-TS-CREATE-SPECIES | test_create_species | 実装済み |
+| RQ-FT-DELETE-SPECIES | RQ-TS-DELETE-SPECIES | DS-TS-DELETE-SPECIES | test_delete_species | 実装済み |
+| RQ-FT-FILTER-SPECIES | RQ-TS-FILTER-SPECIES | DS-TS-FILTER-SPECIES | test_filter_species | 実装済み |
+| RQ-FT-SEARCH-SPECIES | RQ-TS-SEARCH-SPECIES | DS-TS-SEARCH-SPECIES | test_search_species | 実装済み |
+| RQ-FT-UPDATE-SPECIES | RQ-TS-UPDATE-SPECIES | DS-TS-UPDATE-SPECIES | test_update_species | 実装済み |
+| RQ-FT-VALIDATE-SPECIES-INPUT | RQ-TS-VALIDATE-SPECIES-INPUT | DS-TS-VALIDATE-SPECIES-INPUT | test_validate_species_input | 実装済み |
+| RQ-FT-VIEW-SPECIES-DETAIL | RQ-TS-VIEW-SPECIES-DETAIL | DS-TS-VIEW-SPECIES-DETAIL | test_view_species_detail | 実装済み |
+| RQ-NF-CHROMIUM-BROWSER | RQ-TS-NAVIGATION-AND-STYLE | DS-TS-NAVIGATION-AND-STYLE | test_navigation_and_style | 実装済み |
+| RQ-UI-SITE-LAYOUT | RQ-TS-BROWSE-SPECIES-LIST, RQ-TS-NAVIGATION-AND-STYLE | DS-TS-BROWSE-SPECIES-LIST, DS-TS-NAVIGATION-AND-STYLE | test_browse_species_list, test_navigation_and_style | 実装済み |
+| RQ-UI-SPECIES-DETAIL-SCREEN | RQ-TS-DELETE-SPECIES, RQ-TS-VIEW-SPECIES-DETAIL | DS-TS-DELETE-SPECIES, DS-TS-VIEW-SPECIES-DETAIL | test_delete_species, test_view_species_detail | 実装済み |
+| RQ-UI-SPECIES-FORM-SCREEN | RQ-TS-CREATE/UPDATE/VALIDATE-SPECIES(-INPUT) | DS-TS-CREATE/UPDATE/VALIDATE-SPECIES(-INPUT) | test_create_species, test_update_species, test_validate_species_input | 実装済み |
+| RQ-UI-SPECIES-LIST-SCREEN | RQ-TS-BROWSE-SPECIES-LIST, RQ-TS-FILTER-SPECIES, RQ-TS-SEARCH-SPECIES | DS-TS-BROWSE-SPECIES-LIST, DS-TS-FILTER-SPECIES, DS-TS-SEARCH-SPECIES | test_browse_species_list, test_filter_species, test_search_species | 実装済み |
+
+■ 依頼に無く自分で決めた項目（要件定義書 1-2。ANSWERS.md により承認済み扱い）
+  項目の一覧・選択肢・既定の並び順（和名昇順）・入力上限（名前 100 字、説明 1000 字、寿命 1〜500 年、体重 0 超〜200000 kg）・学名の重複禁止・空欄と不正入力の文言・削除の確認ダイアログ・0 件の文言・後勝ちの同時更新・認証なし・件数上限なし（ページ送りなし）
+  サンプル 12 件の内容（寿命・体重・保全状況は一般的な値。正確性は保証しない。Axolotl の寿命のみ空欄）
+
+■ 未了・注意点
+  - 技術選定の出典は「未調査」。WebSearch の権限が許可されず、公式情報を確認していない（ANSWERS.md の承認で標準ライブラリ構成を採用）。
+  - Python 3.12 はローカルに無い。3.9.6 で単体・E2E・起動を確認。3.12 でも標準ライブラリのみなので動く想定だが未検証。
+  - ブラウザ確認は Google Chrome（ヘッドレス）のスクリーンショットで行った。E2E は HTTP クライアントによる検証（ブラウザ自動化なし）。
+  - エージェントの応答終了フックは未設定（この環境でフックの設定方法を確かめられず、書式を推測で作らないため）。手動で `bash scripts/isdd/check.sh --strict` を実行すること。
+  - ポート 8123 は他プロセス（node・python）が使用中。そのプロセスには触れていない。
+  - git コミットは行っていない（依頼が無いため）。data/ と e2e/results/ と __pycache__/ は .gitignore 済み。

@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: Spin showed 'Spinning…', the wheel stopped with the pointer on the Mystery Gift Box segment, and the page displayed 'Ale / YES: Spinning showed 'Spinning...' with the wheel rotating, then it stopped with the pointer on 'Free Coffee' and showed 'Tes / YES: 名前を入力してSpin the Wheelを押すと「Spinning…」と表示されてホイールが回転し、「20% Off Coupon」の区画で止まって「Tester won: 20% Off Coupon — 20% off your ne",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel. / YES: The Reward List shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel. / YES: Reward Listに8種類の賞品が説明・確率付きで表示され、ホイールの8区画と完全に一致した。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After the spin, My Winning Records listed Alex / Mystery Gift Box / Nov 5, 2026, 06:25 AM, so it has the latest prize an / YES: After the spin, My Winning Records listed 'Tester | Free Coffee | Nov 5, 2026, 06:26 AM', so the latest prize appeared w / YES: My Winning Recordsの先頭に、最新のスピン（Tester、20% Off Coupon、Nov 5, 2026, 06:27 AM）がプレイヤー名・賞品・日時付きで表示された。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-4": {
+    "verdict": "NO",
+    "reason": "NO: The body background is rgb(255,255,240), not light gray (211,211,211): the R, G and B differences of 44, 44 and 29 excee / NO: The body background is rgb(255,255,240), which differs from light gray (211,211,211) by more than 40 per channel. The he / NO: bodyの背景色はrgb(255,255,240)で、light gray(211,211,211)との差が40を超える。ヘッダー・ボタン・見出しは濃い緑（rgb(0,100,0)/rgb(0,74,0)）で、dark red(139,0,",
+    "votes": [
+      "NO",
+      "NO",
+      "NO"
+    ]
+  }
+}

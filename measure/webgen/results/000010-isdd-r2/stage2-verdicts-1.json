@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With the name Alice, the wheel spun and stopped on '10% Off Coupon', and the page showed 'You won 10% Off Coupon!' with Player Alice and no errors. Spinning with an empty name showed 'Please enter your name before spinning.' and the wheel stayed in its starting position."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows 6 prizes with descriptions (Free Coffee, Free Dessert, 10% Off Coupon, Free Tote Bag, Movie Ticket Pair, Mystery Gift), and these match the 6 segments on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winnings for Alice shows 1 record with Player Alice, Prize 10% Off Coupon and Date won Nov 5, 2026, 6:52 AM."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button rgb(0,77,0) and the h1 text rgb(0,100,0) are each within 40 per channel of dark green (0,100,0)."}
+}

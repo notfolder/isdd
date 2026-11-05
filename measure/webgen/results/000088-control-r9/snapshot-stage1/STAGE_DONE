@@ -1,0 +1,31 @@
+STAGE_DONE: 種の生物学情報データベース（SpeciesBase）の実装が完了しました。
+
+■ 起動手順（contract.md 準拠）
+  bash setup.sh                    # 標準ライブラリのみ使用。依存の取得なし。DATA_DIR を作成
+  PORT=8000 bash run.sh            # http://127.0.0.1:$PORT で配信（フォアグラウンド）
+  DATA_DIR 未指定時は ./data/species.db を使用。空の場合は sample の 17 種を自動投入。
+
+■ 実装内容（app.py: Python 標準ライブラリ + SQLite、画面はすべて英語）
+  - Home: 検索窓、件数の要約タイル、界・生息地別の入口（チップ）、注目の種
+  - Browse & Search（/species）: 検索（学名・通称・科・綱・説明・分布）、
+    界、生息地、食性、保全状況、寿命の下限/上限、並び替え（5 種）、ページ送り
+  - 種の詳細（/species/<id>）: 分類・生息地・食性・保全状況・寿命・体長・体重・繁殖・分布・説明
+  - 追加（/species/new）・編集（/species/<id>/edit）・削除（確認ダイアログ付き）、入力検証
+  - Statistics（/statistics）: 界・生息地・食性・保全状況ごとの件数（クリックで絞り込み一覧へ）
+  - JSON API（/api/species, /api/species/<id>）: 同じフィルタ・ページ送りに対応
+  - ナビゲーション: 全ページ上部のメニュー（Home / Browse & Search / Add Species / Statistics / JSON API）
+
+■ 配色
+  - ベースの背景: linen（#FAF0E6）
+  - すべてのコンポーネント（ヘッダー、ボタン、見出し、テーブル見出し、バッジ、入力欄の枠、カード枠、ページ送り）: maroon（#800000）
+
+■ 確認した内容
+  - 全ルートの HTTP ステータス確認（200 / 404）
+  - 追加（303 → 詳細）、重複名（400 + メッセージ）、必須欠落・負の数値（400 + 一覧）、
+    編集、削除後の 404、存在しない ID への POST（404）を確認。サーバーログにエラーなし
+  - Chrome のヘッドレス撮影で Home・Browse（絞り込み後）・Statistics の表示を確認
+
+■ 未対応・注意
+  - 画像アップロードは未実装（依頼に含まれないため）
+  - 数値はおおよその成体値（sample データも概数）。sample の一部（寿命など）は一般的な目安
+  - git commit は未実施（依頼がないため）

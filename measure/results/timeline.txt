@@ -53,3 +53,8 @@ stage2 done 02:57:16
 stage2 isdd r1,r2,r4 killed by SIGTERM (agent pkill suspected); rerun start 02:57:55
 stage3 chunk aa start (parallel 1) 02:58:23
 paused by assistant usage limit 03:48:10; batches keep running
+stage3 relaunch (batch2, parallel 3, idempotent) 06:22:10
+stage2 fully done (10 runs) 06:39:15
+stage4 (measure5) start parallel 1 06:39:27
+paused by assistant usage limit 08:24:41; stage3 13/30 done, stage4 webgen 8/10 running; relaunch: bash measure/batch2.sh 3 /tmp/isdd-measure/jobs-m4.txt ; bash measure/batch2.sh 1 /tmp/isdd-measure/jobs-m5.txt ; then judge loop in /tmp/isdd-measure/master.sh
+evaluation stopped by user 11:01:19

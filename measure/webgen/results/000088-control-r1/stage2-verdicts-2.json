@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "/species shows all 13 species with kingdom, class, habitat, diet, conservation status, length and lifespan. Every row has a value in every column and there are no blank placeholders or display errors."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'pan' returned only African Lion (Panthera leo) and Giant Panda. The habitat words 'Forest' and 'Arctic' and the description word 'Sahara' each returned 0 results ('No species match these filters.')."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by habitat Forest showed only the 4 Forest species, and filtering by Marine showed only the 2 Marine species. No non-matching entries appeared."},
+  "000088-design": {"verdict": "YES", "reason": "The body background is rgb(240,255,240), which is honeydew. The header, the main button (Apply filters) and the h1 text are all rgb(85,107,47), which is dark olive green, so the background and all 3 components match."}
+}

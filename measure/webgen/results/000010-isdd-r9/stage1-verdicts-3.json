@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin rotated the wheel and showed 'Spinning...'. The wheel stopped with the pointer on the Mystery Gift segment and displayed 'You won: Mystery Gift!', with no page or console errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prizes page lists 8 prizes, each with a description and a chance. These are the same 8 prizes shown on the wheel's segments."},
+  "000010-3": {"verdict": "YES", "reason": "After the spin, My Winnings went from 'no winnings yet' to a row showing the date and time (11/5/2026, 6:57:10 AM), the prize (Mystery Gift) and the name (Guest)."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(230,230,230), within 40 of light gray (211,211,211). The header background, main button background and h2 heading color are all rgb(139,0,0), which is dark red."}
+}

@@ -1,0 +1,7 @@
+{
+  "_comment": "詳細設計書 第 7 章「依存の規則」の書き写し。isdd-setup が雛形を作り、以後は手で保つ（再実行でも上書きしない）。from: 規則を当てるディレクトリ / deny: 依存してはいけない先（プロジェクト内のパス、または外部モジュール名）/ allow: 依存してよいプロジェクト内のディレクトリ（書くと from 自身と allow 以外は違反）/ reason: 理由",
+  "rules": [
+    {"from": "src/store", "deny": ["src/web", "src/main.py", "flask"], "reason": "保存処理は Web の枠組みに依存しない（画面の変更が保存処理に波及しないため）"},
+    {"from": "src/web", "allow": ["src/store"], "deny": ["src/main.py"], "reason": "画面層は保存処理だけに依存する"}
+  ]
+}

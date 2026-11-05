@@ -1,0 +1,46 @@
+変更依頼 2「景品（prize）を報酬（reward）に統一」の完了要約
+
+■ 実施内容（isdd-spec → isdd-build、変更フロー）
+- 変更要件定義書・変更設計書・tasks.md: .history/20261105-prize-to-reward-rename/
+- docs/active_change は実装後レビューで削除済み。正本（docs/requirements.md・docs/detail_design.md・docs/trace_map.md）へ反映済み。
+- 正本の反映は、ID と意味を変えない文言の置き換え（景品→報酬、Prize→Reward、Prize List→Reward List、/prizes→/rewards、/api/prizes→/api/rewards など）と、変更した行（画面、シナリオ、設計要素）。全章を手で読み直したのではなく、置き換え後に grep で残りを確かめた。
+
+■ 画面の変更（英語 UI）
+- タイトルと見出し: Reward Wheel。メニュー: Spin Wheel / Reward List / My Winning Records。
+- 報酬一覧（/rewards）: 表の見出し Reward、エラーは「Could not load rewards.」
+- 当選履歴（/records）: 表の見出し Player / Reward / Won at
+- 初期データ: 「Grand Reward: $50 Gift Card」、はずれの説明「No reward this time」
+- 「You won: …」の文言の形は変えていない（中身の名前が報酬名になる）。
+
+■ 変えていないもの（意図的）
+- 旧い URL（/prizes、/api/prizes）は 404。転送は作っていない。
+- ID（RQ-*、DS-*）、Python の内部名（PrizeRepository、テーブル prizes）、API 応答の JSON キー（prize_name、prize_id）は変えていない。画面には出ない。
+- 静的ファイルは prizes.html→rewards.html、js/prizes.js→js/rewards.js に改名。JS の関数名、要素 ID も改名（reward-message、reward-rows）。
+- 既存の DATA_DIR の DB が残っていれば、旧い初期データ名が出る（初期投入は報酬が 0 件のときだけ）。空の DATA_DIR では新しい名前だけになる。
+
+■ 検証（実行ログ）
+- python3 -m unittest discover -s tests/unit -p "test_*.py" → Ran 17 tests, OK
+- python3 scripts/isdd/unittest_junit.py -s e2e -t . -o e2e/results/e2e.xml → Ran 6 tests, OK（JUnit XML: e2e/results/e2e.xml、6 件）
+- bash scripts/isdd/check.sh --strict → 対応表 エラー 0 件・警告 0 件、依存チェック合格、受け入れ判定合格（DS-TS 6/6 合格、要件 13/13 実装済み）
+- rq_integrity_checker.py docs/requirements.md → 問題 0 件（RQ 30 件、受け入れテスト欠落 0）
+- rq_ds_link_checker.py docs/requirements.md docs/detail_design.md → 問題 0 件
+- rq_ds_link_checker.py（変更文書、--base docs/requirements.md）→ 問題 0 件
+- implementation_completeness_checker.py . → 4/4 項目通過
+- node --check で JS 4 ファイルの構文を確認。
+
+■ 起動の確認（契約どおり）
+- bash setup.sh → 完了
+- PORT=18081 bash run.sh → 起動。GET /、/rewards、/records → 200。/prizes、/api/prizes → 404。/api/rewards、/api/records?player_name=Sample%20Player → 正常な JSON。
+- 配信した HTML と CSS に「prize」の語は無い。配信した JS に残るのは API の JSON キー prize_name だけ（画面には出ない）。
+- 起動したサーバー（PID 30502）は PID を指定して停止済み。他のプロセスには触れていない。
+
+■ 未マッピング一覧（実装後レビュー）
+- 警告 0 件（対応表に無いコードは無い）。作りすぎの要素: 0 件。
+
+■ 要件ごとの実装済み判定（受け入れ判定の表）
+RQ-ID / RQ-TS / DS-TS / テスト / 結果 は check.sh --strict の出力どおり。13 件すべて「実装済み」。
+
+■ 残りの注意点
+- ユーザーは不在のため、承認はすべて ANSWERS.md の方針で与えられたものとして進めた（変更要件 1-2 の表に記録）。
+- 旧い URL を使っていたブックマークは 404 になる。
+- 既存の DATA_DIR（旧い名前の DB）には、旧い初期データ名が残る。

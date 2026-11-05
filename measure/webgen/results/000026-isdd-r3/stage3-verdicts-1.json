@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "From the home page, the 'Vote' link opened /surveys/1 (HTTP 200) with no errors. All four options (Python, JavaScript, Go, Rust) were shown as radio buttons with a 'Submit vote' button."},
+  "000026-2": {"verdict": "YES", "reason": "The home page lists every survey with information besides its name (option count and total votes). Each survey's options can be viewed on its voting page and its results page without casting a vote."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote the page showed 'Your vote has been recorded.' and the total went from 17 to 18. Returning in the same browser showed 'You have already voted.' with the radio buttons and Submit button disabled, and a forced second submit left the total at 18."},
+  "000026-4": {"verdict": "YES", "reason": "/results and each survey's results page show votes, share percentage and a bar chart for every option, plus total votes. The counts reflected a newly cast vote straight away (17 to 18)."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The nav, the main button/Vote links and the headings are all rgb(47,79,79), which is dark slate gray, so all four colors match within 40."},
+  "000026-rename": {"verdict": "YES", "reason": "The home, voting, results and post-vote pages (text and titles) contain no 'poll' or 'polls'. Navigation, headings, buttons and messages use 'Surveys'/'survey' throughout, and every page returned 200 and worked."}
+}

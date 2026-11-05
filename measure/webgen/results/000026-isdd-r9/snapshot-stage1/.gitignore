@@ -1,0 +1,5 @@
+# isdd: E2E の結果（JUnit XML）。acceptance_checker.py が読む
+e2e/results/
+.venv/
+data/
+__pycache__/

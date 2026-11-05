@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "PARTIAL", "reason": "The /species list shows all 23 species with kingdom, habitat, feeding mode, status, length and lifespan, but several rows (Fly agaric, Common hydra, Strawberry poison-dart frog, Corpse flower) show '—' for Lifespan, so the 'no missing data' criterion gives PARTIAL."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'pand' returned only the name matches (Giant panda, Red panda, Pandion haliaetus). Searching the habitat words 'Wetland' and 'Tropical' and the description word 'bamboo' each returned 'No matching species' with 0 rows."},
+  "000088-3": {"verdict": "YES", "reason": "Applying Habitat = Marine updated the list to only Blue whale and Great white shark, both Marine, and showed no non-matching entries."},
+  "000088-design": {"verdict": "YES", "reason": "The body background is rgb(240,255,240) (honeydew). The header background, the main button background and the h1/h2 text are all rgb(85,107,47) (dark olive green), so the background and all three components match."}
+}

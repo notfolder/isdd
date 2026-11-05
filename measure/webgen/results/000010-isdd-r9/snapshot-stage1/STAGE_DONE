@@ -1,0 +1,19 @@
+STAGE_DONE: 景品ルーレット Web サイト（isdd 新規フロー: 要件 → 設計 → 実装 → 実装後レビュー）
+
+完了の確認
+- bash setup.sh → PORT=8765 bash run.sh で起動し、/ と /api/prizes と /api/spin と /api/winnings を確認（起動したサーバーは PID 98350 で停止済み）
+- Chrome headless で Spin / Prizes / My Winnings の 3 画面を撮影して確認
+- scripts/isdd/check.sh --strict: エラー 0・警告 0・受け入れ判定 合格（DS-TS 10/10、要件 14/14 実装済み）
+- rq_integrity_checker.py: 問題 0 件。rq_ds_link_checker.py: 欠落 0・不整合 0
+- 単体テスト（tests/）4 件、E2E（e2e/）10 件: すべて OK
+
+成果物
+- 要件定義書 docs/requirements.md、詳細設計書 docs/detail_design.md、対応表 docs/trace_map.md
+- タスク表 .history/20261105-wheel-of-fortune/tasks.md
+- 実装 src/（server.py, store.py, draw.py, web/index.html, style.css, app.js）、setup.sh、run.sh、README.md
+
+未確認の決め事（要件定義書 1-2 の「承認: 未確認」）と未解決の事項
+- 技術選定の公式情報調査は未実施（WebSearch の権限が付与されず）。Python 標準ライブラリ + SQLite を採用
+- E2E はブラウザ自動化を使わず HTTP で確認（画面の見た目は Chrome headless で手動確認）
+- 利用者識別は匿名 Cookie、表示名は任意入力（空なら Guest、30 字以内）、回数制限なし、当選のみ記録
+- サンプル景品 8 件と重み（合計 100）、管理画面は無し

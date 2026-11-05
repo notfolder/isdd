@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reward Wheel - My Winning Records</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Reward Wheel</h1>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/">Spin Wheel</a>
+      <a href="/rewards">Reward List</a>
+      <a href="/records" class="current" aria-current="page">My Winning Records</a>
+    </nav>
+  </header>
+  <main>
+    <section class="panel">
+      <h2>My Winning Records</h2>
+      <label for="player-name">Your name</label>
+      <div class="inline-form">
+        <input id="player-name" type="text" placeholder="Enter your name" autocomplete="nickname">
+        <button id="show-button" type="button">Show</button>
+      </div>
+      <p id="records-message" class="error" role="alert"></p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th scope="col">Player</th>
+            <th scope="col">Reward</th>
+            <th scope="col">Won at</th>
+          </tr>
+        </thead>
+        <tbody id="record-rows"></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/static/js/common.js"></script>
+  <script src="/static/js/records.js"></script>
+</body>
+</html>

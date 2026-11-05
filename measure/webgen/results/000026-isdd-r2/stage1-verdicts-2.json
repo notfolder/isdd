@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking a poll on the homepage (/ → /polls) opened /polls/3 without errors, and all 4 options (Noodle bar, Sandwich shop, Cafeteria, Food truck) were shown as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "The poll list shows each voting option with information besides its name: a description plus option and vote counts (e.g. '4 options · 12 votes'). You can open each poll's options without voting."},
+  "000026-3": {"verdict": "PARTIAL", "reason": "After voting for Go, Go went from 2 to 3 votes and the total from 12 to 13, so the vote was recorded. But the page only moved to the results screen and showed no text saying the vote succeeded, so the confirmation notification is not met."},
+  "000026-4": {"verdict": "YES", "reason": "The results page shows the total vote count and, for each option, votes, share (%) and a bar chart. The counts updated right after voting."},
+  "000026-5": {"verdict": "YES", "reason": "Body background is rgb(255,255,255), which matches white. Header background rgb(0,0,128), main button background rgb(0,0,128) and heading h1 text rgb(0,0,128) all match navy."}
+}

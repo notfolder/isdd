@@ -1,0 +1,22 @@
+Change request 1 implemented in app.py.
+
+1. Color theme
+- Page background is light yellow (#ffffe0).
+- Dark slate gray (#2f4f4f) replaces navy for the header, buttons, card borders, headings, badges, bars, and the active nav item.
+- Cards, outline buttons, option boxes, and result bars use the light yellow background instead of white.
+- White remains only as text color on dark slate surfaces (header, buttons, badges).
+
+2. One vote per poll per browser
+- The vote cookie (poll_votes) is the per-browser record. The server checks it before every insert.
+- Poll page: if this browser has voted, the option radios and "Cast my vote" button are disabled, the user's choice is shown checked, and the message "You have already voted in this poll." is displayed. The poll no longer redirects to results.
+- Home page: voted polls show a "You have already voted" badge and a disabled "Vote now" button, plus "View results".
+- POST /polls/<id>/vote: a repeat vote from the same browser is not recorded. It redirects to the poll page, which shows the message.
+- The check and insert run under a lock, so concurrent POSTs cannot both count.
+
+Other behaviour (browsing, voting with confirmation, results pages, sample data, PORT/DATA_DIR handling) is unchanged.
+
+Verification
+- python3 -m py_compile app.py passes.
+- bash setup.sh, then PORT=8765 DATA_DIR=<temp dir> bash run.sh. The test server was stopped by its PID.
+- First vote: recorded (303 to results). Second direct POST from the same cookie: not recorded (303 to poll page). Poll page shows the disabled controls and message. Total votes 123 = 122 seeded + 1. Home card shows the message. A POST with no option returns 400, and an unknown poll returns 404.
+- Not checked: a visual check in Chromium. Colors were checked by reading the CSS only.

@@ -1,0 +1,74 @@
+{
+  "site": "000026",
+  "arm": "control-r9",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 132.7,
+      "agent_tokens": 489855,
+      "usage": {
+        "input_tokens": 20,
+        "output_tokens": 31277,
+        "cache_creation_input_tokens": 43524,
+        "cache_read_input_tokens": 415034
+      },
+      "tool_uses": 9,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "responder": true,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000026-1": {
+          "verdict": "YES",
+          "reason": "YES: From the homepage, 'Browse polls' then 'Vote' opened /polls/1 without errors, and all four options (Python, JavaScript,  / YES: From the homepage, clicking 'Vote' opened /polls/3 with no errors. The page showed all 5 options (Kyoto, Lisbon, Toronto / YES: From the homepage, Browse Polls and then a poll opened the voting page (/polls/2) with no errors, and every option (Spri",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-2": {
+          "verdict": "YES",
+          "reason": "YES: /polls lists 3 polls without voting; each shows its question plus details beyond the name (option count and vote count,  / YES: Browse Polls (/polls) lists 3 polls without asking for a vote. Each one shows its question plus other information (numbe / YES: /polls lists 3 polls without voting, and each one shows its name plus other details such as the number of options and to",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-3": {
+          "verdict": "YES",
+          "reason": "YES: After selecting Python and clicking 'Cast vote', the page showed 'Thank you! Your vote has been recorded.' and the total / YES: After choosing an option on poll #2 and clicking 'Cast vote', the page showed 'Thank you! Your vote has been recorded.'  / YES: Picking an option and clicking Cast vote showed the text 'Thank you! Your vote has been recorded.' on the page, and the ",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000026-4": {
+          "verdict": "YES",
+          "reason": "YES: /results shows a summary table (total votes, leading option), and the per-poll results page shows the current counts and / YES: /results shows a summary table (total votes and leading option for each poll). Each poll's results page shows vote count / YES: /results shows each poll's total votes and leading option, and each poll's results page shows the votes and percentage f",
+          "category": "Data Display Testing",
+          "change": false
+        },
+        "000026-5": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(255,255,255) (white); the header, main button (.btn) and h1 are all rgb(0,0,128) (navy). / YES: The body background is rgb(255,255,255), which counts as white. The header, the main button (.btn) and the headings (h1– / YES: The body background is rgb(255,255,255) (white). The header background rgb(0,0,128), the main button background rgb(0,0,",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 5.0,
+      "n_cases": 5,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 1,
+        "lines": 718,
+        "public_functions": 38
+      }
+    }
+  },
+  "runner": "claude -p"
+}

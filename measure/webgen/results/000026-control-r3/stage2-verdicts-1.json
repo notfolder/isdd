@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the homepage opens /polls/3 without errors, and all 4 options (Dark mode, Offline support, Export to PDF, Keyboard shortcuts) are shown as radio buttons."},
+  "000026-2": {"verdict": "YES", "reason": "Without voting, the homepage lists 3 polls, each with a description, option count and vote count (details beyond the name), and each poll page shows its options clearly."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote, 'Thanks! Your vote has been recorded.' was shown and the count became 1. Returning to the poll in the same browser showed 'You have already voted in this poll.', all radios and the Submit button were disabled, and the count stayed at 1."},
+  "000026-4": {"verdict": "YES", "reason": "/results and /polls/3/results show the latest totals, per-option vote counts and percentages, plus bar graphs, and the vote just cast is reflected."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224) = light yellow. The header background rgb(47,79,79), the main button (Submit vote) background rgb(47,79,79) and the h1/h2 text color rgb(47,79,79) all match dark slate gray."}
+}

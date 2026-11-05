@@ -1,0 +1,9 @@
+{
+  "_comment": "詳細設計書 第 7 章「依存の規則」（7-4）の書き写し。isdd-setup が雛形を作り、以後は手で保つ（再実行でも上書きしない）。from: 規則を当てるディレクトリ / deny: 依存してはいけない先（プロジェクト内のパス、または外部モジュール名）/ allow: 依存してよいプロジェクト内のディレクトリ（書くと from 自身と allow 以外は違反）/ reason: 理由",
+  "rules": [
+    {"from": "app/database.py", "deny": ["app/server.py", "app/service.py", "app/__main__.py", "http"], "reason": "データ層は業務と画面に依らない"},
+    {"from": "app/service.py", "deny": ["app/server.py", "sqlite3", "http"], "reason": "業務ロジックは HTTP と SQL の詳細に依らない（データは database.py を通す）"},
+    {"from": "app/server.py", "deny": ["app/database.py", "sqlite3"], "reason": "画面（HTTP）は業務ロジックを通してだけデータに触れる"},
+    {"from": "app/__main__.py", "deny": ["sqlite3"], "reason": "起動は部品を組み立てるだけで、SQL を直接書かない"}
+  ]
+}

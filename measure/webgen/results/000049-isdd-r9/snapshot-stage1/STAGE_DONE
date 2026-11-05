@@ -1,0 +1,30 @@
+理髪店管理ウェブサイト: 完了（2026-11-05）
+
+起動: bash setup.sh → PORT=任意 bash run.sh → http://127.0.0.1:$PORT/
+  （DATA_DIR 既定 ./data。空なら起動時にサンプル: バーバー 3 件、施術メニュー 4 件）
+  画面はすべて英語。全画面上部のメニュー（Home / Barbers / Services / Notify）。雪の背景と dim gray（#696969）。
+
+機能:
+- Barbers: 一覧と追加（名前必須、専門・電話は任意）
+- Services: 一覧と追加（名前・料金・所要時間必須、説明任意）
+- Notify: 電話番号（1〜20 件）と案内文から、番号ごとの WhatsApp 送信リンク（wa.me）を作る。
+  サーバーは WhatsApp に接続しない（契約で外部サービス不可のため）。利用者がリンクを開いて送る。
+
+成果物:
+- 要件: docs/requirements.md（承認済）、設計: docs/detail_design.md（承認済）、対応表: docs/trace_map.md
+- 作業記録: .history/20261105-barbershop-management/tasks.md
+- コード: src/web（server, app, views, static/style.css）、src/core（db, validation, whatsapp）、run.sh、setup.sh、README.md
+- テスト: tests/（単体・結合 39 件）、e2e/（E2E 8 件、JUnit: e2e/results/e2e.xml）
+- isdd 導入: scripts/isdd/（VERSION v2.2.0）、AGENTS.md、CLAUDE.md、.claude/settings.json（Stop で check.sh）
+
+確認結果:
+- bash scripts/isdd/check.sh --strict: エラー 0・警告 0、受け入れ判定 DS-TS 7/7 合格、要件 14/14 実装済み
+- rq_integrity_checker.py / rq_ds_link_checker.py: 問題 0
+- implementation_completeness_checker.py: 4/4 項目通過
+- 単体・結合 39 件、E2E 8 件: 全件通過
+- 空の DATA_DIR で run.sh 起動 → 全画面 200、サンプル 3 件・4 件
+
+未確認の事項（承認待ち）:
+- E2E の実行手段（HTTP 経由。ブラウザ自動化は未使用）
+- 未マッピング一覧の「設計未定義」11 件（内部関数。設計の DS-CL/DS-MD に含めて扱う案。変更は未実施）
+- 見た目はブラウザで人が確認していない（ブラウザ未導入、CSS の値をテストで確認）

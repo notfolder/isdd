@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "YES", "reason": "/species lists all 12 species, and every column (common name, scientific name, class, habitat, diet, conservation status) has a value in every row, with no blank placeholders. Detail pages also show family, lifespan, mass and a description."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'panda' returned only Giant panda, and searching 'Japanese' returned only the 3 Japanese species, with no unrelated species in the results."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by Habitat=Marine showed 'Showing 3 of 12 species', listing only Blue whale, Emperor penguin and Green sea turtle, all of which are Marine."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which matches linen. The nav background rgb(128,0,0), the h1 text color rgb(128,0,0) and the primary button background rgb(128,0,0) all match maroon."}
+}

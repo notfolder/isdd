@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: With name 'Alice' the wheel rotated (canvas transform changed), stopped, and showed 'Alice won: Free Coffee!' (the point / YES: With the name empty, SPIN showed 'Please enter your name before spinning.' and the wheel's transform stayed 'none'. With / YES: With name 'Alice' the wheel rotated (transform changed) and stopped, showing 'Alice won: Bonus Points x2!' (an earlier s",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: The /prizes page lists 8 prizes ($50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus  / YES: The Prize List page shows all 8 prizes with description, result and chance, and they match the 8 segments drawn on the w / YES: /prizes lists all 8 prizes with description, result and chance, and they match the 8 segments drawn on the wheel ($50 Gi",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After Alice won Free Coffee, My Winning Records showed a new row 'Nov 5, 2026, 6:29 AM | Alice | Free Coffee' with the p / YES: After spinning, My Winning Records shows a new row 'Nov 5, 2026, 6:30 AM | Alice | Free Dessert' that includes the playe / YES: After Alice won 'Bonus Points x2', My Winning Records showed a new top row 'Nov 5, 2026, 6:31 AM | Alice | Bonus Points ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,240), an exact match for ivory. The header background, the SPIN button background and / YES: The body background is rgb(255,255,240), which is ivory. The header background, SPIN button background and h1/h2 color a / YES: The body background is rgb(255,255,240) (ivory). The header, the SPIN button and the h1/h2 headings are all rgb(0,100,0)",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

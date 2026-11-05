@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote' on the homepage opens /polls/1 with no errors, and all four options (Python, JavaScript, Go, Rust) are shown as radio choices."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists every poll with its name plus option and vote counts (e.g. '4 options · 11 votes'), and each poll page shows its description and options, all viewable without voting."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote the page showed 'Thank you for voting.' and Winter went from 1 to 2 votes. On returning, 'You have already voted' was shown with all radios and the Vote button disabled, and a forced second POST got a 409 with the totals unchanged."},
+  "000026-4": {"verdict": "YES", "reason": "The results pages show up-to-date totals (they reflected the new vote), per-option vote counts and percentage shares, and bar-chart bars sized to each share, plus a summary table with the leading option."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224) (light yellow). The header background, Vote button background and h1 text are all rgb(47,79,79) (dark slate gray), so the background and all three components match."}
+}

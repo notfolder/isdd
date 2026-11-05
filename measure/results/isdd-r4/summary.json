@@ -36,7 +36,27 @@
       },
       "cost_usd": 0.8165,
       "turns": 77,
-      "rounds": 1
+      "rounds": 1,
+      "passed": 8,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 8,
+        "lines": 575,
+        "public_functions": 24,
+        "classes": 0,
+        "templates": 5
+      },
+      "score_error": null
     },
     "2": {
       "done": true,
@@ -70,7 +90,104 @@
       },
       "cost_usd": 1.4436,
       "turns": 148,
-      "rounds": 1
+      "rounds": 1,
+      "passed": 15,
+      "total": 15,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 9,
+        "lines": 757,
+        "public_functions": 31,
+        "classes": 0,
+        "templates": 6
+      },
+      "score_error": null,
+      "regressions": []
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 10015.5,
+      "started": "2026-11-05T03:22:10",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 30,
+      "tool_names": {
+        "Bash": 26,
+        "Read": 3,
+        "Write": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 54,
+        "output_tokens": 112057,
+        "cache_creation_input_tokens": 263603,
+        "cache_read_input_tokens": 3945460,
+        "total_tokens": 4321174
+      },
+      "cost_usd": 0.6446,
+      "turns": 31,
+      "rounds": 1,
+      "passed": 23,
+      "total": 23,
+      "tests": {
+        "test_employee_restrictions[chromium]": "pass",
+        "test_staff_role_change[chromium]": "pass",
+        "test_password_reset[chromium]": "pass",
+        "test_account_delete[chromium]": "pass",
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_role_renamed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_stale_equipment_update[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_concurrent_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_duplicate_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 9,
+        "lines": 939,
+        "public_functions": 40,
+        "classes": 0,
+        "templates": 7
+      },
+      "score_error": null,
+      "regressions": []
     }
   },
   "runner": "claude -p"

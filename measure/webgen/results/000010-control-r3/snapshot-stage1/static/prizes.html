@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prize List - Wheel of Fortune</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="inner">
+      <a class="brand" href="/">Wheel of Fortune</a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="/">Spin the Wheel</a></li>
+          <li><a href="/prizes" aria-current="page">Prize List</a></li>
+          <li><a href="/records">My Winning Records</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Prize List</h1>
+    <p class="lead">Every prize on the wheel, with its description and approximate chance of landing on it.</p>
+
+    <section class="card" aria-labelledby="prizes-title">
+      <h2 id="prizes-title">All Prizes</h2>
+      <div id="prizes-container">
+        <p class="empty">Loading prizes...</p>
+      </div>
+      <p class="lead" style="margin:14px 0 0">Chances are based on the relative weight of each segment and add up to 100%.</p>
+    </section>
+
+    <p style="margin-top:20px"><a class="btn" href="/">Go spin the wheel</a></p>
+  </main>
+
+  <script src="/static/app.js"></script>
+  <script src="/static/prizes.js"></script>
+</body>
+</html>

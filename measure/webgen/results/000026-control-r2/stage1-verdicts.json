@@ -1,0 +1,47 @@
+{
+  "000026-1": {
+    "verdict": "YES",
+    "reason": "YES: Clicking 'Vote now' on the homepage opened /polls/1 without errors, and all four options (Python, TypeScript, Rust, Go)  / YES: ホームの「Vote now」から /polls/1 へエラーなく移動でき、選択肢 4 つ（Python, TypeScript, Rust, Go）がすべてラジオボタンで表示された。 / YES: ホームの「Vote now」から /polls/1 の投票ページにエラーなく移動でき、4つの選択肢（Python/TypeScript/Rust/Go）がすべてラジオボタンで表示された。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-2": {
+    "verdict": "YES",
+    "reason": "YES: The homepage lists 4 polls, each with a title, a description, and vote and option counts (e.g. '122 votes · 4 options'). / YES: 投票せずにホームで 4 つの投票を一覧でき、各投票に名称に加えて説明文・票数・選択肢数が表示され、各投票ページでは選択肢も確認できた（「See results without voting」もある）。 / YES: ホームに投票一覧（4件）が表示され、各投票に名称に加えて説明文・票数・選択肢数があり、「See results without voting」で投票せずに結果も閲覧できた。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-3": {
+    "verdict": "YES",
+    "reason": "YES: Voting for TypeScript raised the total from 122 to 123, and the page then showed 'Thank you for voting! You voted for Ty / YES: TypeScript を選んで「Cast my vote」を押すと総票数が 123→124 に増え、直後に「Thank you for voting! You voted for TypeScript.」という確認文が表示され、その選択肢に / YES: TypeScript を選んで「Cast my vote」すると票数が124→125に増え、直後に「Thank you for voting! You voted for TypeScript.」という確認文が表示された。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-4": {
+    "verdict": "YES",
+    "reason": "YES: The results page shows the latest total (123), the leading option, and each option's vote count with a percentage and a  / YES: /results と各投票の結果ページに、投票後の最新票数、総票数、首位の選択肢、選択肢ごとの票数・割合、棒グラフが表示された。 / YES: /results に各投票の総票数と首位が表示され、個別結果ページには投票直後の最新値（総数125）、各選択肢の票数・割合と割合に応じた横棒グラフが表示された。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000026-5": {
+    "verdict": "YES",
+    "reason": "YES: Body background is rgb(255,255,255), which is white. Header, main button (.btn) and heading (h1) are all rgb(0,0,128), w / YES: body の背景は rgb(255,255,255)（white）で、ヘッダーの背景、主要ボタン（.btn）の背景、見出し h1/h2 の文字色がすべて rgb(0,0,128)（navy）と一致し、背景と部品 3 種類がすべて合った。 / YES: body 背景 rgb(255,255,255) で white に一致し、ヘッダー背景・主要ボタン背景・見出し文字色がいずれも rgb(0,0,128) で navy に一致した。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

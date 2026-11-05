@@ -1,0 +1,7 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "ホームの「Vote」リンクから /polls/1 にエラーなく遷移でき、5 つの選択肢（Python, JavaScript, Go, Rust, Other）がすべてラジオボタンで表示された。"},
+  "000026-2": {"verdict": "YES", "reason": "投票せずにホームで 3 件の投票を一覧でき、各投票に名称に加えて説明文と「4 options · 19 votes」のような件数情報が表示されていた。"},
+  "000026-3": {"verdict": "YES", "reason": "Python を選んで「Cast my vote」を押すと結果画面に「Thanks! Your vote has been recorded.」と表示され、合計票数が 26 から 27 に増えて記録が確認できた。"},
+  "000026-4": {"verdict": "YES", "reason": "結果ページに投票直後の値（Total votes: 27）が反映され、選択肢ごとの票数と割合、紺色の横棒グラフが表示された。"},
+  "000026-5": {"verdict": "YES", "reason": "body の背景が rgb(255,255,255)（白）で、ヘッダー背景・主要ボタン背景・見出し h1/h2 の文字色がすべて rgb(0,0,128)（navy）だった。"}
+}

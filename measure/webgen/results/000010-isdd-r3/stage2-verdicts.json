@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: With the name 'Alice' entered, the wheel spun, stopped on a segment and showed 'You won: Free Shipping!' (a spin that la / YES: With the name 'Alice' entered, the wheel canvas spun and stopped on the Free Shipping segment, and the page showed 'You  / YES: With 'Alice', the wheel canvas animated, stopped on a segment and showed the result ('Try again', then 'You won: Mystery",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: The Prize List page shows all 7 prizes with descriptions and chances, and they match the 7 segments on the wheel. / YES: The Prize List page shows 7 prizes, each with a description and a chance. These match the 7 segments drawn on the wheel. / YES: The Prize List page shows 7 prizes with descriptions and chances, and they match the 7 segments drawn on the wheel (10% ",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After Alice won, My Winning Records showed a row with Player 'Alice', Prize 'Free Shipping' and Won at '2026-11-05 07:03 / YES: After the spin, My Winning Records shows a row with Player 'Alice', Prize 'Free Shipping' and Won at '2026-11-05 07:04:0 / YES: After Alice won Mystery Gift, My Winning Records listed a new row: Alice / Mystery Gift / 2026-11-05 07:05:39 (player na",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-design": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(255,255,240), which is ivory. The header background rgb(0,100,0), the Spin button background  / YES: The body background is rgb(255,255,240), which is ivory. The header background, the Spin button and the h2 heading are a / YES: The body background is rgb(255,255,240), which is ivory. The header, main button and h2 heading are all rgb(0,100,0), wh",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

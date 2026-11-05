@@ -1,0 +1,73 @@
+{
+  "site": "000088",
+  "arm": "isdd-r1",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 543.8,
+      "agent_tokens": 6716356,
+      "usage": {
+        "input_tokens": 82,
+        "output_tokens": 127044,
+        "cache_creation_input_tokens": 229345,
+        "cache_read_input_tokens": 6359885
+      },
+      "tool_uses": 72,
+      "rounds": 1,
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "responder": false,
+      "questions_rounds": 0,
+      "note": "",
+      "grader": {
+        "model": "claude-opus-5-5",
+        "votes": 3
+      },
+      "change_missed": [],
+      "change_total": 0,
+      "cases": {
+        "000088-1": {
+          "verdict": "YES",
+          "reason": "YES: The list shows 12 species, each with common name, scientific name, class, habitat, diet and conservation status, and no  / YES: The browse page lists 12 species, each with common name, scientific name, class, habitat, diet and conservation status,  / YES: The Browse page lists 12 species, and every row has a value in all 6 columns (common name, scientific name, class, habit",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-2": {
+          "verdict": "YES",
+          "reason": "YES: Searching 'wolf' returned only Gray wolf, and searching 'Panthera' returned only Snow leopard; no unrelated species appe / YES: Searching for 'wolf' returned only 1 species, Gray wolf (Canis lupus), and no unrelated species. / YES: Searching for 'wolf' returned only Gray wolf (1 species), and searching for 'Panthera' returned only Snow leopard, so no",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-3": {
+          "verdict": "YES",
+          "reason": "YES: Filtering by habitat Forest showed only the 3 Forest entries (Asian elephant, Bald eagle, Gray wolf); no other habitat a / YES: Filtering by Habitat=Forest showed only Asian elephant, Bald eagle and Gray wolf, all with habitat Forest, and no non-ma / YES: The habitat=Forest filter showed only 3 Forest species, and Marine showed only 2 Marine species. No entries that fail th",
+          "category": "Functional Testing",
+          "change": false
+        },
+        "000088-4": {
+          "verdict": "YES",
+          "reason": "YES: The body background is rgb(250,240,230), which is linen. The header background, the main button (Search) background and  / YES: The body background is rgb(250,240,230), which is linen. The header, the main Search button and the h1 heading are all r / YES: The body background is rgb(250,240,230), which matches linen. The header background rgb(128,0,0), the main Search button",
+          "category": "Design Validation Testing",
+          "change": false
+        }
+      },
+      "score": 4.0,
+      "n_cases": 4,
+      "accuracy": 1.0,
+      "regressions": [],
+      "started": true,
+      "overbuild": {
+        "source_files": 6,
+        "lines": 920,
+        "public_functions": 18
+      }
+    }
+  },
+  "runner": "claude -p"
+}

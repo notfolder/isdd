@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With 'Alice' the wheel visibly rotated, stopped with the pointer on 'Better Luck Next Time', and showed 'Alice won: Better Luck Next Time — ...' with no page errors. With an empty name, 'Please enter your name before spinning.' appeared and the wheel stayed in its starting position."},
+  "000010-2": {"verdict": "YES", "reason": "The Reward List page shows 8 rewards with descriptions and chances, and they match the 8 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning as Alice, My Winning Records shows a row with Player 'Alice', Reward 'Better Luck Next Time' and Date 'Nov 5, 2026, 06:30 AM'."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which matches ivory. The header background, primary button background and h1 color are all rgb(0,100,0), which matches dark green, so the background and all 3 component colors fit."}
+}

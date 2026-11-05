@@ -1,0 +1,8 @@
+{
+  "000026-1": {"verdict": "YES", "reason": "Clicking 'Vote now' on the homepage opened /surveys/3 (HTTP 200) with no errors, and all four options appeared as radio buttons with a 'Cast my vote' button."},
+  "000026-2": {"verdict": "YES", "reason": "The homepage lists all four surveys without requiring a vote. Each one shows its name plus a description and vote/option counts (e.g. '27 votes · 4 options'), which counts as relevant information."},
+  "000026-3": {"verdict": "YES", "reason": "After the first vote the page showed 'Thank you for voting! You voted for Bring your own.' and the total went from 27 to 28. On returning in the same browser, every radio button and the submit button were disabled, the page said 'You have already voted in this survey.', and a forced second POST left the total at 28."},
+  "000026-4": {"verdict": "YES", "reason": "The results pages show the up-to-date total, the leading option, and each option's vote count and percentage with a proportional bar (the bar widths match the percentages). The /results overview lists every survey's total and leader."},
+  "000026-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,224), which is light yellow. The header background, the main buttons' background and the headings' text are all rgb(47,79,79), which is dark slate gray, so the background and all three components match."},
+  "000026-rename": {"verdict": "YES", "reason": "I read the home, voting, per-survey results and /results pages, plus page titles and attributes. 'poll' appears nowhere; navigation, headings, buttons and messages all say 'Survey(s)', and every page works."}
+}

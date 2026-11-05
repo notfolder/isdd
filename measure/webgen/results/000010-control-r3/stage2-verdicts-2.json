@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "With the name empty, SPIN showed 'Please enter your name before spinning.' and the wheel's transform stayed 'none'. With 'Alice', the wheel rotated, stopped on Free Dessert (under the pointer) and showed 'Alice won: Free Dessert!' with no page errors."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 8 prizes with description, result and chance, and they match the 8 segments drawn on the wheel ($50 Gift Card, Free Coffee, 10% Discount, Mystery Gift, Free Dessert, Try Again, Bonus Points x2, Extra Spin)."},
+  "000010-3": {"verdict": "YES", "reason": "After spinning, My Winning Records shows a new row 'Nov 5, 2026, 6:30 AM | Alice | Free Dessert' that includes the player name, prize and date."},
+  "000010-design": {"verdict": "YES", "reason": "The body background is rgb(255,255,240), which is ivory. The header background, SPIN button background and h1/h2 color are all rgb(0,100,0), which is dark green, so the background and all 3 component colors match."}
+}

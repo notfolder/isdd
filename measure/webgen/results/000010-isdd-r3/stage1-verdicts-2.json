@@ -1,0 +1,6 @@
+{
+  "000010-1": {"verdict": "YES", "reason": "Clicking Spin disabled the button while the wheel spun. The wheel then stopped on a segment and showed the result (\"Try again\" on one spin, \"You won: Free Shipping!\" on another), with no page errors or error message."},
+  "000010-2": {"verdict": "YES", "reason": "The Prize List page shows all 7 prizes with descriptions and chances, and they match the 7 segments drawn on the wheel."},
+  "000010-3": {"verdict": "YES", "reason": "After winning Free Shipping, My Winning Records showed it at the top with date and time (2026-11-05 06:50:44) and the prize name."},
+  "000010-4": {"verdict": "YES", "reason": "The body background is rgb(211,211,211), which is light gray. The header, the Spin button (idle) and the h2 heading are all rgb(139,0,0), which is dark red, so the background and all 3 components match."}
+}

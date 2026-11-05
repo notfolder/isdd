@@ -1,0 +1,38 @@
+{
+  "000010-1": {
+    "verdict": "YES",
+    "reason": "YES: Spin showed 'Spinning…', the wheel rotated and stopped with the pointer on 'Bonus Spin', and the result box showed 'Bonu / YES: Clicking Spin rotated the wheel group (rotate 0 → ~1821°), it then stopped, and the result area showed the prize ('Bette / YES: Spinを押すとホイールが回転（transform変化、'Spinning…'表示）し、ポインタが『10% Off Coupon』の区画で停止して結果欄に賞品名と説明が表示された。ページエラー・コンソールエラーは無かった。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-2": {
+    "verdict": "YES",
+    "reason": "YES: /prizes lists 7 prizes, each with a description and win chance, and they match the 7 segments on the wheel exactly ($50  / YES: /prizes lists 7 prizes, each with a description and a chance %. They match the 7 segment labels on the wheel exactly. / YES: /prizes に7件の賞品（名称・説明・確率）が表示され、ホイール上の7区画のラベルと完全に一致した。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-3": {
+    "verdict": "YES",
+    "reason": "YES: After the spin, /my-records showed 'Tester has spun the wheel 1 time.' with the row 'Nov 5, 2026, 6:44 AM | Bonus Spin', / YES: After spinning, My Winning Records for 'Tester' showed the latest spin at the top (Nov 5, 2026, 6:45 AM – Better Luck Ne / YES: スピン後に My Winning Records で名前を入力すると、最新の『10% Off Coupon』が日付（Nov 5, 2026, 6:46 AM）と賞品名付きで先頭に記録されていた。",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  },
+  "000010-4": {
+    "verdict": "YES",
+    "reason": "YES: The body background is rgb(228,228,228), within 40 of light gray (211,211,211). The header, Spin button and h1 are all r / YES: The body background is rgb(228,228,228), within 40 per component of light gray (211,211,211). The header background, Spi / YES: body背景 rgb(228,228,228) は light gray(211,211,211) と各成分差40以内、ヘッダー背景・Spinボタン背景・見出し(h1/h2)色がいずれも rgb(139,0,0)＝dark red と一致し",
+    "votes": [
+      "YES",
+      "YES",
+      "YES"
+    ]
+  }
+}

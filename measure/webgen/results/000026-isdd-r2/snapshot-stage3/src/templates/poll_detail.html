@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ poll.title }}{% endblock %}
+{% block content %}
+<p class="breadcrumb"><a href="{{ url_for('web.poll_list_page') }}">Surveys</a> / {{ poll.title }}</p>
+<h1>{{ poll.title }}</h1>
+{% if poll.description %}<p class="lead">{{ poll.description }}</p>{% endif %}
+
+{% if voted %}
+<p class="notice notice-info" role="status">You have already voted in this survey.</p>
+{% endif %}
+
+{% if error %}
+<p class="notice notice-error" role="alert">{{ error }}</p>
+{% endif %}
+
+<form method="post" action="{{ url_for('web.cast_vote_action', poll_id=poll.id) }}" class="vote-form">
+  <fieldset{% if voted %} disabled{% endif %}>
+    <legend>Select one option</legend>
+    {% for option in poll.options %}
+    <label class="option">
+      <input type="radio" name="option_id" value="{{ option.id }}"{% if voted %} disabled{% endif %}>
+      <span>{{ option.text }}</span>
+    </label>
+    {% endfor %}
+  </fieldset>
+  <button type="submit" class="button"{% if voted %} disabled{% endif %}>Vote</button>
+</form>
+<p><a href="{{ url_for('web.poll_results_page', poll_id=poll.id) }}">View results</a></p>
+{% endblock %}

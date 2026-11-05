@@ -1,0 +1,6 @@
+{
+  "000088-1": {"verdict": "PARTIAL", "reason": "The species list (17 entries over 2 pages) shows biological information, but several rows display '—' in the Lifespan column (Button mushroom, Venus flytrap, E. coli). Under the missing-data rule, that makes it PARTIAL."},
+  "000088-2": {"verdict": "YES", "reason": "Searching 'Panda' returned only Giant panda (1 of 17), and searching 'wolf' returned only Gray wolf (1 of 17). No unrelated species appeared."},
+  "000088-3": {"verdict": "YES", "reason": "Filtering by Habitat = Marine showed 4 of 17 entries (Blue whale, Green sea turtle, Common dolphin, Common octopus), all Marine, with no non-matching entries."},
+  "000088-4": {"verdict": "YES", "reason": "The body background is rgb(250,240,230), which is linen. The header, the main button (Apply filters) and the h1 heading are all rgb(128,0,0), which is maroon. Background and all three components match."}
+}

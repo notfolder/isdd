@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Winning Records · Wheel of Fortune</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">Wheel of Fortune</a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="/">Spin the Wheel</a>
+      <a href="/prizes">Prize List</a>
+      <a href="/my-records" class="active" aria-current="page">My Winning Records</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>My Winning Records</h1>
+    <p class="lead">Enter the name you spin with to see every spin and prize recorded under it.</p>
+
+    <section class="card" aria-label="Find my records">
+      <div class="toolbar">
+        <div>
+          <label for="player">Your name</label>
+          <input id="player" type="text" maxlength="30" placeholder="e.g. Alex" autocomplete="nickname">
+        </div>
+        <button id="show-btn" class="btn" type="button">Show my records</button>
+      </div>
+      <p id="summary" class="summary" aria-live="polite"></p>
+
+      <table>
+        <thead>
+          <tr><th scope="col">Date</th><th scope="col">Prize won</th></tr>
+        </thead>
+        <tbody id="records">
+          <tr><td colspan="2" class="empty">Enter your name to see your records.</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/records.js"></script>
+</body>
+</html>
