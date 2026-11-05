@@ -5,8 +5,14 @@
 
 ## 場所
 
-- 残作業: `.history/BACKLOG.md`（完了は `BACKLOG-archive.md`、案は `IDEAS.md`）。最新の引き継ぎ: `.history/2026-11-04-1031-v2.2.0公開と計測1試運転/summary.md`
+- 残作業: `.history/BACKLOG.md`（完了は `BACKLOG-archive.md`、案は `IDEAS.md`）。最新の引き継ぎ: `.history/2026-11-05-1101-計測のやり直しと決め事の見える化/summary.md`
 - 2026-10-19〜24 の作業（PR #5 のマージ、v2.0.0 の出し直し、README の更新手順）は引き継ぎ記録が無い。経緯は `.history/BACKLOG-archive.md` とコミット履歴にある。
+
+## 計測（measure/）の運用
+
+- **isdd あり・なしの比較計測は、計測専用フォルダからの無人実行（`measure/run.py`、`claude -p`）で回し、対照群に isdd のスキルと CLAUDE.md が見えないことを毎回記録する。** Agent ツール方式は cwd のルールが両群に混入する（2026-11-05）。
+- **採点だけは Opus 5.5（3 人の多数決、基準文を固定）。生成は Haiku のまま**（2026-11-05）。
+- **変更の評価は「機能の追加」ではなく「既存機能の変更」で行う。曖昧な指示から要件を定める力も測る**（2026-11-05）。
 
 ## eval の運用（強い指示）
 
