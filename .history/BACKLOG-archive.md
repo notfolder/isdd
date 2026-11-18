@@ -83,3 +83,9 @@
 - [x] (2026-11-05) 対応表チェッカーの範囲指定: `--src` にファイルも書け、`--exclude` を新設（単体テスト 3 本）
 - [x] (2026-11-05) isdd-build が「設計の直し方の判断」で止まる問題: 案 A（DS-MD はチェッカーが走査するコードだけ）を設計の章立てに書いた
 - [x] (2026-11-05) 依頼に無い決め事の見える化（hearing-rules.md、requirements-chapters.md 1-2、rq_integrity_checker、eval 場面 req-decided-items）
+
+## AI-DLC（awslabs/aidlc-workflows）との比較計測
+
+概要: `measure/results/REPORT.md` の「AI-DLC（awslabs/aidlc-workflows）との比較 — 2026-11-18」
+
+- [x] (2026-11-19) AI-DLC v2.11.4 を 3 つ目の群として `measure/run.py --arm aidlc` に足し、相手の題材 sci-calc（3 群 × Haiku・Opus 5.5、全部 88/88）、お題 1 の AI-DLC 群 2 回（段 3 は 2 回とも未完了、13/23 と 10/23）、新しい題材 ripple の対照群・isdd 群（どちらも 38/38）を回して報告書に追記した
