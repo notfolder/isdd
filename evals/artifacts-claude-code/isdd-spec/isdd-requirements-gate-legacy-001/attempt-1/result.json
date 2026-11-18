@@ -1,0 +1,30 @@
+{
+  "task_id": "isdd-requirements-gate-legacy-001",
+  "name": "開始ゲート（既存コードあり・isdd 運用なし）",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-exvmj902",
+  "session_id": "a7fa7071-5744-4036-a26f-4dde66437029",
+  "started": "2026-11-05T19:42:25",
+  "finished": "2026-11-05T19:42:50",
+  "pass": true,
+  "grades": [
+    {
+      "name": "requirements_not_created",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "routes_to_isdd_reverse_engineering",
+      "type": "prompt",
+      "pass": true,
+      "detail": "開始ゲートの回答（外部連携: B、既存コード: C）を受けた後、エージェントは要件ヒアリングの本編（業務課題・機能・画面・非機能の質問）に入らず、isdd-reverse-engineering を先に実行するよう案内して止まった。逆引きそのものは開始していない（対象コードの場所の指定をユーザーに求めた）。"
+    },
+    {
+      "name": "gate_questions_batched",
+      "type": "prompt",
+      "pass": true,
+      "detail": "最初の応答で、開始ゲートの 2 問（1. 外部連携の有無、2. 既存ソースコードと isdd の運用）を番号付きで 1 回の応答にまとめて出していた。1 問ずつ別の応答に分けてはいない。"
+    }
+  ]
+}

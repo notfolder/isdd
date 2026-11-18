@@ -1,0 +1,54 @@
+{
+  "task_id": "isdd-traceability-hello-001",
+  "name": "Hello World 対応表作成",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-1jbenyo9",
+  "session_id": "fd833052-858a-471c-80bd-cd589bee5d58",
+  "started": "2026-11-05T19:57:57",
+  "finished": "2026-11-05T19:59:34",
+  "pass": true,
+  "grades": [
+    {
+      "name": "trace_map_created",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "setup_installed",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "no_id_comments_in_code",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "logic_preserved",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "trace_map_checker_executed",
+      "type": "prompt",
+      "pass": true,
+      "detail": "セッション中の bash ツール呼び出しで `bash scripts/isdd/check.sh --strict` が複数回実行された。check.sh は内部で trace_map_checker.py を `docs/detail_design.md`・`docs/trace_map.md`・`src` に対して実行し、対応表チェックの結果（エラー 0 件・警告 0 件）を出力した。条件を満たすため pass は true とした。"
+    },
+    {
+      "name": "trace_map_strict_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "check.sh --strict が合格:\nHELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutputE2E.test_verify_hello_world_output` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutputE2E.test_verify_hello_world_output` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 3）\n✓ 受け入れ判定に合格しました"
+    },
+    {
+      "name": "rq_ds_link_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_ds_link_checker.py が合格:\n====================================\n検出: RQ-* ID 数: 7 (コンテキストID除外後: 5)\n検出: DS-* ID 数: 8\nマッピング: RQ-DS 対応数: 8\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 7\n  - DS-* 総数: 8\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-NO-PERSISTENCE-DT-DB-NOT-REQUIRED\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE-FT-GET-HELLO-MESSAGE\n  RQ-FT-PRINT-HELLO-WORLD → DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-HELLO-WORLD, DS-FN-PRINT-HELLO-WORLD-FT-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD, DS-OP-CLI-RUN-FT-PRINT-HELLO-WORLD\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-IF-CLI-ENTRY-UI-HELLO-STDOUT-OUTPUT"
+    }
+  ]
+}

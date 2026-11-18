@@ -1,0 +1,84 @@
+{
+  "task_id": "isdd-reverse-engineering-hello-001",
+  "name": "Hello World リバースエンジニアリング",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-reverse-engineering-7nj0c10_",
+  "session_id": "32f9c90a-1731-4e50-8245-d9bc19a08a49",
+  "started": "2026-11-05T20:09:27",
+  "finished": "2026-11-05T20:13:07",
+  "pass": true,
+  "grades": [
+    {
+      "name": "docs_generated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "rq_ids_format",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "ds_ids_format",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "rq_ds_checker_executed",
+      "type": "prompt",
+      "pass": true,
+      "detail": "セッション内で bash ツールにより rq_ds_link_checker.py が実行されている。docs/requirements.md と docs/detail_design.md を引数に `python3 .claude/skills/isdd-reverse-engineering/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を実行し、欠落 0 件・不整合 0 件で終了コード 0 を得た。その後の再確認でも同じコマンドを再実行している。"
+    },
+    {
+      "name": "trace_map_created",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "code_untouched",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "logic_preserved",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "proposals_removed",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "no_interview_marks_left",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/*.md: すべての条件を満たす（3 ファイル）"
+    },
+    {
+      "name": "rq_integrity_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 9\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-FT-*: 4件\n  - RQ-TS-*: 2件\n  - RQ-UI-*: 1件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 7件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 2 本）"
+    },
+    {
+      "name": "rq_ds_link_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_ds_link_checker.py が合格:\nID 数: 7\nマッピング: RQ-DS 対応数: 16\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - DS-* 総数: 7\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-FT-FIXED-HELLO-MESSAGE → DS-CL-HELLO-WORLD-PRINTER, DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-MODULE\n  RQ-FT-GET-HELLO-MESSAGE → DS-CL-HELLO-WORLD-PRINTER, DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-MODULE\n  RQ-FT-PRINT-HELLO-WORLD → DS-CL-HELLO-WORLD-PRINTER, DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE\n  RQ-FT-PROPAGATE-EXCEPTION → DS-FN-PRINT-HELLO-WORLD, DS-IF-CLI-ENTRY, DS-MD-HELLO-MODULE\n  RQ-TS-FAIL-ON-EXCEPTION → DS-TS-FAIL-ON-EXCEPTION-E2E\n  RQ-TS-RUN-HELLO-WORLD-SCRIPT → DS-TS-HELLO-WORLD-OUTPUT-E2E\n  RQ-UI-HELLO-WORLD-STDOUT → DS-IF-CLI-ENTRY, DS-MD-HELLO-MODULE"
+    },
+    {
+      "name": "trace_map_strict_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "check.sh --strict が合格:\n\n--------------------------------------------------\n\n検証サマリ\n--------------------------------------------------\nエラー: 0 件\n警告: 0 件\n✓ 対応表チェックに合格しました\n\nDependency Checker\n==================================================\n規則: scripts/isdd/dependencies.json\nソース: src\n依存の規則は無い（詳細設計書 第 7 章に依存の規則があれば dependencies.json に書き写す）\n✓ 依存チェックに合格しました（規則なし）\n\nAcceptance Checker（受け入れ判定）\n==================================================\nテストディレクトリ（e2e）が無いので受け入れ判定を省く（E2E の有無は implementation_completeness_checker.py が確かめる）"
+    }
+  ]
+}

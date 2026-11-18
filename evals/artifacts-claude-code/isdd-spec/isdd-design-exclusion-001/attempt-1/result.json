@@ -1,0 +1,30 @@
+{
+  "task_id": "isdd-design-exclusion-001",
+  "name": "除外要件の記録",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-mbp8s1kk",
+  "session_id": "bd23b2dd-2e02-4a8b-a8c2-4322501b1a6b",
+  "started": "2026-11-05T19:28:42",
+  "finished": "2026-11-05T19:31:19",
+  "pass": true,
+  "grades": [
+    {
+      "name": "docs_generated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "exclusion_recorded",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "rq_ds_link_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_ds_link_checker.py が合格:\nRQ-DS Link Checker\n==================================================\n検出: RQ-* ID 数: 8 (コンテキストID除外後: 6)\n検出: DS-* ID 数: 6\n除外: 設計書の「除外要件」節にある RQ-* 1 件は対応を求めない: RQ-NF-SINGLE-LINE-OUTPUT\nマッピング: RQ-DS 対応数: 7\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 8\n  - DS-* 総数: 6\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-HELLO-MESSAGE-CONSTANT\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-WORLD\n  RQ-FT-PRINT-HELLO-WORLD → DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-WORLD\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-VERIFY-HELLO-WORLD-OUTPUT\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-IF-HELLO-COMMAND"
+    }
+  ]
+}

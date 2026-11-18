@@ -1,0 +1,90 @@
+{
+  "task_id": "isdd-design-hello-001",
+  "name": "Hello World 詳細設計",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-nk9h0cvs",
+  "session_id": "3d8cb61e-8b40-4768-972e-ec12aded9f4a",
+  "started": "2026-11-05T19:32:08",
+  "finished": "2026-11-05T19:35:23",
+  "pass": true,
+  "grades": [
+    {
+      "name": "docs_generated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "ds_ids",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "tech_selection_recorded",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "mapping_chapter",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "rq_ds_link_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_ds_link_checker.py が合格:\n============================\n検出: RQ-* ID 数: 9 (コンテキストID除外後: 7)\n検出: DS-* ID 数: 11\nマッピング: RQ-DS 対応数: 14\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - DS-* 総数: 11\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-HELLO-MESSAGE-CONSTANT\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-WORLD\n  RQ-FT-PRINT-HELLO-WORLD → DS-FN-MAIN, DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-WORLD\n  RQ-NF-RESPONSE-UNDER-1S → DS-TS-RESPONSE-TIME-UNDER-1S-E2E\n  RQ-OP-EXIT-CODE-RESULT → DS-FN-MAIN, DS-MD-MAIN, DS-OP-EXIT-CODE, DS-OP-RUN-COMMAND\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-VERIFY-HELLO-WORLD-OUTPUT-E2E\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-FN-PRINT-HELLO-WORLD, DS-IF-HELLO-CLI"
+    },
+    {
+      "name": "requirements_still_valid",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 9\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-DT-*: 1件\n  - RQ-FT-*: 2件\n  - RQ-NF-*: 1件\n  - RQ-OP-*: 1件\n  - RQ-TS-*: 1件\n  - RQ-UI-*: 1件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 7件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 1 本）"
+    },
+    {
+      "name": "test_requirement_uses_ds_ts",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "operation_requirement_uses_ds_op",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "nonfunctional_requirement_mapped",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "new_chapters_present",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "tasks_md_rules",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/*/tasks.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "rq_ds_checker_executed",
+      "type": "prompt",
+      "pass": true,
+      "detail": "ツール呼び出し履歴に、Bash ツールで rq_ds_link_checker.py を実行したコマンドがある。`python3 -I .claude/skills/isdd-spec/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を、docs/detail_design.md の作成直後、設計修正後の再実行、最終確認の 3 回実行した。いずれも終了コード 0 だった。"
+    },
+    {
+      "name": "short_design_ids",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md: すべての条件を満たす（1 ファイル）"
+    }
+  ]
+}

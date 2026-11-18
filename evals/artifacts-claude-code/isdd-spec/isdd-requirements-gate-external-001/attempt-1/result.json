@@ -1,0 +1,30 @@
+{
+  "task_id": "isdd-requirements-gate-external-001",
+  "name": "開始ゲート（外部連携あり）",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-ysle97so",
+  "session_id": "51a78434-a6db-4c54-a46d-ee9217103a2f",
+  "started": "2026-11-05T19:41:20",
+  "finished": "2026-11-05T19:41:46",
+  "pass": true,
+  "grades": [
+    {
+      "name": "requirements_not_created",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "routes_to_isdd_external_precheck",
+      "type": "prompt",
+      "pass": true,
+      "detail": "ゲートの回答（外部連携あり、既存ソースなし）を受けた次の応答は、段階 1 の最初の問い「一言で言うとどのようなアプリですか？」だけだった。機能・画面・非機能の質問には入っていない。外部連携の接続・認証の詳細も聞いておらず、段階 2 で連携先ごとにまとめて聞くと説明するにとどまった。段階 1 の業務の問題、業務課題、見込み経営効果の確定へ順に進む状態になっている。"
+    },
+    {
+      "name": "gate_questions_batched",
+      "type": "prompt",
+      "pass": true,
+      "detail": "最初の応答で、開始ゲートの 2 問（1. 外部連携の有無、2. 既存ソースコードと isdd の運用）を番号を付けて 1 回の応答にまとめて出していた。1 問ずつ別の応答に分けてはいない。"
+    }
+  ]
+}

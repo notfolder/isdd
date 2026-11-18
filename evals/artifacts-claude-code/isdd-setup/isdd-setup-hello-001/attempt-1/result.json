@@ -1,0 +1,84 @@
+{
+  "task_id": "isdd-setup-hello-001",
+  "name": "Hello World 対応表チェック導入",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-setup-lys9g48h",
+  "session_id": "e82fd033-9e13-4725-b2b6-ccd425c4126f",
+  "started": "2026-11-05T20:13:07",
+  "finished": "2026-11-05T20:13:50",
+  "pass": true,
+  "grades": [
+    {
+      "name": "scripts_installed",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "rules_appended",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "code_untouched",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "setup_script_executed",
+      "type": "prompt",
+      "pass": true,
+      "detail": "bash ツールで `python3 .claude/skills/isdd-setup/scripts/isdd_setup.py --src src --runtime cli --no-auth --no-external --granularity function` が実行され（終了コード 0）、`bash scripts/isdd/check.sh` も実行された（終了コード 0、対応表チェックと依存チェックが合格）。両方のコマンドが呼ばれたため条件を満たす。"
+    },
+    {
+      "name": "hook_status_reported",
+      "type": "prompt",
+      "pass": true,
+      "detail": "最終報告に「エージェント自身のフック」が「作らなかった」として明記されている。理由は「`.claude/settings.json` への書き込み権限が拒否されたため、この環境では作れなかった」で、基準の「作れない環境だった」に当たる。報告には作らなかった旨と、手動で `bash scripts/isdd/check.sh` を実行する必要がある旨も書かれている。"
+    },
+    {
+      "name": "setup_outputs",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "old_rq_copy_removed",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "version_current",
+      "type": "program",
+      "pass": true,
+      "detail": "VERSION は v2.3.0"
+    },
+    {
+      "name": "profile_runtime_cli",
+      "type": "program",
+      "pass": true,
+      "detail": "scripts/isdd/completeness.json の runtime は 'cli'"
+    },
+    {
+      "name": "profile_no_auth",
+      "type": "program",
+      "pass": true,
+      "detail": "scripts/isdd/completeness.json の auth は False"
+    },
+    {
+      "name": "profile_no_external",
+      "type": "program",
+      "pass": true,
+      "detail": "scripts/isdd/completeness.json の external は False"
+    },
+    {
+      "name": "rules_block_single",
+      "type": "program",
+      "pass": true,
+      "detail": "AGENTS.md の「<!-- isdd-setup:begin -->」は 1 回"
+    }
+  ]
+}

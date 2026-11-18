@@ -1,0 +1,54 @@
+{
+  "task_id": "isdd-traceability-change-flow-001",
+  "name": "進行中の変更を正本に重ねて実装する",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-0brylki8",
+  "session_id": "3bdb5515-8b8c-4d80-9e5d-985d608ea932",
+  "started": "2026-11-05T20:31:22",
+  "finished": "2026-11-05T20:32:38",
+  "pass": true,
+  "grades": [
+    {
+      "name": "code_follows_change_design",
+      "type": "program",
+      "pass": true,
+      "detail": "src/hello.py: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "trace_map_uses_change_ids",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/trace_map.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "trace_map_strict_pass_with_active_change",
+      "type": "program",
+      "pass": true,
+      "detail": "check.sh --strict が合格:\n----------\nエラー: 0 件\n警告: 0 件\n✓ 対応表チェックに合格しました\n\nDependency Checker\n==================================================\n規則: scripts/isdd/dependencies.json\nソース: src\n依存の規則は無い（詳細設計書 第 7 章に依存の規則があれば dependencies.json に書き写す）\n✓ 依存チェックに合格しました（規則なし）\n\nAcceptance Checker（受け入れ判定）\n==================================================\n進行中の変更: .history/20260508-add-timestamp-to-hello-world（変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の ID を外して判定）\nテストディレクトリ（e2e）が無いので受け入れ判定を省く（E2E の有無は implementation_completeness_checker.py が確かめる）"
+    },
+    {
+      "name": "active_change_kept",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/active_change: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "canonical_requirements_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/requirements.md は変わっていない"
+    },
+    {
+      "name": "canonical_design_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md は変わっていない"
+    },
+    {
+      "name": "change_design_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/20260508-add-timestamp-to-hello-world/change_detail_design.md は変わっていない"
+    }
+  ]
+}

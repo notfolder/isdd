@@ -1,0 +1,30 @@
+{
+  "task_id": "isdd-requirements-gate-managed-001",
+  "name": "開始ゲート（既存コードあり・isdd 運用あり）",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-bxqaowkn",
+  "session_id": "e201a7fe-e22f-414b-a2de-89c098cca2c2",
+  "started": "2026-11-05T19:41:46",
+  "finished": "2026-11-05T19:42:24",
+  "pass": true,
+  "grades": [
+    {
+      "name": "requirements_not_created",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "routes_to_isdd_change_req",
+      "type": "prompt",
+      "pass": true,
+      "detail": "開始ゲートの回答（1=B 外部連携なし、2=B 既存ソースあり・isdd 運用あり）の後、エージェントは新規要件の本編（業務課題・機能・画面・非機能）を聞かなかった。作業ディレクトリを調べ、docs/requirements.md がルートに無いことを確かめ、既存の要件定義書の候補を挙げて、正本のディレクトリと進行中の変更の有無を尋ねた。「既存の docs/requirements.md の場所を尋ねた」という条件を満たす。ただし、変更フローで進めると明言はしておらず、段階 1 の最初の問い（今回どのような変更か）も出していない。"
+    },
+    {
+      "name": "gate_questions_batched",
+      "type": "prompt",
+      "pass": true,
+      "detail": "最初の応答で、開始ゲートの 2 問（1. 外部連携の有無、2. 既存ソースコードと isdd の運用）を番号付きで 1 回の応答にまとめて出しており、それぞれに選択肢（A〜C、A〜D）が付いていた。1 問ずつ別の応答に分けてはいない。"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "task_id": "isdd-external-precheck-no-env-001",
+  "name": ".env が無いときは作成を依頼して待つ",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-zvnni4yk",
+  "session_id": "896bfea8-806f-4fc0-8056-2c21341ae5eb",
+  "started": "2026-11-05T19:37:28",
+  "finished": "2026-11-05T19:38:50",
+  "pass": true,
+  "grades": [
+    {
+      "name": "asks_for_env",
+      "type": "prompt",
+      "pass": true,
+      "detail": "条件を満たす。エージェントは最初の確認で作業ディレクトリに .env が無いことを確かめた。接続テストを始めず、「.env はまだ作っていない」という回答を受けて、ユーザーに .env の作成を依頼した。作成の報告があるまで接続テスト・スキーマ取得は行っていない。.env は自分で作らず、値も書いていない。書いたのは external/crm/.env.example（値はダミーの /path/to/crm_copy.sqlite3）だけで、これは接続テストの前に環境変数名を示すという外部連携の手順どおり。"
+    },
+    {
+      "name": "env_not_created_by_agent",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    }
+  ]
+}

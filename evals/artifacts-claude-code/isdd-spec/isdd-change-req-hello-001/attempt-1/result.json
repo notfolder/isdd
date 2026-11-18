@@ -1,0 +1,48 @@
+{
+  "task_id": "isdd-change-req-hello-001",
+  "name": "Hello World 時刻表示追加 変更要件定義",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-9313b_8u",
+  "session_id": "2209db86-fde7-45f0-b254-d848207f3f05",
+  "started": "2026-11-05T20:52:33",
+  "finished": "2026-11-05T20:54:44",
+  "pass": true,
+  "grades": [
+    {
+      "name": "change_requirements_created",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/*/change_requirements.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "problem_and_issue_separated",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/*/change_requirements.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "deleted_requirements_have_bk",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/*/change_requirements.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "rq_integrity_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n文書種別: 変更要件定義書（[追加] / [削除] を検出）。RQ-BZ の存在確認は省く\n検出: RQ-* ID 総数: 11\n  - RQ-BK-*: 2件\n  - RQ-BZ-*: 1件\n  - RQ-FT-*: 4件\n  - RQ-TS-*: 2件\n  - RQ-UI-*: 2件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 11\n  - RQ-BK-*: 2件\n  - 非BK/BZ要件: 8件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 1 本）"
+    },
+    {
+      "name": "canonical_requirements_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/requirements.md は変わっていない"
+    },
+    {
+      "name": "rq_integrity_checker_executed",
+      "type": "prompt",
+      "pass": true,
+      "detail": "セッション内で Bash ツールにより `python3 -I .claude/skills/isdd-spec/scripts/rq_integrity_checker.py .history/20261105-hello-world-timestamp/change_requirements.md` が実行された。2 回目の実行は列の位置を直した後で、終了コード 0、全チェック合格、受け入れテスト欠落 0 件（シナリオ 1 本）だった。"
+    }
+  ]
+}

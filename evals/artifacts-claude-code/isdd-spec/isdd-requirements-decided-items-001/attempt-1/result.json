@@ -1,0 +1,36 @@
+{
+  "task_id": "isdd-requirements-decided-items-001",
+  "name": "依頼に無い決め事の見える化（聞けるものは聞き、決めたものは 1-2 の表に残す）",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-xz_yoh1j",
+  "session_id": "dd30ccd3-343a-44a1-85d3-4128c641696f",
+  "started": "2026-11-05T20:49:09",
+  "finished": "2026-11-05T20:52:12",
+  "pass": true,
+  "grades": [
+    {
+      "name": "docs_generated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "decided_items_table_recorded",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "rq_integrity_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 22\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-DT-*: 2件\n  - RQ-FT-*: 8件\n  - RQ-NF-*: 2件\n  - RQ-TS-*: 5件\n  - RQ-UI-*: 3件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 22\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 20件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 5 本）"
+    },
+    {
+      "name": "undecided_behaviours_asked_before_deciding",
+      "type": "prompt",
+      "pass": true,
+      "detail": "条件1: 「最小で決めてよい」と言われる前の応答で、入力ファイルが無い（C1）、空（C2）、空行（C3）の各振る舞いを、案ア/イの表と「推奨」付きで問いとして出していた。条件2: 最小で決めてよいと言われた後は止まらず docs/requirements.md を作成し、1-2 の表に 15 項目すべてを内容・根拠・承認（未確認）の列付きで書いた。チェッカーは合格。最終報告では同じ 15 行の表を示していた。"
+    }
+  ]
+}

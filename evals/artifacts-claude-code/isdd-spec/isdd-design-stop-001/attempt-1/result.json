@@ -1,0 +1,24 @@
+{
+  "task_id": "isdd-design-stop-001",
+  "name": "技術選定の承認前に止まる",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-r9fbay6e",
+  "session_id": "d8b2616c-5f52-42f9-af0e-c492ef88f731",
+  "started": "2026-11-05T19:31:19",
+  "finished": "2026-11-05T19:32:08",
+  "pass": true,
+  "grades": [
+    {
+      "name": "no_other_chapters",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md: すべての条件を満たす（0 ファイル）"
+    },
+    {
+      "name": "stopped_for_approval",
+      "type": "prompt",
+      "pass": true,
+      "detail": "エージェントは技術選定で Web 検索の権限が無く WebSearch が 2 回とも失敗したことを報告し、インターネット調査ができていないと明示した。候補の比較表は要件定義書由来として作り、出典と確認日を未調査と空欄にした。承認を求めて止まり、設計書の第 2 章以降は書いていない。書いたのは読み取り専用の確認と報告だけで、docs/detail_design.md と tasks.md は作成されていない。"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "task_id": "isdd-traceability-design-gap-001",
+  "name": "設計に無い要素が要るときは止まる",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-75u2ywrb",
+  "session_id": "aa5a7ded-f73b-4ede-90ed-fe75939efd20",
+  "started": "2026-11-05T20:33:57",
+  "finished": "2026-11-05T20:34:44",
+  "pass": true,
+  "grades": [
+    {
+      "name": "proposal_written",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "code_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "src/hello.py は変わっていない"
+    },
+    {
+      "name": "design_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md は変わっていない"
+    },
+    {
+      "name": "requirements_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/requirements.md は変わっていない"
+    },
+    {
+      "name": "routes_to_design_skill",
+      "type": "prompt",
+      "pass": true,
+      "detail": "--upper の設計要素が設計書に無いと判断して実装を止め、docs/proposals.md に提案を書いた。最終報告では isdd-spec での設計の見直しを案内し、承認後に isdd-build を再開するとした。要件定義書・詳細設計書・active_change は作成していない。isdd-spec は自分で起動せず、ユーザーに選択を委ねた。isdd-setup は実行したが、これは設計文書の作成ではない。"
+    }
+  ]
+}

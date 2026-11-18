@@ -1,0 +1,66 @@
+{
+  "task_id": "isdd-post-implementation-review-change-req-001",
+  "name": "Hello World 変更要件フロー後 実装後整合確認",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-9sseqe_r",
+  "session_id": "9d2e7b15-31ec-4c0d-9a44-cb2f00550060",
+  "started": "2026-11-05T20:00:57",
+  "finished": "2026-11-05T20:03:12",
+  "pass": true,
+  "grades": [
+    {
+      "name": "requirements_updated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "design_updated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "trace_map_updated",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "change_requirements_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/20260508-add-timestamp-to-hello-world/change_requirements.md は変わっていない"
+    },
+    {
+      "name": "change_design_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/20260508-add-timestamp-to-hello-world/change_detail_design.md は変わっていない"
+    },
+    {
+      "name": "active_change_removed",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/active_change は無い"
+    },
+    {
+      "name": "rq_ds_link_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_ds_link_checker.py が合格:\n件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-NO-PERSISTENCE-DT-DB-NOT-REQUIRED\n  RQ-FT-BUILD-TIMESTAMPED-MESSAGE → DS-FN-BUILD-TIMESTAMPED-MESSAGE-FT-BUILD-TIMESTAMPED-MESSAGE\n  RQ-FT-GET-CURRENT-TIME → DS-FN-GET-CURRENT-TIME-FT-GET-CURRENT-TIME\n  RQ-FT-PRINT-TIMESTAMPED-OUTPUT → DS-CL-HELLO-WORLD-PRINTER-FT-PRINT-TIMESTAMPED-OUTPUT, DS-FN-PRINT-TIMESTAMPED-OUTPUT-FT-PRINT-TIMESTAMPED-OUTPUT, DS-MD-HELLO-MODULE-FT-PRINT-TIMESTAMPED-OUTPUT, DS-OP-CLI-RUN-FT-PRINT-TIMESTAMPED-OUTPUT\n  RQ-FT-TIME-FORMAT-RULE → DS-FN-GET-CURRENT-TIME-FT-GET-CURRENT-TIME\n  RQ-TS-VERIFY-TIMESTAMPED-OUTPUT → DS-TS-TIMESTAMPED-OUTPUT-E2E-TS-VERIFY-TIMESTAMPED-OUTPUT\n  RQ-UI-TIMESTAMPED-STDOUT-OUTPUT → DS-IF-CLI-ENTRY-UI-TIMESTAMPED-STDOUT-OUTPUT"
+    },
+    {
+      "name": "trace_map_strict_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "check.sh --strict が合格:\nOUTPUT-E2E-TS-VERIFY-TIMESTAMPED-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutput.test_verify_timestamped_output` | 実装済み |\n| `RQ-UI-TIMESTAMPED-STDOUT-OUTPUT` | `RQ-TS-VERIFY-TIMESTAMPED-OUTPUT` | `DS-TS-TIMESTAMPED-OUTPUT-E2E-TS-VERIFY-TIMESTAMPED-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutput.test_verify_timestamped_output` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 5 / 不合格 0 / 未検証 0（全 5）\n✓ 受け入れ判定に合格しました"
+    },
+    {
+      "name": "unmapped_table_presented",
+      "type": "prompt",
+      "pass": true,
+      "detail": "前の応答の最終報告に「### 未マッピング一覧」の見出しがあり、その直下に実装要素（修飾名）、対応表の DS-ID、設計書に DS-ID があるか、対応する RQ-ID、要件定義書に RQ-ID があるか、状態の 6 列の表がある。該当なしの行を入れ、見出しと表の両方を出している。"
+    }
+  ]
+}

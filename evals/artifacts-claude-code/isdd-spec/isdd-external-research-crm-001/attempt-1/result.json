@@ -1,0 +1,60 @@
+{
+  "task_id": "isdd-external-research-crm-001",
+  "name": "外部連携の確認と要件の突き合わせ（CRM の SQLite）",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-qb5i_vp6",
+  "session_id": "1ecd21e7-dce5-4ee8-8cb4-a9275a80daf9",
+  "started": "2026-11-05T19:48:19",
+  "finished": "2026-11-05T19:51:55",
+  "pass": true,
+  "grades": [
+    {
+      "name": "reports_created",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "no_code_created",
+      "type": "program",
+      "pass": true,
+      "detail": "external/crm/src は無い\nexternal/crm/mock は無い"
+    },
+    {
+      "name": "research_sections",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "alignment_judgement",
+      "type": "file",
+      "pass": true,
+      "detail": "ok"
+    },
+    {
+      "name": "external_requirement_in_3_3",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/requirements.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "requirements_still_valid",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 14\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-DT-*: 3件\n  - RQ-EF-*: 1件\n  - RQ-EX-*: 1件\n  - RQ-FT-*: 1件\n  - RQ-NF-*: 1件\n  - RQ-TS-*: 4件\n  - RQ-UI-*: 1件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 14\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 12件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 4 本）"
+    },
+    {
+      "name": "secret_not_leaked",
+      "type": "program",
+      "pass": true,
+      "detail": "秘密の値は .env 以外に無い"
+    },
+    {
+      "name": "env_example_has_names_only",
+      "type": "program",
+      "pass": true,
+      "detail": "external/crm/.env.example: すべての条件を満たす（1 ファイル）"
+    }
+  ]
+}

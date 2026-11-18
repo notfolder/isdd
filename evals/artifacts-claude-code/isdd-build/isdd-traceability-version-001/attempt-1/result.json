@@ -1,0 +1,24 @@
+{
+  "task_id": "isdd-traceability-version-001",
+  "name": "チェッカーの版の食い違い",
+  "model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-byoelvn4",
+  "session_id": "a635f34a-58d6-47a1-b748-df80395d8d6d",
+  "started": "2026-11-05T19:59:34",
+  "finished": "2026-11-05T20:00:57",
+  "pass": true,
+  "grades": [
+    {
+      "name": "version_aligned_or_reported",
+      "type": "program",
+      "pass": true,
+      "detail": "VERSION は v2.3.0"
+    },
+    {
+      "name": "version_mismatch_handled",
+      "type": "prompt",
+      "pass": true,
+      "detail": "スキル手順の開始確認で、エージェントは他の作業より先に scripts/isdd/VERSION（v1.0.14）と SKILL.md の metadata.version（v2.3.0）を読み、不一致に自分で気づいた。最初の応答で「スキルの手順どおり、isdd-setup を再実行してから進めます」と報告し、isdd-setup を再実行して VERSION が v2.3.0 になったことを確認した。最終報告にも、再実行の経緯と一致後の版を書いている。"
+    }
+  ]
+}
