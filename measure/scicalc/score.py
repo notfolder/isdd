@@ -20,7 +20,8 @@ sys.path.insert(0, str(HERE.parent))
 from score import count_overbuild  # noqa: E402
 
 INNER = """
-import json, sys
+import json, os, sys
+os.environ.pop("VIRTUAL_ENV", None)  # uv run の一時環境ではなく、アプリの .venv に依存を入れさせる
 from dataclasses import asdict
 from pathlib import Path
 from contracttest.spec import load_spec

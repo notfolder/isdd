@@ -39,9 +39,18 @@
       "cost_usd": 115.1207,
       "turns": 139,
       "rounds": 22,
-      "passed": 0,
-      "total": 0,
-      "tests": {},
+      "passed": 7,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
       "overbuild": {
         "source_files": 24,
         "lines": 712,
@@ -49,7 +58,8 @@
         "classes": 11,
         "templates": 5
       },
-      "score_error": null
+      "score_error": null,
+      "score_note": "採点環境を作り直して採点し直した（2026-11-18）"
     }
   },
   "runner": "claude -p",
