@@ -22,7 +22,7 @@
 - [ ] 計測で起きた外部からの停止（SIGTERM で isdd 群 3 本が落ちた）の原因を切り分ける（エージェントの pkill か、背景実行の後始末か）（追加 2026-11-05、重要 低）
 - [ ] SWE-Dev は easy で両群 100%（天井）。差を見るなら hard split か FeatureBench lv1（追加 2026-11-04、重要 低）
 - [ ] P7 計測の手順を `evals/` と同じ基盤（waza、固定回答）に載せ、版を上げるたびに isdd あり・なしの差を出せるようにする（無人実行の実行器 `measure/run.py` ができたので、固定回答の場面は載せられる。追加 2026-11-03、重要 中）
-- [ ] 3 AI-DLC（awslabs/aidlc-workflows v2.11.4）との比較計測（2026-11-18 開始）: `measure/run.py --arm aidlc`（Classic、承認は発言で 1 件ずつ）と題材 `measure/scicalc/`（相手の評価器の題材、契約テスト 88 件）を足した。試運転（お題 1 の段 1、Haiku）は 22 往復・52 分で完走し 7/8、キャッシュ読み取りを含め約 4,800 万トークン。残り: 本計測の回数とモデルをユーザーが決める、お題 1 の AI-DLC 群、sci-calc の 3 群、差が出やすい題材の設計（下の「評価の題材の見直し」と同じ）、`measure/results/REPORT.md` への追記、`measure/run.py` と `measure/scicalc/` のコミット。採点用の `measure/.venv` は 2026-11-18 に作り直した（前のものは消えた一時フォルダへのリンクだった）
+- [ ] 3 AI-DLC（awslabs/aidlc-workflows v2.11.4）との比較計測（2026-11-18 開始）: `measure/run.py --arm aidlc`（Classic、承認は発言で 1 件ずつ）と題材 `measure/scicalc/`（相手の評価器の題材、契約テスト 88 件）を足した。試運転（お題 1 の段 1、Haiku）は 22 往復・52 分で完走し 7/8、キャッシュ読み取りを含め約 4,800 万トークン。ユーザーの決定（2026-11-18）: お題 1 の AI-DLC 群は Haiku で 2 回、sci-calc は 3 群を Haiku と Opus 5.5 で各 1 回、新しい題材 `measure/ripple/`（お題 1 の続きの段 4〜6、依頼に書いていない決まりを見る隠しテスト 15 本）は 3 群 1 回ずつ（対照 control-r5、isdd は isdd-r2 を v2.3.0 に入れ替え、AI-DLC は aidlc-r1 の続き）。実行は `/tmp/isdd-measure/aidlc-batch.sh` と `ripple-batch.sh`（ログは同じフォルダの lane1.log・lane2.log・ripple.log）。残り: 実行の完了、結果の集計と `measure/results/REPORT.md` への追記、結果のコミット、ripple で差が出たら回数を増やす判断。採点用の `measure/.venv` は 2026-11-18 に作り直した（前のものは消えた一時フォルダへのリンクだった）
 
 ## 環境・言語の非固定化と ID の入れ方の再検討（ブランチ feature-rethink-env-and-id）
 
