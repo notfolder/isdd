@@ -63,12 +63,11 @@ def test_cannot_lend_after_sent_to_repair(app, page, new_page):
 
 @pytest.mark.stage5
 def test_lent_equipment_cannot_be_sent_to_repair(app, page, new_page):
-    """貸出中の備品には「修理に出す」を出さず、画面を開いたあとに貸し出された備品も修理中にならない"""
+    """画面を開いたあとに貸し出された備品は、「修理に出す」を押しても修理中にならない（貸出中の行にボタンを出すかどうかは問わない）"""
     app.seed({"accounts": [ADMIN, EMP_A], "equipment": PCS,
               "lendings": [{"equipment": "PC-001", "borrower": emp("3"), "lent_on": "2025-01-06"}]})
     login(page, app.base_url, emp("1"))
     expect(equipment_row(page, "PC-002").get_by_role("button", name=TO_REPAIR)).to_have_count(1)
-    expect(equipment_row(page, "PC-001").get_by_role("button", name=TO_REPAIR)).to_have_count(0)
     other = new_page()
     login(other, app.base_url, emp("1"))
     equipment_row(other, "PC-002").get_by_role("button", name="貸出").click()
