@@ -46,6 +46,12 @@ FIRST_PROMPT_CONTROL = """REQUEST.md の依頼を最後まで実装してくだ�
 {change_note}
 実装が動くことを確かめたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"""
 
+FIRST_PROMPT_AIDLC = """/aidlc {scope} REQUEST.md の依頼を、AI-DLC のワークフローで最後まで（要件 → 設計 → 実装 → テスト）進めてください。
+他のプロセスを `pkill`・`killall`・`kill -9 -1` などで止めないでください（同じマシンで別の作業が動いています）。自分が起動したサーバーは、その PID だけを止めてください。依頼者は画面の選択肢を使えません。質問は ANSWERS.md に依頼者の回答があるので、それを依頼者の答えとして使い、ANSWERS.md に無いことは依頼の文章と contract.md から最も単純な案を依頼者の答えとしてください。回答方法を聞く場面では「Chat」を選んだものとします。承認が要るところでは止まって承認を求めてください（依頼者が次の発言で答えます）。
+採点の契約は contract.md にあります（起動方法、URL、画面の要素の id、文言）。必ず守ってください。アプリのコードはこの作業ディレクトリの直下に置いてください。
+{change_note}
+ワークフローの最後の段階が承認されたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"""
+
 FIRST_PROMPT_ISDD_Q = """REQUEST.md の依頼を、isdd-spec と isdd-build のスキル（.claude/skills/ にある）を使って、要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください。
 他のプロセスを `pkill`・`killall` などで止めないでください（同じマシンで別の作業が動いています）。自分が起動したサーバーは、その PID だけを止めてください。依頼者は応答を読んで答えます。分からないことや承認が要ることは、応答の中で依頼者に質問してください（質問は番号を付けてまとめる。依頼者の答えが次の依頼として届きます）。依頼者が「任せる」と答えたことは最小案で決め、要件定義書の「依頼に無く自分で決めた項目」に書いてください。
 採点の契約は contract.md にあります（起動方法、URL、画面の要素の id とクラス名）。必ず守ってください。
@@ -56,8 +62,16 @@ FIRST_PROMPT_CONTROL_Q = """REQUEST.md の依頼を最後まで実装してく�
 採点の契約は contract.md にあります（起動方法、URL、画面の要素の id とクラス名）。必ず守ってください。
 実装が動くことを確かめたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"""
 
+AIDLC_ANSWERS_HEAD = """# 質問への依頼者の回答
+
+質問にはこのファイルの回答を依頼者の答えとして使う。ここに無いことは、依頼の文章と契約から最も単純な案を依頼者の答えとする。承認はこのファイルでは与えない（依頼者が発言で答える）。
+
+"""
+TASK = HERE  # --task で題材のフォルダ（stages/、contracts/、answers/、score.py）に切り替える
+
 CHANGE_NOTE = "これは既存のアプリへの変更要求です。前の段までの文書とコードがこのディレクトリにあります。既存の機能を壊さないでください。"
 FOLLOW_UP = "続けてください。質問には ANSWERS.md の回答で自分で答え、承認はすべて与えます。残りを最後まで進め、完了したら STAGE_DONE を作ってください。"
+FOLLOW_UP_AIDLC = "承認します。続けてください。質問への私の答えは ANSWERS.md のとおりです（無いことは最も単純な案でよい）。ワークフローの最後の段階が承認されたら STAGE_DONE を作ってください。"
 FOLLOW_UP_CONTROL = "続けてください。不明な点は最も単純な案で決めて進め、残りを最後まで実装し、完了したら STAGE_DONE を作ってください。"
 
 
@@ -80,7 +94,7 @@ def sum_usage(rounds: list) -> dict:
 
 
 def write_contract(workdir: Path, stage: int) -> None:
-    (workdir / "contract.md").write_text((HERE / "contracts" / f"stage{stage}.md").read_text(encoding="utf-8"), encoding="utf-8")
+    (workdir / "contract.md").write_text((TASK / "contracts" / f"stage{stage}.md").read_text(encoding="utf-8"), encoding="utf-8")
 
 
 def score_snapshot(label: str, stage: int, snap: Path, out_json: Path, lock_path: Path) -> None:
@@ -89,7 +103,7 @@ def score_snapshot(label: str, stage: int, snap: Path, out_json: Path, lock_path
         fcntl.flock(lock, fcntl.LOCK_EX)
         log(label, f"stage {stage}: 採点を開始")
         started = time.time()
-        subprocess.run([sys.executable, str(HERE / "score.py"), "--app", str(snap), "--stage", str(stage), "--out", str(out_json)],
+        subprocess.run([sys.executable, str(TASK / "score.py"), "--app", str(snap), "--stage", str(stage), "--out", str(out_json)],
                        check=False, capture_output=True)
         log(label, f"stage {stage}: 採点を終了（{round(time.time() - started)} 秒）")
         fcntl.flock(lock, fcntl.LOCK_UN)
@@ -97,7 +111,7 @@ def score_snapshot(label: str, stage: int, snap: Path, out_json: Path, lock_path
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--arm", choices=["isdd", "control"], required=True)
+    parser.add_argument("--arm", choices=["isdd", "control", "aidlc"], required=True)
     parser.add_argument("--run", type=int, required=True)
     parser.add_argument("--model", default="claude-haiku-5-5")
     parser.add_argument("--work", required=True)
@@ -108,13 +122,18 @@ def main() -> int:
     parser.add_argument("--path-prefix", default=None, help="PATH の先頭に足すディレクトリ（python3 を 3.12 にするなど）")
     parser.add_argument("--responder", default=None, help="依頼者役の隠し台帳（計測 5）。指定すると固定回答の代わりに、台帳を持つ依頼者役のモデルが質問に答える")
     parser.add_argument("--responder-model", default="claude-sonnet-5-5")
+    parser.add_argument("--task", default=None, help="題材のフォルダ名（measure/ の下。既定はお題 1。例: scicalc）")
+    parser.add_argument("--scope", default="classic", help="AI-DLC 群の進め方（classic、express など）")
     parser.add_argument("--contract", default=None, help="契約ファイルの名前（既定 contracts/stage<N>.md。計測 5 は stage1-min.md）")
     args = parser.parse_args()
 
     if args.path_prefix:
         os.environ["PATH"] = args.path_prefix + os.pathsep + os.environ.get("PATH", "")
 
-    label = args.label or f"{args.arm}-r{args.run}"
+    global TASK
+    if args.task:
+        TASK = HERE / args.task
+    label = args.label or (f"{args.task}-" if args.task else "") + f"{args.arm}-r{args.run}"
     workdir = Path(args.work).resolve() / label
     results_dir = HERE / "results" / label
     results_dir.mkdir(parents=True, exist_ok=True)
@@ -132,6 +151,12 @@ def main() -> int:
             for skill in (REPO / "skills").iterdir():
                 if skill.is_dir() and not skill.name.endswith("-workspace"):
                     shutil.copytree(skill, dest / skill.name, ignore=shutil.ignore_patterns("evals"))
+        if args.arm == "aidlc":
+            # AI-DLC（awslabs/aidlc-workflows）を Claude Code 用に設定する。aidlc コマンドは事前に入れておく
+            done = subprocess.run(["aidlc", "config", "--harness", "claude", "--yes"], cwd=workdir, capture_output=True, text=True)
+            log(label, "aidlc config: " + (done.stdout + done.stderr).strip()[-200:])
+            if done.returncode != 0:
+                return 1
 
     summary_path = results_dir / "summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.exists() else {"arm": args.arm, "run": args.run, "model": args.model, "stages": {}}
@@ -139,16 +164,22 @@ def main() -> int:
         log(label, "採点済みのため何もしない")
         return 0
     summary["runner"] = "claude -p"
+    if args.arm == "aidlc":
+        summary["aidlc"] = {"scope": args.scope, "version": subprocess.run(["aidlc", "--version"], capture_output=True, text=True).stdout.strip()}
     scorers = []
 
     for stage in stages:
-        shutil.copyfile(HERE / "stages" / f"stage{stage}.md", workdir / "REQUEST.md")
+        shutil.copyfile(TASK / "stages" / f"stage{stage}.md", workdir / "REQUEST.md")
         if args.contract:
-            (workdir / "contract.md").write_text((HERE / "contracts" / args.contract).read_text(encoding="utf-8"), encoding="utf-8")
+            (workdir / "contract.md").write_text((TASK / "contracts" / args.contract).read_text(encoding="utf-8"), encoding="utf-8")
         else:
             write_contract(workdir, stage)
-        if args.arm == "isdd" and not args.responder:
-            shutil.copyfile(HERE / "answers" / f"stage{stage}.md", workdir / "ANSWERS.md")
+        if args.arm in ("isdd", "aidlc") and not args.responder:
+            answers = (TASK / "answers" / f"stage{stage}.md").read_text(encoding="utf-8")
+            if args.arm == "aidlc":
+                # 固定回答の前書きは isdd 群向け（承認はすべて与えられたものとする）なので、項目だけを残して前書きを差し替える
+                answers = AIDLC_ANSWERS_HEAD + "\n".join(line for line in answers.splitlines() if line.startswith("- ")) + "\n"
+            (workdir / "ANSWERS.md").write_text(answers, encoding="utf-8")
         done_flag = workdir / "STAGE_DONE"
         if done_flag.exists():
             done_flag.unlink()
@@ -156,9 +187,9 @@ def main() -> int:
             prompt = FIRST_PROMPT_ISDD_Q if args.arm == "isdd" else FIRST_PROMPT_CONTROL_Q
             ledger_text = Path(args.responder).read_text(encoding="utf-8")
         else:
-            template = FIRST_PROMPT_ISDD if args.arm == "isdd" else FIRST_PROMPT_CONTROL
-            prompt = template.format(change_note=CHANGE_NOTE if stage > 1 else "")
-        follow = FOLLOW_UP if args.arm == "isdd" else FOLLOW_UP_CONTROL
+            template = {"isdd": FIRST_PROMPT_ISDD, "aidlc": FIRST_PROMPT_AIDLC}.get(args.arm, FIRST_PROMPT_CONTROL)
+            prompt = template.format(change_note=CHANGE_NOTE if stage > 1 else "", scope=args.scope)
+        follow = {"isdd": FOLLOW_UP, "aidlc": FOLLOW_UP_AIDLC}.get(args.arm, FOLLOW_UP_CONTROL)
         questions_asked = 0
         rounds = []
         session = ""
@@ -203,10 +234,18 @@ def main() -> int:
         isdd_used = any(sk in ISDD_SKILLS for sk in skills_called)
         artifacts = all((workdir / f).exists() for f in ("docs/requirements.md", "docs/detail_design.md", "docs/trace_map.md", "scripts/isdd"))
         valid = ((isdd_used or artifacts) if args.arm == "isdd" else not visible and not isdd_used)
+        aidlc_info = {}
+        if args.arm == "aidlc":
+            # AI-DLC の記録（段階の状態と承認の数）。isdd のスキルが見えていないことと合わせて有効とする
+            records = sorted((workdir / "aidlc" / "spaces").glob("*/intents/*/aidlc-state.md"))
+            audit = "".join(f.read_text(encoding="utf-8", errors="replace") for r in records for f in sorted((r.parent / "audit").glob("*.md")))
+            aidlc_info = {"aidlc_records": [r.parent.name for r in records], "aidlc_gates_approved": audit.count("GATE_APPROVED"),
+                          "aidlc_human_turns": audit.count("HUMAN_TURN"), "aidlc_workflow_completed": "WORKFLOW_COMPLETED" in audit}
+            valid = bool(records) and not visible and not isdd_used
         stage_info = {"done": done_flag.exists(), "wall_sec": wall, "started": datetime.fromtimestamp(stage_started).isoformat(timespec="seconds"),
                       "responder": bool(args.responder), "questions_rounds": questions_asked,
                       "tool_uses": sum(tool_names.values()), "tool_names": tool_names, "skills_called": skills_called, "isdd_skills_visible": visible,
-                      "valid": valid, "isdd_artifacts": artifacts, "validity_note": ("isdd の成果物もスキル呼び出しも無し" if args.arm == "isdd" and not (isdd_used or artifacts) else
+                      "valid": valid, **aidlc_info, "isdd_artifacts": artifacts, "validity_note": ("isdd の成果物もスキル呼び出しも無し" if args.arm == "isdd" and not (isdd_used or artifacts) else
                                                        ("対照群に isdd のスキルが見えていた" if args.arm == "control" and (visible or isdd_used) else "")),
                       **sum_usage(rounds)}
         summary["stages"][str(stage)] = stage_info

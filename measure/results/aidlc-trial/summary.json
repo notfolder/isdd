@@ -1,0 +1,60 @@
+{
+  "arm": "aidlc",
+  "run": 0,
+  "model": "claude-haiku-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 3109.1,
+      "started": "2026-11-18T13:26:57",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 727,
+      "tool_names": {
+        "Bash": 401,
+        "Agent": 32,
+        "Write": 167,
+        "Read": 94,
+        "Edit": 16,
+        "Grep": 17
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "aidlc_records": [
+        "261118-equipment-ledger"
+      ],
+      "aidlc_gates_approved": 18,
+      "aidlc_human_turns": 21,
+      "aidlc_workflow_completed": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 258,
+        "output_tokens": 68061,
+        "cache_creation_input_tokens": 154515,
+        "cache_read_input_tokens": 48148273,
+        "total_tokens": 48371107
+      },
+      "cost_usd": 115.1207,
+      "turns": 139,
+      "rounds": 22,
+      "passed": 0,
+      "total": 0,
+      "tests": {},
+      "overbuild": {
+        "source_files": 24,
+        "lines": 712,
+        "public_functions": 26,
+        "classes": 11,
+        "templates": 5
+      },
+      "score_error": null
+    }
+  },
+  "runner": "claude -p",
+  "aidlc": {
+    "scope": "classic",
+    "version": "aidlc 2.11.4 (runtime 2.11.4)"
+  }
+}
