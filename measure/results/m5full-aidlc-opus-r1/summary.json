@@ -1,0 +1,74 @@
+{
+  "arm": "aidlc",
+  "run": 1,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 18322.9,
+      "started": "2026-11-20T21:11:26",
+      "responder": true,
+      "questions_rounds": 11,
+      "tool_uses": 409,
+      "tool_names": {
+        "Bash": 164,
+        "Read": 92,
+        "Write": 91,
+        "Edit": 43,
+        "Agent": 10,
+        "Grep": 7,
+        "Glob": 2
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "aidlc_records": [
+        "261120-equipment-ledger"
+      ],
+      "aidlc_gates_approved": 14,
+      "aidlc_human_turns": 21,
+      "aidlc_workflow_completed": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 358,
+        "output_tokens": 157328,
+        "cache_creation_input_tokens": 1563901,
+        "cache_read_input_tokens": 104362337,
+        "total_tokens": 106083924
+      },
+      "cost_usd": 320.8623,
+      "turns": 272,
+      "rounds": 16,
+      "passed": 3,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "fail",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "fail",
+        "test_equipment_create[chromium]": "fail",
+        "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+        "test_lending_status_empty_and_sorted[chromium]": "fail"
+      },
+      "overbuild": {
+        "source_files": 8,
+        "lines": 1411,
+        "public_functions": 57,
+        "classes": 11,
+        "templates": 6
+      },
+      "score_error": null
+    }
+  },
+  "runner": "claude -p",
+  "continued_from": {
+    "workdir_label": "m5-aidlc-opus-r1",
+    "session": "a3844a9d-6e6d-40b1-9269-645a9a6e239b"
+  },
+  "aidlc": {
+    "scope": "classic",
+    "version": "aidlc 2.11.4 (runtime 2.11.4)"
+  }
+}

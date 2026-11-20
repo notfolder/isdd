@@ -3,7 +3,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from support.ui import expect_url, account_row, click_with_dialog, login, messages
+from support.ui import expect_url, account_row, click_with_dialog, login, messages, notices
 from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF, EMP_FORMAT_MSG, LAST_STAFF, OLD_ROLE, ROLE, STAFF_ONLY, emp
 
 STAFF = {"number": emp("1"), "name": "担当太郎", "staff": True}
@@ -26,7 +26,7 @@ def test_employee_restrictions(app, page):
     for url in ["/equipment/new/", "/accounts/"]:
         page.goto(app.base_url + url)
         expect_url(page, app.base_url, "/")
-        expect(messages(page)).to_have_text([STAFF_ONLY])
+        expect(notices(page)).to_have_text([STAFF_ONLY])
     page.get_by_role("button", name="ログアウト").click()
     for url in ["/equipment/new/", "/accounts/"]:
         page.goto(app.base_url + url)

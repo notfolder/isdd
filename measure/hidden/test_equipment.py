@@ -3,7 +3,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from support.ui import expect_url, click_with_dialog, equipment_row, field_error, login, messages
+from support.ui import expect_url, click_with_dialog, equipment_row, field_error, login, messages, save_button
 from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF, EMP_FORMAT_MSG, LAST_STAFF, OLD_ROLE, ROLE, STAFF_ONLY, emp
 
 STAFF = {"number": emp("1"), "name": "担当太郎", "staff": True}
@@ -15,7 +15,7 @@ FORMAT_MESSAGE = "管理番号は半角の英数字とハイフンで 20 文字�
 def fill_equipment(page, number, name):
     page.fill("#id_equipment_number", number)
     page.fill("#id_name", name)
-    page.get_by_role("button", name="保存").click()
+    save_button(page).click()
 
 
 @pytest.mark.stage1

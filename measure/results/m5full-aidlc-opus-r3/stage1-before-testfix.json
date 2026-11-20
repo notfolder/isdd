@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/m5full-aidlc-opus-r3/snapshot-stage1",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "fail",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "fail",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "pass"
+  },
+  "passed": 6,
+  "total": 8,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "F...F...                                                                 [100%]\n=================================== FAILURES ===================================\n__________________ test_first_account_becomes_staff[chromium] __________________\n\napp = <conftest.AppServer object at 0x108fc4c20>\npage = <Page url='http://127.0.0.1:63129/'>\n\n    @pytest.mark.stage1\n    def test_first_account_becomes_staff(app, page):\n        page.goto(app.base_url)\n        page.get_by_role(\"link\", name=\"アカウント登録\").click()\n        register(page, app.base_url, emp(\"1\"), \"最初の人\")\n        login(page, app.base_url, emp(\"1\"))\n        page.goto(f\"{app.base_url}/equipment/new/\")\n        expect(page.locator(\"#id_equipment_number\")).to_be_visible()\n        page.goto(app.base_url)\n        page.get_by_role(\"button\", name=\"ログアウト\").click()\n        register(page, app.base_url, emp(\"2\"), \"二番目の人\")\n        login(page, app.base_url, emp(\"2\"))\n        expect(page.get_by_role(\"button\", name=\"ログアウト\")).to_be_visible()\n        page.goto(f\"{app.base_url}/equipment/new/\")\n        expect_url(page, app.base_url, \"/\")\n>       expect(messages(page)).to_have_text([STAFF_ONLY])\nE       AssertionError: Locator expected to have text '['この操作は担当者だけが行えます']'\nE       Actual value: [] \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".message\") with timeout 5000ms\nE         - waiting for locator(\".message\")\nE           14 × locator resolved to 0 elements\n\ntest_accounts.py:31: AssertionError\n_______________ test_employee_cannot_manage_equipment[chromium] ________________\n\napp = <conftest.AppServer object at 0x109600770>\npage = <Page url='http://127.0.0.1:63246/'>\n\n    @pytest.mark.stage1\n    def test_employee_cannot_manage_equipment(app, page):\n        app.seed({\"accounts\": [STAFF, EMPLOYEE], \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}]})\n        login(page, app.base_url, emp(\"2\"))\n        expect(page.get_by_role(\"button\", name=\"修正\")).to_have_count(0)\n        expect(page.get_by_role(\"button\", name=\"削除\")).to_have_count(0)\n        page.goto(f\"{app.base_url}/equipment/new/\")\n        expect_url(page, app.base_url, \"/\")\n>       expect(messages(page)).to_have_text([STAFF_ONLY])\nE       AssertionError: Locator expected to have text '['この操作は担当者だけが行えます']'\nE       Actual value: [] \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".message\") with timeout 5000ms\nE         - waiting for locator(\".message\")\nE           14 × locator resolved to 0 elements\n\ntest_accounts.py:92: AssertionError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_first_account_becomes_staff[chromium] - Asserti...\nFAILED test_accounts.py::test_employee_cannot_manage_equipment[chromium] - As...\n2 failed, 6 passed, 15 deselected in 28.96s\n",
+  "overbuild": {
+    "source_files": 11,
+    "lines": 1157,
+    "public_functions": 46,
+    "classes": 8,
+    "templates": 6
+  },
+  "duration_sec": 31.3
+}

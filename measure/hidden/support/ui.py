@@ -41,6 +41,16 @@ def messages(page: Page) -> Locator:
     return page.locator(".message")
 
 
+def notices(page: Page) -> Locator:
+    """権限が無いときの知らせ。契約は「エラーは .error、操作の結果は .message」で、どちらに出すかは台帳に無いので両方を認める（2026-11-21）"""
+    return page.locator(".message, .error")
+
+
+def save_button(page: Page) -> Locator:
+    """備品の登録・修正の送信ボタン。台帳は「保存」とだけ書き、登録画面のボタンを決めていないので「登録」も認める（2026-11-21）"""
+    return page.get_by_role("button", name=re.compile(r"^(保存|登録)$"))
+
+
 def add_equipment(page: Page) -> Locator:
     """「備品を登録」の入口。契約はボタンかリンクかを定めていないので両方を受け付ける。"""
     return page.get_by_role("button", name="備品を登録").or_(page.get_by_role("link", name="備品を登録"))

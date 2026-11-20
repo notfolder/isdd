@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import expect
 
 from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF, EMP_FORMAT_MSG, LAST_STAFF, OLD_ROLE, ROLE, STAFF_ONLY, emp
-from support.ui import account_row, expect_url, field_error, login, messages, register
+from support.ui import account_row, expect_url, field_error, login, messages, notices, register
 
 STAFF = {"number": emp("1"), "name": "担当太郎", "staff": True}
 EMPLOYEE = {"number": emp("2"), "name": "社員花子"}
@@ -33,7 +33,7 @@ def test_role_renamed_everywhere(app, page):
     app.seed({"accounts": [STAFF, EMPLOYEE]})
     login(page, app.base_url, emp("2"))
     page.goto(f"{app.base_url}/accounts/")
-    expect(messages(page)).to_have_text([STAFF_ONLY])
+    expect(notices(page)).to_have_text([STAFF_ONLY])
     page.get_by_role("button", name="ログアウト").click()
     login(page, app.base_url, emp("1"))
     page.goto(f"{app.base_url}/accounts/")

@@ -79,6 +79,8 @@ AIDLC_ANSWERS_HEAD = """# 質問への依頼者の回答
 TASK = HERE  # --task で題材のフォルダ（stages/、contracts/、answers/、score.py）に切り替える
 
 CHANGE_NOTE = "これは既存のアプリへの変更要求です。前の段までの文書とコードがこのディレクトリにあります。既存の機能を壊さないでください。"
+CONTINUE_ISDD = "要件定義は承認済みです。予定を変えて、ここで止めずに続きの設計 → 実装 → 実装後レビューまで最後まで進めてください。これまでと同じく、分からないことや承認が要ることは応答の中で依頼者に質問してください（依頼者の答えが次の依頼として届きます）。前に作った STAGE_DONE は消してあります。\n" + ISDD_UNTIL_END
+CONTINUE_AIDLC = "Requirements Analysis は承認済みです。予定を変えて、ここで止めずにワークフローの残りの段階を最後まで進めてください。これまでと同じく、質問や承認が要るところでは応答の中で依頼者に聞いてください（依頼者の答えが次の発言として届きます）。前に作った STAGE_DONE は消してあります。\n" + AIDLC_UNTIL_END
 FOLLOW_UP = "続けてください。質問には ANSWERS.md の回答で自分で答え、承認はすべて与えます。残りを最後まで進め、完了したら STAGE_DONE を作ってください。"
 FOLLOW_UP_AIDLC = "承認します。続けてください。質問への私の答えは ANSWERS.md のとおりです（無いことは最も単純な案でよい）。ワークフローの最後の段階が承認されたら STAGE_DONE を作ってください。"
 FOLLOW_UP_CONTROL = "続けてください。不明な点は最も単純な案で決めて進め、残りを最後まで実装し、完了したら STAGE_DONE を作ってください。"
@@ -134,6 +136,8 @@ def main() -> int:
     parser.add_argument("--task", default=None, help="題材のフォルダ名（measure/ の下。既定はお題 1。例: scicalc）")
     parser.add_argument("--scope", default="classic", help="AI-DLC 群の進め方（classic、express など）")
     parser.add_argument("--until-requirements", action="store_true", help="isdd 群・AI-DLC 群（依頼者役あり）を要件定義の承認で止める。隠しテストの採点はしない")
+    parser.add_argument("--continue-session", default=None, help="要件定義で止めた回の続きを回す。その回のセッション ID。作業フォルダは消さず、最初の指示を「続きを最後まで」に替える")
+    parser.add_argument("--workdir-label", default=None, help="作業フォルダの名前（既定は --label と同じ）。続きを別の結果フォルダに記録するときに使う")
     parser.add_argument("--contract", default=None, help="契約ファイルの名前（既定 contracts/stage<N>.md。計測 5 は stage1-min.md）")
     args = parser.parse_args()
 
@@ -144,13 +148,13 @@ def main() -> int:
     if args.task:
         TASK = HERE / args.task
     label = args.label or (f"{args.task}-" if args.task else "") + f"{args.arm}-r{args.run}"
-    workdir = Path(args.work).resolve() / label
+    workdir = Path(args.work).resolve() / (args.workdir_label or label)
     results_dir = HERE / "results" / label
     results_dir.mkdir(parents=True, exist_ok=True)
     lock_path = HERE / "results" / ".score.lock"
     stages = [int(s) for s in args.stages.split(",")]
 
-    if 1 in stages:
+    if 1 in stages and not args.continue_session:
         if workdir.exists():
             shutil.rmtree(workdir)
         workdir.mkdir(parents=True)
@@ -174,6 +178,8 @@ def main() -> int:
         log(label, "採点済みのため何もしない")
         return 0
     summary["runner"] = "claude -p"
+    if args.continue_session:
+        summary["continued_from"] = {"workdir_label": args.workdir_label, "session": args.continue_session}
     if args.arm == "aidlc":
         summary["aidlc"] = {"scope": args.scope, "version": subprocess.run(["aidlc", "--version"], capture_output=True, text=True).stdout.strip()}
     scorers = []
@@ -201,6 +207,8 @@ def main() -> int:
                 if args.arm == "isdd" and args.until_requirements:
                     assert ISDD_UNTIL_END in prompt
                     prompt = prompt.replace("要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください", "進めてください").replace(ISDD_UNTIL_END, ISDD_UNTIL_REQ)
+            if args.continue_session:
+                prompt = CONTINUE_AIDLC if args.arm == "aidlc" else CONTINUE_ISDD
             ledger_text = Path(args.responder).read_text(encoding="utf-8")
         else:
             template = {"isdd": FIRST_PROMPT_ISDD, "aidlc": FIRST_PROMPT_AIDLC}.get(args.arm, FIRST_PROMPT_CONTROL)
@@ -208,7 +216,7 @@ def main() -> int:
         follow = {"isdd": FOLLOW_UP, "aidlc": FOLLOW_UP_AIDLC}.get(args.arm, FOLLOW_UP_CONTROL)
         questions_asked = 0
         rounds = []
-        session = ""
+        session = args.continue_session or ""
         log_file = open(results_dir / f"stage{stage}.log", "w", encoding="utf-8")
         log_file.write(f"# {label} stage {stage} model {args.model} start {datetime.now().isoformat()}\n")
         stage_started = time.time()

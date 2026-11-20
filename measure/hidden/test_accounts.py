@@ -6,7 +6,7 @@ import time
 import pytest
 from playwright.sync_api import expect
 
-from support.ui import expect_url, field_error, login, messages, register
+from support.ui import expect_url, field_error, login, messages, notices, register
 from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF, EMP_FORMAT_MSG, LAST_STAFF, OLD_ROLE, ROLE, STAFF_ONLY, emp
 
 STAFF = {"number": emp("1"), "name": "担当太郎", "staff": True}
@@ -28,7 +28,7 @@ def test_first_account_becomes_staff(app, page):
     expect(page.get_by_role("button", name="ログアウト")).to_be_visible()
     page.goto(f"{app.base_url}/equipment/new/")
     expect_url(page, app.base_url, "/")
-    expect(messages(page)).to_have_text([STAFF_ONLY])
+    expect(notices(page)).to_have_text([STAFF_ONLY])
 
 
 @pytest.mark.stage1
@@ -89,7 +89,7 @@ def test_employee_cannot_manage_equipment(app, page):
     expect(page.get_by_role("button", name="削除")).to_have_count(0)
     page.goto(f"{app.base_url}/equipment/new/")
     expect_url(page, app.base_url, "/")
-    expect(messages(page)).to_have_text([STAFF_ONLY])
+    expect(notices(page)).to_have_text([STAFF_ONLY])
     page.get_by_role("button", name="ログアウト").click()
     page.goto(f"{app.base_url}/equipment/new/")
     expect_url(page, app.base_url, "/login/")

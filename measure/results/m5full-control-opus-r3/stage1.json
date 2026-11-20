@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/m5full-control-opus-r3/snapshot-stage1",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "pass",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "pass",
+    "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+    "test_lending_status_empty_and_sorted[chromium]": "fail"
+  },
+  "passed": 7,
+  "total": 8,
+  "setup_ok": null,
+  "error": null,
+  "pytest_tail": ".......F                                                                 [100%]\n=================================== FAILURES ===================================\n________________ test_lending_status_empty_and_sorted[chromium] ________________\n\napp = <conftest.AppServer object at 0x1077a08c0>\npage = <Page url='http://127.0.0.1:64809/'>\n\n    @pytest.mark.stage1\n    def test_lending_status_empty_and_sorted(app, page):\n        page.goto(app.base_url)\n>       expect(page.get_by_text(\"備品は登録されていません\")).to_be_visible()\nE       AssertionError: Locator expected to be visible\nE       Actual value: None\nE       Error: element(s) not found \nE       Call log:\nE         - Expect \"to_be_visible\" get_by_text(\"備品は登録されていません\") with timeout 5000ms\nE         - waiting for get_by_text(\"備品は登録されていません\")\nE       \nE       Aria snapshot:\nE       - banner:\nE         - link \"備品台帳\":\nE           - /url: /\nE         - link \"ログイン\":\nE           - /url: /login/\nE         - link \"アカウント登録\":\nE           - /url: /accounts/register/\nE       - main:\nE         - heading \"備品の貸出状況\" [level=1]\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状況 借りている社員 貸出日\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状況\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE           - rowgroup\nE         - paragraph: 備品はまだ登録されていません\n\ntest_lending.py:139: AssertionError\n=========================== short test summary info ============================\nFAILED test_lending.py::test_lending_status_empty_and_sorted[chromium] - Asse...\n1 failed, 7 passed, 15 deselected in 29.71s\n",
+  "overbuild": {
+    "source_files": 9,
+    "lines": 447,
+    "public_functions": 19,
+    "classes": 6,
+    "templates": 6
+  },
+  "duration_sec": 29.9
+}

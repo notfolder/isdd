@@ -7,7 +7,7 @@ accounts の 1 件目が最初の登録になり、契約どおり自動で担�
 """
 
 from support.config import BTN_MAKE_STAFF, BTN_UNMAKE_STAFF
-from support.ui import account_row, click_with_dialog, equipment_row, login, register
+from support.ui import account_row, click_with_dialog, equipment_row, login, register, save_button
 
 
 class Seeder:
@@ -37,7 +37,7 @@ class Seeder:
                     page.goto(f"{self.base_url}/equipment/new/")
                     page.fill("#id_equipment_number", e["number"])
                     page.fill("#id_name", e["name"])
-                    page.get_by_role("button", name="保存").click()
+                    save_button(page).click()
                     equipment_row(page, e["number"]).wait_for()
                 for l in lendings:
                     page.goto(self.base_url)
