@@ -1,0 +1,217 @@
+{
+  "arm": "aidlc",
+  "run": 1,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 3261.6,
+      "started": "2026-11-19T13:43:12",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 523,
+      "tool_names": {
+        "Bash": 188,
+        "Read": 140,
+        "Agent": 12,
+        "Grep": 10,
+        "Write": 116,
+        "SendMessage": 1,
+        "Edit": 55,
+        "Glob": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "aidlc_records": [
+        "261119-equipment-ledger"
+      ],
+      "aidlc_gates_approved": 13,
+      "aidlc_human_turns": 13,
+      "aidlc_workflow_completed": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 372,
+        "output_tokens": 163803,
+        "cache_creation_input_tokens": 707602,
+        "cache_read_input_tokens": 96951850,
+        "total_tokens": 97823627
+      },
+      "cost_usd": 232.0592,
+      "turns": 314,
+      "rounds": 14,
+      "passed": 8,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 11,
+        "lines": 1109,
+        "public_functions": 45,
+        "classes": 6,
+        "templates": 6
+      },
+      "score_error": null
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 3883.5,
+      "started": "2026-11-19T14:37:34",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 628,
+      "tool_names": {
+        "Bash": 236,
+        "Read": 177,
+        "Agent": 14,
+        "Write": 95,
+        "Grep": 18,
+        "Edit": 83,
+        "SendMessage": 1,
+        "Glob": 4
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "aidlc_records": [
+        "261119-equipment-ledger",
+        "261119-lending-and-7digit"
+      ],
+      "aidlc_gates_approved": 28,
+      "aidlc_human_turns": 28,
+      "aidlc_workflow_completed": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 429,
+        "output_tokens": 191988,
+        "cache_creation_input_tokens": 856976,
+        "cache_read_input_tokens": 105954475,
+        "total_tokens": 107003868
+      },
+      "cost_usd": 294.7735,
+      "turns": 339,
+      "rounds": 16,
+      "passed": 15,
+      "total": 15,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 12,
+        "lines": 1674,
+        "public_functions": 62,
+        "classes": 11,
+        "templates": 7
+      },
+      "score_error": null,
+      "regressions": []
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 16487.1,
+      "started": "2026-11-19T15:42:18",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 657,
+      "tool_names": {
+        "Bash": 220,
+        "Read": 203,
+        "Agent": 12,
+        "Glob": 10,
+        "Grep": 41,
+        "Write": 78,
+        "Edit": 91,
+        "SendMessage": 1,
+        "TaskStop": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "aidlc_records": [
+        "261119-account-management",
+        "261119-equipment-ledger",
+        "261119-lending-and-7digit"
+      ],
+      "aidlc_gates_approved": 44,
+      "aidlc_human_turns": 44,
+      "aidlc_workflow_completed": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 471,
+        "output_tokens": 173753,
+        "cache_creation_input_tokens": 1681410,
+        "cache_read_input_tokens": 110140602,
+        "total_tokens": 111996236
+      },
+      "cost_usd": 394.6368,
+      "turns": 344,
+      "rounds": 16,
+      "passed": 23,
+      "total": 23,
+      "tests": {
+        "test_employee_restrictions[chromium]": "pass",
+        "test_staff_role_change[chromium]": "pass",
+        "test_password_reset[chromium]": "pass",
+        "test_account_delete[chromium]": "pass",
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_role_renamed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_stale_equipment_update[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_concurrent_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_duplicate_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 12,
+        "lines": 1947,
+        "public_functions": 71,
+        "classes": 14,
+        "templates": 8
+      },
+      "score_error": null,
+      "regressions": []
+    }
+  },
+  "runner": "claude -p",
+  "aidlc": {
+    "scope": "classic",
+    "version": "aidlc 2.11.4 (runtime 2.11.4)"
+  }
+}

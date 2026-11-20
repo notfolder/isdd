@@ -1,0 +1,207 @@
+{
+  "arm": "isdd",
+  "run": 1,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 834.3,
+      "started": "2026-11-19T14:03:33",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 42,
+      "tool_names": {
+        "Bash": 29,
+        "Skill": 2,
+        "Read": 2,
+        "ToolSearch": 1,
+        "WebSearch": 3,
+        "Write": 4,
+        "Edit": 1
+      },
+      "skills_called": [
+        "isdd-spec",
+        "isdd-build"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 79,
+        "output_tokens": 87943,
+        "cache_creation_input_tokens": 195988,
+        "cache_read_input_tokens": 4889865,
+        "total_tokens": 5173875
+      },
+      "cost_usd": 4.3051,
+      "turns": 45,
+      "rounds": 1,
+      "passed": 8,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 7,
+        "lines": 558,
+        "public_functions": 25,
+        "classes": 3,
+        "templates": 6
+      },
+      "score_error": null
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 1076.5,
+      "started": "2026-11-19T14:17:27",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 55,
+      "tool_names": {
+        "Bash": 42,
+        "Skill": 2,
+        "Read": 6,
+        "Write": 4,
+        "Edit": 1
+      },
+      "skills_called": [
+        "isdd-spec",
+        "isdd-build"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 93,
+        "output_tokens": 129798,
+        "cache_creation_input_tokens": 295187,
+        "cache_read_input_tokens": 9677367,
+        "total_tokens": 10102445
+      },
+      "cost_usd": 6.8933,
+      "turns": 58,
+      "rounds": 1,
+      "passed": 15,
+      "total": 15,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 8,
+        "lines": 790,
+        "public_functions": 32,
+        "classes": 7,
+        "templates": 7
+      },
+      "score_error": null,
+      "regressions": []
+    },
+    "3": {
+      "done": true,
+      "wall_sec": 899.3,
+      "started": "2026-11-19T14:35:24",
+      "responder": false,
+      "questions_rounds": 0,
+      "tool_uses": 60,
+      "tool_names": {
+        "Bash": 49,
+        "Skill": 2,
+        "Read": 6,
+        "Write": 3
+      },
+      "skills_called": [
+        "isdd-spec",
+        "isdd-build"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 107,
+        "output_tokens": 98608,
+        "cache_creation_input_tokens": 311476,
+        "cache_read_input_tokens": 12460358,
+        "total_tokens": 12870549
+      },
+      "cost_usd": 6.9565,
+      "turns": 63,
+      "rounds": 1,
+      "passed": 23,
+      "total": 23,
+      "tests": {
+        "test_employee_restrictions[chromium]": "pass",
+        "test_staff_role_change[chromium]": "pass",
+        "test_password_reset[chromium]": "pass",
+        "test_account_delete[chromium]": "pass",
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_employee_number_rule_changed_everywhere[chromium]": "pass",
+        "test_role_renamed_everywhere[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
+        "test_equipment_update_and_delete_without_lending[chromium]": "pass",
+        "test_equipment_update_keeps_lending[chromium]": "pass",
+        "test_stale_equipment_update[chromium]": "pass",
+        "test_equipment_delete_rejects_lent[chromium]": "pass",
+        "test_lending[chromium]": "pass",
+        "test_concurrent_lending[chromium]": "pass",
+        "test_return[chromium]": "pass",
+        "test_duplicate_return[chromium]": "pass",
+        "test_lending_status_without_login[chromium]": "pass",
+        "test_lending_status_empty_and_sorted[chromium]": "pass",
+        "test_response_time[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 8,
+        "lines": 978,
+        "public_functions": 41,
+        "classes": 10,
+        "templates": 8
+      },
+      "score_error": null,
+      "regressions": []
+    }
+  },
+  "runner": "claude -p"
+}
