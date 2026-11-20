@@ -1,0 +1,50 @@
+{
+  "arm": "aidlc",
+  "run": 3,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 767.4,
+      "started": "2026-11-20T12:56:55",
+      "responder": true,
+      "questions_rounds": 3,
+      "tool_uses": 108,
+      "tool_names": {
+        "Bash": 28,
+        "Read": 50,
+        "Agent": 3,
+        "Glob": 2,
+        "Grep": 2,
+        "Write": 17,
+        "Edit": 6
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "aidlc_records": [
+        "261120-equipment-ledger"
+      ],
+      "aidlc_gates_approved": 2,
+      "aidlc_human_turns": 4,
+      "aidlc_workflow_completed": false,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 122,
+        "output_tokens": 54975,
+        "cache_creation_input_tokens": 253972,
+        "cache_read_input_tokens": 11232454,
+        "total_tokens": 11541523
+      },
+      "cost_usd": 22.0996,
+      "turns": 75,
+      "rounds": 5
+    }
+  },
+  "runner": "claude -p",
+  "aidlc": {
+    "scope": "classic",
+    "version": "aidlc 2.11.4 (runtime 2.11.4)"
+  }
+}

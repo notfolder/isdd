@@ -1,0 +1,114 @@
+{
+  "items": {
+    "L1": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1で文言案を提示。依頼者の指定どおりFR1.2に「社員番号は 6 桁の数字で入力してください」と記載"
+    },
+    "L2": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR1.3に「この社員番号は既に登録されています」と記載"
+    },
+    "L3": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR1.4に「名前を入力してください」と記載"
+    },
+    "L4": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR1.4に「名前は 30 文字以内で入力してください」と記載"
+    },
+    "L5": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR1.5に「パスワードは 8 文字以上で入力してください」と記載"
+    },
+    "L6": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1とQ6。FR1.7でログイン画面へ移り「登録しました。ログインしてください」を出すと記載"
+    },
+    "L7": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR2.3で文言を1つにし、どちらが違うかは示さないと記載"
+    },
+    "L8": {
+      "asked": false,
+      "in_requirements": "一致",
+      "note": "質問はしていない。FR1.8、FR2.3、FR3.5で入力値を残すと決めている。パスワード欄だけは空に戻すが、台帳は『パスワードも含めてよい』という許容なので、食い違いとはみなさない"
+    },
+    "L9": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q7。FR5.2で未ログインはログイン画面へ、FR5.3で担当者以外は貸出状況へ戻して「この操作は担当者だけが行えます」を出すと記載"
+    },
+    "L10": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR3.2に依頼者の文言をそのまま記載"
+    },
+    "L11": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR3.3に「この管理番号は既に使われています」と記載"
+    },
+    "L12": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR3.4に「備品名は 50 文字以内で入力してください」と記載"
+    },
+    "L13": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q8。FR4.4で管理番号の昇順と記載"
+    },
+    "L14": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1。FR4.5に「備品は登録されていません」と記載"
+    },
+    "L15": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q5。FR3.7でブラウザの確認ダイアログを出し、OKのときだけ削除すると記載"
+    },
+    "L16": {
+      "asked": false,
+      "in_requirements": "無し",
+      "note": "質問していない。書かれているのは「ログアウト」「修正」「削除」ボタンだけ。登録・ログイン・保存ボタンの文言、備品の登録画面への入口の「備品を登録」、トップの「ログイン」「アカウント登録」リンクは決めていない"
+    },
+    "L17": {
+      "asked": false,
+      "in_requirements": "一致",
+      "note": "質問していない。FR4.1で誰でも一覧を見られ、FR4.6で担当者以外にボタンを出さない。ログアウトボタンもログイン中だけ。トップのリンクは明記していないが、内容は矛盾しない"
+    },
+    "L18": {
+      "asked": false,
+      "in_requirements": "一致",
+      "note": "質問していない。FR4.2とFR4.3の列、および全件「空き」で名前と日付が空欄という扱いが台帳と一致"
+    },
+    "L19": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "台帳に無い項目。Q1で案を出し、任されたので「備品名を入力してください」と決めた"
+    },
+    "L20": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "台帳に無い項目。Q3で質問し、任されたので大文字と小文字を区別する完全一致と決めた"
+    }
+  },
+  "extra_decisions": 16,
+  "summary": {
+    "asked": 16,
+    "matched": 19,
+    "mismatched": 0,
+    "missing": 1,
+    "extra_decisions": 16,
+    "n_items": 20
+  },
+  "judge_tokens": 43286
+}

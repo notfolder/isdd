@@ -47,7 +47,12 @@ def main() -> int:
     ledger = Path(a.ledger).read_text(encoding="utf-8")
     log = Path(a.log).read_text(encoding="utf-8")[-40000:]
     req_path = Path(a.workdir) / "docs" / "requirements.md"
-    req = req_path.read_text(encoding="utf-8")[:40000] if req_path.exists() else "（無し）"
+    if req_path.exists():
+        req = req_path.read_text(encoding="utf-8")[:40000]
+    else:
+        # AI-DLC 群は要件定義書を aidlc/spaces/<space>/intents/<intent>/inception/requirements-analysis/ に書く
+        parts = sorted(Path(a.workdir).glob("aidlc/spaces/*/intents/*/inception/requirements-analysis/requirements*.md"))
+        req = "\n\n".join(f"<!-- {q.name} -->\n" + q.read_text(encoding="utf-8") for q in parts)[:40000] or "（無し）"
     prompt = PROMPT.format(ledger=ledger, log=log, req=req)
     data = run_claude_retry(Path(a.workdir).parent, prompt, a.model, "", 20)
     text = str(data.get("result") or "")
@@ -65,7 +70,7 @@ def main() -> int:
                "missing": sum(1 for v in items.values() if v.get("in_requirements") == "無し"),
                "extra_decisions": result.get("extra_decisions"), "n_items": len(items)}
     result["summary"] = summary
-    result["judge_tokens"] = sum((data.get("usage") or {}).values()) if data.get("usage") else None
+    result["judge_tokens"] = sum(v for v in (data.get("usage") or {}).values() if isinstance(v, int)) if data.get("usage") else None
     Path(a.out).write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False))
     return 0

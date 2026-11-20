@@ -1,0 +1,114 @@
+{
+  "items": {
+    "L1": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1とQ10で聞いている。指定どおりの文言がFR1.2と付録Aにある"
+    },
+    "L2": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q10の文言案で聞いている。FR1.5と付録Aにある"
+    },
+    "L3": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q2とQ10で聞いている。FR1.3にある"
+    },
+    "L4": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q2とQ10で聞いている。FR1.3にある"
+    },
+    "L5": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q2とQ10で聞いている。FR1.4にある"
+    },
+    "L6": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3で聞いている。FR1.7でログイン画面に移り、指定の文言を出す"
+    },
+    "L7": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q10の文言案で聞いている。FR2.3でどちらが違うかを示さない"
+    },
+    "L8": {
+      "asked": false,
+      "in_requirements": "一致",
+      "note": "質問は無く、依頼者が自分から言った。FR9.4でパスワードも含めて残す"
+    },
+    "L9": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q9で聞いている。FR7.1とFR7.2にある"
+    },
+    "L10": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q10の文言案で聞いている。FR4.2にある"
+    },
+    "L11": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q10の文言案で聞いている。FR4.4にある"
+    },
+    "L12": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q10の文言案で聞いている。FR4.3にある"
+    },
+    "L13": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q8で聞いている。FR3.4で管理番号の昇順"
+    },
+    "L14": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q8で聞いている。FR3.5にある"
+    },
+    "L15": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q7で聞いている。FR6.1でブラウザの確認ダイアログを使う"
+    },
+    "L16": {
+      "asked": false,
+      "in_requirements": "一致",
+      "note": "ボタンの文言は質問に無く、依頼者が自分から言った。FR3.6と付録Aにある"
+    },
+    "L17": {
+      "asked": false,
+      "in_requirements": "一致",
+      "note": "質問は無く、依頼者が自分から言った。FR3.6でリンクだけを出す"
+    },
+    "L18": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q10の案で状態と空欄の出し方を聞いている。FR3.2とFR3.3で名前と日付を空欄にする"
+    },
+    "L19": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q10の文言案で聞いている。任された分を「備品名を入力してください」と決めた"
+    },
+    "L20": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q5で聞いている。任された分を、大文字と小文字を区別すると決めた"
+    }
+  },
+  "extra_decisions": 10,
+  "summary": {
+    "asked": 17,
+    "matched": 20,
+    "mismatched": 0,
+    "missing": 0,
+    "extra_decisions": 10,
+    "n_items": 20
+  },
+  "judge_tokens": 46980
+}

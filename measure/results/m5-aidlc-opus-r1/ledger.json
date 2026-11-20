@@ -1,0 +1,114 @@
+{
+  "items": {
+    "L1": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で文言案を示し、依頼者が変更した。FR1.2 に「社員番号は 6 桁の数字で入力してください」とある"
+    },
+    "L2": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR1.3 に「この社員番号は既に登録されています」とある"
+    },
+    "L3": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR1.4 に「名前を入力してください」とある"
+    },
+    "L4": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR1.4 に「名前は 30 文字以内で入力してください」とある"
+    },
+    "L5": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR1.5 に台帳と同じ文言がある"
+    },
+    "L6": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q2 と Q3 で確認した。FR1.7 はログイン画面に移り「登録しました。ログインしてください」と出す"
+    },
+    "L7": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR2.3 は同じ文言で、どちらが違うかを示さない"
+    },
+    "L8": {
+      "asked": false,
+      "in_requirements": "食い違い",
+      "note": "質問していない。FR1.8 と A4 では社員番号と名前は残すが、パスワードは空に戻すと自分で決めた。台帳は、パスワードも含めて消さずに残してよいとしている。備品の入力は FR4.6 で残す"
+    },
+    "L9": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q7 で確認した。FR7.2 では未ログインの人をログイン画面へ移す。FR7.3 では社員を / に戻して「この操作は担当者だけが行えます」と出す"
+    },
+    "L10": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR4.2 に台帳と同じ文言がある"
+    },
+    "L11": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR4.3 に「この管理番号は既に使われています」とある"
+    },
+    "L12": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR4.4 に台帳と同じ文言がある"
+    },
+    "L13": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q4 で確認した。FR3.5 は管理番号の昇順"
+    },
+    "L14": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 で確認した。FR3.6 に「備品は登録されていません」とある"
+    },
+    "L15": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q6 で C（ブラウザの確認ダイアログ）を選んだ。FR6.1 は OK のときだけ削除する"
+    },
+    "L16": {
+      "asked": false,
+      "in_requirements": "食い違い",
+      "note": "ボタンの文言を質問していない。FR4.1 で備品の登録画面のボタンを「登録ボタン」としており、台帳の「保存」と違う。登録画面への入口の文言「備品を登録」も書いていない。「修正」「削除」とログイン・登録のリンクは書いてある"
+    },
+    "L17": {
+      "asked": false,
+      "in_requirements": "一致",
+      "note": "質問していない。FR3.1、FR3.7、FR2.4 で、一覧はだれでも見られ、ボタンは担当者だけに出し、未ログインの人にはリンクを出す"
+    },
+    "L18": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q4 で空欄の扱いを確認した。FR3.2 と FR3.4 で、列と「すべて空き、名前と日付は空欄」が一致する"
+    },
+    "L19": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q3 の案に含めて聞き、依頼者は任せた。「備品名を入力してください」と決めた（台帳に無い項目）"
+    },
+    "L20": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "Q1 で聞き、依頼者は任せた。大文字と小文字を区別すると決めた（A1、台帳に無い項目）"
+    }
+  },
+  "extra_decisions": 14,
+  "summary": {
+    "asked": 17,
+    "matched": 18,
+    "mismatched": 2,
+    "missing": 0,
+    "extra_decisions": 14,
+    "n_items": 20
+  },
+  "judge_tokens": 43378
+}
