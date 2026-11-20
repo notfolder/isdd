@@ -1,0 +1,44 @@
+{
+  "arm": "isdd",
+  "run": 1,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 586.2,
+      "started": "2026-11-20T13:20:04",
+      "responder": true,
+      "questions_rounds": 6,
+      "tool_uses": 16,
+      "tool_names": {
+        "Skill": 1,
+        "Read": 7,
+        "Bash": 6,
+        "Write": 2
+      },
+      "skills_called": [
+        "isdd-spec"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 42,
+        "output_tokens": 61330,
+        "cache_creation_input_tokens": 127332,
+        "cache_read_input_tokens": 1384165,
+        "total_tokens": 1572869
+      },
+      "cost_usd": 9.0685,
+      "turns": 26,
+      "rounds": 9
+    }
+  },
+  "runner": "claude -p"
+}

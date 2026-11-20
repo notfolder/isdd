@@ -66,6 +66,8 @@ FIRST_PROMPT_AIDLC_Q = """/aidlc {scope} REQUEST.md の依頼を、AI-DLC のワ
 他のプロセスを `pkill`・`killall` などで止めないでください（同じマシンで別の作業が動いています）。自分が起動したサーバーは、その PID だけを止めてください。依頼者は画面の選択肢を使えませんが、応答を読んで答えます。質問や承認が要るところでは、応答の中で依頼者に聞いてください（依頼者の答えが次の発言として届きます）。回答方法を聞く場面では「Chat」を選んだものとします。依頼者が「任せる」と答えたことは最も単純な案で決めてください。
 採点の契約は contract.md にあります（起動方法、URL、画面の要素の id とクラス名）。必ず守ってください。アプリのコードはこの作業ディレクトリの直下に置いてください。
 {until}"""
+ISDD_UNTIL_END = "完了条件（isdd-build の実装後レビューまで）を満たしたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"
+ISDD_UNTIL_REQ = "今回は要件定義まで（isdd-spec で docs/requirements.md を書き、依頼者がその要件定義を承認するまで）で止めます。承認されたら、設計には進まず、作業ディレクトリ直下に STAGE_DONE というファイルを作り、決めた要件の要約を書いてください。承認の前には作らないでください。"
 AIDLC_UNTIL_END = "ワークフローの最後の段階が承認されたら、作業ディレクトリ直下に STAGE_DONE というファイルを作り、完了の要約を書いてください。途中で止まるときは作らないでください。"
 AIDLC_UNTIL_REQ = "今回は要件定義まで（Requirements Analysis の段階が依頼者に承認されるまで）で止めます。その承認が記録されたら、次の段階には進まず、作業ディレクトリ直下に STAGE_DONE というファイルを作り、決めた要件の要約を書いてください。承認の前には作らないでください。"
 
@@ -131,7 +133,7 @@ def main() -> int:
     parser.add_argument("--responder-model", default="claude-sonnet-5-5")
     parser.add_argument("--task", default=None, help="題材のフォルダ名（measure/ の下。既定はお題 1。例: scicalc）")
     parser.add_argument("--scope", default="classic", help="AI-DLC 群の進め方（classic、express など）")
-    parser.add_argument("--until-requirements", action="store_true", help="AI-DLC 群（依頼者役あり）を要件定義の承認で止める。隠しテストの採点はしない")
+    parser.add_argument("--until-requirements", action="store_true", help="isdd 群・AI-DLC 群（依頼者役あり）を要件定義の承認で止める。隠しテストの採点はしない")
     parser.add_argument("--contract", default=None, help="契約ファイルの名前（既定 contracts/stage<N>.md。計測 5 は stage1-min.md）")
     args = parser.parse_args()
 
@@ -196,6 +198,9 @@ def main() -> int:
                 prompt = FIRST_PROMPT_AIDLC_Q.format(scope=args.scope, until=AIDLC_UNTIL_REQ if args.until_requirements else AIDLC_UNTIL_END)
             else:
                 prompt = FIRST_PROMPT_ISDD_Q if args.arm == "isdd" else FIRST_PROMPT_CONTROL_Q
+                if args.arm == "isdd" and args.until_requirements:
+                    assert ISDD_UNTIL_END in prompt
+                    prompt = prompt.replace("要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください", "進めてください").replace(ISDD_UNTIL_END, ISDD_UNTIL_REQ)
             ledger_text = Path(args.responder).read_text(encoding="utf-8")
         else:
             template = {"isdd": FIRST_PROMPT_ISDD, "aidlc": FIRST_PROMPT_AIDLC}.get(args.arm, FIRST_PROMPT_CONTROL)

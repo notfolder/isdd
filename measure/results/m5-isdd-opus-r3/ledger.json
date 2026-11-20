@@ -1,0 +1,114 @@
+{
+  "items": {
+    "L1": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "機能の問い1で質問。4-2に「社員番号は 6 桁の数字で入力してください」"
+    },
+    "L2": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い1で質問。3-2に「この社員番号は既に登録されています」"
+    },
+    "L3": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い1で質問。4-2に「名前を入力してください」"
+    },
+    "L4": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い1で質問。4-2に「名前は 30 文字以内で入力してください」"
+    },
+    "L5": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い1で質問。4-2に「パスワードは 8 文字以上で入力してください」"
+    },
+    "L6": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い3で質問。ログイン画面へ移り「登録しました。ログインしてください」を出す"
+    },
+    "L7": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い4で質問。どちらが違うかを示さない同じ文言を出す"
+    },
+    "L8": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い1の案はパスワード欄を空に戻す内容だった。依頼者が直し、パスワードも含めて残す形になった"
+    },
+    "L9": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い7で質問。社員はトップへ移して文言を出し、ログインしていない人はログイン画面へ移す"
+    },
+    "L10": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い8で質問。文言が一致"
+    },
+    "L11": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い8の案は「既に登録されています」だった。依頼者の指定どおり「既に使われています」になった"
+    },
+    "L12": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い8で質問。文言が一致"
+    },
+    "L13": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い12で質問。管理番号の昇順（文字コード順）"
+    },
+    "L14": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い12で質問。「備品は登録されていません」"
+    },
+    "L15": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い10と画面の問い2で質問。ブラウザ標準のダイアログで、OKを「はい」とみなしたときだけ削除する"
+    },
+    "L16": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い12の流れで依頼者が指定。ボタンとリンクの文言がすべて一致"
+    },
+    "L17": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い12で質問。ログインしていない人にも一覧は見せ、ボタンは出さずリンクだけにする"
+    },
+    "L18": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "問い12の案Aで提示。列と、状態がすべて「空き」で名前と日付が空欄の表示が一致"
+    },
+    "L19": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "台帳に無い項目。問い8で質問し、依頼者は任せると回答。「備品名を入力してください」と決めた"
+    },
+    "L20": {
+      "asked": true,
+      "in_requirements": "一致",
+      "note": "台帳に無い項目。問い8で質問し、依頼者は任せると回答。大文字と小文字を区別すると決めた"
+    }
+  },
+  "extra_decisions": 38,
+  "summary": {
+    "asked": 20,
+    "matched": 20,
+    "mismatched": 0,
+    "missing": 0,
+    "extra_decisions": 38,
+    "n_items": 20
+  },
+  "judge_tokens": 65423
+}
