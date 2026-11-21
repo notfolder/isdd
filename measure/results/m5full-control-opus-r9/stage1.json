@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/m5full-control-opus-r9/snapshot-stage1",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "fail",
+    "test_account_registration[chromium]": "fail",
+    "test_login_logout[chromium]": "fail",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "fail",
+    "test_equipment_create[chromium]": "fail",
+    "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+    "test_lending_status_empty_and_sorted[chromium]": "fail"
+  },
+  "passed": 1,
+  "total": 8,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "as=locator(\"#id_equipment_number\")).locator(\".field-error\") with timeout 5000ms\nE             - waiting for locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\")\nE               14 × locator resolved to <div class=\"field-error\">管理番号は半角の英数字とハイフンで20文字以内で入力してください。</div>\nE                  - unexpected value \"管理番号は半角の英数字とハイフンで20文字以内で入力してください。\"\nE           \nE           Aria snapshot:\nE           - text: 管理番号は半角の英数字とハイフンで20文字以内で入力してください。\n\ntest_equipment.py:34: AssertionError\n__________ test_equipment_update_and_delete_without_lending[chromium] __________\n\napp = <conftest.AppServer object at 0x109f671d0>\npage = <Page url='http://127.0.0.1:50447/equipment/2/edit/?'>\n\n    @pytest.mark.stage1\n    def test_equipment_update_and_delete_without_lending(app, page):\n        app.seed({\"accounts\": [STAFF], \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}, {\"number\": \"PC-002\", \"name\": \"モニター\"}]})\n        login(page, app.base_url, emp(\"1\"))\n        equipment_row(page, \"PC-001\").get_by_role(\"button\", name=\"修正\").click()\n        fill_equipment(page, \"PC-101\", \"ノートパソコン（新）\")\n        expect(equipment_row(page, \"PC-101\")).to_contain_text(\"ノートパソコン（新）\")\n        equipment_row(page, \"PC-002\").get_by_role(\"button\", name=\"修正\").click()\n        fill_equipment(page, \"PC-101\", \"モニター\")\n>       expect(field_error(page, \"id_equipment_number\")).to_have_text(\"この管理番号は既に使われています\")\nE       AssertionError: Locator expected to have text 'この管理番号は既に使われています'\nE       Actual value: この管理番号は既に登録されています。 \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\") with timeout 5000ms\nE         - waiting for locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\")\nE           14 × locator resolved to <div class=\"field-error\">この管理番号は既に登録されています。</div>\nE              - unexpected value \"この管理番号は既に登録されています。\"\nE       \nE       Aria snapshot:\nE       - text: この管理番号は既に登録されています。\n\ntest_equipment.py:51: AssertionError\n________________ test_lending_status_empty_and_sorted[chromium] ________________\n\napp = <conftest.AppServer object at 0x109f84aa0>\npage = <Page url='http://127.0.0.1:50477/'>\n\n    @pytest.mark.stage1\n    def test_lending_status_empty_and_sorted(app, page):\n        page.goto(app.base_url)\n>       expect(page.get_by_text(\"備品は登録されていません\")).to_be_visible()\nE       AssertionError: Locator expected to be visible\nE       Actual value: None\nE       Error: element(s) not found \nE       Call log:\nE         - Expect \"to_be_visible\" get_by_text(\"備品は登録されていません\") with timeout 5000ms\nE         - waiting for get_by_text(\"備品は登録されていません\")\nE       \nE       Aria snapshot:\nE       - banner:\nE         - link \"貸出状況\":\nE           - /url: /\nE         - link \"ログイン\":\nE           - /url: /login/\nE         - link \"アカウント登録\":\nE           - /url: /accounts/register/\nE       - main:\nE         - heading \"備品の貸出状況\" [level=1]\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状況 借りている社員 貸出日\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状況\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE           - rowgroup\nE         - paragraph: 登録されている備品はありません。\n\ntest_lending.py:139: AssertionError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_first_account_becomes_staff[chromium] - Asserti...\nFAILED test_accounts.py::test_account_registration[chromium] - AssertionError...\nFAILED test_accounts.py::test_login_logout[chromium] - AssertionError: Locato...\nFAILED test_accounts.py::test_employee_cannot_manage_equipment[chromium] - As...\nFAILED test_equipment.py::test_equipment_create[chromium] - AssertionError: L...\nFAILED test_equipment.py::test_equipment_update_and_delete_without_lending[chromium]\nFAILED test_lending.py::test_lending_status_empty_and_sorted[chromium] - Asse...\n7 failed, 1 passed, 15 deselected in 52.98s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 351,
+    "public_functions": 21,
+    "classes": 0,
+    "templates": 8
+  },
+  "duration_sec": 55.0
+}

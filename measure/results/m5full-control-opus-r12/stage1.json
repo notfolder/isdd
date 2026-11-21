@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/m5full-control-opus-r12/snapshot-stage1",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "fail",
+    "test_account_registration[chromium]": "fail",
+    "test_login_logout[chromium]": "fail",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "fail",
+    "test_equipment_create[chromium]": "fail",
+    "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+    "test_lending_status_empty_and_sorted[chromium]": "fail"
+  },
+  "passed": 1,
+  "total": 8,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": " _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nconftest.py:34: in seed\n    Seeder(self.base_url, self._browser).seed(data)\nsupport/seed.py:40: in seed\n    save_button(page).click()\n../.venv/lib/python3.12/site-packages/playwright/sync_api/_generated.py:11021: in click\n    self._sync(\n../.venv/lib/python3.12/site-packages/playwright/_impl/_locator.py:174: in click\n    return await self._frame._click(self._selector, strict=True, **params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n../.venv/lib/python3.12/site-packages/playwright/_impl/_frame.py:598: in _click\n    await self._channel.send(\"click\", self._timeout, locals_to_params(locals()))\n../.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py:78: in send\n    return await self._connection.wrap_api_call(\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = <playwright._impl._connection.Connection object at 0x10b146c90>\ncb = <function Channel.send.<locals>.<lambda> at 0x10b5393a0>\nis_internal = False, title = None\n\n    async def wrap_api_call(\n        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None\n    ) -> Any:\n        if self._api_zone.get():\n            return await cb()\n        task = asyncio.current_task(self._loop)\n        parsed_st = _attach_api_call_information(\n            getattr(task, \"__pw_stack__\", None) or _capture_stack_trace(),\n            is_internal,\n            title,\n        )\n        self._api_zone.set(parsed_st)\n        try:\n            return await cb()\n        except Exception as error:\n>           raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nE           playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.\nE           Call log:\nE             - waiting for get_by_role(\"button\", name=re.compile(r\"^(保存|登録)$\"))\n\n../.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py:636: TimeoutError\n________________ test_lending_status_empty_and_sorted[chromium] ________________\n\napp = <conftest.AppServer object at 0x10b50a7b0>\npage = <Page url='http://127.0.0.1:50820/'>\n\n    @pytest.mark.stage1\n    def test_lending_status_empty_and_sorted(app, page):\n        page.goto(app.base_url)\n>       expect(page.get_by_text(\"備品は登録されていません\")).to_be_visible()\nE       AssertionError: Locator expected to be visible\nE       Actual value: None\nE       Error: element(s) not found \nE       Call log:\nE         - Expect \"to_be_visible\" get_by_text(\"備品は登録されていません\") with timeout 5000ms\nE         - waiting for get_by_text(\"備品は登録されていません\")\nE       \nE       Aria snapshot:\nE       - banner:\nE         - link \"備品管理\":\nE           - /url: /\nE           - strong: 備品管理\nE         - link \"貸出状況\":\nE           - /url: /\nE         - link \"ログイン\":\nE           - /url: /login/\nE         - link \"アカウント登録\":\nE           - /url: /accounts/register/\nE       - main:\nE         - heading \"貸出状況\" [level=1]\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状況 借りている社員 貸出日\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状況\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE           - rowgroup\nE         - paragraph: 登録されている備品はありません。\n\ntest_lending.py:139: AssertionError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_first_account_becomes_staff[chromium] - Asserti...\nFAILED test_accounts.py::test_account_registration[chromium] - AssertionError...\nFAILED test_accounts.py::test_login_logout[chromium] - AssertionError: Locato...\nFAILED test_accounts.py::test_employee_cannot_manage_equipment[chromium] - pl...\nFAILED test_equipment.py::test_equipment_create[chromium] - playwright._impl....\nFAILED test_equipment.py::test_equipment_update_and_delete_without_lending[chromium]\nFAILED test_lending.py::test_lending_status_empty_and_sorted[chromium] - Asse...\n7 failed, 1 passed, 15 deselected in 127.09s (0:02:07)\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 346,
+    "public_functions": 22,
+    "classes": 0,
+    "templates": 7
+  },
+  "duration_sec": 129.9
+}
