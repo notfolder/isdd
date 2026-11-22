@@ -1,0 +1,7 @@
+{
+  "rules": [
+    {"from": "src/web", "deny": ["src/data", "sqlite3"], "reason": "画面は業務層を通して保存する"},
+    {"from": "src/service", "deny": ["src/web", "flask", "werkzeug", "sqlite3"], "reason": "業務層は画面と Web の部品に依存せず、SQL を書かない"},
+    {"from": "src/data", "deny": ["src/web", "src/service", "flask"], "reason": "データ層は他の層に依存しない"}
+  ]
+}

@@ -118,13 +118,20 @@ def ask_responder(ledger: str, response: str, model: str, workdir: Path) -> str:
     env = dict(os.environ)
     env.pop("CLAUDECODE", None)
     cmd = ["claude", "-p", "--model", model, "--output-format", "json", "--setting-sources", "project", "--permission-mode", "plan", "--allowedTools", ""]
-    try:
-        proc = subprocess.run(cmd, cwd=workdir.parent, capture_output=True, text=True, timeout=300, env=env,
-                              input=RESPONDER_PROMPT.format(ledger=ledger, response=response[-12000:]))
-        data = json.loads(proc.stdout.strip() or "{}")
-        text = (data.get("result") or "").strip()
-    except Exception as e:  # noqa: BLE001
-        text = ""
-    return text or "続けてください。分からないことは任せます。"
+    while True:
+        try:
+            proc = subprocess.run(cmd, cwd=workdir.parent, capture_output=True, text=True, timeout=300, env=env,
+                                  input=RESPONDER_PROMPT.format(ledger=ledger, response=response[-12000:]))
+            data = json.loads(proc.stdout.strip() or "{}")
+            text = (data.get("result") or "").strip()
+        except Exception as e:  # noqa: BLE001
+            text = ""
+        # 利用上限の表示を依頼者の答えとして渡さない（2026-11-22 に 1 回混入した）。回復まで待ってやり直す
+        if "hit your" in text and "limit" in text:
+            wait = seconds_until_reset(text)
+            print(f"依頼者役が利用上限に到達。{wait // 60} 分待ってやり直す（{text[:80]}）", flush=True)
+            time.sleep(wait)
+            continue
+        return text or "続けてください。分からないことは任せます。"
 
 

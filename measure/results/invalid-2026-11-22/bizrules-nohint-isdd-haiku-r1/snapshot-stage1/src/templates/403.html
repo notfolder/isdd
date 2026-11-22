@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}権限がありません{% endblock %}
+{% block content %}
+  <p class="error">この操作は担当者だけができます</p>
+  <p><a href="{% url 'status' %}">貸出状況へ戻る</a></p>
+{% endblock %}

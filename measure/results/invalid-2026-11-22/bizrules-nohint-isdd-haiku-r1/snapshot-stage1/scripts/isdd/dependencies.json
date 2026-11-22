@@ -1,0 +1,6 @@
+{
+  "rules": [
+    {"from": "src/equipment", "deny": ["src/config"], "reason": "業務層は設定に依存しない（設定はフレームワークの入口だけ）"},
+    {"from": "src/accounts", "deny": ["src/equipment"], "reason": "認証は備品の業務を知らない"}
+  ]
+}

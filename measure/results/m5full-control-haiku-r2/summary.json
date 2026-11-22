@@ -1,0 +1,55 @@
+{
+  "arm": "control",
+  "run": 2,
+  "model": "claude-haiku-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 107.5,
+      "started": "2026-11-22T13:45:54",
+      "responder": true,
+      "questions_rounds": 0,
+      "tool_uses": 6,
+      "tool_names": {
+        "Bash": 4,
+        "Write": 2
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 14,
+        "output_tokens": 25712,
+        "cache_creation_input_tokens": 37755,
+        "cache_read_input_tokens": 236247,
+        "total_tokens": 299728
+      },
+      "cost_usd": 0.0228,
+      "turns": 7,
+      "rounds": 1,
+      "passed": 1,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "fail",
+        "test_account_registration[chromium]": "fail",
+        "test_login_logout[chromium]": "fail",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "fail",
+        "test_equipment_create[chromium]": "fail",
+        "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+        "test_lending_status_empty_and_sorted[chromium]": "fail"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 656,
+        "public_functions": 38,
+        "classes": 1,
+        "templates": 0
+      },
+      "score_error": null
+    }
+  },
+  "runner": "claude -p"
+}

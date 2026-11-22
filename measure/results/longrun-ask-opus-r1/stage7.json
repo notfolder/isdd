@@ -1,0 +1,39 @@
+{
+  "stage": 7,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/longrun-ask-opus-r1/snapshot-stage7",
+  "tests": {
+    "test_base_accounts_and_login[chromium]": "pass",
+    "test_base_equipment[chromium]": "pass",
+    "test_base_lend_and_return[chromium]": "pass",
+    "test_rule_two_items_per_person[chromium]": "pass",
+    "test_rule_borrower_can_return[chromium]": "pass",
+    "test_rule_lent_on_within_30_days[chromium]": "pass",
+    "test_rule_staff_cannot_borrow[chromium]": "pass",
+    "test_rule_equipment_number_ignores_case[chromium]": "pass",
+    "test_rule_no_delete_while_lent[chromium]": "pass",
+    "test_rule_due_date_and_overdue[chromium]": "pass",
+    "test_rule_no_lending_to_overdue_borrower[chromium]": "pass",
+    "test_base_staff_management[chromium]": "pass",
+    "test_rule_last_staff_and_promoted_staff_cannot_borrow[chromium]": "pass",
+    "test_base_category[chromium]": "pass",
+    "test_base_history[chromium]": "pass",
+    "test_keep_history_is_staff_only[chromium]": "pass",
+    "test_base_employee_sees_borrow_button[chromium]": "pass",
+    "test_keep_borrow_needs_staff_approval[chromium]": "pass",
+    "test_base_extend[chromium]": "pass",
+    "test_keep_extend_once_by_7_days[chromium]": "pass"
+  },
+  "passed": 20,
+  "total": 20,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "....................                                                     [100%]\n20 passed, 5 deselected in 23.75s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 777,
+    "public_functions": 32,
+    "classes": 0,
+    "templates": 9
+  },
+  "duration_sec": 25.9
+}

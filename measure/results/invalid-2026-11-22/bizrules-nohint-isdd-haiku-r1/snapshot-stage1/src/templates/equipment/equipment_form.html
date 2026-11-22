@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}備品の修正{% else %}備品の登録{% endif %}{% endblock %}
+{% block content %}
+  <h1>{% if editing %}備品の修正{% else %}備品の登録{% endif %}</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "_field.html" with field=form.equipment_number %}
+    {% include "_field.html" with field=form.name %}
+    <button type="submit">保存</button>
+  </form>
+  {% if editing %}
+    <form method="post" action="{% url 'equipment_delete' current_number %}" onsubmit="return window.confirm('この備品を削除しますか？');">
+      {% csrf_token %}
+      <button type="submit">削除</button>
+    </form>
+  {% endif %}
+{% endblock %}

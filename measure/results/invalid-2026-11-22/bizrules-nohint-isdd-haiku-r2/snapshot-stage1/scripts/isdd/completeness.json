@@ -1,0 +1,6 @@
+{
+  "runtime": "server",
+  "auth": true,
+  "external": false,
+  "e2e_dir": "e2e"
+}

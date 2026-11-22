@@ -1,0 +1,8 @@
+# isdd: E2E の結果（JUnit XML）。acceptance_checker.py が読む
+e2e/results/
+
+# 備品の貸出管理（ローカルの実行で生成されるもの）
+.venv/
+data/
+__pycache__/
+.pytest_cache/

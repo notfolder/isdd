@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}備品の貸出管理{% endblock %}</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; color: #222; }
+    header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 16px; background: #eef2f7; }
+    header nav { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    main { padding: 16px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; }
+    .inline { display: inline; }
+    .field { margin: 10px 0; }
+    .field label { display: block; font-weight: bold; margin-bottom: 4px; }
+    .field-error { color: #b00020; margin: 4px 0 0; }
+    .error { color: #b00020; font-weight: bold; }
+    .message { color: #0b5d1e; font-weight: bold; }
+    button { cursor: pointer; }
+  </style>
+</head>
+<body>
+<header>
+  <a href="{% url 'status' %}"><strong>備品の貸出管理</strong></a>
+  <nav>
+    {% if user.is_authenticated %}
+      <span class="current-user">{{ user.name }}</span>
+      {% if user.role == "M" %}
+        <a href="{% url 'equipment_new' %}">備品を登録</a>
+      {% endif %}
+      <form method="post" action="{% url 'logout' %}" class="inline">
+        {% csrf_token %}
+        <button type="submit">ログアウト</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}">ログイン</a>
+      <a href="{% url 'register' %}">アカウント登録</a>
+    {% endif %}
+  </nav>
+</header>
+<main>
+  {% for message in messages %}
+    {% if message.level_tag == "error" %}
+      <p class="error">{{ message }}</p>
+    {% else %}
+      <p class="message">{{ message }}</p>
+    {% endif %}
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

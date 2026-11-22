@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}アカウント登録{% endblock %}
+{% block content %}
+  <h1>アカウント登録</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "_field.html" with field=form.employee_number %}
+    {% include "_field.html" with field=form.name %}
+    {% include "_field.html" with field=form.password %}
+    <button type="submit">登録</button>
+  </form>
+{% endblock %}

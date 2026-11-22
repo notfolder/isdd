@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{% endblock %} | 備品の貸出管理</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <a class="site-title" href="{{ url_for('status_page') }}">備品の貸出管理</a>
+  <nav class="site-nav">
+    {% if user %}
+      <span class="current-user">{{ user.name }}</span>
+      <form method="post" action="{{ url_for('logout') }}" class="inline">
+        <button type="submit">ログアウト</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('login_page') }}">ログイン</a>
+      <a href="{{ url_for('register_account_page') }}">アカウント登録</a>
+    {% endif %}
+  </nav>
+</header>
+<main>
+  {% for category, text in get_flashed_messages(with_categories=true) %}
+    <p class="{{ 'error' if category == 'error' else 'message' }}">{{ text }}</p>
+  {% endfor %}
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

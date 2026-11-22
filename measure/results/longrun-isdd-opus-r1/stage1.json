@@ -1,0 +1,28 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/longrun-isdd-opus-r1/snapshot-stage1",
+  "tests": {
+    "test_base_accounts_and_login[chromium]": "pass",
+    "test_base_equipment[chromium]": "pass",
+    "test_base_lend_and_return[chromium]": "pass",
+    "test_rule_two_items_per_person[chromium]": "pass",
+    "test_rule_borrower_can_return[chromium]": "pass",
+    "test_rule_lent_on_within_30_days[chromium]": "pass",
+    "test_rule_staff_cannot_borrow[chromium]": "pass",
+    "test_rule_equipment_number_ignores_case[chromium]": "pass",
+    "test_rule_no_delete_while_lent[chromium]": "pass"
+  },
+  "passed": 9,
+  "total": 9,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": ".........                                                                [100%]\n9 passed, 16 deselected in 12.46s\n",
+  "overbuild": {
+    "source_files": 8,
+    "lines": 801,
+    "public_functions": 33,
+    "classes": 9,
+    "templates": 7
+  },
+  "duration_sec": 15.8
+}

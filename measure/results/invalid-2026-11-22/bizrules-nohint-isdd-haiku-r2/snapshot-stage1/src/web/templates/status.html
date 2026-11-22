@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}貸出状況{% endblock %}
+{% block content %}
+{% set manager = user is not none and user.role == 'manager' %}
+<div class="toolbar">
+  <h1>貸出状況</h1>
+  {% if manager %}<a class="button-link" href="{{ url_for('equipment_new_page') }}">備品を登録</a>{% endif %}
+</div>
+{% if rows %}
+<table class="status-table">
+  <thead>
+    <tr>
+      <th>管理番号</th>
+      <th>備品名</th>
+      <th>状態</th>
+      <th>借りている社員の名前</th>
+      <th>貸出日</th>
+      {% if manager %}<th>操作</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr data-equipment-number="{{ row.equipment_number }}">
+      <td>{{ row.equipment_number }}</td>
+      <td>{{ row.name }}</td>
+      <td>{{ row.status }}</td>
+      <td>{{ row.borrower_name or '' }}</td>
+      <td>{{ row.lent_on or '' }}</td>
+      {% if manager %}
+      <td class="actions">
+        <form method="get" action="{{ url_for('equipment_edit_page', equipment_id=row.id) }}" class="inline">
+          <button type="submit">修正</button>
+        </form>
+        <form method="post" action="{{ url_for('equipment_delete', equipment_id=row.id) }}" class="inline"
+              onsubmit="return confirm('この備品を削除しますか？');">
+          <button type="submit">削除</button>
+        </form>
+        {% if row.status == '空き' %}
+        <form method="get" action="{{ url_for('lending_new_page') }}" class="inline">
+          <input type="hidden" name="equipment" value="{{ row.id }}">
+          <button type="submit">貸出</button>
+        </form>
+        {% else %}
+        <form method="post" action="{{ url_for('lending_return', equipment_id=row.id) }}" class="inline"
+              onsubmit="return confirm('返却を記録しますか？');">
+          <button type="submit">返却</button>
+        </form>
+        {% endif %}
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty">備品は登録されていません</p>
+{% endif %}
+{% endblock %}

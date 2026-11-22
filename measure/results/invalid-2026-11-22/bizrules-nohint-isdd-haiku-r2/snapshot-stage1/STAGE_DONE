@@ -1,0 +1,31 @@
+STAGE_DONE: 備品の貸出管理（isdd 新規フロー）の実装後レビューまで完了
+
+## 状態
+- 要件定義書 docs/requirements.md、詳細設計書 docs/detail_design.md、対応表 docs/trace_map.md は既存（isdd-spec の成果）。今回は整合を確かめた。
+- 実装（src/）、単体テスト（tests/、32 件）、E2E テスト（e2e/、DS-TS 19 本）は既存。今回はすべて再実行して確かめた。
+- docs/proposals.md・docs/active_change は無い（変更フローではない）。
+
+## 今回の作業
+1. e2e/test_*.py の docstring から DS-TS-* の ID を削除（CLAUDE.md: コードに要件 ID・設計 ID を書かない）。動作は変えていない。
+2. README.md を新規作成（起動方法、設定（PORT・DATA_DIR）、初期ユーザー、運用、テスト）。isdd の完了確認（実装完了チェック）の必須項目。
+
+## 検証結果
+- bash scripts/isdd/check.sh --strict: 終了 0。対応表 エラー 0・警告 0、依存チェック 合格、受け入れ判定 DS-TS 19/19 合格、要件 21/21 実装済み
+- python3 .claude/skills/isdd-build/scripts/rq_integrity_checker.py docs/requirements.md: 全チェック合格（RQ 51 件）
+- rq_ds_link_checker.py: 合格
+- implementation_completeness_checker.py: 4/4 項目通過
+- pytest tests -q: 32 passed
+- pytest e2e -q --junitxml=e2e/results/e2e.xml: 19 passed
+- 起動確認: bash run.sh（PORT=8765、一時の DATA_DIR）で / 200、/login/ 200、/accounts/register/ 200、未ログインの /equipment/new/ 302。起動したサーバーは自分の PID だけを止めた。
+
+## 未マッピング一覧（実装後逆引き）
+公開クラス・公開関数は対応表に載っている（対応表チェックの警告 0）。対応表に名前が無い補助関数は次のとおり。どれも要件に結びつかない機能ではなく、所属するファイル・クラス・設計要素の内部の処理なので残した。対応表への ID 追加は isdd-spec の採番が必要なため行わなかった。
+- src/web/app.py::handle_not_found（DS-CL-NOT-FOUND-ERROR の画面側の処理）
+- src/web/views.py::register_routes（DS-MD-WEB-VIEWS の内部）
+- src/service/clock.py::now_jst（DS-FN-TODAY-JST の内部）
+- src/service/validation.py::parse_lent_on（DS-FN-VALIDATE-LENDING-FIELDS の内部）
+- src/service/accounts.py::hash_password・verify_password（DS-MD-SERVICE-ACCOUNTS の内部。RQ-NF-PASSWORD-HASHING に対応）
+要件なし（作りすぎ）: 0 件
+
+## 残っている確認事項
+- docs/requirements.md の「1-2. 依頼に無く自分で決めた項目」は承認が「未確認」のまま。依頼者の確認が要る。

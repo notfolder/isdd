@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}貸出の登録{% endblock %}
+{% block content %}
+  <h1>貸出の登録</h1>
+  <p>備品: {{ equipment.equipment_number }}（{{ equipment.name }}）</p>
+  {% if is_lent %}
+    <p class="error">この備品は貸出中です</p>
+    <p><a href="{% url 'status' %}">貸出状況へ戻る</a></p>
+  {% else %}
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for error in form.non_field_errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+      {% include "_field.html" with field=form.borrower %}
+      {% include "_field.html" with field=form.lent_on %}
+      <button type="submit">登録</button>
+    </form>
+  {% endif %}
+{% endblock %}

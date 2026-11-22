@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}貸出状況{% endblock %}
+{% block content %}
+  <h1>貸出状況</h1>
+  {% if rows %}
+    <table>
+      <thead>
+        <tr>
+          <th>管理番号</th>
+          <th>備品名</th>
+          <th>状態</th>
+          <th>借りている社員</th>
+          <th>貸出日</th>
+          {% if can_operate %}<th>操作</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr data-equipment-number="{{ row.equipment.equipment_number }}">
+            <td>{{ row.equipment.equipment_number }}</td>
+            <td>{{ row.equipment.name }}</td>
+            <td>{% if row.lending %}貸出中{% else %}空き{% endif %}</td>
+            <td>{% if row.lending %}{{ row.lending.borrower.name }}{% endif %}</td>
+            <td>{% if row.lending %}{{ row.lending.lent_on|date:"Y-m-d" }}{% endif %}</td>
+            {% if can_operate %}
+              <td>
+                <form method="get" action="{% url 'equipment_edit' row.equipment.equipment_number %}" class="inline">
+                  <button type="submit">修正</button>
+                </form>
+                <form method="post" action="{% url 'equipment_delete' row.equipment.equipment_number %}" class="inline" onsubmit="return window.confirm('この備品を削除しますか？');">
+                  {% csrf_token %}
+                  <button type="submit">削除</button>
+                </form>
+                {% if row.lending %}
+                  <form method="post" action="{% url 'lending_return' row.equipment.equipment_number %}" class="inline" onsubmit="return window.confirm('返却を記録しますか？');">
+                    {% csrf_token %}
+                    <button type="submit">返却</button>
+                  </form>
+                {% else %}
+                  <form method="get" action="{% url 'lending_new' %}" class="inline">
+                    <input type="hidden" name="equipment" value="{{ row.equipment.equipment_number }}">
+                    <button type="submit">貸出</button>
+                  </form>
+                {% endif %}
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>備品は登録されていません</p>
+  {% endif %}
+{% endblock %}

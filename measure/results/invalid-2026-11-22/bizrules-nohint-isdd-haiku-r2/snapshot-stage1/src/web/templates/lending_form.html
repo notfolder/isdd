@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}貸出の登録{% endblock %}
+{% block content %}
+<h1>貸出の登録</h1>
+<p>備品: {{ item.equipment_number }} {{ item.name }}</p>
+<form method="post" action="{{ url_for('lending_new_page') }}" class="form">
+  <input type="hidden" name="equipment" value="{{ item.id }}">
+  <div class="field">
+    <label for="id_borrower">借りる社員</label>
+    <select id="id_borrower" name="borrower">
+      <option value="">選んでください</option>
+      {% for b in borrowers %}
+      <option value="{{ b.id }}" {% if values.borrower == b.id|string %}selected{% endif %}>{{ b.name }}（{{ b.employee_number }}）</option>
+      {% endfor %}
+    </select>
+    {% if errors.borrower %}<span class="field-error">{{ errors.borrower }}</span>{% endif %}
+  </div>
+  <div class="field">
+    <label for="id_lent_on">貸出日（YYYY-MM-DD）</label>
+    <input id="id_lent_on" name="lent_on" type="date" value="{{ values.lent_on or today }}">
+    {% if errors.lent_on %}<span class="field-error">{{ errors.lent_on }}</span>{% endif %}
+  </div>
+  <button type="submit">登録</button>
+</form>
+{% endblock %}

@@ -1,0 +1,30 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/bizrules-nohint-isdd-haiku-r2/snapshot-stage1",
+  "tests": {
+    "test_base_accounts_and_login[chromium]": "pass",
+    "test_base_equipment[chromium]": "pass",
+    "test_base_lend_and_return[chromium]": "pass",
+    "test_rule_b1_two_items_per_person[chromium]": "fail",
+    "test_rule_b2_borrower_can_return[chromium]": "fail",
+    "test_rule_b3_lent_on_within_30_days[chromium]": "fail",
+    "test_rule_b4_staff_cannot_borrow[chromium]": "fail",
+    "test_rule_b5_equipment_number_ignores_case[chromium]": "fail",
+    "test_rule_b6_overdue_after_14_days[chromium]": "fail",
+    "test_rule_b7_no_lending_to_overdue_borrower[chromium]": "fail",
+    "test_rule_b8_no_delete_while_lent[chromium]": "pass"
+  },
+  "passed": 4,
+  "total": 11,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "ect(equipment_row(page, \"PC-001\")).to_contain_text(\"ノートパソコン\")\nE       AssertionError: Locator expected to contain text 'ノートパソコン'\nE       Actual value: None\nE       Error: element(s) not found \nE       Call log:\nE         - Expect \"to_contain_text\" locator(\"tr[data-equipment-number=\\\"PC-001\\\"]\") with timeout 5000ms\nE         - waiting for locator(\"tr[data-equipment-number=\\\"PC-001\\\"]\")\nE       \nE       Aria snapshot:\nE       - banner:\nE         - link \"貸出状況\":\nE           - /url: /\nE         - text: 担当太郎\nE         - link \"備品を登録\":\nE           - /url: /equipment/new/\nE         - button \"ログアウト\"\nE       - main:\nE         - heading \"貸出状況\" [level=1]\nE         - table:\nE           - rowgroup:\nE             - row \"管理番号 備品名 状態 借りている社員 貸出日 操作\":\nE               - columnheader \"管理番号\"\nE               - columnheader \"備品名\"\nE               - columnheader \"状態\"\nE               - columnheader \"借りている社員\"\nE               - columnheader \"貸出日\"\nE               - columnheader \"操作\"\nE           - rowgroup:\nE             - row \"pc-001 ノートパソコン 空き 修正 削除 貸出\":\nE               - cell \"pc-001\"\nE               - cell \"ノートパソコン\"\nE               - cell \"空き\"\nE               - cell\nE               - cell\nE               - cell \"修正 削除 貸出\":\nE                 - button \"修正\"\nE                 - button \"削除\"\nE                 - button \"貸出\"\n\ntest_bizrules.py:193: AssertionError\n_________________ test_rule_b6_overdue_after_14_days[chromium] _________________\n\napp = <base_conftest.AppServer object at 0x109c02540>\npage = <Page url='http://127.0.0.1:49895/'>\n\n    @pytest.mark.stage1\n    def test_rule_b6_overdue_after_14_days(app, page):\n        app.seed({\"accounts\": [STAFF, EMP_A, EMP_B], \"equipment\": pcs(2)})\n        login(page, app.base_url, STAFF[\"number\"])\n        try_lend(page, app.base_url, \"PC-001\", LABEL_A, days_ago(15))\n        try_lend(page, app.base_url, \"PC-002\", LABEL_B, days_ago(14))\n>       assert \"期限超過\" in status_text(page, app.base_url, \"PC-001\"), \"貸出日から 15 日で期限超過\"\nE       AssertionError: 貸出日から 15 日で期限超過\nE       assert '期限超過' in 'PC-001\\t備品1\\t貸出中\\t社員花子\\t2026-11-07\\t修正 削除 返却'\nE        +  where 'PC-001\\t備品1\\t貸出中\\t社員花子\\t2026-11-07\\t修正 削除 返却' = status_text(<Page url='http://127.0.0.1:49895/'>, 'http://127.0.0.1:49895', 'PC-001')\nE        +    where 'http://127.0.0.1:49895' = <base_conftest.AppServer object at 0x109c02540>.base_url\n\ntest_bizrules.py:202: AssertionError\n____________ test_rule_b7_no_lending_to_overdue_borrower[chromium] _____________\n\napp = <base_conftest.AppServer object at 0x10ff8e930>\npage = <Page url='http://127.0.0.1:49900/'>\n\n    @pytest.mark.stage1\n    def test_rule_b7_no_lending_to_overdue_borrower(app, page):\n        app.seed({\"accounts\": [STAFF, EMP_A], \"equipment\": pcs(2)})\n        login(page, app.base_url, STAFF[\"number\"])\n        try_lend(page, app.base_url, \"PC-001\", LABEL_A, days_ago(15))\n        assert lent(page, app.base_url, \"PC-001\")\n        try_lend(page, app.base_url, \"PC-002\", LABEL_A)\n>       assert not lent(page, app.base_url, \"PC-002\"), \"期限を過ぎた備品を持つ社員には貸し出せない\"\nE       AssertionError: 期限を過ぎた備品を持つ社員には貸し出せない\nE       assert not True\nE        +  where True = lent(<Page url='http://127.0.0.1:49900/'>, 'http://127.0.0.1:49900', 'PC-002')\nE        +    where 'http://127.0.0.1:49900' = <base_conftest.AppServer object at 0x10ff8e930>.base_url\n\ntest_bizrules.py:214: AssertionError\n=========================== short test summary info ============================\nFAILED test_bizrules.py::test_rule_b1_two_items_per_person[chromium] - Assert...\nFAILED test_bizrules.py::test_rule_b2_borrower_can_return[chromium] - playwri...\nFAILED test_bizrules.py::test_rule_b3_lent_on_within_30_days[chromium] - Asse...\nFAILED test_bizrules.py::test_rule_b4_staff_cannot_borrow[chromium] - Asserti...\nFAILED test_bizrules.py::test_rule_b5_equipment_number_ignores_case[chromium]\nFAILED test_bizrules.py::test_rule_b6_overdue_after_14_days[chromium] - Asser...\nFAILED test_bizrules.py::test_rule_b7_no_lending_to_overdue_borrower[chromium]\n7 failed, 4 passed in 56.72s\n",
+  "overbuild": {
+    "source_files": 20,
+    "lines": 572,
+    "public_functions": 18,
+    "classes": 10,
+    "templates": 8
+  },
+  "duration_sec": 62.0
+}

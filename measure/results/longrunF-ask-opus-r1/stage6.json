@@ -1,0 +1,37 @@
+{
+  "stage": 6,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/longrunF-ask-opus-r1/snapshot-stage6",
+  "tests": {
+    "test_base_accounts_and_login[chromium]": "pass",
+    "test_base_equipment[chromium]": "pass",
+    "test_base_lend_and_return[chromium]": "pass",
+    "test_rule_two_items_per_person[chromium]": "pass",
+    "test_rule_borrower_can_return[chromium]": "pass",
+    "test_rule_lent_on_within_30_days[chromium]": "pass",
+    "test_rule_staff_cannot_borrow[chromium]": "pass",
+    "test_rule_equipment_number_ignores_case[chromium]": "pass",
+    "test_rule_no_delete_while_lent[chromium]": "pass",
+    "test_rule_due_date_and_overdue[chromium]": "pass",
+    "test_rule_no_lending_to_overdue_borrower[chromium]": "pass",
+    "test_base_staff_management[chromium]": "pass",
+    "test_rule_last_staff_and_promoted_staff_cannot_borrow[chromium]": "pass",
+    "test_base_category[chromium]": "pass",
+    "test_base_history[chromium]": "pass",
+    "test_keep_history_is_staff_only[chromium]": "fail",
+    "test_base_employee_sees_borrow_button[chromium]": "pass",
+    "test_keep_borrow_needs_staff_approval[chromium]": "fail"
+  },
+  "passed": 16,
+  "total": 18,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "...............F.F                                                       [100%]\n=================================== FAILURES ===================================\n__________________ test_keep_history_is_staff_only[chromium] ___________________\n\napp = <base_conftest.AppServer object at 0x10c870470>\npage = <Page url='http://127.0.0.1:63053/'>\nnew_page = <function new_page.<locals>.make at 0x10c8d2e80>\n\n    @pytest.mark.stage5\n    def test_keep_history_is_staff_only(app, page, new_page):\n        \"\"\"依頼 1 で伝えた決め事: 履歴を見られるのは担当者だけ。社員には自分が借りた分も見せない\"\"\"\n        boot(app, page, equipment=1)\n        try_lend(page, app.base_url, \"PC-001\", LABEL_A)\n        do_return(page, app.base_url, \"PC-001\")\n        employee = new_page()\n        login(employee, app.base_url, EMP_A[0])\n        employee.goto(app.base_url)\n>       expect(employee.get_by_role(\"link\", name=\"履歴\", exact=True)).to_have_count(0)\nE       AssertionError: Locator expected to have count '0'\nE       Actual value: 1 \nE       Call log:\nE         - Expect \"to_have_count\" get_by_role(\"link\", name=\"履歴\", exact=True) with timeout 5000ms\nE         - waiting for get_by_role(\"link\", name=\"履歴\", exact=True)\nE           14 × locator resolved to 1 element\nE              - unexpected value \"1\"\n\ntest_longrun.py:338: AssertionError\n_______________ test_keep_borrow_needs_staff_approval[chromium] ________________\n\napp = <base_conftest.AppServer object at 0x10c8ffc80>\npage = <Page url='http://127.0.0.1:63108/'>\nnew_page = <function new_page.<locals>.make at 0x10c9e0fe0>\n\n    @pytest.mark.stage6\n    def test_keep_borrow_needs_staff_approval(app, page, new_page):\n        \"\"\"依頼 1 で伝えた決め事: 社員からの申請を足しても、担当者が確定するまでは貸出にしない\"\"\"\n        boot(app, page, equipment=1)\n        employee = new_page()\n        login(employee, app.base_url, EMP_A[0])\n        employee.goto(app.base_url)\n        equipment_row(employee, \"PC-001\").get_by_role(\"button\", name=\"借りる\", exact=True).click()\n        employee.wait_for_load_state()\n>       assert not lent(page, app.base_url, \"PC-001\"), \"社員が押しただけでは貸出にならない\"\nE       AssertionError: 社員が押しただけでは貸出にならない\nE       assert not True\nE        +  where True = lent(<Page url='http://127.0.0.1:63108/'>, 'http://127.0.0.1:63108', 'PC-001')\nE        +    where 'http://127.0.0.1:63108' = <base_conftest.AppServer object at 0x10c8ffc80>.base_url\n\ntest_longrun.py:372: AssertionError\n=========================== short test summary info ============================\nFAILED test_longrun.py::test_keep_history_is_staff_only[chromium] - Assertion...\nFAILED test_longrun.py::test_keep_borrow_needs_staff_approval[chromium] - Ass...\n2 failed, 16 passed, 7 deselected in 29.49s\n",
+  "overbuild": {
+    "source_files": 9,
+    "lines": 1081,
+    "public_functions": 56,
+    "classes": 10,
+    "templates": 9
+  },
+  "duration_sec": 33.1
+}

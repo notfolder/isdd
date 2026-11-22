@@ -1,0 +1,63 @@
+{
+  "arm": "isdd",
+  "run": 2,
+  "model": "claude-haiku-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 845.7,
+      "started": "2026-11-22T13:55:19",
+      "responder": true,
+      "questions_rounds": 7,
+      "tool_uses": 95,
+      "tool_names": {
+        "Bash": 58,
+        "Write": 22,
+        "Edit": 12,
+        "Read": 2,
+        "WebSearch": 1
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 160,
+        "output_tokens": 178531,
+        "cache_creation_input_tokens": 302799,
+        "cache_read_input_tokens": 13593596,
+        "total_tokens": 14075086
+      },
+      "cost_usd": 2.0168,
+      "turns": 104,
+      "rounds": 9,
+      "passed": 6,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "fail",
+        "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 9,
+        "lines": 528,
+        "public_functions": 38,
+        "classes": 0,
+        "templates": 6
+      },
+      "score_error": null
+    }
+  },
+  "runner": "claude -p"
+}

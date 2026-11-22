@@ -1,0 +1,30 @@
+# 完了の要約: 備品の貸出管理（isdd-build 実装後レビューまで）
+
+## 状態
+- 要件定義書・詳細設計書・対応表・tasks.md: 作成済み（`docs/` と `.history/20261122-equipment-lending/`）。新規フローのため変更の反映は無し。
+- `docs/active_change` と `docs/proposals.md`: 無い。
+- 段階 1（実装）: 作成済みのコードを確認。単体テスト 35 件、E2E テスト 10 件とも全件通過。
+- 段階 2（実装後レビュー）: 正本の整合を確認。未整合はゼロ。
+
+## 確認した結果
+- `bash scripts/isdd/check.sh --strict`: 終了コード 0。対応表エラー 0・警告 0、依存チェック合格、受け入れ判定合格。
+- `rq_integrity_checker.py docs/requirements.md`: 合格（RQ-* 44 件、受け入れテスト欠落 0）。
+- `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md`: 合格。
+- `implementation_completeness_checker.py .`: 4 / 4 項目通過。
+- 起動確認: `PORT=18093 DATA_DIR=<一時>` で `bash run.sh` → `/`・`/accounts/register/`・`/login/` が 200、`/equipment/new/` は未ログインで 302。起動したプロセスの PID だけを停止。
+- 契約の確認: 入力欄 id（`id_employee_number`・`id_name`・`id_password`・`id_equipment_number`・`id_borrower`・`id_lent_on`）、`.field`/`.field-error`/`.error`/`.message`/`.current-user`、`tbody tr[data-equipment-number]`、ボタン文言、`window.confirm`、「備品は登録されていません」を確認。
+
+## 未マッピング一覧
+| 実装要素（修飾名） | 対応表の DS-ID | 設計書に DS-ID があるか | 対応する RQ-ID | 要件定義書に RQ-ID があるか | 状態 |
+|---|---|---|---|---|---|
+| `src/accounts/__init__.py` | ― | なし | ― | ― | 対応表未登録（空のパッケージ初期化ファイル） |
+| `src/config/__init__.py` | ― | なし | ― | ― | 対応表未登録（空のパッケージ初期化ファイル） |
+| `src/equipment/__init__.py` | ― | なし | ― | ― | 対応表未登録（空のパッケージ初期化ファイル） |
+
+要件なし（作りすぎ）: 0 件（公開関数・クラス・ファイル）
+
+## 要件ごとの実装済み判定
+受け入れ判定（21 要件・10 DS-TS）はすべて「実装済み」、不合格 0、未検証 0。
+
+## 依頼に無く自分で決めた項目
+`docs/requirements.md` の 1-2 節に記載（承認は「未確認」のまま）。依頼者の確認が要る。

@@ -78,6 +78,7 @@ AIDLC_ANSWERS_HEAD = """# 質問への依頼者の回答
 """
 ASK_MAY = "分からないことは、応答の中で依頼者に質問してよいです"
 ASK_FIRST = "依頼に書かれていないことや決まっていないことは、作り始める前に、応答の中で依頼者に質問してください"
+KEEP_NOTES = "依頼者と決めたこと、依頼文で伝えられた方針と、その理由は、作業ディレクトリ直下の DECISIONS.md に書き足してください。作業の最初に必ず DECISIONS.md を読んでください（無ければ作る）。テストも書き、毎回すべて通してください。"
 TASK = HERE  # --task で題材のフォルダ（stages/、contracts/、answers/、score.py）に切り替える
 
 CHANGE_NOTE = "これは既存のアプリへの変更要求です。前の段までの文書とコードがこのディレクトリにあります。既存の機能を壊さないでください。"
@@ -141,6 +142,7 @@ def main() -> int:
     parser.add_argument("--continue-session", default=None, help="要件定義で止めた回の続きを回す。その回のセッション ID。作業フォルダは消さず、最初の指示を「続きを最後まで」に替える")
     parser.add_argument("--workdir-label", default=None, help="作業フォルダの名前（既定は --label と同じ）。続きを別の結果フォルダに記録するときに使う")
     parser.add_argument("--ask-first", action="store_true", help="対照群（依頼者役あり）の指示を「質問してよい」から「作る前に質問する」の一文に替える（一文つきの対照群）")
+    parser.add_argument("--keep-notes", action="store_true", help="対照群（依頼者役あり）に、決めたことを DECISIONS.md に残して毎回読むことと、テストを書いて毎回通すことの 2 文を足す（数文つきの対照群。--ask-first と併せて使う）")
     parser.add_argument("--contract", default=None, help="契約ファイルの名前（既定 contracts/stage<N>.md。計測 5 は stage1-min.md）")
     args = parser.parse_args()
 
@@ -183,6 +185,8 @@ def main() -> int:
     summary["runner"] = "claude -p"
     if args.ask_first:
         summary["ask_first"] = True
+    if args.keep_notes:
+        summary["keep_notes"] = True
     if args.continue_session:
         summary["continued_from"] = {"workdir_label": args.workdir_label, "session": args.continue_session}
     if args.arm == "aidlc":
@@ -212,6 +216,12 @@ def main() -> int:
                 if args.arm == "control" and args.ask_first:
                     assert ASK_MAY in prompt
                     prompt = prompt.replace(ASK_MAY, ASK_FIRST)
+                if args.arm == "control" and args.keep_notes:
+                    prompt = prompt.replace("\n採点の契約は", "\n" + KEEP_NOTES + "\n採点の契約は", 1)
+                    assert KEEP_NOTES in prompt
+                if stage > 1 and not args.until_requirements:
+                    prompt = prompt.replace("\n採点の契約は", "\n" + CHANGE_NOTE + "\n採点の契約は", 1)
+                    assert CHANGE_NOTE in prompt
                 if args.arm == "isdd" and args.until_requirements:
                     assert ISDD_UNTIL_END in prompt
                     prompt = prompt.replace("要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください", "進めてください").replace(ISDD_UNTIL_END, ISDD_UNTIL_REQ)

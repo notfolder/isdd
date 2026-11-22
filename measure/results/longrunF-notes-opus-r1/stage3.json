@@ -1,0 +1,32 @@
+{
+  "stage": 3,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/longrunF-notes-opus-r1/snapshot-stage3",
+  "tests": {
+    "test_base_accounts_and_login[chromium]": "pass",
+    "test_base_equipment[chromium]": "pass",
+    "test_base_lend_and_return[chromium]": "pass",
+    "test_rule_two_items_per_person[chromium]": "pass",
+    "test_rule_borrower_can_return[chromium]": "pass",
+    "test_rule_lent_on_within_30_days[chromium]": "pass",
+    "test_rule_staff_cannot_borrow[chromium]": "pass",
+    "test_rule_equipment_number_ignores_case[chromium]": "pass",
+    "test_rule_no_delete_while_lent[chromium]": "pass",
+    "test_rule_due_date_and_overdue[chromium]": "pass",
+    "test_rule_no_lending_to_overdue_borrower[chromium]": "pass",
+    "test_base_staff_management[chromium]": "pass",
+    "test_rule_last_staff_and_promoted_staff_cannot_borrow[chromium]": "pass"
+  },
+  "passed": 13,
+  "total": 13,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": ".............                                                            [100%]\n13 passed, 12 deselected in 17.99s\n",
+  "overbuild": {
+    "source_files": 11,
+    "lines": 1160,
+    "public_functions": 82,
+    "classes": 20,
+    "templates": 8
+  },
+  "duration_sec": 21.2
+}
