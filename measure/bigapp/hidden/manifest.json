@@ -1,0 +1,402 @@
+[
+ {
+  "slug": "equipment",
+  "family": "L",
+  "loan_days": 14,
+  "limit": 2,
+  "active_style": 0
+ },
+ {
+  "slug": "vehicles",
+  "family": "L",
+  "loan_days": 3,
+  "limit": 1,
+  "active_style": 1
+ },
+ {
+  "slug": "books",
+  "family": "L",
+  "loan_days": 21,
+  "limit": 3,
+  "active_style": 2
+ },
+ {
+  "slug": "tools",
+  "family": "L",
+  "loan_days": 7,
+  "limit": 2,
+  "active_style": 3
+ },
+ {
+  "slug": "devices",
+  "family": "L",
+  "loan_days": 30,
+  "limit": 1,
+  "active_style": 4
+ },
+ {
+  "slug": "keys",
+  "family": "L",
+  "loan_days": 1,
+  "limit": 2,
+  "active_style": 5
+ },
+ {
+  "slug": "projectors",
+  "family": "L",
+  "loan_days": 2,
+  "limit": 1,
+  "active_style": 0
+ },
+ {
+  "slug": "uniforms",
+  "family": "L",
+  "loan_days": 60,
+  "limit": 2,
+  "active_style": 1
+ },
+ {
+  "slug": "cameras",
+  "family": "L",
+  "loan_days": 5,
+  "limit": 1,
+  "active_style": 2
+ },
+ {
+  "slug": "bicycles",
+  "family": "L",
+  "loan_days": 1,
+  "limit": 1,
+  "active_style": 3
+ },
+ {
+  "slug": "meeting_rooms",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 3,
+  "active_style": 3
+ },
+ {
+  "slug": "reception_rooms",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 2,
+  "active_style": 4
+ },
+ {
+  "slug": "seminar_rooms",
+  "family": "B",
+  "unit": 60,
+  "max_per_day": 1,
+  "active_style": 5
+ },
+ {
+  "slug": "focus_booths",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 4,
+  "active_style": 0
+ },
+ {
+  "slug": "studios",
+  "family": "B",
+  "unit": 60,
+  "max_per_day": 1,
+  "active_style": 1
+ },
+ {
+  "slug": "guest_parking",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 2,
+  "active_style": 2
+ },
+ {
+  "slug": "business_cards",
+  "family": "Q",
+  "max_quantity": 500,
+  "active_style": 1
+ },
+ {
+  "slug": "supplies",
+  "family": "Q",
+  "max_quantity": 100,
+  "active_style": 2
+ },
+ {
+  "slug": "stamps",
+  "family": "Q",
+  "max_quantity": 200,
+  "active_style": 3
+ },
+ {
+  "slug": "toner",
+  "family": "Q",
+  "max_quantity": 10,
+  "active_style": 4
+ },
+ {
+  "slug": "beverages",
+  "family": "Q",
+  "max_quantity": 50,
+  "active_style": 5
+ },
+ {
+  "slug": "stationery",
+  "family": "Q",
+  "max_quantity": 100,
+  "active_style": 0
+ },
+ {
+  "slug": "cleaning",
+  "family": "Q",
+  "max_quantity": 20,
+  "active_style": 1
+ },
+ {
+  "slug": "courier",
+  "family": "Q",
+  "max_quantity": 30,
+  "active_style": 2
+ },
+ {
+  "slug": "laptops",
+  "family": "L",
+  "loan_days": 14,
+  "limit": 1,
+  "active_style": 2
+ },
+ {
+  "slug": "tablets",
+  "family": "L",
+  "loan_days": 7,
+  "limit": 1,
+  "active_style": 3
+ },
+ {
+  "slug": "monitors",
+  "family": "L",
+  "loan_days": 30,
+  "limit": 2,
+  "active_style": 4
+ },
+ {
+  "slug": "wifi_routers",
+  "family": "L",
+  "loan_days": 5,
+  "limit": 1,
+  "active_style": 5
+ },
+ {
+  "slug": "helmets",
+  "family": "L",
+  "loan_days": 10,
+  "limit": 2,
+  "active_style": 0
+ },
+ {
+  "slug": "ladders",
+  "family": "L",
+  "loan_days": 2,
+  "limit": 1,
+  "active_style": 1
+ },
+ {
+  "slug": "carts",
+  "family": "L",
+  "loan_days": 1,
+  "limit": 2,
+  "active_style": 2
+ },
+ {
+  "slug": "tents",
+  "family": "L",
+  "loan_days": 4,
+  "limit": 1,
+  "active_style": 3
+ },
+ {
+  "slug": "whiteboards",
+  "family": "L",
+  "loan_days": 7,
+  "limit": 2,
+  "active_style": 4
+ },
+ {
+  "slug": "microphones",
+  "family": "L",
+  "loan_days": 3,
+  "limit": 3,
+  "active_style": 5
+ },
+ {
+  "slug": "guest_badges",
+  "family": "L",
+  "loan_days": 1,
+  "limit": 3,
+  "active_style": 0
+ },
+ {
+  "slug": "lockers",
+  "family": "L",
+  "loan_days": 90,
+  "limit": 1,
+  "active_style": 1
+ },
+ {
+  "slug": "parking_passes",
+  "family": "L",
+  "loan_days": 30,
+  "limit": 1,
+  "active_style": 2
+ },
+ {
+  "slug": "safety_vests",
+  "family": "L",
+  "loan_days": 14,
+  "limit": 2,
+  "active_style": 3
+ },
+ {
+  "slug": "first_aid_kits",
+  "family": "L",
+  "loan_days": 7,
+  "limit": 1,
+  "active_style": 4
+ },
+ {
+  "slug": "gym",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 1,
+  "active_style": 1
+ },
+ {
+  "slug": "nap_rooms",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 1,
+  "active_style": 2
+ },
+ {
+  "slug": "web_booths",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 3,
+  "active_style": 3
+ },
+ {
+  "slug": "lounges",
+  "family": "B",
+  "unit": 60,
+  "max_per_day": 1,
+  "active_style": 4
+ },
+ {
+  "slug": "rooftop",
+  "family": "B",
+  "unit": 60,
+  "max_per_day": 1,
+  "active_style": 5
+ },
+ {
+  "slug": "showrooms",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 2,
+  "active_style": 0
+ },
+ {
+  "slug": "labs",
+  "family": "B",
+  "unit": 60,
+  "max_per_day": 2,
+  "active_style": 1
+ },
+ {
+  "slug": "shuttle",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 2,
+  "active_style": 2
+ },
+ {
+  "slug": "massage_rooms",
+  "family": "B",
+  "unit": 30,
+  "max_per_day": 1,
+  "active_style": 3
+ },
+ {
+  "slug": "book_orders",
+  "family": "Q",
+  "max_quantity": 20,
+  "active_style": 4
+ },
+ {
+  "slug": "software",
+  "family": "Q",
+  "max_quantity": 10,
+  "active_style": 5
+ },
+ {
+  "slug": "train_tickets",
+  "family": "Q",
+  "max_quantity": 40,
+  "active_style": 0
+ },
+ {
+  "slug": "gifts",
+  "family": "Q",
+  "max_quantity": 30,
+  "active_style": 1
+ },
+ {
+  "slug": "flowers",
+  "family": "Q",
+  "max_quantity": 10,
+  "active_style": 2
+ },
+ {
+  "slug": "catering",
+  "family": "Q",
+  "max_quantity": 200,
+  "active_style": 3
+ },
+ {
+  "slug": "printing",
+  "family": "Q",
+  "max_quantity": 1000,
+  "active_style": 4
+ },
+ {
+  "slug": "translations",
+  "family": "Q",
+  "max_quantity": 50,
+  "active_style": 5
+ },
+ {
+  "slug": "name_plates",
+  "family": "Q",
+  "max_quantity": 100,
+  "active_style": 0
+ },
+ {
+  "slug": "uniform_orders",
+  "family": "Q",
+  "max_quantity": 20,
+  "active_style": 1
+ },
+ {
+  "slug": "badges",
+  "family": "Q",
+  "max_quantity": 50,
+  "active_style": 2
+ },
+ {
+  "slug": "snacks",
+  "family": "Q",
+  "max_quantity": 100,
+  "active_style": 3
+ }
+]

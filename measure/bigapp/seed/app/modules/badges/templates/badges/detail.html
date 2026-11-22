@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>社章の申請 {{ r['id'] }}</h1>
+<table>
+<tr><th>申請した社員</th><td>{{ r['employee_no'] }} {{ r['employee_name'] }}</td></tr>
+<tr><th>数量</th><td>{{ r['quantity'] }}</td></tr>
+<tr><th>単価（税抜き）</th><td>{{ r['unit_price'] }}</td></tr>
+<tr><th>税抜き</th><td>{{ r['quantity'] * r['unit_price'] }}</td></tr>
+<tr><th>税込み</th><td>{{ r['amount_incl_tax'] }}</td></tr>
+<tr><th>状態</th><td>{{ states[r['state']] }}</td></tr>
+</table>
+<p><a href="{{ url_for('badges.index') }}">一覧へ戻る</a></p>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ date }} の予約（部屋ごと）</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('labs.day') }}">
+  <label>日付 <input name="date" value="{{ date }}" placeholder="YYYY-MM-DD"></label> <button>表示</button>
+</form>
+{% if by_room is defined %}
+<table>
+<thead><tr><th>部屋</th><th>予約</th></tr></thead>
+<tbody>
+{% for r in rooms %}
+<tr data-room="{{ r['code'] }}"><td>{{ r['code'] }} {{ r['name'] }}</td>
+<td>{% for b in by_room[r['code']] %}{{ b['start'] }}-{{ b['end'] }} ({{ b['employee_no'] }}){% if not loop.last %}、{% endif %}{% else %}予約なし{% endfor %}</td></tr>
+{% else %}
+<tr><td colspan="2">部屋がありません</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+<p><a href="{{ url_for('labs.index') }}">予約の一覧へ</a></p>
+{% endblock %}

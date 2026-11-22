@@ -1,0 +1,118 @@
+{
+ "label": "review-code_bug-haiku-r3",
+ "cond": "code_bug",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "issues": [
+  {
+   "what": "1 人が同時に借りられる件数が 3 件になっており、依頼の 2 件までと違う。",
+   "where": "app.py 23 行 MAX_LOANS_PER_PERSON = 3、および 566〜567 行の上限判定とメッセージ（「3 件」）"
+  },
+  {
+   "what": "延長で延ばす日数が 14 日になっており、依頼の 7 日と違う。",
+   "where": "app.py 28 行 EXTEND_DAYS = 14（延長処理の 776 行、期限計算の 153 行にも使われる）"
+  },
+  {
+   "what": "期限超過の表示が貸出日から 14 日目で出ており、依頼の「15 日以上たって返っていなければ期限超過」（14 日目までは貸出中）と違う。",
+   "where": "app.py 220 行の status 判定（today >= due）と 25 行のコメント。templates/index.html 22 行の状態の表示"
+  },
+  {
+   "what": "履歴の画面がログインしている社員にも見えており、依頼の「見られるのは管理者だけ。社員は自分の分も見られない」と違う。",
+   "where": "app.py 788〜794 行の history()（コメントに「ログインしている人なら誰でも見られる」）。templates/base.html 24 行の「履歴」リンクが全利用者に出る"
+  },
+  {
+   "what": "CSV に借りている社員の名前を出しており、依頼の「借りている社員は社員番号だけを出し、名前は出さない」と違う。",
+   "where": "app.py 249 行の CSV の見出し、252〜253 行の出力処理。ただし 31 行と 243 行のコメントには「社員番号と名前を出す」とある"
+  },
+  {
+   "what": "借りたままの社員の退職の処理を止めておらず、依頼の「備品を借りたままの社員は退職の処理ができない」と違う。",
+   "where": "app.py 411〜435 行の deactivate()（役割と有効かどうかしか見ず、貸出件数を見ていない）。templates/accounts.html の「退職」ボタン"
+  },
+  {
+   "what": "借りている備品がある社員を管理者にできないようにしており、依頼に無い制限が加わっている（依頼は社員を管理者にすることを制限していない）。",
+   "where": "app.py 361〜365 行の promote()（借りている備品があれば「先に返却を処理してください」と断る）。templates/accounts.html 4 行の説明文"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 1,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  }
+ ],
+ "wall_sec": 56.8,
+ "usage": {
+  "input_tokens": 12,
+  "cache_creation_input_tokens": 47475,
+  "cache_read_input_tokens": 226888,
+  "output_tokens": 10983,
+  "output_tokens_details": {
+   "thinking_tokens": 9253
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 47475,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 58997,
+    "cache_creation_input_tokens": 1882,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1882
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.017256579999999997,
+ "tool_uses": 6,
+ "error": null
+}

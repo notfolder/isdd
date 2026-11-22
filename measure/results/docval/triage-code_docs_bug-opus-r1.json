@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_docs_bug-opus-r1",
+ "cond": "code_docs_bug",
+ "model": "claude-opus-5-5",
+ "run": 1,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の RQ-FT-LIMIT-LOANS-PER-EMPLOYEE に「1 人の社員が同時に借りられるのは 2 件まで」とあり、3 件目は受け付けない決まり。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の RQ-FT-EXCLUDE-STAFF-FROM-BORROWERS に「借りる社員の選択肢には、その時点で役割が社員の利用者だけを出す」とある。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の RQ-FT-RESTRICT-HISTORY-VIEWER に「履歴の画面を開けるのは役割が管理者の利用者だけ。社員には自分が借りた分も見せない」とある。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の RQ-FT-REQUEST-BORROWING と README「社員が席から借りる」に、「借りる」で備品は申請中になり、管理者の承認で初めて貸出になるとある。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の RQ-FT-LIMIT-DUE-DATE-EXTENSION に「今の返却の期限に 7 日を足す」とあり、14 日延びるのは意図と違う。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の RQ-FT-LIMIT-DUE-DATE-EXTENSION に「延長は 1 回の貸出につき 1 回だけ」で、延長済みなら「延長は 1 回だけです」と出して受け付けないとある。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の RQ-FT-PROHIBIT-RETIRING-BORROWER に「備品を 1 件でも借りている社員（期限超過を含む）は退職の処理ができない」とある。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の RQ-FT-RETIRE-EMPLOYEE と RQ-FT-SHOW-ACCOUNT-INACTIVE-STATUS に、退職ではアカウントを消さず、一覧の「状態」の列に「無効」と出すとある。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の RQ-FT-CSV-EMPLOYEE-NUMBER-ONLY に「借りている社員の列には社員番号だけを出し、名前はどの列にも出さない」とある。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の RQ-FT-RESTRICT-LENT-ON-RANGE と RQ-TS-VERIFY-LENT-ON-RANGE に、貸出日は今日の 30 日前から今日までだけを受け付け、31 日前はエラーになるとある。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の用語集「期限超過」と 1-2 の「貸出日から 14 日」の数え方に、返却の期限 = 貸出日 + 14 日で、14 日目までは貸出中、15 日以上たって初めて期限超過とある。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の RQ-FT-NORMALIZE-EQUIPMENT-NUMBER と RQ-TS-VERIFY-EQUIPMENT-MANAGEMENT に、管理番号は大文字にそろえて保存・表示し、「pc-001」は一覧に「PC-001」と出るとある。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 49.8,
+ "usage": {
+  "input_tokens": 16,
+  "cache_creation_input_tokens": 35488,
+  "cache_read_input_tokens": 266416,
+  "output_tokens": 3057,
+  "output_tokens_details": {
+   "thinking_tokens": 413
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 35488,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 47378,
+    "cache_creation_input_tokens": 1514,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1514
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.39839120000000006,
+ "tool_uses": 7,
+ "error": null
+}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>ログイン</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="post">
+  <p><label>社員番号 <input name="employee_no"></label></p>
+  <p><label>パスワード <input name="password" type="password"></label></p>
+  <button>ログイン</button>
+</form>
+{% endblock %}

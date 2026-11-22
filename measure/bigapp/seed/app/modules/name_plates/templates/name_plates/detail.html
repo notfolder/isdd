@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>名札の申請 {{ r['id'] }}</h1>
+<dl>
+  <dt>申請した社員</dt><dd class="employee">{{ r['employee_no'] }} {{ r['employee_name'] }}</dd>
+  <dt>数量</dt><dd class="quantity">{{ r['quantity'] }}</dd>
+  <dt>単価（税抜き）</dt><dd class="unit-price">{{ r['unit_price'] }}</dd>
+  <dt>税抜き</dt><dd class="net">{{ r['net'] }}</dd>
+  <dt>税込み</dt><dd class="gross">{{ r['gross'] }}</dd>
+  <dt>状態</dt><dd class="state">{{ {'pending': '申請中', 'approved': '承認', 'rejected': '却下'}[r['state']] }} ({{ r['state'] }})</dd>
+</dl>
+<p><a href="{{ url_for('name_plates.index') }}">一覧へ戻る</a></p>
+{% endblock %}

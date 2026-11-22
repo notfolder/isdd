@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}クリーニングの申請 {% if item %}{{ item.id }}{% endif %}{% endblock %}
+{% block content %}
+<h1>クリーニングの申請の詳細</h1>
+{% if error %}<p class="error">{{ error }}</p>{% else %}
+<table>
+<tr><th>番号</th><td>{{ item.id }}</td></tr>
+<tr><th>申請した社員</th><td>{{ item.employee_no }} {{ item.employee_name }}</td></tr>
+<tr><th>数量</th><td>{{ item.quantity }}</td></tr>
+<tr><th>単価</th><td>{{ item.unit_price }}</td></tr>
+<tr><th>税抜き</th><td>{{ item.amount_excl_tax }}</td></tr>
+<tr><th>税込み</th><td>{{ item.amount_incl_tax }}</td></tr>
+<tr><th>状態</th><td>{{ item.state_label }}</td></tr>
+</table>
+{% endif %}
+<p><a href="/cleaning/">一覧へ戻る</a></p>
+{% endblock %}

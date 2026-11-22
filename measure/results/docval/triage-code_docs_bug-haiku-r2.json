@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_docs_bug-haiku-r2",
+ "cond": "code_docs_bug",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 3-2「同時に借りられる件数」(RQ-FT-LIMIT-LOANS-PER-EMPLOYEE, 525 行目) に、1 人の社員が同時に借りられるのは 2 件まで、と定められている。3 件借りられたのは、この決まりに反する。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 3-2「管理者は借りられない」(RQ-FT-EXCLUDE-STAFF-FROM-BORROWERS, 527 行目) と貸出の登録の画面 (454 行目) に、借りる社員の選択肢には役割が社員の利用者だけを出す、と定められている。管理者の名前が出ないのは意図どおり。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 3-2「履歴を見られる人」(RQ-FT-RESTRICT-HISTORY-VIEWER, 537 行目) と履歴の画面 (467〜473 行目) に、履歴を開けるのは管理者だけ、社員には自分が借りた分も見せない、と定められている。社員が見られたのは、この決まりに反する。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 用語集「申請」「申請中」(28・29 行目) と「社員が席から借りる」(488〜503 行目, RQ-FT-REQUEST-BORROWING) に、社員の「借りる」は申請になり、備品は申請中になる、管理者が承認して初めて貸出になる、と定められている。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 用語集「延長」(35 行目) と 3-2「延長の決まり」(RQ-FT-LIMIT-DUE-DATE-EXTENSION, 545 行目) に、延長は返却の期限に 7 日を足す、と定められている。14 日延びたのは、この決まりに反する。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 用語集「延長」(35 行目) と 3-2「延長の決まり」(545 行目) に、延長は 1 回の貸出につき 1 回だけ、と定められている。2 回目を拒否するのは意図どおり。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 3-2「借りている社員は退職にしない」(RQ-FT-PROHIBIT-RETIRING-BORROWER, 549 行目) に、備品を 1 件でも借りている社員は退職の処理ができない、と定められている。借りたままで通ったのは、この決まりに反する。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 用語集「無効」(21 行目) と 3-2 の画面仕様 (463 行目) に、退職の処理をしたアカウントは消さずに残し、アカウントの一覧の「状態」の列に「無効」と出す、と定められている。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 3-1「貸出状況の CSV」(516 行目) と 3-2「CSV には社員の名前を出さない」(RQ-FT-CSV-EMPLOYEE-NUMBER-ONLY, 557 行目) に、CSV の借りている社員の列には社員番号だけを出し、名前はどの列にも出さない、と定められている。名前が入ったのは、この決まりに反する。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 用語集「貸出日」(36 行目) と 3-2「貸出日の範囲」(RQ-FT-RESTRICT-LENT-ON-RANGE, 526 行目) に、貸出日は今日の 30 日前から今日までだけを受け付ける、と定められている。31 日前を拒否するのは意図どおり。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 用語集「期限超過」(34 行目) に、期限超過は日本時間の今日が返却の期限より後で、延長していなければ貸出日から 15 日以上たってから、と定められている。期限の日（貸出日から 14 日目）は「貸出中」のままのはずなので、「期限超過」と出るのは、この定めに反する。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 3-2「管理番号の大文字・小文字」(RQ-FT-NORMALIZE-EQUIPMENT-NUMBER, 528 行目) と 用語集「管理番号」(25 行目) に、大文字と小文字を区別せず、保存・表示は大文字にそろえる、と定められている。pc-001 が PC-001 と出るのは意図どおり。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 45.3,
+ "usage": {
+  "input_tokens": 14,
+  "cache_creation_input_tokens": 67848,
+  "cache_read_input_tokens": 312419,
+  "output_tokens": 8609,
+  "output_tokens_details": {
+   "thinking_tokens": 5058
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 67848,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 77751,
+    "cache_creation_input_tokens": 3501,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 3501
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.020999690000000005,
+ "tool_uses": 11,
+ "error": null
+}

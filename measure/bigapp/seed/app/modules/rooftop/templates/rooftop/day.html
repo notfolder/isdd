@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}屋上スペースの予約 {{ date }}{% endblock %}
+{% block content %}
+<h1>{{ date }} の予約（部屋ごと）</h1>
+<p><a href="{{ url_for('rooftop.index') }}">一覧へ</a></p>
+{% for r in rooms %}
+<h2>{{ r['code'] }} {{ r['name'] }}</h2>
+<table>
+<thead><tr><th>時間</th><th>社員</th></tr></thead>
+<tbody>
+{% for b in by_room[r['code']] %}
+<tr><td>{{ fmt(b['start_min']) }}-{{ fmt(b['end_min']) }}</td><td>{{ b['employee_no'] }} {{ b['employee_name'] }}</td></tr>
+{% else %}
+<tr><td colspan="2">予約はありません</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% else %}
+<p>部屋は登録されていません</p>
+{% endfor %}
+{% endblock %}

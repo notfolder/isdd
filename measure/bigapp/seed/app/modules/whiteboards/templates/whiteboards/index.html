@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}ホワイトボードの貸出{% endblock %}
+{% block content %}
+<h1>ホワイトボードの貸出</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('whiteboards.index') }}">
+  <label>番号・名前で絞り込み <input name="q" value="{{ q }}"></label>
+  <button>検索</button>
+  <a href="{{ url_for('whiteboards.history') }}">貸出の履歴</a>
+</form>
+<table>
+<thead><tr><th>番号</th><th>名前</th><th>状態</th><th>借りている社員</th><th>貸出日</th><th>期限</th></tr></thead>
+<tbody>
+{% for i in items %}
+<tr data-code="{{ i['code'] }}"><td>{{ i['code'] }}</td><td>{{ i['name'] }}</td>
+<td>{{ {'free': '空き', 'lent': '貸出中', 'overdue': '延滞'}[i['state']] }}</td>
+<td>{{ i['borrower'] or '' }}</td><td>{{ i['lent_on'] or '' }}</td><td>{{ i['due_on'] or '' }}</td></tr>
+{% else %}
+<tr><td colspan="6">該当する物はありません</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if current_user and current_user['role'] == 'staff' %}
+<h2>物を登録</h2>
+<form method="post" action="{{ url_for('whiteboards.item_create') }}">
+  <label>番号 <input name="code"></label> <label>名前 <input name="name"></label> <button>登録</button>
+</form>
+<h2>名前を直す</h2>
+<form method="post" action="{{ url_for('whiteboards.item_update') }}">
+  <label>番号 <input name="code"></label> <label>名前 <input name="name"></label> <button>直す</button>
+</form>
+<h2>物を削除</h2>
+<form method="post" action="{{ url_for('whiteboards.item_delete') }}">
+  <label>番号 <input name="code"></label> <button>削除</button>
+</form>
+<h2>貸出</h2>
+<form method="post" action="{{ url_for('whiteboards.lend') }}">
+  <label>物の番号 <input name="item_code"></label> <label>社員番号 <input name="employee_no"></label>
+  <label>貸出日（省略すると今日） <input name="lent_on" placeholder="YYYY-MM-DD"></label> <button>貸し出す</button>
+</form>
+<h2>返却</h2>
+<form method="post" action="{{ url_for('whiteboards.return_item') }}">
+  <label>物の番号 <input name="item_code"></label> <button>返却する</button>
+</form>
+{% endif %}
+{% endblock %}

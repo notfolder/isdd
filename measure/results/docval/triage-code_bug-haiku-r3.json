@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug-haiku-r3",
+ "cond": "code_bug",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "answers": {
+  "R1": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の MAX_LOANS_PER_PERSON = 3（23 行目）と loan_rule_violation の「同時に 3 件まで」（563〜567 行目）により、同時に 3 件までの貸出は許される。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の borrower_choices（555〜560 行目）の docstring「有効な社員だけ。管理者は出さない」により、借りる社員の一覧に管理者は出ない。"
+  },
+  "R3": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の history（788〜790 行目）の docstring「ログインしている人なら誰でも見られる」、および base.html で履歴のリンクが全利用者に出ていることから、社員でも履歴は見られる。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の loan_requests のコメント（71 行目）と request_loan の docstring（589 行目）「管理者が承認するまでは貸出にしない」により、「借りる」は申請になり、承認まで「申請中」のままになる。"
+  },
+  "R5": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の EXTEND_DAYS 関連コメント（26〜27 行目）「今の期限に 14 日足す」と EXTEND_DAYS = 14（28 行目）により、延長すると期限が 14 日延びる。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "app.py のコメント（26 行目）と extend_loan の docstring（753 行目）「1 回の貸出につき 1 回だけ」、および extend_loan の extended 判定（770〜771 行目）により、2 回目の延長は断られる。"
+  },
+  "R7": {
+   "verdict": "判断できない",
+   "basis": "accounts.html の説明文と app.py の deactivate のコメント（407〜410 行目）は、退職の条件として管理者でないこと・承認待ちの申請を残すことにしか触れておらず、貸出中の備品がある社員の退職を禁止するかは資料に書かれていない（管理者の昇格だけは accounts.html と promote の処理で貸出中を禁止している）。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の deactivate のコメント（407〜409 行目）「アカウントは消さずに無効にして一覧に残す（「無効」と出す）」と accounts.html の説明文「アカウントは消さずに残り」により、退職したアカウントは「無効」と出て残る。"
+  },
+  "R9": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の総務の決まりのコメント（31 行目）「一覧をファイル（CSV）に出すときは、借りている社員の社員番号と名前を出す」と export_csv（241〜256 行目）の処理により、CSV に借りている社員の名前が入る。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の LEND_DAYS_BACK = 30（24 行目）と lend の処理（704〜705 行目）「今日から 30 日前までです」、および lend.html の貸出日の範囲の表示により、31 日前の貸出日は受け付けられない。"
+  },
+  "R11": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の LOAN_DAYS のコメント（25 行目）「期限の当日から「期限超過」」と equipment_status_rows の判定（220 行目）`today >= due` により、貸出日から 14 日目（期限の当日）は「期限超過」と出る。"
+  },
+  "R12": {
+   "verdict": "判断できない",
+   "basis": "app.py の validate_equipment（455 行目）・equipment_new（478 行目）・equipment_edit（516 行目）は管理番号を大文字にして保存しているが、資料のどこにも管理番号を大文字で扱うという依頼や説明はなく（equipment_form.html の管理番号の説明も英数字とハイフンのみ）、大文字化が依頼者の意図かは分からない。"
+  }
+ },
+ "detail": {
+  "R1": "spec",
+  "R2": "spec",
+  "R3": "spec",
+  "R4": "spec",
+  "R5": "spec",
+  "R6": "spec",
+  "R7": "undecided",
+  "R8": "spec",
+  "R9": "spec",
+  "R10": "spec",
+  "R11": "spec",
+  "R12": "undecided"
+ },
+ "score": {
+  "bug_caught": 0,
+  "spec_right": 5,
+  "wrong": 5,
+  "undecided": 2
+ },
+ "wall_sec": 39.3,
+ "usage": {
+  "input_tokens": 10,
+  "cache_creation_input_tokens": 43059,
+  "cache_read_input_tokens": 160574,
+  "output_tokens": 7764,
+  "output_tokens_details": {
+   "thinking_tokens": 5683
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 43059,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 49511,
+    "cache_creation_input_tokens": 6952,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 6952
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.014100540000000002,
+ "tool_uses": 5,
+ "error": null
+}

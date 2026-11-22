@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug_staledocs-opus-r3",
+ "cond": "code_bug_staledocs",
+ "model": "claude-opus-5-5",
+ "run": 3,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-LIMIT-LOANS-PER-EMPLOYEE と 4-2 の貸出の行、README の「社員が席から借りる」に「1 人 2 件まで」とあり、3 件を認める依頼の記録はどの資料にも無い（コードの MAX_LOANS_PER_EMPLOYEE = 3 だけが食い違う）。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-EXCLUDE-STAFF-FROM-BORROWERS と README の「管理者を増やす」に、担当者（管理者）は借りられず借りる社員の選択肢に出ないとある。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-RESTRICT-HISTORY-VIEWER と README の「貸出と返却の履歴」に、履歴の画面は担当者（管理者）だけが開け、社員は開けないとある。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "README の「社員が席から借りる」に「借りる」で備品は「申請中」になり、管理者が承認するまで貸出にならないとあり、docs/requirements.md 1 章の総務の決まり（担当者が確定するまでは貸出にしない）とも合う。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "README の「返却の期限の延長」と docs/requirements.md 1 章の総務の決まりに、延長で延ばすのは 7 日（期限は貸出日 + 21 日）とある。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "README の「返却の期限の延長」と docs/requirements.md 1 章の総務の決まりに、延長は 1 回の貸出につき 1 回だけとある。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "README の「退職した社員」と docs/requirements.md 1 章の総務の決まりに、備品を借りている社員は先に返却してからでないと退職（無効）にできないとある。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "README の「退職した社員」と docs/requirements.md 1 章の総務の決まりに、アカウントは消さずに無効にして残し、一覧の「状態」の列に「無効」と出すとある。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "README の「貸出状況の CSV 出力」と docs/requirements.md 1 章の総務の決まりに、借りている社員は社員番号だけを出し、名前は出さない（社外の監査法人に渡すため）とある。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-RESTRICT-LENT-ON-RANGE と 1-2 の表に、貸出日は今日の 30 日前から今日まで（両端を含む）だけを受け付けるとある。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の用語集の「期限超過」と README の「返却の期限」に、期限の日まで（貸出日から 14 日目まで）は「貸出中」で、15 日以上たってから「期限超過」になるとある。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-NORMALIZE-EQUIPMENT-NUMBER と用語集の「管理番号」に、管理番号は大文字にそろえて保存し、一覧にも大文字で出すとある。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 62.8,
+ "usage": {
+  "input_tokens": 19,
+  "cache_creation_input_tokens": 44477,
+  "cache_read_input_tokens": 376321,
+  "output_tokens": 3901,
+  "output_tokens_details": {
+   "thinking_tokens": 1360
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 44477,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 1,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 56230,
+    "cache_creation_input_tokens": 1651,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1651
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.5091762,
+ "tool_uses": 9,
+ "error": null
+}

@@ -1,0 +1,114 @@
+{
+ "label": "review-code_bug-sonnet-r1",
+ "cond": "code_bug",
+ "model": "claude-sonnet-5-5",
+ "run": 1,
+ "issues": [
+  {
+   "what": "1 人が同時に借りられるのは 2 件までのはずが、3 件まで借りられる。",
+   "where": "app.py MAX_LOANS_PER_PERSON = 3、loan_rule_violation"
+  },
+  {
+   "what": "延長は 7 日のはずが、14 日延びる。",
+   "where": "app.py EXTEND_DAYS = 14、due_date、DUE_DATE_SQL、extend_loan"
+  },
+  {
+   "what": "貸出日から 14 日目（期限の当日）は「貸出中」のはずが、「期限超過」と表示される（15 日目から超過のはず）。",
+   "where": "app.py equipment_status_rows の status 判定 today >= due、LOAN_DAYS のコメント"
+  },
+  {
+   "what": "CSV に借りている社員の名前も出しているが、依頼は社員番号だけで名前は出さない。",
+   "where": "app.py export_csv（「借りている社員の名前」列）と冒頭コメント"
+  },
+  {
+   "what": "履歴は管理者だけが見られるはずが、ログインしていれば社員でも見られる。",
+   "where": "app.py history()、templates/base.html の履歴リンク"
+  },
+  {
+   "what": "備品を借りたままの社員は退職の処理ができないはずが、借りたままでも退職（無効）にできる。",
+   "where": "app.py deactivate()"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 0,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  }
+ ],
+ "wall_sec": 15.5,
+ "usage": {
+  "input_tokens": 10,
+  "cache_creation_input_tokens": 34892,
+  "cache_read_input_tokens": 155285,
+  "output_tokens": 1528,
+  "output_tokens_details": {
+   "thinking_tokens": 613
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 34892,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 47634,
+    "cache_creation_input_tokens": 662,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 662
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.1703965,
+ "tool_uses": 4,
+ "error": null
+}

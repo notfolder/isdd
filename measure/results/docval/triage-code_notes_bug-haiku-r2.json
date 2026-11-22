@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_notes_bug-haiku-r2",
+ "cond": "code_notes_bug",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 15 行目（依頼 1・総務のきまり）「1 人が同時に借りられるのは 2 件まで」に対し、lending/forms.py 10 行目の MAX_LOANS が 3 になっている（lending/tests.py 288 行目のテストも 2 件を期待している）。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 17 行目「担当者は借りられない。借りる社員の選択肢は社員だけ」に従い、lending/forms.py 97 行目の借りる社員の選択肢は is_manager=False に限っている。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 133 行目（依頼 5）「履歴を見られるのは担当者だけ」に対し、lending/views.py 348〜352 行目の history は未ログインだけを弾き、社員のログインでも履歴を表示してしまう。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 161 行目と 168 行目（依頼 6 の回答 1）で、「借りる」は「申請中」になり、担当者が「承認」してから貸出にすると決めている。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 27 行目（依頼 2）と 190 行目（依頼 7）で延長は「7 日延ばす」と決めているのに、lending/models.py 10 行目の EXTENSION_DAYS が 14 になっている。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 27 行目と 190 行目（依頼 2・7）で延長は「1 回の貸出につき 1 回だけ」と決めており、lending/views.py 501〜502 行目で延長済みを拒否している。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 80 行目と 220 行目（依頼 3・8）「備品を借りたままの社員は無効にできない（先に返却を処理する）」に対し、lending/views.py 324〜345 行目の account_retire には借りている備品の検査がない。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 220 行目と 229 行目（依頼 8）で退職した社員は消さずに残し、役割の列に「無効」と出してボタンは出さないと決めており、lending/templates/lending/accounts.html 12 行目と 14 行目がそのとおりになっている。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 248 行目と 260 行目（依頼 9）「ファイルには借りている社員の名前を出さず、社員番号だけを出す」に対し、lending/views.py 357 行目のヘッダと 374 行目で借りている社員の名前を書き出している。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 16 行目「貸出日は今日から 30 日前まで（今日と 30 日前を含む）。未来は不可」に対し、31 日前の日付は lending/forms.py 123 行目の検査で受け付けない。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 25 行目「14 日目（期限の日）までは「貸出中」」と 67 行目「期限超過の判定は「貸出日 < 今日 − 14 日」」に対し、lending/models.py 92 行目（due_on <= today）と 23 行目（lent_on__lte=今日 − 14 日）が 14 日目から期限超過にしている。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 13 行目（依頼 1・総務のきまり）「大文字にそろえて保存・表示」に従い、lending/forms.py 80 行目で value.upper() して保存している。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 48.0,
+ "usage": {
+  "input_tokens": 12,
+  "cache_creation_input_tokens": 84145,
+  "cache_read_input_tokens": 296304,
+  "output_tokens": 9849,
+  "output_tokens_details": {
+   "thinking_tokens": 7189
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 84145,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 91996,
+    "cache_creation_input_tokens": 5553,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 5553
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.024717740000000002,
+ "tool_uses": 12,
+ "error": null
+}

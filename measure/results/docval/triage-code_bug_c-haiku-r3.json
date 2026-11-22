@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug_c-haiku-r3",
+ "cond": "code_bug_c",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "answers": {
+  "R1": {
+   "verdict": "判断できない",
+   "basis": "app.py の loan_rule_violation の説明文は「同時に 2 件まで」だが、定数 MAX_LOANS_PER_PERSON（app.py 23 行目）は 3 で、利用者向けの文言も「3 件」と出すため、資料同士で上限が食い違っている。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の borrower_choices（556〜561 行目）の説明文「管理者は出さない」と、lend の「管理者は借りられません」（687 行目）から、管理者を借りる社員の一覧に出さないのが意図。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "app.py の history（789〜795 行目）の説明文は「管理者だけ」だが、コードはログインしているかだけを確かめ、役割を確かめていない。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の request_loan（588 行目以降）の説明文「管理者が承認するまでは貸出にしない」と loan_requests の注釈（72〜73 行目）から、社員の「借りる」は申請中になり、管理者の承認で貸出になるのが意図。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "app.py 27 行目の注釈と extend_loan の説明文（754 行目）は「今の期限に 7 日足す」だが、定数 EXTEND_DAYS（28 行目）は 14 で、期限の計算（due_date と DUE_DATE_SQL）に使われている。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "app.py 26〜27 行目の注釈と extend_loan の説明文（754 行目）に「1 回の貸出につき 1 回だけ」とあり、2 回目の延長を断るのが意図。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "app.py 408〜411 行目の注釈と accounts.html 5 行目に「備品を借りている社員は無効にできない」「先に返却を処理してください」とあるが、deactivate（412 行目以降）は貸出の有無を確かめていない。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "app.py 409〜410 行目の注釈と accounts.html 5 行目に「アカウントは消さずに無効にして一覧に残す（「無効」と出す）」とあり、無効のまま一覧に残るのが意図。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "app.py 31〜32 行目の注釈と export_csv（242〜257 行目）の説明文に「CSV では借りている社員の名前を出さず社員番号だけ出す」とあるが、export_csv は名前の列にも値を入れている。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の LEND_DAYS_BACK = 30（24 行目）と lend の検査（705〜706 行目）、lend.html の表示（貸出日は今日から 30 日前まで）から、31 日前の貸出日を断るのが意図。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "app.py 25 行目の注釈に「期限の翌日から「期限超過」」とあるが、equipment_status_rows（221 行目）は today >= due を期限超過にしており、期限の当日（貸出日から 14 日目）も期限超過になる。"
+  },
+  "R12": {
+   "verdict": "判断できない",
+   "basis": "管理番号を大文字に直して保存する処理（validate_equipment の重複確認、登録・修正の upper() 呼び出し）はあるが、資料の画面文言（templates/equipment_form.html の「半角の英数字とハイフン」）にも説明文にも大文字で保存する決まりが書かれていない。"
+  }
+ },
+ "detail": {
+  "R1": "undecided",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "undecided"
+ },
+ "score": {
+  "bug_caught": 5,
+  "spec_right": 5,
+  "wrong": 0,
+  "undecided": 2
+ },
+ "wall_sec": 37.8,
+ "usage": {
+  "input_tokens": 12,
+  "cache_creation_input_tokens": 31715,
+  "cache_read_input_tokens": 224723,
+  "output_tokens": 7080,
+  "output_tokens_details": {
+   "thinking_tokens": 4802
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 31715,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 52164,
+    "cache_creation_input_tokens": 4446,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 4446
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.012131430000000002,
+ "tool_uses": 6,
+ "error": null
+}

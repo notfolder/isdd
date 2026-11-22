@@ -1,0 +1,118 @@
+{
+ "label": "review-notes_err-haiku-r3",
+ "cond": "notes_err",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "issues": [
+  {
+   "what": "同時に借りられるのは依頼では 2 件までだが、成果物では 3 件までになっている。",
+   "where": "DECISIONS.md 15 行目（依頼 1 の表）。同じ数字は 169 行目と 179 行目にも出る"
+  },
+  {
+   "what": "期限超過の判定が依頼（貸出日から 15 日以上たつと期限超過、14 日目までは貸出中）と違い、成果物は貸出日から 14 日たった時点で期限超過にしている。",
+   "where": "DECISIONS.md 25 行目（依頼 2 の表）。同じ判定は 67 行目と 209 行目にも出る"
+  },
+  {
+   "what": "延長の日数が依頼の 7 日ではなく、成果物では 14 日になっている。",
+   "where": "DECISIONS.md 190 行目（依頼 7 の表）。期限を貸出日から 28 日とする計算は 208 行目にも出る"
+  },
+  {
+   "what": "延長を操作できるのは依頼では管理者だけだが、成果物では借りている本人にも延長を許している。",
+   "where": "DECISIONS.md 198 行目（依頼 7 の表）。延長ボタンの出し方は 191 行目と 211 行目にも出る"
+  },
+  {
+   "what": "履歴を見られるのは管理者だけで社員は自分の分も見られないという依頼に対し、成果物はログインしている社員にも履歴を見せるとしている。",
+   "where": "DECISIONS.md 133 行目（依頼 5 の表）。履歴リンクの出し方は 154 行目にも出る"
+  },
+  {
+   "what": "備品を借りたままの社員は退職の処理ができないという依頼に対し、成果物は借りている備品があっても退職（無効）の処理を受け付けるとしている。",
+   "where": "DECISIONS.md 220 行目（依頼 8 の表）。同じ内容は 80 行目（依頼 3 の表）にもある"
+  },
+  {
+   "what": "CSV で借りている社員は社員番号だけを出し名前は出さないという依頼に対し、成果物は社員番号に加えて借りている社員の名前も出すとしている。",
+   "where": "DECISIONS.md 248 行目（依頼 9 の表）。列の一覧は 255 行目と 260 行目にも出る"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 1,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M4",
+    "M5"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M4",
+    "M5"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M4",
+    "M5"
+   ],
+   "other": 1
+  }
+ ],
+ "wall_sec": 41.1,
+ "usage": {
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 35718,
+  "cache_read_input_tokens": 107434,
+  "output_tokens": 8403,
+  "output_tokens_details": {
+   "thinking_tokens": 7190
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 35718,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 40964,
+    "cache_creation_input_tokens": 8158,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 8158
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.012420239999999999,
+ "tool_uses": 3,
+ "error": null
+}

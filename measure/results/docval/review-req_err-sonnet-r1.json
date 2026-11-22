@@ -1,0 +1,114 @@
+{
+ "label": "review-req_err-sonnet-r1",
+ "cond": "req_err",
+ "model": "claude-sonnet-5-5",
+ "run": 1,
+ "issues": [
+  {
+   "what": "1 人が同時に借りられる件数が、依頼の 2 件までではなく 3 件までになっている。",
+   "where": "requirements.md 3-2 RQ-FT-LIMIT-LOANS-PER-EMPLOYEE、RQ-FT-COUNT-REQUESTS-IN-LOAN-LIMIT、4-2 貸出の「借りる社員」、第 7 章 RQ-TS-VERIFY-LOAN-LIMIT"
+  },
+  {
+   "what": "期限超過になる日が、依頼の「貸出日から 15 日以上（14 日目までは貸出中）」ではなく、貸出日から 14 日以上（期限の日当日から期限超過、13 日目までが貸出中）になっている。",
+   "where": "requirements.md 用語集「期限超過」「貸出中」、1-2「貸出日から 14 日の数え方」、3 章 貸出状況の表示項目、RQ-FT-SHOW-OVERDUE-STATUS、4-4 状態遷移、RQ-TS-VERIFY-RETURN-DUE-DATE-AND-OVERDUE"
+  },
+  {
+   "what": "延長で延ばす日数が、依頼の 7 日ではなく 14 日（延長後の期限が貸出日 + 28 日）になっている。",
+   "where": "requirements.md 用語集「延長」「返却の期限」、RQ-FT-EXTEND-RETURN-DUE-DATE、RQ-FT-LIMIT-DUE-DATE-EXTENSION、4-2 貸出の「返却の期限」、RQ-TS-VERIFY-DUE-DATE-EXTENSION"
+  },
+  {
+   "what": "履歴を見られる人が、依頼の管理者だけではなく、ログインしている社員にも全員分を見せる仕様になっている。",
+   "where": "requirements.md 用語集「履歴」、3 章 履歴（/history/）の画面仕様、全画面の共通部分、RQ-FT-ALLOW-LOGGED-IN-HISTORY-VIEWER、RQ-TS-VERIFY-LENDING-HISTORY-ACCESS"
+  },
+  {
+   "what": "備品を借りたままの社員は退職の処理ができない、という依頼に反して、借りている社員も退職の処理ができる仕様になっている。",
+   "where": "requirements.md 用語集「退職の処理」、1-2「アカウントを消すか、借りている社員の扱い」、RQ-FT-ALLOW-RETIRING-BORROWER、RQ-TS-VERIFY-RETIRE-BORROWER-ALLOWED"
+  },
+  {
+   "what": "CSV に借りている社員の名前も出す仕様で、依頼の「社員番号だけを出し、名前は出さない」と違う。",
+   "where": "requirements.md 用語集「CSV 出力」、1-2「CSV の項目」「借りている社員の出し方」、3-1 RQ-UI-LENDING-STATUS-CSV-EXPORT、RQ-FT-CSV-EMPLOYEE-NUMBER-AND-NAME、RQ-TS-VERIFY-CSV-EXPORT"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 0,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M4",
+    "M5"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M4",
+    "M5"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M4",
+    "M5"
+   ],
+   "other": 0
+  }
+ ],
+ "wall_sec": 30.3,
+ "usage": {
+  "input_tokens": 18,
+  "cache_creation_input_tokens": 113768,
+  "cache_read_input_tokens": 495507,
+  "output_tokens": 3240,
+  "output_tokens_details": {
+   "thinking_tokens": 1014
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 113768,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 125550,
+    "cache_creation_input_tokens": 1622,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1622
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.5370587,
+ "tool_uses": 8,
+ "error": null
+}

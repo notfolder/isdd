@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ date }} の予約（部屋ごと）</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<p><a href="{{ url_for('web_booths.index') }}">一覧へ戻る</a></p>
+<table>
+<thead><tr><th>部屋</th><th>予約</th></tr></thead>
+<tbody>
+{% for r in rooms %}
+<tr><td>{{ r['code'] }} {{ r['name'] }}</td>
+<td>{% for b in table[r['code']] %}{{ b['start'] }}-{{ b['end'] }}（{{ b['employee_no'] }}）{% if not loop.last %}、{% endif %}{% else %}予約なし{% endfor %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

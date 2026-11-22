@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>集中ブースの予約</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('focus_booths.index') }}">
+  <label>日付 <input name="date" value="{{ date }}" placeholder="YYYY-MM-DD"></label>
+  <button>絞り込む</button>
+  <a href="{{ url_for('focus_booths.day', date=date) }}">{% if date %}この日の部屋ごとの表{% endif %}</a>
+</form>
+<h2>予約の一覧</h2>
+<table>
+<thead><tr><th>番号</th><th>部屋</th><th>社員</th><th>日付</th><th>開始</th><th>終了</th><th></th></tr></thead>
+<tbody>
+{% for b in bookings %}
+<tr data-booking-id="{{ b['id'] }}"><td>{{ b['id'] }}</td><td>{{ b['room_code'] }} {{ b['room_name'] }}</td><td>{{ b['employee_no'] }} {{ b['employee_name'] }}</td>
+<td>{{ b['date'] }}</td><td>{{ b['start'] }}</td><td>{{ b['end'] }}</td>
+<td>{% if current_user and current_user['role'] == 'staff' %}<form method="post" action="{{ url_for('focus_booths.cancel') }}"><input type="hidden" name="booking_id" value="{{ b['id'] }}"><button>取消</button></form>{% endif %}</td></tr>
+{% else %}
+<tr><td colspan="7">予約はありません</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if current_user and current_user['role'] == 'staff' %}
+<h2>予約する</h2>
+<form method="post" action="{{ url_for('focus_booths.book') }}">
+  <label>部屋 <select name="room_code">{% for r in rooms %}<option value="{{ r['code'] }}">{{ r['code'] }} {{ r['name'] }}</option>{% endfor %}</select></label>
+  <label>社員番号 <input name="employee_no"></label>
+  <label>日付 <input name="date" placeholder="YYYY-MM-DD"></label>
+  <label>開始 <input name="start" placeholder="09:00"></label>
+  <label>終了 <input name="end" placeholder="10:00"></label>
+  <button>予約</button>
+</form>
+<h2>部屋を登録</h2>
+<form method="post" action="{{ url_for('focus_booths.room_new') }}">
+  <label>番号 <input name="code"></label>
+  <label>名前 <input name="name"></label>
+  <button>登録</button>
+</form>
+<h2>部屋の名前を直す</h2>
+<form method="post" action="{{ url_for('focus_booths.room_edit') }}">
+  <label>番号 <input name="code"></label>
+  <label>名前 <input name="name"></label>
+  <button>直す</button>
+</form>
+{% endif %}
+<h2>部屋</h2>
+<ul>{% for r in rooms %}<li>{{ r['code'] }} {{ r['name'] }}</li>{% else %}<li>部屋は登録されていません</li>{% endfor %}</ul>
+{% endblock %}

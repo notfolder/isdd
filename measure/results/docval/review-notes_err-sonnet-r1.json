@@ -1,0 +1,122 @@
+{
+ "label": "review-notes_err-sonnet-r1",
+ "cond": "notes_err",
+ "model": "claude-sonnet-5-5",
+ "run": 1,
+ "issues": [
+  {
+   "what": "1 人が同時に借りられるのは 2 件までなのに、3 件までと決めている。",
+   "where": "DECISIONS.md 15行目（および 169・179行目の「3 件まで」）"
+  },
+  {
+   "what": "期限超過は貸出日から 15 日以上（14 日目までは貸出中）なのに、14 日以上（13 日目まで貸出中）としている。",
+   "where": "DECISIONS.md 25行目・67行目"
+  },
+  {
+   "what": "延長は 7 日延ばすのに、14 日延ばすとしている。",
+   "where": "DECISIONS.md 27行目・190行目・208行目"
+  },
+  {
+   "what": "延長を操作できるのは管理者だけなのに、借りている本人もできるとしている。",
+   "where": "DECISIONS.md 198行目・211行目"
+  },
+  {
+   "what": "延長済みの備品の期限超過の判定が「期限 <= 今日」で、依頼の「貸出日から 15 日以上」の境界とずれている。",
+   "where": "DECISIONS.md 209行目"
+  },
+  {
+   "what": "履歴を見られるのは管理者だけなのに、ログインしている社員なら誰でも見られるとしている。",
+   "where": "DECISIONS.md 133行目・154行目"
+  },
+  {
+   "what": "備品を借りたままの社員は退職の処理ができないのに、借りたままでも無効にできるとしている。",
+   "where": "DECISIONS.md 80行目・220行目・239行目"
+  },
+  {
+   "what": "CSV では借りている社員は社員番号だけで名前は出さないのに、名前も出すとしている。",
+   "where": "DECISIONS.md 106行目・248行目・255行目・260行目"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 2,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 2
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 2
+  },
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M4",
+    "M5"
+   ],
+   "other": 2
+  }
+ ],
+ "wall_sec": 16.5,
+ "usage": {
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 28137,
+  "cache_read_input_tokens": 104707,
+  "output_tokens": 1768,
+  "output_tokens_details": {
+   "thinking_tokens": 885
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 28137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 39986,
+    "cache_creation_input_tokens": 1555,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1555
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.14071470000000003,
+ "tool_uses": 3,
+ "error": null
+}

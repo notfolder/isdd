@@ -1,0 +1,114 @@
+{
+ "label": "review-req_err-haiku-r3",
+ "cond": "req_err",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "issues": [
+  {
+   "what": "1 人の社員が同時に借りられる件数が、依頼の「2 件まで」に対して「3 件まで」になっている。",
+   "where": "requirements.md 3-2 業務ルール RQ-FT-LIMIT-LOANS-PER-EMPLOYEE（525 行目）。同じ 3 件の数字は 4-2 の貸出・申請の項目（622、633 行目）、テスト RQ-TS-VERIFY-LOAN-LIMIT（768 行目）にも出る"
+  },
+  {
+   "what": "延長の日数が、依頼の「7 日」に対して「14 日」になっており、延長後の返却の期限も貸出日 + 28 日としている。",
+   "where": "requirements.md 3-2 業務ルール RQ-FT-LIMIT-DUE-DATE-EXTENSION（545 行目）。1 目的の段落（7 行目）、4-2 の返却の期限（625 行目）にも同じ内容が出る"
+  },
+  {
+   "what": "期限超過の判定が、依頼の「貸出日から 15 日以上たって返っていなければ期限超過（14 日目までは貸出中）」に対して、貸出日から 14 日目（返却の期限の日）から期限超過としている。その結果、延長の受け付けも 14 日目で止まる。",
+   "where": "requirements.md 用語集「期限超過」（34 行目）、1-2 の「『貸出日から 14 日』の数え方」（85 行目）、3 画面ごとの仕様 貸出状況の表示項目（405 行目）、3-2 RQ-FT-SHOW-OVERDUE-STATUS（493 行目）、テスト RQ-TS-VERIFY-RETURN-DUE-DATE-AND-OVERDUE（774 行目）"
+  },
+  {
+   "what": "履歴を見られる人が、依頼の「管理者だけ。社員は自分の分も見られない」に対して、社員にも全員分の履歴を見せる仕様になっている。",
+   "where": "requirements.md 3-2 業務ルール RQ-FT-ALLOW-LOGGED-IN-HISTORY-VIEWER（537 行目）。1-2 の履歴を開ける人（130 行目）、3 画面ごとの仕様 履歴の開ける人（473 行目）、用語集「履歴」（37 行目）、1 目的の段落（7 行目）にも同じ内容が出る"
+  },
+  {
+   "what": "CSV の借りている社員の列に、依頼の「借りている社員は社員番号だけを出し、名前は出さない」に対して、社員番号に加えて名前も出す仕様になっている。",
+   "where": "requirements.md 3-2 業務ルール RQ-FT-CSV-EMPLOYEE-NUMBER-AND-NAME（557 行目）、3-1 帳票 RQ-UI-LENDING-STATUS-CSV-EXPORT（516 行目）。1 目的の段落（7 行目）、用語集「CSV 出力」（40 行目）、1-2 の借りている社員の出し方（194 行目）にも同じ内容が出る"
+  },
+  {
+   "what": "退職の処理が、依頼の「備品を借りたままの社員は退職の処理ができない」に対して、備品を借りている社員（期限超過を含む）も退職の処理ができる仕様になっている。",
+   "where": "requirements.md 3-2 業務ルール RQ-FT-ALLOW-RETIRING-BORROWER（549 行目）。1-2 の退職の処理（173 行目）、用語集「退職の処理」（20 行目）、テスト RQ-TS-VERIFY-RETIRE-BORROWER-ALLOWED（806 行目）にも同じ内容が出る"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 0,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  }
+ ],
+ "wall_sec": 59.7,
+ "usage": {
+  "input_tokens": 10,
+  "cache_creation_input_tokens": 123421,
+  "cache_read_input_tokens": 219562,
+  "output_tokens": 12473,
+  "output_tokens_details": {
+   "thinking_tokens": 10616
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 123421,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 124780,
+    "cache_creation_input_tokens": 12045,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 12045
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.14996348,
+ "tool_uses": 4,
+ "error": null
+}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}脚立の貸出の履歴{% endblock %}
+{% block content %}
+<h1>脚立の貸出の履歴</h1>
+<p><a href="/ladders/">一覧へ戻る</a></p>
+<table>
+  <tr><th>物の番号</th><th>借りた社員</th><th>貸出日</th><th>期限</th><th>返却日</th></tr>
+  {% for r in rows %}
+  <tr><td>{{ r.item_code }}</td><td>{{ r.employee_no }} {{ r.borrower_name }}</td><td>{{ r.lent_on }}</td><td>{{ r.due_on }}</td><td>{{ r.returned_on }}</td></tr>
+  {% else %}
+  <tr><td colspan="5">履歴はありません</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

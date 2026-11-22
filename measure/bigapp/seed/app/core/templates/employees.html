@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>社員</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<table>
+<thead><tr><th>社員番号</th><th>名前</th><th>部署</th><th>役割</th><th>状態</th><th></th></tr></thead>
+<tbody>
+{% for r in rows %}
+<tr data-employee-no="{{ r['employee_no'] }}"><td>{{ r['employee_no'] }}</td><td>{{ r['name'] }}</td><td>{{ r['dept'] }}</td>
+<td>{{ '担当者' if r['role'] == 'staff' else '社員' }}</td><td>{{ '在籍' if r['status'] == 'active' else '退職' }}</td>
+<td>{% if r['status'] == 'active' %}<form method="post" action="{{ url_for('employees.retire') }}"><input type="hidden" name="employee_no" value="{{ r['employee_no'] }}"><button>退職</button></form>{% endif %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<h2>社員を登録</h2>
+<form method="post" action="{{ url_for('employees.create') }}">
+  <label>社員番号 <input name="employee_no"></label>
+  <label>名前 <input name="name"></label>
+  <label>部署 <input name="dept"></label>
+  <label>役割 <select name="role"><option value="employee">社員</option><option value="staff">担当者</option></select></label>
+  <button>登録</button>
+</form>
+{% endblock %}

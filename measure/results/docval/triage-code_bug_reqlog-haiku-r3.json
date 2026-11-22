@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug_reqlog-haiku-r3",
+ "cond": "code_bug_reqlog",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "requests/01-request.md の「1 人が同時に借りられるのは 2 件まで」に対し、app.py の 23 行目 MAX_LOANS_PER_PERSON = 3 と 564〜567 行目（3 件目まで貸せる）が 3 件を許しており、資料と食い違う。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「担当者自身は借りられない。借りる社員の選択肢には社員だけを出す」に対し、app.py の borrower_choices（555〜560 行目）が role = employee かつ active = 1 だけを返しており、管理者の名前が出ないのは意図どおり。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "requests/01-request.md の「将来残すことになったら、履歴を見られるのは担当者だけにする。社員には…見せない」に対し、app.py の history()（788〜794 行目）はログインしていれば誰でも見られる作りになっている。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「社員が自分で貸出を登録する機能は作らない。…社員からの申請を足しても、担当者が確定するまでは貸出にしない」に対し、app.py の request_loan（587〜616 行目）は申請を loan_requests に入れるだけで、貸出にするのは担当者の承認（approve_request）になっている。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "requests/02-request.md の「延ばすのは 7 日」に対し、app.py の 28 行目 EXTEND_DAYS = 14 が 14 日延ばしている（28 行目のコメントは依頼 7 を根拠にするが、requests/07-request.md には日数の記載がない）。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "requests/02-request.md の「延長は 1 回の貸出につき 1 回だけ」に対し、app.py の extend_loan（770〜771 行目）が extended が 1 の備品の再延長を断っている。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "requests/03-request.md の「備品を借りたままの社員は、無効にできない。先に返却を処理する」に対し、app.py の deactivate()（411〜435 行目）は loans の有無を確かめずに無効にしている。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "requests/03-request.md の「アカウントは消さずに『無効』にして残す」に対し、app.py の deactivate は行を消さず active = 0 にし、templates/accounts.html の 15 行目が「無効」と表示している。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "requests/04-request.md の「ファイルには借りている社員の名前を出さず、社員番号だけを出す」に対し、app.py の export_csv（252〜253 行目）が名前を書き出している（app.py の 31 行目のコメントは逆の内容だが、その根拠となる依頼の記載は資料にない）。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「今日から 30 日前まで。それより前の日付…は受け付けない」に対し、app.py の lend()（704〜705 行目）が LEND_DAYS_BACK の 30 日より前の貸出日を断っている。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "requests/02-request.md の「貸出日から 14 日目までは「貸出中」」「15 日以上たっても…期限超過」に対し、app.py の 220 行目が today >= due（貸出日から 14 日目）で「期限超過」にしている（25 行目のコメントも同じ誤り）。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「保存するときは大文字にそろえ、一覧にも大文字で出す」に対し、app.py の equipment_new（478 行目）が number.upper() で保存している。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 39.6,
+ "usage": {
+  "input_tokens": 12,
+  "cache_creation_input_tokens": 43439,
+  "cache_read_input_tokens": 203865,
+  "output_tokens": 7914,
+  "output_tokens_details": {
+   "thinking_tokens": 5652
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 43439,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 55099,
+    "cache_creation_input_tokens": 1744,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1744
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.014684649999999999,
+ "tool_uses": 6,
+ "error": null
+}

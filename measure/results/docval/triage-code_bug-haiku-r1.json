@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug-haiku-r1",
+ "cond": "code_bug",
+ "model": "claude-haiku-5-5",
+ "run": 1,
+ "answers": {
+  "R1": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:23 の MAX_LOANS_PER_PERSON = 3 と app.py:563-567 の貸出の決まり（「同時に 3 件まで」）から、3 件は上限ちょうどで許される。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:555-560 の borrower_choices は role が社員（employee）で有効なアカウントだけを選択肢にし、コメントに「管理者は出さない」とある。"
+  },
+  "R3": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:788-790 の history のdocstringに「ログインしている人なら誰でも見られる」とあり、ログイン済みであれば役割で制限していない。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:71 のコメント（依頼 6）「社員が画面から出した借りる申請。管理者が承認するまでは貸出にしない」と、app.py:221-224 の申請中の表示。"
+  },
+  "R5": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:26-28 のコメント「今の期限に 14 日足す」と app.py:145-149 の due_date（貸出日＋14＋延長 14）から、延長で期限が 14 日後ろへ動く。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:26-28 と 753 のdocstringに「1 回の貸出につき 1 回だけ」とあり、app.py:770-771 で延長済みの備品を断っている。"
+  },
+  "R7": {
+   "verdict": "判断できない",
+   "basis": "app.py:407-410 の退職の規則には借りている備品の扱いが書かれておらず、app.py:411-435 の deactivate も貸出の有無を見ない。借りている備品を先に返却させる規則が書かれているのは管理者の昇格（app.py:363-365）だけである。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:407-408 のコメント「アカウントは消さずに無効にして一覧に残す（「無効」と出す）」と app.py:427 の active = 0 の更新、accounts.html:15 の「無効」表示。"
+  },
+  "R9": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:31 の総務の決まり「一覧をファイル（CSV）に出すときは、借りている社員の社員番号と名前を出す」と app.py:249-253 の CSV の列。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:24 の LEND_DAYS_BACK = 30 と app.py:704-705「貸出日にできるのは今日から 30 日前まで」により、31 日前は受け付けない。"
+  },
+  "R11": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:25 のコメント「返却の期限は貸出日から 14 日。期限の当日から「期限超過」」と app.py:220 の today >= due の判定。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:455・478・516 で管理番号を upper() して保存・重複判定しており、大文字に揃える扱いが一貫している（明文の規定はなく、コードからの推定）。"
+  }
+ },
+ "detail": {
+  "R1": "spec",
+  "R2": "spec",
+  "R3": "spec",
+  "R4": "spec",
+  "R5": "spec",
+  "R6": "spec",
+  "R7": "undecided",
+  "R8": "spec",
+  "R9": "spec",
+  "R10": "spec",
+  "R11": "spec",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 0,
+  "spec_right": 6,
+  "wrong": 5,
+  "undecided": 1
+ },
+ "wall_sec": 47.6,
+ "usage": {
+  "input_tokens": 10,
+  "cache_creation_input_tokens": 43799,
+  "cache_read_input_tokens": 159765,
+  "output_tokens": 9183,
+  "output_tokens_details": {
+   "thinking_tokens": 7401
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 43799,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 48593,
+    "cache_creation_input_tokens": 8610,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 8610
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.01494995,
+ "tool_uses": 5,
+ "error": null
+}

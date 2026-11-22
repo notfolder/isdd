@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug-haiku-r2",
+ "cond": "code_bug",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "answers": {
+  "R1": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:23 の MAX_LOANS_PER_PERSON = 3 と app.py:563-567 の loan_rule_violation が「同時に 3 件まで」と定めており、3 件は上限ちょうどで許される。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:555-560 の borrower_choices は「管理者は出さない」と定め、templates/accounts.html:4 も「管理者は備品を借りられません」と明記している。"
+  },
+  "R3": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:788-790 の history のドックストリングが「ログインしている人なら誰でも見られる」と定め、ログイン確認のみで管理者限定の処理はない。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:587-589 の request_loan のドックストリングが「管理者が承認するまでは貸出にしない」と定め、templates/index.html:43-48 は申請中を承認待ちとして表示する。"
+  },
+  "R5": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:26-27 の依頼 7 のコメントが「今の期限に 14 日足す」と定め、app.py:776 の延長後の期限計算も +14 日になっている。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:26-27 のコメントが「1 回の貸出につき 1 回だけ」と定め、app.py:770-771 は延長済みの備品の再延長を拒否している。"
+  },
+  "R7": {
+   "verdict": "判断できない",
+   "basis": "templates/accounts.html:5 と app.py:407-410 は退職の条件として「管理者は先に外す」「承認待ちの申請は残す」しか定めず、貸出中の社員を退職させてよいかの記述がない。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:407-409 のコメントが「アカウントは消さずに無効にして一覧に残す（「無効」と出す）」と定め、templates/accounts.html:5 も同じことを書いている。"
+  },
+  "R9": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:31 の総務の決まり「一覧を CSV に出すときは借りている社員の社員番号と名前を出す」と、app.py:249-253 の CSV 出力が一致している。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:24 の LEND_DAYS_BACK = 30 と app.py:704-705 の「今日から 30 日前まで」の制限により 31 日前は範囲外で、templates/lend.html:19 も同じ範囲を表示する。"
+  },
+  "R11": {
+   "verdict": "仕様どおり",
+   "basis": "app.py:25 のコメントが「返却の期限は貸出日から 14 日。期限の当日から「期限超過」」と定め、貸出日から 14 日目は期限の当日にあたる（app.py:220 の today >= due）。"
+  },
+  "R12": {
+   "verdict": "判断できない",
+   "basis": "資料に管理番号を大文字に揃えるという決まりの記述はなく、app.py:455 と app.py:478 の .upper() は実装だけで、templates/equipment_form.html:7 は「半角の英数字とハイフン」としか書いていない。"
+  }
+ },
+ "detail": {
+  "R1": "spec",
+  "R2": "spec",
+  "R3": "spec",
+  "R4": "spec",
+  "R5": "spec",
+  "R6": "spec",
+  "R7": "undecided",
+  "R8": "spec",
+  "R9": "spec",
+  "R10": "spec",
+  "R11": "spec",
+  "R12": "undecided"
+ },
+ "score": {
+  "bug_caught": 0,
+  "spec_right": 5,
+  "wrong": 5,
+  "undecided": 2
+ },
+ "wall_sec": 33.1,
+ "usage": {
+  "input_tokens": 10,
+  "cache_creation_input_tokens": 43347,
+  "cache_read_input_tokens": 163752,
+  "output_tokens": 6525,
+  "output_tokens_details": {
+   "thinking_tokens": 4546
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 43347,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 52952,
+    "cache_creation_input_tokens": 3799,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 3799
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.01357042,
+ "tool_uses": 6,
+ "error": null
+}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}マイクの貸出{% endblock %}
+{% block content %}
+<h1>マイクの貸出</h1>
+<p><a href="{{ url_for('microphones.history') }}">貸出の履歴</a></p>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+<form method="get" action="{{ url_for('microphones.index') }}">
+  <input name="q" value="{{ q }}" placeholder="番号か名前">
+  <button>絞り込む</button>
+</form>
+
+<table>
+  <thead><tr><th>番号</th><th>名前</th><th>状態</th><th>借りている社員</th><th>貸出日</th><th>期限</th></tr></thead>
+  <tbody>
+  {% for i in items %}
+    <tr>
+      <td>{{ i.code }}</td>
+      <td>{{ i.name }}</td>
+      <td>{{ {'free': '空き', 'lent': '貸出中', 'overdue': '期限超過'}[i.status] }}</td>
+      <td>{% if i.borrower %}{{ i.borrower }} {{ i.borrower_name }}{% endif %}</td>
+      <td>{{ i.lent_on or '' }}</td>
+      <td>{{ i.due_on or '' }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6">該当するマイクはありません</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% if current_user and current_user['role'] == 'staff' %}
+<h2>マイクの登録</h2>
+<form method="post" action="{{ url_for('microphones.item_create') }}">
+  <label>番号 <input name="code"></label>
+  <label>名前 <input name="name"></label>
+  <button>登録</button>
+</form>
+
+<h2>名前の変更</h2>
+<form method="post" action="{{ url_for('microphones.item_update') }}">
+  <label>番号 <input name="code"></label>
+  <label>新しい名前 <input name="name"></label>
+  <button>変更</button>
+</form>
+
+<h2>マイクの削除</h2>
+<form method="post" action="{{ url_for('microphones.item_delete') }}">
+  <label>番号 <input name="code"></label>
+  <button>削除</button>
+</form>
+
+<h2>貸出</h2>
+<form method="post" action="{{ url_for('microphones.lend') }}">
+  <label>マイクの番号 <input name="item_code"></label>
+  <label>社員番号 <input name="employee_no"></label>
+  <label>貸出日（省略すると今日） <input name="lent_on" placeholder="YYYY-MM-DD"></label>
+  <button>貸し出す</button>
+</form>
+
+<h2>返却</h2>
+<form method="post" action="{{ url_for('microphones.give_back') }}">
+  <label>マイクの番号 <input name="item_code"></label>
+  <button>返却</button>
+</form>
+{% endif %}
+{% endblock %}

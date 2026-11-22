@@ -1,0 +1,114 @@
+{
+ "label": "review-req_err-sonnet-r2",
+ "cond": "req_err",
+ "model": "claude-sonnet-5-5",
+ "run": 2,
+ "issues": [
+  {
+   "what": "依頼では 1 人が同時に借りられるのは 2 件までなのに、3 件までと書いてある。",
+   "where": "requirements.md 3-2 RQ-FT-LIMIT-LOANS-PER-EMPLOYEE、RQ-FT-COUNT-REQUESTS-IN-LOAN-LIMIT、4-2 貸出・申請の「借りる社員」、4-3 CRUD、4-4 状態遷移、シナリオ RQ-TS-VERIFY-LOAN-LIMIT、エラー文言「この社員はすでに 3 件借りています」"
+  },
+  {
+   "what": "依頼では貸出日から 15 日以上たって返っていなければ期限超過（14 日目までは貸出中）なのに、期限の日（貸出日 + 14 日）以降、つまり 14 日目から期限超過と書いてある。",
+   "where": "requirements.md 用語集「期限超過」「返却の期限」、1-2「貸出日から 14 日の数え方」、画面仕様 貸出状況、3-2 RQ-FT-SHOW-OVERDUE-STATUS、4-4 状態遷移、シナリオ RQ-TS-VERIFY-RETURN-DUE-DATE-AND-OVERDUE（14 日前の貸出が期限超過）"
+  },
+  {
+   "what": "依頼では延長は 7 日延ばせるのに、14 日延ばす（期限は貸出日 + 28 日）と書いてある。",
+   "where": "requirements.md 用語集「延長」「返却の期限」、3-2 RQ-FT-LIMIT-DUE-DATE-EXTENSION、4-2 貸出の返却の期限、4-4 状態遷移、2-2 業務課題 RQ-BK-RETURN-DUE-DATE-EXTENSION、機能一覧 RQ-FT-EXTEND-RETURN-DUE-DATE"
+  },
+  {
+   "what": "依頼では履歴を見られるのは管理者だけで社員は自分の分も見られないのに、ログインしている管理者と社員の全員が全員分の履歴を見られると書いてある。",
+   "where": "requirements.md 用語集「履歴」、画面仕様 履歴（/history/）、3-2 RQ-FT-ALLOW-LOGGED-IN-HISTORY-VIEWER、1-2「履歴を開ける人と「履歴」のリンク」、全画面の共通部分、4-5 RQ-UI-LENDING-HISTORY-SCREEN"
+  },
+  {
+   "what": "依頼では CSV に借りている社員の名前は出さず社員番号だけなのに、社員番号と名前の両方を出すと書いてある。",
+   "where": "requirements.md 用語集「CSV 出力」、1-2「CSV の項目」「借りている社員の出し方」、3-1 RQ-UI-LENDING-STATUS-CSV-EXPORT、3-2 RQ-FT-CSV-EMPLOYEE-NUMBER-AND-NAME"
+  },
+  {
+   "what": "依頼では備品を借りたままの社員は退職の処理ができないのに、借りている社員（期限超過を含む）も退職の処理ができると書いてある。",
+   "where": "requirements.md 用語集「退職の処理」、1-2「アカウントを消すか、借りている社員の扱い」、3-2 RQ-FT-ALLOW-RETIRING-BORROWER、2 業務フロー・6 運用要件の退職者が出たとき"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 0,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M6",
+    "M3",
+    "M2",
+    "M5",
+    "M4"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  }
+ ],
+ "wall_sec": 36.2,
+ "usage": {
+  "input_tokens": 23,
+  "cache_creation_input_tokens": 96661,
+  "cache_read_input_tokens": 730501,
+  "output_tokens": 3836,
+  "output_tokens_details": {
+   "thinking_tokens": 1081
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 96661,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 80,
+    "cache_read_input_tokens": 108426,
+    "cache_creation_input_tokens": 1639,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1639
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.49810009999999993,
+ "tool_uses": 12,
+ "error": null
+}

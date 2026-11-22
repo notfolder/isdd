@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}飲料の申請 {{ r['id'] }}{% endblock %}
+{% block content %}
+<h1>飲料の申請 {{ r['id'] }}</h1>
+<table>
+<tr><th>申請した社員</th><td>{{ r['employee_no'] }} {{ employee['name'] }}</td></tr>
+<tr><th>数量</th><td>{{ r['quantity'] }}</td></tr>
+<tr><th>単価（税抜き）</th><td>{{ r['unit_price'] }}</td></tr>
+<tr><th>税抜き</th><td>{{ r['quantity'] * r['unit_price'] }}</td></tr>
+<tr><th>税込み</th><td>{{ r['amount_incl_tax'] }}</td></tr>
+<tr><th>状態</th><td>{{ {'pending': '申請中', 'approved': '承認', 'rejected': '却下'}[r['state']] }}</td></tr>
+</table>
+<p><a href="{{ url_for('beverages.index') }}">一覧へ</a></p>
+{% endblock %}

@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug_staledocs-haiku-r2",
+ "cond": "code_bug_staledocs",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 3-2 業務ルール RQ-FT-LIMIT-LOANS-PER-EMPLOYEE に「1 人の社員が同時に借りられるのは 2 件まで」とあり、README.md「社員が席から借りる」節にも「1 人 2 件まで」とあるため、3 件同時は意図と違う。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 3-2 業務ルール RQ-FT-EXCLUDE-STAFF-FROM-BORROWERS に「借りる社員の選択肢には、その時点で役割が社員の利用者だけを出す」とあり、README.md「管理者を増やす」節も管理者は借りる社員の選択肢に出ないと書いているため、管理者の名前が出ないのは意図どおり。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 3-2 業務ルール RQ-FT-RESTRICT-HISTORY-VIEWER に「履歴の画面を開けるのは担当者だけ。社員には自分が借りた分も見せない」とあり、README.md「貸出と返却の履歴」節も管理者だけが開けると書いているため、社員が履歴を見られるのは意図と違う。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "README.md「社員が席から借りる」節に「申請しただけでは貸出にならない。管理者が承認して初めて貸出になる」とあり、docs/requirements.md 1 章「今回は作らないが」にも社員からの申請を足しても担当者が確定するまでは貸出にしないとあるため、申請中のままなのは意図どおり。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "README.md「返却の期限の延長」節に「その貸出の返却の期限を 7 日延ばせる（期限は貸出日 + 21 日になる）」とあり、docs/requirements.md 1 章にも「延ばすのは 7 日」とあるため、14 日延びるのは意図と違う。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 1 章と README.md「返却の期限の延長」節の両方に、延長は 1 回の貸出につき 1 回だけで、2 回目はできないとあるため、再延長ができないのは意図どおり。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "README.md「退職した社員」節に「備品を借りている社員は、先に返却してからでないと退職にできない」とあり、docs/requirements.md 1 章にも「備品を借りたままの社員は無効にできない。先に返却を処理する」とあるため、借りたままの退職が通ったのは意図と違う。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "README.md「退職した社員」節に「アカウントは消えず、一覧の「状態」の列に「無効」と出る」とあり、docs/requirements.md 1 章にも「アカウントは消さずに「無効」にして残す」とあるため、無効のまま一覧に残るのは意図どおり。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "README.md「貸出状況の CSV 出力」節に「借りている社員は社員番号だけを出し、名前は出さない」とあり、docs/requirements.md 1 章にも「ファイルには借りている社員の名前を出さず、社員番号だけを出す」とあるため、名前が入ったのは意図と違う。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の用語集「貸出日」に「今日から 30 日前までの日付だけを受け付ける」とあり、3-2 業務ルール RQ-FT-RESTRICT-LENT-ON-RANGE も 30 日前から今日までの範囲外を拒むと定めているため、31 日前の登録が受け付けられないのは意図どおり。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の用語集「期限超過」に「期限の日まで（貸出日から 14 日目まで）は「貸出中」」とあり、期限超過は貸出日から 15 日以上たってからなので、14 日目の備品を期限超過と表示するのは意図と違う。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の用語集「管理番号」に「大文字と小文字を区別せず、大文字にそろえて保存・表示する」とあり、3-2 業務ルール RQ-FT-NORMALIZE-EQUIPMENT-NUMBER も同じ扱いを定めているため、pc-001 が PC-001 と出るのは意図どおり。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 70.5,
+ "usage": {
+  "input_tokens": 22,
+  "cache_creation_input_tokens": 95060,
+  "cache_read_input_tokens": 650658,
+  "output_tokens": 14530,
+  "output_tokens_details": {
+   "thinking_tokens": 10658
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 95060,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 108120,
+    "cache_creation_input_tokens": 344,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 344
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.049548020000000005,
+ "tool_uses": 13,
+ "error": null
+}

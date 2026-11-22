@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>申請の詳細</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+{% if row %}
+<table>
+<tr><th>番号</th><td>{{ row['id'] }}</td></tr>
+<tr><th>申請した社員</th><td>{{ row['employee_no'] }} {{ employee_name }}</td></tr>
+<tr><th>数量</th><td>{{ row['quantity'] }}</td></tr>
+<tr><th>単価（税抜き）</th><td>{{ row['unit_price'] }}</td></tr>
+<tr><th>税抜き</th><td>{{ subtotal }}</td></tr>
+<tr><th>税込み</th><td>{{ row['amount_incl_tax'] }}</td></tr>
+<tr><th>状態</th><td>{{ labels[row['state']] }}</td></tr>
+</table>
+{% endif %}
+<p><a href="/courier/">一覧へ戻る</a></p>
+{% endblock %}

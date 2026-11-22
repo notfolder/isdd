@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+{% set labels = {'pending': '申請中', 'approved': '承認', 'rejected': '却下'} %}
+<h1>{{ title }}（{{ r.id }}）</h1>
+<table>
+<tr><th>申請した社員</th><td>{{ r.employee_no }} {{ r.employee_name }}</td></tr>
+<tr><th>数量</th><td>{{ r.quantity }}</td></tr>
+<tr><th>単価（税抜き）</th><td>{{ r.unit_price }}</td></tr>
+<tr><th>税抜き</th><td>{{ r.subtotal }}</td></tr>
+<tr><th>税込み</th><td>{{ r.amount_incl_tax }}</td></tr>
+<tr><th>状態</th><td>{{ labels[r.state] }}</td></tr>
+</table>
+<p><a href="{{ url_for('translations.index') }}">一覧へ戻る</a></p>
+{% endblock %}

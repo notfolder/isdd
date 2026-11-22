@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ date }} の予約</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<table>
+<thead><tr><th>部屋</th><th>予約</th></tr></thead>
+<tbody>
+{% for r in rooms %}
+<tr><td>{{ r['code'] }} {{ r['name'] }}</td>
+<td>{% for b in bookings.get(r['code'], []) %}{{ b['start'] }}-{{ b['end'] }} {{ b['employee_no'] }} {{ b['employee_name'] or '' }}<br>{% else %}なし{% endfor %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<p><a href="{{ url_for('shuttle.index') }}">一覧へ</a></p>
+{% endblock %}

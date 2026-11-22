@@ -1,0 +1,114 @@
+{
+ "label": "review-req_err-haiku-r2",
+ "cond": "req_err",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "issues": [
+  {
+   "what": "同時に借りられる件数が依頼の「2 件まで」ではなく「3 件まで」になっている。",
+   "where": "requirements.md 3-2 業務ルール RQ-FT-LIMIT-LOANS-PER-EMPLOYEE（525 行目）。ほかに 1-2 依頼に無く自分で決めた項目の表（86, 141, 145, 98 行目付近）、4-2 データ項目の表（622, 633 行目）、3-2 RQ-FT-COUNT-REQUESTS-IN-LOAN-LIMIT（541 行目）、画面仕様の貸出の登録（456 行目）にも「3 件」と書いてある。"
+  },
+  {
+   "what": "延長の日数が依頼の「7 日」ではなく「14 日」になっている。",
+   "where": "requirements.md 用語集の「延長」（35 行目）、「返却の期限」（33 行目。延長後は貸出日 + 28 日）、1-2 依頼に無く自分で決めた項目の「延長できる人・回数・日数」（160 行目）と「14 日を数える起点」（161 行目）、3-2 RQ-FT-LIMIT-DUE-DATE-EXTENSION（545 行目）、RQ-FT-SHOW-EXTENDED-RETURN-DUE-DATE（492 行目）、画面仕様 入力データ（319 行目）と画面遷移（356 行目）。"
+  },
+  {
+   "what": "期限超過になるのが依頼の「貸出日から 15 日以上たって返っていないとき」（14 日目までは貸出中）ではなく、返却の期限の日（貸出日から 14 日目）当日から期限超過になっている。",
+   "where": "requirements.md 用語集の「期限超過」（34 行目。期限の日の前日までは貸出中）、1-2 依頼に無く自分で決めた項目の「「貸出日から 14 日」の数え方」（85 行目。依頼を「13 日目までは貸出中」と書き換えている）、4-4 状態遷移の RQ-DT-EQUIPMENT-STATE-LENT-WITH-DUE-DATE（667 行目）と RQ-DT-EQUIPMENT-STATE-OVERDUE（670 行目）、3-2 RQ-FT-SHOW-OVERDUE-STATUS（493 行目）。"
+  },
+  {
+   "what": "履歴を見られるのが依頼の「管理者だけ」ではなく、社員にも全員分の履歴を見せる仕様になっている（社員は自分の分も見られないはずだった）。",
+   "where": "requirements.md 用語集の「履歴」（37 行目。「管理者も社員も履歴の画面で見られる（全員分の履歴が出る）」）、1-2 依頼に無く自分で決めた項目の「履歴を開ける人」（130 行目。「社員にも全員分を見せる」を総務の決まりとしている）、3-2 RQ-FT-ALLOW-LOGGED-IN-HISTORY-VIEWER（537 行目）、画面仕様 履歴（`/history/`）の開ける人（473 行目）。"
+  },
+  {
+   "what": "CSV に借りている社員の名前を出すことになっているが、依頼では社員番号だけを出し名前は出さないことになっている。",
+   "where": "requirements.md 概要（7 行目。「社員番号に加えて名前も出す」）、用語集の「貸出状況」（39 行目）と「CSV 出力」（40 行目）、1-2 依頼に無く自分で決めた項目の「CSV の項目」（193 行目）と「借りている社員の出し方」（194 行目）、3-2 RQ-FT-CSV-EMPLOYEE-NUMBER-AND-NAME（557 行目。「社員番号と名前を出す」を総務の決まりとしている）、4-2 の CSV 関連の項目（200 行目付近）。"
+  },
+  {
+   "what": "借りたままの社員の退職の処理を認めているが、依頼では備品を借りたままの社員は退職の処理ができないことになっている。",
+   "where": "requirements.md 用語集の「退職の処理」（20 行目。「備品を借りている社員もできる」）、1-2 依頼に無く自分で決めた項目の「アカウントを消すか、借りている社員の扱い」（173 行目）、3-2 RQ-FT-ALLOW-RETIRING-BORROWER（549 行目。「借りている社員も退職にできる」を総務の決まりとしている）。"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 0,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M3",
+    "M6",
+    "M2",
+    "M5",
+    "M4"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M3",
+    "M6",
+    "M2",
+    "M5",
+    "M4"
+   ],
+   "other": 0
+  }
+ ],
+ "wall_sec": 59.9,
+ "usage": {
+  "input_tokens": 18,
+  "cache_creation_input_tokens": 87401,
+  "cache_read_input_tokens": 532230,
+  "output_tokens": 11367,
+  "output_tokens_details": {
+   "thinking_tokens": 8237
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 87401,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 97537,
+    "cache_creation_input_tokens": 3268,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 3268
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.03501248,
+ "tool_uses": 9,
+ "error": null
+}

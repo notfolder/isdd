@@ -1,0 +1,118 @@
+{
+ "label": "review-code_bug-haiku-r2",
+ "cond": "code_bug",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "issues": [
+  {
+   "what": "1 人が同時に借りられる件数の上限が 3 件になっている（依頼は 2 件まで）。",
+   "where": "app.py の 23 行目 MAX_LOANS_PER_PERSON = 3（貸出の決まりの判定 563〜571 行で使用）"
+  },
+  {
+   "what": "期限超過になるのが貸出日から 14 日目（期限の当日）からになっている（依頼は 15 日以上たってから。14 日目までは「貸出中」）。",
+   "where": "app.py の 220 行目 item[\"status\"] = \"期限超過\" if today >= due（25 行目のコメントも同じ誤り）。templates/index.html の状態表示もこの値を使う"
+  },
+  {
+   "what": "延長で延びる日数が 7 日ではなく 14 日になっている（依頼は 1 回につき 7 日）。",
+   "where": "app.py の 28 行目 EXTEND_DAYS = 14（due_date の 145〜149 行、延長の処理の 776〜777 行、753 行の説明文も 14 日と書いている）"
+  },
+  {
+   "what": "貸出状況の CSV に、借りている社員の名前を出している（依頼は社員番号だけを出し、名前は出さない）。",
+   "where": "app.py の 249 行目（ヘッダに「借りている社員の名前」）と 253 行目（borrower_name を書き出す）。31 行目と 243 行目のコメントも名前を出すと書いている"
+  },
+  {
+   "what": "退職の処理で、備品を借りたままの社員を止めていない（依頼は借りたままの社員は退職の処理ができない）。",
+   "where": "app.py の 411〜435 行目 deactivate()（貸出中の備品があるかの確認が無い）。templates/accounts.html の 27〜30 行目（退職ボタン）"
+  },
+  {
+   "what": "履歴を見られるのが管理者だけでなく、ログインしている全員（社員も含む）になっている（依頼は管理者だけ。社員は自分の分も見られない）。",
+   "where": "app.py の 788〜794 行目 history()（管理者かどうかの確認が無い）。templates/base.html の 24 行目（社員にも履歴のリンクを出す）"
+  },
+  {
+   "what": "管理者が社員を管理者にする操作を、借りている備品があると禁止している（依頼には、そのような制限は無い）。",
+   "where": "app.py の 363〜365 行目 promote()（貸出件数の確認と「先に返却を処理してください」のメッセージ）。templates/accounts.html の 4 行目の説明文"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 1,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  }
+ ],
+ "wall_sec": 47.4,
+ "usage": {
+  "input_tokens": 18,
+  "cache_creation_input_tokens": 45720,
+  "cache_read_input_tokens": 327926,
+  "output_tokens": 8819,
+  "output_tokens_details": {
+   "thinking_tokens": 6684
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 45720,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 56035,
+    "cache_creation_input_tokens": 3089,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 3089
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.016834560000000002,
+ "tool_uses": 9,
+ "error": null
+}

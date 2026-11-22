@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}ショールームの日ごとの予約{% endblock %}
+{% block content %}
+<h1>ショールームの予約（{{ date }}）</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+{% for r in rooms %}
+<h2>{{ r.code }} {{ r.name }}</h2>
+<table>
+<thead><tr><th>開始</th><th>終了</th><th>社員番号</th></tr></thead>
+<tbody>
+{% for b in table[r.code] %}<tr><td>{{ b.start }}</td><td>{{ b.end }}</td><td>{{ b.employee }}</td></tr>
+{% else %}<tr><td colspan="3">予約はありません</td></tr>{% endfor %}
+</tbody>
+</table>
+{% endfor %}
+<p><a href="{{ url_for('showrooms.index') }}">一覧へ戻る</a></p>
+{% endblock %}

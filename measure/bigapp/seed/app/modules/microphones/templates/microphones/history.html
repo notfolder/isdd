@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}マイクの貸出の履歴{% endblock %}
+{% block content %}
+<h1>マイクの貸出の履歴</h1>
+<p><a href="{{ url_for('microphones.index') }}">一覧へ戻る</a></p>
+<table>
+  <thead><tr><th>番号</th><th>名前</th><th>社員</th><th>貸出日</th><th>期限</th><th>返却日</th></tr></thead>
+  <tbody>
+  {% for l in loans %}
+    <tr><td>{{ l.item_code }}</td><td>{{ l.item_name }}</td><td>{{ l.employee_no }} {{ l.employee_name }}</td><td>{{ l.lent_on }}</td><td>{{ l.due_on }}</td><td>{{ l.returned_on }}</td></tr>
+  {% else %}
+    <tr><td colspan="6">履歴はありません</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

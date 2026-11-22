@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>備品の貸出</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="/equipment/">
+  <label>絞り込み <input name="q" value="{{ q }}"></label>
+  <button>検索</button>
+  <a href="/equipment/history">貸出の履歴</a>
+</form>
+<table>
+<thead><tr><th>番号</th><th>名前</th><th>状態</th><th>借りている社員</th><th>貸出日</th><th>期限</th><th></th></tr></thead>
+<tbody>
+{% for r in rows %}
+<tr data-code="{{ r['code'] }}"><td>{{ r['code'] }}</td><td>{{ r['name'] }}</td>
+<td>{{ {'free': '在庫', 'lent': '貸出中', 'overdue': '延滞'}[r['status']] }}</td>
+<td>{% if r['borrower'] %}{{ r['borrower'] }} {{ r['borrower_name'] }}{% endif %}</td>
+<td>{{ r['lent_on'] or '' }}</td><td>{{ r['due_on'] or '' }}</td>
+<td>{% if current_user['role'] == 'staff' %}
+{% if r['borrower'] %}
+<form method="post" action="/equipment/return" style="display:inline"><input type="hidden" name="item_code" value="{{ r['code'] }}"><button>返却</button></form>
+{% else %}
+<form method="post" action="/equipment/items/delete" style="display:inline"><input type="hidden" name="code" value="{{ r['code'] }}"><button>削除</button></form>
+{% endif %}{% endif %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if current_user['role'] == 'staff' %}
+<h2>備品を登録</h2>
+<form method="post" action="/equipment/items/new">
+  <label>番号 <input name="code"></label>
+  <label>名前 <input name="name"></label>
+  <button>登録</button>
+</form>
+<h2>名前を直す</h2>
+<form method="post" action="/equipment/items/edit">
+  <label>番号 <input name="code"></label>
+  <label>名前 <input name="name"></label>
+  <button>直す</button>
+</form>
+<h2>貸し出す</h2>
+<form method="post" action="/equipment/lend">
+  <label>備品の番号 <input name="item_code"></label>
+  <label>社員番号 <input name="employee_no"></label>
+  <label>貸出日 <input name="lent_on" placeholder="YYYY-MM-DD（省略すると今日）"></label>
+  <button>貸出</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,118 @@
+{
+ "label": "review-notes_err-sonnet-r3",
+ "cond": "notes_err",
+ "model": "claude-sonnet-5-5",
+ "run": 3,
+ "issues": [
+  {
+   "what": "1 人が同時に借りられるのは 2 件までのはずが、3 件までになっている。",
+   "where": "DECISIONS.md 15行目（1 人が同時に借りられるのは 3 件まで）、169行目・179行目（3 件までの数え方）"
+  },
+  {
+   "what": "期限超過は貸出日から 15 日以上たったときのはずが、14 日以上（14 日目から。期限の日から）で期限超過としており、14 日目までは「貸出中」のはずが 13 日目までになっている。",
+   "where": "DECISIONS.md 25行目、67行目、209行目（期限 <= 今日で判定）"
+  },
+  {
+   "what": "延長は 7 日延ばすはずが、14 日延ばす（延長済みは期限が +28 日）ことになっている。",
+   "where": "DECISIONS.md 27行目、190行目、208行目、209行目"
+  },
+  {
+   "what": "延長を操作できるのは管理者だけのはずが、借りている本人も延長できることになっている。",
+   "where": "DECISIONS.md 198行目、211行目"
+  },
+  {
+   "what": "履歴を見られるのは管理者だけで社員は自分の分も見られないはずが、ログインしている社員なら誰でも履歴を見られることになっている。",
+   "where": "DECISIONS.md 23行目、133行目、154行目（「履歴」リンクをログイン中の利用者全員に出す）"
+  },
+  {
+   "what": "備品を借りたままの社員は退職の処理ができないはずが、借りたままでも退職（無効）にできることになっている。",
+   "where": "DECISIONS.md 80行目、220行目、239行目（拒否するのは管理者・無効済み・申請中のときだけ）"
+  },
+  {
+   "what": "CSV では借りている社員は社員番号だけを出し名前は出さないはずが、社員番号に加えて名前も出すことになっている。",
+   "where": "DECISIONS.md 106行目、248行目、255行目（列に名前）、260行目"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 1,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 1
+  }
+ ],
+ "wall_sec": 18.4,
+ "usage": {
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 28305,
+  "cache_read_input_tokens": 104717,
+  "output_tokens": 1880,
+  "output_tokens_details": {
+   "thinking_tokens": 874
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 28305,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 39991,
+    "cache_creation_input_tokens": 1718,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1718
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.14250770000000001,
+ "tool_uses": 3,
+ "error": null
+}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>モバイル Wi-Fi の貸出</h1>
+<p><a href="{{ url_for('wifi_routers.history') }}">貸出の履歴</a></p>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('wifi_routers.index') }}">
+  <label>絞り込み <input name="q" value="{{ q }}"></label>
+  <button>検索</button>
+</form>
+<table>
+<thead><tr><th>番号</th><th>名前</th><th>状態</th><th>借りている社員</th><th>貸出日</th><th>期限</th><th></th></tr></thead>
+<tbody>
+{% for i in items %}
+<tr data-code="{{ i.code }}">
+  <td>{{ i.code }}</td><td>{{ i.name }}</td>
+  <td>{{ {'free': '貸出可', 'lent': '貸出中', 'overdue': '延滞'}[i.status] }}</td>
+  <td>{% if i.borrower %}{{ i.borrower }} {{ i.borrower_name or '' }}{% endif %}</td>
+  <td>{{ i.lent_on or '' }}</td><td>{{ i.due_on or '' }}</td>
+  <td>
+    {% if current_user and current_user['role'] == 'staff' %}
+      {% if i.borrower %}
+      <form method="post" action="{{ url_for('wifi_routers.return_item') }}" style="display:inline"><input type="hidden" name="item_code" value="{{ i.code }}"><button>返却</button></form>
+      {% else %}
+      <form method="post" action="{{ url_for('wifi_routers.item_delete') }}" style="display:inline"><input type="hidden" name="code" value="{{ i.code }}"><button>削除</button></form>
+      {% endif %}
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% if current_user and current_user['role'] == 'staff' %}
+<h2>物を登録</h2>
+<form method="post" action="{{ url_for('wifi_routers.item_create') }}">
+  <label>番号 <input name="code"></label>
+  <label>名前 <input name="name"></label>
+  <button>登録</button>
+</form>
+<h2>名前を直す</h2>
+<form method="post" action="{{ url_for('wifi_routers.item_update') }}">
+  <label>番号 <input name="code"></label>
+  <label>新しい名前 <input name="name"></label>
+  <button>直す</button>
+</form>
+<h2>貸し出す</h2>
+<form method="post" action="{{ url_for('wifi_routers.lend') }}">
+  <label>物の番号 <input name="item_code"></label>
+  <label>社員番号 <input name="employee_no"></label>
+  <label>貸出日（省略すると今日） <input name="lent_on" placeholder="YYYY-MM-DD"></label>
+  <button>貸し出す</button>
+</form>
+<h2>返却する</h2>
+<form method="post" action="{{ url_for('wifi_routers.return_item') }}">
+  <label>物の番号 <input name="item_code"></label>
+  <button>返却</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}茶菓の申請 {{ row['id'] }}{% endblock %}
+{% block content %}
+<h1>茶菓の申請 {{ row['id'] }}</h1>
+<table>
+<tr><th>申請した社員</th><td>{{ row['employee_no'] }}{% if employee %} {{ employee['name'] }}{% endif %}</td></tr>
+<tr><th>数量</th><td>{{ row['quantity'] }}</td></tr>
+<tr><th>単価（税抜き）</th><td>{{ row['unit_price'] }}</td></tr>
+<tr><th>税込み金額</th><td>{{ row['amount_incl_tax'] }}</td></tr>
+<tr><th>状態</th><td>{{ {'pending': '申請中', 'approved': '承認', 'rejected': '却下'}[row['state']] }}</td></tr>
+</table>
+<p><a href="{{ url_for('snacks.index') }}">一覧へ</a></p>
+{% endblock %}

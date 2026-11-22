@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>印刷の申請 {{ r.id }}</h1>
+<dl>
+  <dt>申請した社員</dt><dd>{{ r.employee_no }} {{ r.employee_name }}</dd>
+  <dt>数量</dt><dd>{{ r.quantity }}</dd>
+  <dt>単価（税抜き）</dt><dd>{{ r.unit_price }} 円</dd>
+  <dt>税抜き</dt><dd>{{ r.amount }} 円</dd>
+  <dt>税込み</dt><dd>{{ r.amount_incl_tax }} 円</dd>
+  <dt>状態</dt><dd>{{ r.state_label }}</dd>
+</dl>
+<p><a href="{{ url_for('printing.index') }}">一覧へ戻る</a></p>
+{% endblock %}

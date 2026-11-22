@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug_staledocs-haiku-r3",
+ "cond": "code_bug_staledocs",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 4-2 節（貸出の借りる社員「1 人の社員に同時に 2 件まで」）と 3-2 節の業務ルール RQ-FT-LIMIT-LOANS-PER-EMPLOYEE（同時に借りられるのは 2 件まで）に反し、3 件目の貸出が受け付けられたため。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 3-2 節 RQ-FT-EXCLUDE-STAFF-FROM-BORROWERS で、借りる社員の選択肢には社員の役割の利用者だけを出し、担当者（管理者と呼ばれる人を含む）は借りられないと定めているため、担当者の名前が出ないのは意図どおり。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 3-2 節 RQ-FT-RESTRICT-HISTORY-VIEWER と 3 節の履歴画面（/history/）の記述で、履歴を見られるのは担当者だけ、社員には見せないと定めているのに、社員が履歴の画面を開けたため。"
+  },
+  "R4": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 1 節（社員が自分で貸出を登録する機能は作らない）と 3 節の貸出状況の行ボタン表（社員には空きの行のボタンを出さない）に反し、社員の「借りる」で申請中になるのは、正本にない動きのため。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 1 節（返却の期限の延長は今は受け付けない。将来受け付けても延ばすのは 7 日）に反し、延長ができて返却の期限が 14 日延びたため。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 1 節で返却の期限の延長は今は受け付けないと定め、将来受け付ける場合も 1 回の貸出につき 1 回だけとしているため、2 回目の延長を断ることは意図どおり。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 1 節（退職の扱いは今は決めない。将来扱うなら備品を借りたままの社員は無効にできず、先に返却を処理する）に反し、借りたままの社員の退職処理が通ったため。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 1 節（将来退職を扱うなら、アカウントは消さずに「無効」にして残す）のとおり、退職の処理をした社員のアカウントが無効として残ることは意図どおり。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の 1 節（一覧をファイルに出す機能は今は作らない。将来足す場合もファイルには借りている社員の名前を出さず社員番号だけを出す）と 3-1 節（帳票・出力ファイルは無い）に反し、CSV に借りている社員の名前が入ったため。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 1-2 節（「今日から 30 日前まで」は両端を含む）と 3-2 節 RQ-FT-RESTRICT-LENT-ON-RANGE（貸出日は今日の 30 日前から今日まで）で、31 日前の貸出日は受け付けないと定めているため。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md の用語集（返却の期限は貸出日 + 14 日。期限超過は貸出日から 15 日以上たってから。14 日目までは貸出中）と 1-2 節の「貸出日から 14 日」の数え方に反し、貸出日から 14 日目の備品が期限超過と表示されたため。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md の 4-2 節の備品の管理番号（大文字と小文字を区別せず、大文字にそろえて保存・表示する）と 3-2 節 RQ-FT-NORMALIZE-EQUIPMENT-NUMBER のとおり、「pc-001」の登録が「PC-001」と表示されるのは意図どおり。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "bug",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 5,
+  "wrong": 1,
+  "undecided": 0
+ },
+ "wall_sec": 84.6,
+ "usage": {
+  "input_tokens": 24,
+  "cache_creation_input_tokens": 100461,
+  "cache_read_input_tokens": 696725,
+  "output_tokens": 17681,
+  "output_tokens_details": {
+   "thinking_tokens": 13523
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 100461,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 107478,
+    "cache_creation_input_tokens": 6387,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 6387
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.07148499,
+ "tool_uses": 15,
+ "error": null
+}

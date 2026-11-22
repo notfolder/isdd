@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>贈答品の申請 {{ r['id'] }}</h1>
+<table>
+<tr><th>申請した社員</th><td>{{ r['employee_no'] }}{% if employee %}（{{ employee['name'] }}）{% endif %}</td></tr>
+<tr><th>数量</th><td>{{ r['quantity'] }}</td></tr>
+<tr><th>単価（税抜き）</th><td>{{ r['unit_price'] }}</td></tr>
+<tr><th>税抜き</th><td>{{ amount_excl_tax }}</td></tr>
+<tr><th>税込み</th><td>{{ r['amount_incl_tax'] }}</td></tr>
+<tr><th>状態</th><td>{{ labels[r['state']] }}</td></tr>
+<tr><th>申請日</th><td>{{ r['applied_on'] }}</td></tr>
+</table>
+<p><a href="{{ url_for('gifts.index') }}">一覧へ戻る</a></p>
+{% endblock %}

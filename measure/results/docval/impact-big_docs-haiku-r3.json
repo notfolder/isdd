@@ -1,0 +1,185 @@
+{
+ "label": "impact-big_docs-haiku-r3",
+ "cond": "big_docs",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "answers": {
+  "I1": [
+   "bicycles",
+   "books",
+   "cameras",
+   "carts",
+   "devices",
+   "equipment",
+   "first_aid_kits",
+   "guest_badges",
+   "helmets",
+   "keys",
+   "ladders",
+   "laptops",
+   "lockers",
+   "microphones",
+   "monitors",
+   "parking_passes",
+   "projectors",
+   "safety_vests",
+   "tablets",
+   "tents",
+   "tools",
+   "uniforms",
+   "vehicles",
+   "whiteboards",
+   "wifi_routers"
+  ],
+  "I2": [
+   "badges",
+   "beverages",
+   "bicycles",
+   "books",
+   "business_cards",
+   "cameras",
+   "carts",
+   "catering",
+   "cleaning",
+   "courier",
+   "flowers",
+   "gifts",
+   "guest_parking",
+   "gym",
+   "keys",
+   "labs",
+   "ladders",
+   "laptops",
+   "lockers",
+   "massage_rooms",
+   "meeting_rooms",
+   "microphones",
+   "nap_rooms",
+   "parking_passes",
+   "rooftop",
+   "safety_vests",
+   "seminar_rooms",
+   "shuttle",
+   "snacks",
+   "software",
+   "stamps",
+   "studios",
+   "supplies",
+   "tents",
+   "tools",
+   "translations",
+   "uniform_orders",
+   "uniforms",
+   "vehicles",
+   "web_booths",
+   "wifi_routers"
+  ],
+  "I3": [
+   "badges",
+   "beverages",
+   "book_orders",
+   "business_cards",
+   "catering",
+   "cleaning",
+   "courier",
+   "flowers",
+   "gifts",
+   "name_plates",
+   "printing",
+   "snacks",
+   "software",
+   "stamps",
+   "stationery",
+   "supplies",
+   "toner",
+   "train_tickets",
+   "translations",
+   "uniform_orders"
+  ],
+  "I4": [
+   "meeting_rooms"
+  ]
+ },
+ "score": {
+  "I1": {
+   "key": 25,
+   "listed": 25,
+   "hit": 25,
+   "missed": [],
+   "extra": [],
+   "recall": 1.0,
+   "precision": 1.0
+  },
+  "I2": {
+   "key": 41,
+   "listed": 41,
+   "hit": 41,
+   "missed": [],
+   "extra": [],
+   "recall": 1.0,
+   "precision": 1.0
+  },
+  "I3": {
+   "key": 20,
+   "listed": 20,
+   "hit": 20,
+   "missed": [],
+   "extra": [],
+   "recall": 1.0,
+   "precision": 1.0
+  },
+  "I4": {
+   "key": 1,
+   "listed": 1,
+   "hit": 1,
+   "missed": [],
+   "extra": [],
+   "recall": 1.0,
+   "precision": 1.0
+  }
+ },
+ "wall_sec": 173.5,
+ "usage": {
+  "input_tokens": 50,
+  "cache_creation_input_tokens": 108972,
+  "cache_read_input_tokens": 1689880,
+  "output_tokens": 33371,
+  "output_tokens_details": {
+   "thinking_tokens": 27421
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 108972,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 121924,
+    "cache_creation_input_tokens": 452,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 452
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.13747234,
+ "tool_uses": 24,
+ "tool_names": {
+  "Bash": 17,
+  "Read": 2,
+  "Grep": 4,
+  "Write": 1
+ },
+ "error": null
+}

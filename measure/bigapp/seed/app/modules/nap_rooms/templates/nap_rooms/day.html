@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>仮眠室の予約 {{ date }}</h1>
+<p><a href="/nap_rooms/">一覧へ</a></p>
+{% for r in rooms %}
+<h2>{{ r['code'] }} {{ r['name'] }}</h2>
+<table>
+<thead><tr><th>開始</th><th>終了</th><th>社員</th></tr></thead>
+<tbody>
+{% for b in by_room[r['code']] %}
+<tr><td>{{ b['start_time'] }}</td><td>{{ b['end_time'] }}</td><td>{{ b['employee_no'] }} {{ b['employee_name'] }}</td></tr>
+{% else %}
+<tr><td colspan="3">予約なし</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endfor %}
+{% endblock %}

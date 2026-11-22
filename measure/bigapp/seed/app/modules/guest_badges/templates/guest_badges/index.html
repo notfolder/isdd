@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>来客用入館証の貸出</h1>
+<p><a href="{{ url_for('guest_badges.history') }}">貸出の履歴</a></p>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('guest_badges.index') }}">
+  <label>絞り込み <input name="q" value="{{ request.args.get('q', '') }}"></label>
+  <button>検索</button>
+</form>
+<table>
+<thead><tr><th>番号</th><th>名前</th><th>状態</th><th>借りている社員</th><th>貸出日</th><th>期限</th></tr></thead>
+<tbody>
+{% for r in rows %}
+<tr data-code="{{ r['code'] }}"><td>{{ r['code'] }}</td><td>{{ r['name'] }}</td>
+<td>{{ {'free': '貸出可', 'lent': '貸出中', 'overdue': '期限切れ'}[r['status']] }}</td>
+<td>{% if r['borrower'] %}{{ r['borrower'] }} {{ r['borrower_name'] }}{% endif %}</td>
+<td>{{ r['lent_on'] or '' }}</td><td>{{ r['due_on'] or '' }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if current_user and current_user['role'] == 'staff' %}
+<h2>入館証を登録</h2>
+<form method="post" action="{{ url_for('guest_badges.item_new') }}">
+  <label>番号 <input name="code"></label> <label>名前 <input name="name"></label> <button>登録</button>
+</form>
+<h2>名前を直す</h2>
+<form method="post" action="{{ url_for('guest_badges.item_edit') }}">
+  <label>番号 <input name="code"></label> <label>名前 <input name="name"></label> <button>変更</button>
+</form>
+<h2>削除</h2>
+<form method="post" action="{{ url_for('guest_badges.item_delete') }}">
+  <label>番号 <input name="code"></label> <button>削除</button>
+</form>
+<h2>貸出</h2>
+<form method="post" action="{{ url_for('guest_badges.lend') }}">
+  <label>入館証の番号 <input name="item_code"></label>
+  <label>社員番号 <input name="employee_no"></label>
+  <label>貸出日 <input name="lent_on" placeholder="YYYY-MM-DD"></label>
+  <button>貸し出す</button>
+</form>
+<h2>返却</h2>
+<form method="post" action="{{ url_for('guest_badges.give_back') }}">
+  <label>入館証の番号 <input name="item_code"></label> <button>返却</button>
+</form>
+{% endif %}
+{% endblock %}

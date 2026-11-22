@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}申請 {{ req.id }}{% endblock %}
+{% block content %}
+<h1>申請 {{ req.id }}</h1>
+<table>
+  <tr><th>申請した社員</th><td>{{ req.employee_no }} {{ req.employee_name }}</td></tr>
+  <tr><th>数量</th><td>{{ req.quantity }}</td></tr>
+  <tr><th>単価（税抜き）</th><td>{{ req.unit_price }}</td></tr>
+  <tr><th>税抜き</th><td>{{ req.subtotal }}</td></tr>
+  <tr><th>税込み</th><td>{{ req.total }}</td></tr>
+  <tr><th>状態</th><td>{{ req.state_label }}（{{ req.state }}）</td></tr>
+</table>
+<p><a href="{{ url_for('software.index') }}">一覧へ戻る</a></p>
+{% endblock %}

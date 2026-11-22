@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>機能の一覧</h1>
+<ul>
+{% for m in modules %}<li><a href="/{{ m.slug }}/">{{ m.title }}</a></li>{% endfor %}
+</ul>
+{% endblock %}

@@ -79,6 +79,8 @@ AIDLC_ANSWERS_HEAD = """# 質問への依頼者の回答
 ASK_MAY = "分からないことは、応答の中で依頼者に質問してよいです"
 ASK_FIRST = "依頼に書かれていないことや決まっていないことは、作り始める前に、応答の中で依頼者に質問してください"
 KEEP_NOTES = "依頼者と決めたこと、依頼文で伝えられた方針と、その理由は、作業ディレクトリ直下の DECISIONS.md に書き足してください。作業の最初に必ず DECISIONS.md を読んでください（無ければ作る）。テストも書き、毎回すべて通してください。"
+KEEP_NOTES_CODE = "調べて分かったコードの構造（どの機能がどこにあり、きまりがどこにどう書かれているか）と、依頼者と決めたこと、その理由は、作業ディレクトリ直下の NOTES.md に書き足してください。作業の最初に必ず NOTES.md を読んでください（無ければ作る）。テストも直し、毎回すべて通してください。"
+SEED_NOTE_ISDD = "このディレクトリには既存のコードがあります。isdd の文書（docs/requirements.md・docs/detail_design.md・docs/trace_map.md）が無ければ、isdd-reverse-engineering のスキルで、今回の変更に必要な範囲の文書を起こしてから、変更を進めてください。"
 TASK = HERE  # --task で題材のフォルダ（stages/、contracts/、answers/、score.py）に切り替える
 
 CHANGE_NOTE = "これは既存のアプリへの変更要求です。前の段までの文書とコードがこのディレクトリにあります。既存の機能を壊さないでください。"
@@ -143,6 +145,7 @@ def main() -> int:
     parser.add_argument("--workdir-label", default=None, help="作業フォルダの名前（既定は --label と同じ）。続きを別の結果フォルダに記録するときに使う")
     parser.add_argument("--ask-first", action="store_true", help="対照群（依頼者役あり）の指示を「質問してよい」から「作る前に質問する」の一文に替える（一文つきの対照群）")
     parser.add_argument("--keep-notes", action="store_true", help="対照群（依頼者役あり）に、決めたことを DECISIONS.md に残して毎回読むことと、テストを書いて毎回通すことの 2 文を足す（数文つきの対照群。--ask-first と併せて使う）")
+    parser.add_argument("--seed", default=None, help="最初の依頼の前に作業フォルダへ写す既存のアプリのフォルダ（題材 bigapp）。指定すると、どの依頼も既存のアプリへの変更として扱う")
     parser.add_argument("--contract", default=None, help="契約ファイルの名前（既定 contracts/stage<N>.md。計測 5 は stage1-min.md）")
     args = parser.parse_args()
 
@@ -163,13 +166,15 @@ def main() -> int:
         if workdir.exists():
             shutil.rmtree(workdir)
         workdir.mkdir(parents=True)
+        if args.seed:
+            shutil.copytree(args.seed, workdir, dirs_exist_ok=True, ignore=shutil.ignore_patterns(".venv", "__pycache__", ".pytest_cache", "data"))
         subprocess.run(["git", "init", "-q"], cwd=workdir, check=False)
         if args.arm == "isdd":
             dest = workdir / ".claude" / "skills"
-            dest.mkdir(parents=True)
+            dest.mkdir(parents=True, exist_ok=True)  # 文書つきの出発点（--seed）には、すでにスキルが入っていることがある
             for skill in (REPO / "skills").iterdir():
                 if skill.is_dir() and not skill.name.endswith("-workspace"):
-                    shutil.copytree(skill, dest / skill.name, ignore=shutil.ignore_patterns("evals"))
+                    shutil.copytree(skill, dest / skill.name, ignore=shutil.ignore_patterns("evals"), dirs_exist_ok=True)
         if args.arm == "aidlc":
             # AI-DLC（awslabs/aidlc-workflows）を Claude Code 用に設定する。aidlc コマンドは事前に入れておく
             done = subprocess.run(["aidlc", "config", "--harness", "claude", "--yes"], cwd=workdir, capture_output=True, text=True)
@@ -217,9 +222,13 @@ def main() -> int:
                     assert ASK_MAY in prompt
                     prompt = prompt.replace(ASK_MAY, ASK_FIRST)
                 if args.arm == "control" and args.keep_notes:
-                    prompt = prompt.replace("\n採点の契約は", "\n" + KEEP_NOTES + "\n採点の契約は", 1)
-                    assert KEEP_NOTES in prompt
-                if stage > 1 and not args.until_requirements:
+                    notes = KEEP_NOTES_CODE if args.seed else KEEP_NOTES
+                    prompt = prompt.replace("\n採点の契約は", "\n" + notes + "\n採点の契約は", 1)
+                    assert notes in prompt
+                if args.arm == "isdd" and args.seed:
+                    prompt = prompt.replace("\n採点の契約は", "\n" + SEED_NOTE_ISDD + "\n採点の契約は", 1)
+                    assert SEED_NOTE_ISDD in prompt
+                if (stage > 1 or args.seed) and not args.until_requirements:
                     prompt = prompt.replace("\n採点の契約は", "\n" + CHANGE_NOTE + "\n採点の契約は", 1)
                     assert CHANGE_NOTE in prompt
                 if args.arm == "isdd" and args.until_requirements:

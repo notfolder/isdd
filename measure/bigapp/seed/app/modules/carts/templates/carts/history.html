@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>台車の貸出の履歴</h1>
+<p><a href="{{ url_for('carts.index') }}">一覧へ戻る</a></p>
+<table>
+<thead><tr><th>物の番号</th><th>名前</th><th>社員</th><th>貸出日</th><th>期限</th><th>返却日</th></tr></thead>
+<tbody>
+{% for r in rows %}
+<tr><td>{{ r['item_code'] }}</td><td>{{ r['item_name'] or '' }}</td><td>{{ r['employee_no'] }}</td><td>{{ r['lent_on'] }}</td><td>{{ r['due_on'] }}</td><td>{{ r['returned_on'] }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

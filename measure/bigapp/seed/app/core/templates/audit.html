@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>操作の記録</h1>
+<table>
+<thead><tr><th>日時</th><th>操作した人</th><th>機能</th><th>操作</th><th>対象</th></tr></thead>
+<tbody>{% for r in rows %}<tr><td>{{ r['logged_at'] }}</td><td>{{ r['actor_no'] }}</td><td>{{ r['module'] }}</td><td>{{ r['action'] }}</td><td>{{ r['target'] }}</td></tr>{% endfor %}</tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}（日別）{% endblock %}
+{% block content %}
+<h1>{{ title }}　{{ date }}</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('reception_rooms.day') }}">
+  <label>日付 <input name="date" value="{{ date }}" placeholder="YYYY-MM-DD"></label>
+  <button>表示</button>
+  <a href="{{ url_for('reception_rooms.index') }}">一覧へ戻る</a>
+</form>
+{% if not error %}
+<table>
+<thead><tr><th>部屋</th><th>予約</th></tr></thead>
+<tbody>
+{% for r in rooms %}
+<tr data-room="{{ r['code'] }}"><td>{{ r['code'] }} {{ r['name'] }}</td>
+<td>{% for b in by_room.get(r['code'], []) %}{{ b['start'] }}-{{ b['end'] }} {{ b['employee_no'] }} {{ b['employee_name'] }}<br>{% else %}予約なし{% endfor %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+{% endblock %}

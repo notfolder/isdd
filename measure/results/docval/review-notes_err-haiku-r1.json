@@ -1,0 +1,115 @@
+{
+ "label": "review-notes_err-haiku-r1",
+ "cond": "notes_err",
+ "model": "claude-haiku-5-5",
+ "run": 1,
+ "issues": [
+  {
+   "what": "1 人が同時に借りられる件数が 3 件になっている。依頼は 2 件まで。",
+   "where": "DECISIONS.md 15 行目（依頼 1 の方針の表「1 人が同時に借りられるのは 3 件まで」）。同じ 3 件の扱いが 169 行目（申請中も「3 件まで」に数える）と 179 行目（4 件目ができないようにする）にもある。"
+  },
+  {
+   "what": "期限超過の判定が 1 日早い。依頼は貸出日から 15 日以上たって返っていないと期限超過で、14 日目までは貸出中。この文書は 14 日以上たつと期限超過（13 日目までが貸出中）としている。",
+   "where": "DECISIONS.md 25 行目（「14 日以上たって返っていない備品は…期限超過。13 日目までは「貸出中」」）、67 行目（判定は「貸出日 <= 今日 − 14 日」）、209 行目（期限超過は「期限 <= 今日」）。"
+  },
+  {
+   "what": "延長の日数が 14 日になっている。依頼は 1 回につき 7 日。",
+   "where": "DECISIONS.md 27 行目（将来作るときは 1 回の貸出につき 1 回だけ、14 日延ばす）、190 行目（期限を 14 日延ばす）、208 行目（期限は貸出日 + 14 日、延長済みなら + 28 日）。"
+  },
+  {
+   "what": "延長を操作できる人が、管理者に加えて借りている本人にもなっている。依頼は管理者だけが延長を操作できる。",
+   "where": "DECISIONS.md 198 行目（延長できる利用者は「担当者と借りている本人」）、211 行目（「延長」ボタンは担当者と借りている本人にだけ出す）。"
+  },
+  {
+   "what": "社員が履歴を見られるようになっている。依頼は履歴を管理者だけが見られ、社員は自分の分も見られないこと。",
+   "where": "DECISIONS.md 133 行目（履歴を見られるのは「ログインしている社員と担当者」）、154 行目（「履歴」リンクはログインしている利用者にだけ出す）。"
+  },
+  {
+   "what": "備品を借りたままの社員を退職（無効）にできる。依頼では、備品を借りたままの社員は退職の処理ができない。",
+   "where": "DECISIONS.md 80 行目（「備品を借りたままの社員でも無効にできる」）、220 行目（同じ内容を依頼 8 の方針として記載）。"
+  },
+  {
+   "what": "CSV に借りている社員の名前を出している。依頼は借りている社員について社員番号だけを出し、名前は出さない。",
+   "where": "DECISIONS.md 248 行目（「社員番号に加えて名前も出す」）、255 行目（列に「借りている社員の名前」）、260 行目（社員の名前を出す）、106 行目（将来の制約として名前も出す）。"
+  },
+  {
+   "what": "依頼 1 の内容として「返却したら貸出の記録を消し、履歴は残さない」と記録している。依頼は貸出と返却の履歴を残すこと。（後の依頼 5 で置き換えたと書かれているが、依頼 1 の記録としては違う。）",
+   "where": "DECISIONS.md 19 行目（依頼 1 の方針の表）。"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 2,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 2
+  },
+  {
+   "found": [],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 2
+  }
+ ],
+ "wall_sec": 56.2,
+ "usage": {
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 38946,
+  "cache_read_input_tokens": 107476,
+  "output_tokens": 11628,
+  "output_tokens_details": {
+   "thinking_tokens": 10028
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 38946,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 41018,
+    "cache_creation_input_tokens": 11332,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 11332
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.01467876,
+ "tool_uses": 3,
+ "error": null
+}

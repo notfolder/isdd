@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}制服の購入の申請 {{ item['id'] }}{% endblock %}
+{% block content %}
+{% set labels = {'pending': '申請中', 'approved': '承認', 'rejected': '却下'} %}
+<h1>申請 {{ item['id'] }}</h1>
+<table>
+<tr><th>申請した社員</th><td>{{ item['employee_no'] }} {{ item['employee_name'] }}</td></tr>
+<tr><th>数量</th><td>{{ item['quantity'] }}</td></tr>
+<tr><th>単価</th><td>{{ item['unit_price'] }}</td></tr>
+<tr><th>税抜き</th><td>{{ item['subtotal'] }}</td></tr>
+<tr><th>税込み</th><td>{{ item['amount_incl_tax'] }}</td></tr>
+<tr><th>状態</th><td>{{ labels[item['state']] }}</td></tr>
+</table>
+<p><a href="/uniform_orders/">一覧へ戻る</a></p>
+{% endblock %}

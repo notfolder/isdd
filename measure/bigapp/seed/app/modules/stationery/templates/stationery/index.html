@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}文具の申請{% endblock %}
+{% block content %}
+<h1>文具の申請</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('stationery.index') }}">
+  <label>状態
+    <select name="state">
+      <option value="">すべて</option>
+      {% for s in states %}<option value="{{ s }}"{% if s == state %} selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+  </label>
+  <button>絞り込み</button>
+</form>
+<table>
+<thead><tr><th>番号</th><th>申請者</th><th>数量</th><th>単価</th><th>税抜き</th><th>税込み</th><th>状態</th><th></th></tr></thead>
+<tbody>
+{% for r in rows %}
+<tr data-request-id="{{ r['id'] }}">
+  <td><a href="{{ url_for('stationery.detail', request_id=r['id']) }}">{{ r['id'] }}</a></td>
+  <td>{{ r['employee_no'] }} {{ r['employee_name'] }}</td>
+  <td>{{ r['quantity'] }}</td><td>{{ r['unit_price'] }}</td><td>{{ r['subtotal'] }}</td><td>{{ r['amount_incl_tax'] }}</td>
+  <td>{{ r['state'] }}</td>
+  <td>{% if r['state'] == 'pending' and current_user['role'] == 'staff' %}
+    <form method="post" action="{{ url_for('stationery.approve') }}" style="display:inline"><input type="hidden" name="request_id" value="{{ r['id'] }}"><button>承認</button></form>
+    <form method="post" action="{{ url_for('stationery.reject') }}" style="display:inline"><input type="hidden" name="request_id" value="{{ r['id'] }}"><button>却下</button></form>
+  {% endif %}</td>
+</tr>
+{% else %}
+<tr><td colspan="8">申請はありません</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if current_user['role'] == 'staff' %}
+<h2>申請する</h2>
+<form method="post" action="{{ url_for('stationery.apply') }}">
+  <label>社員番号 <input name="employee_no"></label>
+  <label>数量 <input name="quantity" type="number" min="1" max="100"></label>
+  <label>単価（税抜き・円） <input name="unit_price" type="number" min="1" max="100000"></label>
+  <button>申請</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_docs_bug-haiku-r3",
+ "cond": "code_docs_bug",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 業務ルールの RQ-FT-LIMIT-LOANS-PER-EMPLOYEE:「1 人の社員が同時に借りられるのは 2 件まで。すでに 2 件借りている社員を選んで登録したら受け付けない」とあり、3 件目を受け付けることは意図されていない。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-EXCLUDE-STAFF-FROM-BORROWERS と 1-2 の表「管理者は借りられない」:管理者は備品を借りられず、借りる社員の選択肢には役割が社員の利用者だけを出すとある。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3「画面ごとの仕様」の「履歴（/history/）」:開ける人は管理者だけで、社員が開いたら貸出状況に移り「この操作はできません」と出すとある。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 用語集の「申請」「申請中」と 1-2 の表「すぐ貸出にするか、管理者の承認を挟むか」:社員の「借りる」は申請で、管理者が「承認」するまで申請中のまま、承認して初めて貸出になるとある。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 用語集の「延長」と 1-2 の表「7 日を数える起点」:延長は返却の期限に 7 日を足す（延長後は貸出日 + 21 日）とあり、14 日延びることは書かれていない。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 用語集の「延長」と 1-2 の表「延長できる人・回数・日数・期限超過の扱い」:延長は 1 回の貸出につき 1 回だけとあり、延長済みの備品への再延長は「延長は 1 回だけです」で受け付けないと書かれている。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-PROHIBIT-RETIRING-BORROWER:備品を 1 件でも借りている社員（期限超過を含む）は退職の処理ができず、先に返却するとあり、用語集の「退職の処理」も「備品を借りている社員にはできない」と定めている。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 用語集の「無効」と 1-2 の表「「無効」の表示」:退職の処理をしたアカウントは消さずに残し、アカウントの一覧の状態の列に「無効」と出すとある。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-1 帳票・出力ファイルの RQ-FT-CSV-EMPLOYEE-NUMBER-ONLY:CSV の借りている社員の列には社員番号だけを出し、名前はどの列にも出さないとあり、用語集の「CSV 出力」も「名前は出さない」と定めている。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 用語集の「貸出日」と 1-2 の表「『今日から 30 日前まで』の範囲」:貸出日は今日から 30 日前まで（両端を含む）だけを受け付けるとあり、31 日前は範囲外になる。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 用語集の「期限超過」と 1-2 の表「「貸出日から 14 日」の数え方」:期限超過は返却の期限より後で、貸出日から 15 日以上たった場合である。14 日目（返却の期限の日）までは「貸出中」と出すとある。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 用語集の「管理番号」:大文字と小文字を区別せず、大文字にそろえて保存・表示するとある。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 63.7,
+ "usage": {
+  "input_tokens": 22,
+  "cache_creation_input_tokens": 88623,
+  "cache_read_input_tokens": 735361,
+  "output_tokens": 11734,
+  "output_tokens_details": {
+   "thinking_tokens": 8223
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 88623,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 98915,
+    "cache_creation_input_tokens": 3112,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 3112
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.03740241,
+ "tool_uses": 12,
+ "error": null
+}

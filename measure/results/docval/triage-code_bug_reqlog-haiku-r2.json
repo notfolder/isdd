@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug_reqlog-haiku-r2",
+ "cond": "code_bug_reqlog",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "requests/01-request.md の「1 人が同時に借りられるのは 2 件まで」に対し、app.py:23 の MAX_LOANS_PER_PERSON が 3 になっている。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「借る社員の選択肢には社員だけを出す」に対し、app.py:555-560 borrower_choices が role=社員かつ有効のアカウントだけを出している。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "requests/01-request.md の「履歴を見られるのは担当者だけにする。社員には見せない」に対し、app.py:788-794 の history() はログインしていれば誰でも見られる。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「社員からの申請は、担当者が確定するまでは貸出にしない」に対し、app.py:587-616 の request_loan は申請中にし、templates/index.html:43-53 の「借りる」は申請のみで、承認（app.py:619-656）で初めて貸出になる。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "requests/02-request.md の「延ばすのは 7 日」に対し、app.py:28 の EXTEND_DAYS が 14 になっている。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "requests/02-request.md の「延長は 1 回の貸出につき 1 回だけ」に対し、app.py:770-771 が延長済みの備品の再延長を断っている。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "requests/03-request.md の「備品を借りたままの社員は、無効にできない。先に返却を処理する」に対し、app.py:411-435 の deactivate() は貸出の有無を確かめずに無効にしている。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "requests/03-request.md の「アカウントは消さずに『無効』にして残す」に対し、app.py:427 は active=0 にして残し、templates/accounts.html:15 が「無効」と表示する。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "requests/04-request.md の「ファイルには借りている社員の名前を出さず、社員番号だけを出す」に対し、app.py:249-253 の export_csv は社員番号と名前の両方を出している（app.py:31 のコメントも名前を出すと書いており、04 の決まりと食い違う）。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「貸出日は今日から 30 日前まで」に対し、app.py:704-705 は 31 日前を「今日から 30 日前まで」として断っている。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "requests/02-request.md の「貸出日から 14 日目までは『貸出中』、15 日以上たっても返っていなければ『期限超過』」に対し、app.py:218-220 は today >= due（貸出日から 14 日後）で「期限超過」にしている。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "requests/01-request.md の「保存するときは大文字にそろえ、一覧にも大文字で出す」に対し、app.py:478 と :516 が upper() で保存し、一覧も同じ値を出す。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 36.7,
+ "usage": {
+  "input_tokens": 10,
+  "cache_creation_input_tokens": 42232,
+  "cache_read_input_tokens": 167544,
+  "output_tokens": 7019,
+  "output_tokens_details": {
+   "thinking_tokens": 5133
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 42232,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 53716,
+    "cache_creation_input_tokens": 1920,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1920
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.013632340000000001,
+ "tool_uses": 5,
+ "error": null
+}

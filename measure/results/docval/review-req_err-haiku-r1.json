@@ -1,0 +1,114 @@
+{
+ "label": "review-req_err-haiku-r1",
+ "cond": "req_err",
+ "model": "claude-haiku-5-5",
+ "run": 1,
+ "issues": [
+  {
+   "what": "1 人の社員が同時に借りられる件数が、依頼の「2 件まで」ではなく「3 件まで」になっている。",
+   "where": "requirements.md の 3-2 業務ルール RQ-FT-LIMIT-LOANS-PER-EMPLOYEE（525 行目）。ほかに 406 行目・414 行目（画面仕様の注記）、456 行目（貸出の登録のエラー）、541 行目（RQ-FT-COUNT-REQUESTS-IN-LOAN-LIMIT）、622 行目と 633 行目（データ項目）、643 行目（申請の Create）、672・673 行目（状態遷移）、796 行目（テスト）にも同じ誤りがある。"
+  },
+  {
+   "what": "延長で返却の期限を延ばす日数が、依頼の「7 日」ではなく「14 日」（延長後の期限は貸出日から 28 日）になっている。",
+   "where": "requirements.md の 3-2 業務ルール RQ-FT-LIMIT-DUE-DATE-EXTENSION（545 行目）。ほかに 1 章の目的（7 行目）、用語集の「延長」（35 行目）と「返却の期限」（33 行目）、機能 RQ-FT-EXTEND-RETURN-DUE-DATE（505 行目）、データ項目の返却の期限（625 行目）、状態遷移（674・656 行目）、テスト（800 行目以降）にも同じ誤りがある。"
+  },
+  {
+   "what": "期限超過になる日が、依頼の「貸出日から 15 日以上たって返っていなければ期限超過、14 日目までは貸出中」ではなく「期限の日（14 日目）から期限超過」になっている。また、同じ文書の 165 行目では期限の当日は期限超過ではないとしていて、文書内でも食い違っている。",
+   "where": "requirements.md の用語集「期限超過」（34 行目）と 1 章の 85 行目（「13 日目までは貸出中」と依頼を誤って引用している）。ほかに 405 行目（画面の表示ルール）、493 行目（RQ-FT-SHOW-OVERDUE-STATUS）、657・667・670 行目（状態遷移）、774 行目（テスト「14 日目から期限超過」）にも同じ誤りがある。"
+  },
+  {
+   "what": "備品を借りたままの社員の退職の処理を禁じる依頼に反し、借りている社員（期限超過を含む）も退職の処理ができるとしている。",
+   "where": "requirements.md の 3-2 業務ルール RQ-FT-ALLOW-RETIRING-BORROWER（549 行目）。ほかに用語集の「退職の処理」（20 行目）、1 章の 173 行目（決めた内容）、テスト RQ-TS-VERIFY-RETIRE-BORROWER-ALLOWED（806 行目）、業務課題の対応表（829 行目）にも同じ誤りがある。"
+  },
+  {
+   "what": "履歴の画面を管理者だけに見せる依頼に反し、ログインしている社員にも全員分の履歴を見せるとしている（社員は自分の分も見られない、という依頼の内容と食い違う）。",
+   "where": "requirements.md の 3-2 業務ルール RQ-FT-ALLOW-LOGGED-IN-HISTORY-VIEWER（537 行目）。ほかに用語集の「履歴」（37 行目）、画面仕様の履歴（469 行目）、画面一覧 RQ-UI-LENDING-HISTORY-SCREEN（727 行目）、運用要件（750 行目）、テスト RQ-TS-VERIFY-LENDING-HISTORY-ACCESS（792 行目）にも同じ誤りがある。"
+  },
+  {
+   "what": "CSV で借りている社員の名前を出さない（社員番号だけを出す）とする依頼に反し、社員番号に加えて名前も出すとしている。",
+   "where": "requirements.md の 3-1 帳票 RQ-UI-LENDING-STATUS-CSV-EXPORT（516 行目、見出しと列の定義）。ほかに 3-2 業務ルール RQ-FT-CSV-EMPLOYEE-NUMBER-AND-NAME（557 行目）、用語集の「CSV 出力」（40 行目）、1 章の 193・194 行目（決めた内容）、業務フロー（263 行目）、テスト RQ-TS-VERIFY-CSV-EXPORT（812 行目）にも同じ誤りがある。"
+  }
+ ],
+ "found": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6"
+ ],
+ "other": 0,
+ "judge_votes": [
+  {
+   "found": [
+    "M1",
+    "M3",
+    "M6",
+    "M4",
+    "M2",
+    "M5"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M3",
+    "M6",
+    "M4",
+    "M2",
+    "M5"
+   ],
+   "other": 0
+  },
+  {
+   "found": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6"
+   ],
+   "other": 0
+  }
+ ],
+ "wall_sec": 67.0,
+ "usage": {
+  "input_tokens": 20,
+  "cache_creation_input_tokens": 124271,
+  "cache_read_input_tokens": 678990,
+  "output_tokens": 12585,
+  "output_tokens_details": {
+   "thinking_tokens": 9626
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 124271,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 133241,
+    "cache_creation_input_tokens": 4434,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 4434
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.09474376000000001,
+ "tool_uses": 11,
+ "error": null
+}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}タブレットの貸出{% endblock %}
+{% block content %}
+<h1>タブレットの貸出</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="{{ url_for('tablets.index') }}">
+  <label>絞り込み <input name="q" value="{{ q }}"></label>
+  <button>検索</button>
+  <a href="{{ url_for('tablets.history') }}">貸出の履歴</a>
+</form>
+{% set staff = current_user and current_user['role'] == 'staff' %}
+<table>
+<thead><tr><th>番号</th><th>名前</th><th>状態</th><th>借りている社員</th><th>貸出日</th><th>期限</th>{% if staff %}<th>操作</th>{% endif %}</tr></thead>
+<tbody>
+{% for r in rows %}
+<tr data-code="{{ r['code'] }}">
+  <td>{{ r['code'] }}</td><td>{{ r['name'] }}</td>
+  <td>{{ {'free': '貸出可', 'lent': '貸出中', 'overdue': '期限超過'}[r['status']] }}</td>
+  <td>{{ r['borrower'] or '' }}</td><td>{{ r['lent_on'] or '' }}</td><td>{{ r['due_on'] or '' }}</td>
+  {% if staff %}<td>
+    {% if r['status'] == 'free' %}
+    <form method="post" action="{{ url_for('tablets.item_delete') }}" style="display:inline"><input type="hidden" name="code" value="{{ r['code'] }}"><button>削除</button></form>
+    {% else %}
+    <form method="post" action="{{ url_for('tablets.return_item') }}" style="display:inline"><input type="hidden" name="item_code" value="{{ r['code'] }}"><button>返却</button></form>
+    {% endif %}
+  </td>{% endif %}
+</tr>
+{% else %}
+<tr><td colspan="7">該当するタブレットはありません</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if staff %}
+<h2>タブレットを登録</h2>
+<form method="post" action="{{ url_for('tablets.item_create') }}">
+  <label>番号 <input name="code"></label>
+  <label>名前 <input name="name"></label>
+  <button>登録</button>
+</form>
+<h2>名前を直す</h2>
+<form method="post" action="{{ url_for('tablets.item_update') }}">
+  <label>番号 <input name="code"></label>
+  <label>新しい名前 <input name="name"></label>
+  <button>更新</button>
+</form>
+<h2>貸し出す</h2>
+<form method="post" action="{{ url_for('tablets.lend') }}">
+  <label>物の番号 <input name="item_code"></label>
+  <label>社員番号 <input name="employee_no"></label>
+  <label>貸出日（省略すると今日） <input name="lent_on" placeholder="YYYY-MM-DD"></label>
+  <button>貸出</button>
+</form>
+{% endif %}
+{% endblock %}

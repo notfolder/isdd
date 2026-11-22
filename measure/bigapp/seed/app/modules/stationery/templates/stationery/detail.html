@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}文具の申請の詳細{% endblock %}
+{% block content %}
+<h1>申請の詳細</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+{% if item %}
+<table>
+<tr><th>番号</th><td>{{ item['id'] }}</td></tr>
+<tr><th>申請した社員</th><td>{{ item['employee_no'] }} {{ item['employee_name'] }}</td></tr>
+<tr><th>数量</th><td>{{ item['quantity'] }}</td></tr>
+<tr><th>単価</th><td>{{ item['unit_price'] }}</td></tr>
+<tr><th>税抜き</th><td>{{ item['subtotal'] }}</td></tr>
+<tr><th>税込み</th><td>{{ item['amount_incl_tax'] }}</td></tr>
+<tr><th>状態</th><td>{{ item['state'] }}</td></tr>
+</table>
+{% endif %}
+<p><a href="{{ url_for('stationery.index') }}">一覧へ</a></p>
+{% endblock %}

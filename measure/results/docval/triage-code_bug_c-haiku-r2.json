@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_bug_c-haiku-r2",
+ "cond": "code_bug_c",
+ "model": "claude-haiku-5-5",
+ "run": 2,
+ "answers": {
+  "R1": {
+   "verdict": "判断できない",
+   "basis": "app.py の loan_rule_violation の説明文（2 行目の docstring）は「同時に 2 件まで」とし、定数 MAX_LOANS_PER_PERSON = 3（25 行目）と画面の文言「すでに 3 件借りている」と食い違うため、上限が 2 件か 3 件か資料から決められない。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の borrower_choices の説明文（557 行目）「借りる社員の選択肢（有効な社員だけ。管理者は出さない）」と、lend の「管理者は借りられません」の処理に一致する。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "app.py の history 関数の説明文（791 行目）は「貸出と返却の履歴（管理者だけ）」とするが、関数はログイン済みかの確認しかしておらず、社員でも履歴画面を開ける。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の request_loan の説明文（590 行目）と loan_requests テーブルの説明（72 行目）に、社員の借りる操作は申請であり管理者が承認するまで貸出にしないとある。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "app.py の EXTEND_DAYS の説明（26〜27 行目）は「今の期限に 7 日足す」とするが、定数 EXTEND_DAYS は 14（28 行目）で、due_date により期限が貸出日から 28 日後になる。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の extend_loan の説明文（754 行目）と延長済みの判定（771 行目）、および LOAN 定数の説明（26 行目）に、延長は 1 回の貸出につき 1 回だけとある。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "app.py の deactivate の説明文（409 行目）と templates/accounts.html の説明文に「備品を借りたままの社員は無効にできない」「借りている社員は先に返却」とあるが、deactivate 関数には貸出の有無の確認が無い。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の deactivate の説明文（409〜410 行目）「アカウントは消さずに無効にして一覧に残す（「無効」と出す）」と、accounts.html の説明文「アカウントは消さずに残り」に一致する。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "app.py の export_csv の説明文（244 行目）と定数付近のコメント（31〜32 行目）は、CSV では社員の名前を出さず社員番号だけを出すとするが、export_csv は「借りている社員の名前」の列を出力している。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "app.py の LEND_DAYS_BACK = 30（24 行目）と lend の検査（705〜706 行目）で「今日から 30 日前まで」の貸出日だけを受け付け、lend.html にも同じ範囲が表示されている。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "app.py の LOAN_DAYS の説明（25 行目）は「期限の翌日から「期限超過」」とするが、equipment_status_rows は today >= due（221 行目）で、期限当日の 14 日目を「期限超過」にしている。"
+  },
+  "R12": {
+   "verdict": "判断できない",
+   "basis": "app.py は管理番号を保存時と重複確認時に upper() で大文字にしている（456、479 行目）が、資料に大文字で表示するという説明は無く、画面の文言（454 行目）も大小文字を示していないため、意図かどうか根拠が取れない。"
+  }
+ },
+ "detail": {
+  "R1": "undecided",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "undecided"
+ },
+ "score": {
+  "bug_caught": 5,
+  "spec_right": 5,
+  "wrong": 0,
+  "undecided": 2
+ },
+ "wall_sec": 35.1,
+ "usage": {
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 31376,
+  "cache_read_input_tokens": 127906,
+  "output_tokens": 6903,
+  "output_tokens_details": {
+   "thinking_tokens": 5018
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 31376,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 49832,
+    "cache_creation_input_tokens": 6439,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 6439
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.011006560000000002,
+ "tool_uses": 4,
+ "error": null
+}

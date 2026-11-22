@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>宅配便の申請</h1>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+<form method="get" action="/courier/">
+  <label>状態
+    <select name="state">
+      <option value="">すべて</option>
+      {% for key, label in labels.items() %}<option value="{{ key }}"{% if state == key %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+  </label>
+  <button>絞り込む</button>
+</form>
+<table>
+<thead><tr><th>番号</th><th>社員</th><th>数量</th><th>単価（税抜き）</th><th>税込み</th><th>状態</th><th></th></tr></thead>
+<tbody>
+{% for r in rows %}
+<tr data-request-id="{{ r['id'] }}">
+<td><a href="/courier/detail?request_id={{ r['id'] }}">{{ r['id'] }}</a></td><td>{{ r['employee_no'] }}</td>
+<td>{{ r['quantity'] }}</td><td>{{ r['unit_price'] }}</td><td>{{ r['amount_incl_tax'] }}</td><td>{{ labels[r['state']] }}</td>
+<td>{% if r['state'] == 'pending' and current_user and current_user['role'] == 'staff' %}
+<form method="post" action="/courier/approve" style="display:inline"><input type="hidden" name="request_id" value="{{ r['id'] }}"><button>承認</button></form>
+<form method="post" action="/courier/reject" style="display:inline"><input type="hidden" name="request_id" value="{{ r['id'] }}"><button>却下</button></form>
+{% endif %}</td></tr>
+{% else %}
+<tr><td colspan="7">申請はありません</td></tr>
+{% endfor %}
+</tbody>
+</table>
+{% if current_user and current_user['role'] == 'staff' %}
+<h2>申請する</h2>
+<form method="post" action="/courier/apply">
+  <label>社員番号 <input name="employee_no"></label>
+  <label>数量（1〜30） <input name="quantity"></label>
+  <label>単価（税抜き、1〜100000 円） <input name="unit_price"></label>
+  <button>申請</button>
+</form>
+{% endif %}
+{% endblock %}

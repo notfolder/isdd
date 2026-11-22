@@ -1,0 +1,114 @@
+{
+ "label": "triage-code_notes_bug-haiku-r3",
+ "cond": "code_notes_bug",
+ "model": "claude-haiku-5-5",
+ "run": 3,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 13 行目（依頼 1 の総務のきまり）で「1 人が同時に借りられるのは 2 件まで」と決めており、3 件借りられたのはこのきまりに反する。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 17 行目（依頼 1）で「借りる社員の選択肢は社員だけ」、79 行目（依頼 3）で担当者は借りられないきまりが後から担当者になった人にも当てはまると決めており、管理者の名前が出てこないのは意図どおり。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 133 行目（依頼 5）と 154 行目で「履歴を見られるのは担当者だけ」、社員が開いたら `/` に戻して理由を出すと決めており、社員が履歴を見られたのは意図と違う。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 161 行目（依頼 6）と 168 行目（依頼 6 の回答 1）で、「借りる」は「申請中」になり、担当者が「承認」するまで貸出にしないと決めており、申請中のままなのは意図どおり。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 27 行目（依頼 2）と 190 行目（依頼 7）で、延長は 1 回につき期限を 7 日延ばすと決めており、14 日延びたのは意図と違う（208 行目でも延長済みは +21 日＝+7 日と定めている）。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 27 行目（依頼 2）と 190 行目（依頼 7）、211 行目で、延長は 1 回の貸出につき 1 回だけと決めており、2 回目を断られたのは意図どおり。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 80 行目（依頼 3）と 220 行目（依頼 8）で、備品を借りたままの社員は無効にできない（先に返却を処理する）と決めており、そのまま退職が通ったのは意図と違う。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 80 行目と 220 行目（依頼 3・依頼 8）で、退職した社員はアカウントを消さず「無効」にして残すと決め、229 行目（依頼 8 の回答 4）で役割の列に「無効」と出すと決めており、意図どおり。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 106 行目（依頼 4）、248 行目と 260 行目（依頼 9）で、CSV には借りている社員の名前を出さず社員番号だけを出すと決めており、名前が入っていたのは意図と違う。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 16 行目（依頼 1 の総務のきまり）で、貸出日は今日から 30 日前まで（30 日前を含む）と決めており、31 日前の登録を受け付けないのは意図どおり。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "DECISIONS.md 25 行目（依頼 2）と 67 行目で、14 日目（期限の日）までは「貸出中」、15 日以上たって期限超過とすると決めており、14 日目に「期限超過」と出るのは意図と違う。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "DECISIONS.md 13 行目（依頼 1 の総務のきまり）で、管理番号は大文字小文字を区別せず、大文字にそろえて保存・表示すると決めており、「pc-001」が「PC-001」と出るのは意図どおり。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "wall_sec": 29.8,
+ "usage": {
+  "input_tokens": 8,
+  "cache_creation_input_tokens": 33370,
+  "cache_read_input_tokens": 111034,
+  "output_tokens": 5484,
+  "output_tokens_details": {
+   "thinking_tokens": 3769
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 33370,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 41470,
+    "cache_creation_input_tokens": 5304,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 5304
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.01052714,
+ "tool_uses": 3,
+ "error": null
+}
