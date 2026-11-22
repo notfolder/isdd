@@ -1,0 +1,30 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/bizrules-control-opus-r2/snapshot-stage1",
+  "tests": {
+    "test_base_accounts_and_login[chromium]": "pass",
+    "test_base_equipment[chromium]": "pass",
+    "test_base_lend_and_return[chromium]": "pass",
+    "test_rule_b1_two_items_per_person[chromium]": "pass",
+    "test_rule_b2_borrower_can_return[chromium]": "pass",
+    "test_rule_b3_lent_on_within_30_days[chromium]": "pass",
+    "test_rule_b4_staff_cannot_borrow[chromium]": "pass",
+    "test_rule_b5_equipment_number_ignores_case[chromium]": "pass",
+    "test_rule_b6_overdue_after_14_days[chromium]": "pass",
+    "test_rule_b7_no_lending_to_overdue_borrower[chromium]": "pass",
+    "test_rule_b8_no_delete_while_lent[chromium]": "pass"
+  },
+  "passed": 11,
+  "total": 11,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "...........                                                              [100%]\n11 passed in 14.70s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 505,
+    "public_functions": 34,
+    "classes": 0,
+    "templates": 7
+  },
+  "duration_sec": 16.8
+}

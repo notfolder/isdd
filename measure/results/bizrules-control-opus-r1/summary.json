@@ -1,0 +1,58 @@
+{
+  "arm": "control",
+  "run": 1,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 188.6,
+      "started": "2026-11-22T11:01:10",
+      "responder": true,
+      "questions_rounds": 0,
+      "tool_uses": 12,
+      "tool_names": {
+        "Bash": 10,
+        "Write": 2
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 28,
+        "output_tokens": 20544,
+        "cache_creation_input_tokens": 36761,
+        "cache_read_input_tokens": 492203,
+        "total_tokens": 549536
+      },
+      "cost_usd": 1.3166,
+      "turns": 14,
+      "rounds": 2,
+      "passed": 11,
+      "total": 11,
+      "tests": {
+        "test_base_accounts_and_login[chromium]": "pass",
+        "test_base_equipment[chromium]": "pass",
+        "test_base_lend_and_return[chromium]": "pass",
+        "test_rule_b1_two_items_per_person[chromium]": "pass",
+        "test_rule_b2_borrower_can_return[chromium]": "pass",
+        "test_rule_b3_lent_on_within_30_days[chromium]": "pass",
+        "test_rule_b4_staff_cannot_borrow[chromium]": "pass",
+        "test_rule_b5_equipment_number_ignores_case[chromium]": "pass",
+        "test_rule_b6_overdue_after_14_days[chromium]": "pass",
+        "test_rule_b7_no_lending_to_overdue_borrower[chromium]": "pass",
+        "test_rule_b8_no_delete_while_lent[chromium]": "pass"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 526,
+        "public_functions": 30,
+        "classes": 0,
+        "templates": 7
+      },
+      "score_error": null
+    }
+  },
+  "runner": "claude -p"
+}

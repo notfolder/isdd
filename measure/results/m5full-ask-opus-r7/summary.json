@@ -1,0 +1,55 @@
+{
+  "arm": "control",
+  "run": 7,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 160.0,
+      "started": "2026-11-22T11:04:27",
+      "responder": true,
+      "questions_rounds": 1,
+      "tool_uses": 6,
+      "tool_names": {
+        "Bash": 6
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 15,
+        "output_tokens": 16857,
+        "cache_creation_input_tokens": 31649,
+        "cache_read_input_tokens": 234559,
+        "total_tokens": 283080
+      },
+      "cost_usd": 0.7779,
+      "turns": 8,
+      "rounds": 2,
+      "passed": 4,
+      "total": 8,
+      "tests": {
+        "test_first_account_becomes_staff[chromium]": "pass",
+        "test_account_registration[chromium]": "pass",
+        "test_login_logout[chromium]": "pass",
+        "test_session_timeout[chromium]": "pass",
+        "test_employee_cannot_manage_equipment[chromium]": "fail",
+        "test_equipment_create[chromium]": "fail",
+        "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+        "test_lending_status_empty_and_sorted[chromium]": "fail"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 346,
+        "public_functions": 19,
+        "classes": 0,
+        "templates": 6
+      },
+      "score_error": null
+    }
+  },
+  "runner": "claude -p",
+  "ask_first": true
+}

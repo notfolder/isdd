@@ -1,0 +1,27 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/m5full-ask-opus-r2/snapshot-stage1",
+  "tests": {
+    "test_first_account_becomes_staff[chromium]": "pass",
+    "test_account_registration[chromium]": "fail",
+    "test_login_logout[chromium]": "pass",
+    "test_session_timeout[chromium]": "pass",
+    "test_employee_cannot_manage_equipment[chromium]": "pass",
+    "test_equipment_create[chromium]": "fail",
+    "test_equipment_update_and_delete_without_lending[chromium]": "fail",
+    "test_lending_status_empty_and_sorted[chromium]": "pass"
+  },
+  "passed": 5,
+  "total": 8,
+  "setup_ok": true,
+  "error": null,
+  "pytest_tail": "employee_number\")).locator(\".field-error\") with timeout 5000ms\nE             - waiting for locator(\".field\").filter(has=locator(\"#id_employee_number\")).locator(\".field-error\")\nE               14 × locator resolved to <span class=\"field-error\">社員番号は6桁の数字で入力してください</span>\nE                  - unexpected value \"社員番号は6桁の数字で入力してください\"\nE           \nE           Aria snapshot:\nE           - text: 社員番号は6桁の数字で入力してください\n\ntest_accounts.py:48: AssertionError\n_______________________ test_equipment_create[chromium] ________________________\n\napp = <conftest.AppServer object at 0x109b79e50>\npage = <Page url='http://127.0.0.1:50802/equipment/new/'>\n\n    @pytest.mark.stage1\n    def test_equipment_create(app, page):\n        app.seed({\"accounts\": [STAFF], \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}]})\n        login(page, app.base_url, emp(\"1\"))\n        page.goto(f\"{app.base_url}/equipment/new/\")\n        cases = [\n            (\"ＰＣ－００２\", \"ノートパソコン\", \"id_equipment_number\", FORMAT_MESSAGE),\n            (\"A\" * 21, \"ノートパソコン\", \"id_equipment_number\", FORMAT_MESSAGE),\n            (\"PC-001\", \"ノートパソコン\", \"id_equipment_number\", \"この管理番号は既に使われています\"),\n            (\"PC-002\", \"あ\" * 51, \"id_name\", \"備品名は 50 文字以内で入力してください\"),\n        ]\n        for number, name, input_id, message in cases:\n            fill_equipment(page, number, name)\n>           expect(field_error(page, input_id)).to_have_text(message)\nE           AssertionError: Locator expected to have text '管理番号は半角の英数字とハイフンで 20 文字以内で入力してください'\nE           Actual value: 管理番号は半角の英数字とハイフンで入力してください \nE           Call log:\nE             - Expect \"to_have_text\" locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\") with timeout 5000ms\nE             - waiting for locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\")\nE               14 × locator resolved to <span class=\"field-error\">管理番号は半角の英数字とハイフンで入力してください</span>\nE                  - unexpected value \"管理番号は半角の英数字とハイフンで入力してください\"\nE           \nE           Aria snapshot:\nE           - text: 管理番号は半角の英数字とハイフンで入力してください\n\ntest_equipment.py:34: AssertionError\n__________ test_equipment_update_and_delete_without_lending[chromium] __________\n\napp = <conftest.AppServer object at 0x109ba9940>\npage = <Page url='http://127.0.0.1:50832/equipment/2/edit/'>\n\n    @pytest.mark.stage1\n    def test_equipment_update_and_delete_without_lending(app, page):\n        app.seed({\"accounts\": [STAFF], \"equipment\": [{\"number\": \"PC-001\", \"name\": \"ノートパソコン\"}, {\"number\": \"PC-002\", \"name\": \"モニター\"}]})\n        login(page, app.base_url, emp(\"1\"))\n        equipment_row(page, \"PC-001\").get_by_role(\"button\", name=\"修正\").click()\n        fill_equipment(page, \"PC-101\", \"ノートパソコン（新）\")\n        expect(equipment_row(page, \"PC-101\")).to_contain_text(\"ノートパソコン（新）\")\n        equipment_row(page, \"PC-002\").get_by_role(\"button\", name=\"修正\").click()\n        fill_equipment(page, \"PC-101\", \"モニター\")\n>       expect(field_error(page, \"id_equipment_number\")).to_have_text(\"この管理番号は既に使われています\")\nE       AssertionError: Locator expected to have text 'この管理番号は既に使われています'\nE       Actual value: この管理番号はすでに登録されています \nE       Call log:\nE         - Expect \"to_have_text\" locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\") with timeout 5000ms\nE         - waiting for locator(\".field\").filter(has=locator(\"#id_equipment_number\")).locator(\".field-error\")\nE           14 × locator resolved to <span class=\"field-error\">この管理番号はすでに登録されています</span>\nE              - unexpected value \"この管理番号はすでに登録されています\"\nE       \nE       Aria snapshot:\nE       - text: この管理番号はすでに登録されています\n\ntest_equipment.py:51: AssertionError\n=========================== short test summary info ============================\nFAILED test_accounts.py::test_account_registration[chromium] - AssertionError...\nFAILED test_equipment.py::test_equipment_create[chromium] - AssertionError: L...\nFAILED test_equipment.py::test_equipment_update_and_delete_without_lending[chromium]\n3 failed, 5 passed, 15 deselected in 33.56s\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 308,
+    "public_functions": 17,
+    "classes": 0,
+    "templates": 5
+  },
+  "duration_sec": 35.7
+}

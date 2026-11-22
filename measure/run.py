@@ -76,6 +76,8 @@ AIDLC_ANSWERS_HEAD = """# 質問への依頼者の回答
 質問にはこのファイルの回答を依頼者の答えとして使う。ここに無いことは、依頼の文章と契約から最も単純な案を依頼者の答えとする。承認はこのファイルでは与えない（依頼者が発言で答える）。
 
 """
+ASK_MAY = "分からないことは、応答の中で依頼者に質問してよいです"
+ASK_FIRST = "依頼に書かれていないことや決まっていないことは、作り始める前に、応答の中で依頼者に質問してください"
 TASK = HERE  # --task で題材のフォルダ（stages/、contracts/、answers/、score.py）に切り替える
 
 CHANGE_NOTE = "これは既存のアプリへの変更要求です。前の段までの文書とコードがこのディレクトリにあります。既存の機能を壊さないでください。"
@@ -138,6 +140,7 @@ def main() -> int:
     parser.add_argument("--until-requirements", action="store_true", help="isdd 群・AI-DLC 群（依頼者役あり）を要件定義の承認で止める。隠しテストの採点はしない")
     parser.add_argument("--continue-session", default=None, help="要件定義で止めた回の続きを回す。その回のセッション ID。作業フォルダは消さず、最初の指示を「続きを最後まで」に替える")
     parser.add_argument("--workdir-label", default=None, help="作業フォルダの名前（既定は --label と同じ）。続きを別の結果フォルダに記録するときに使う")
+    parser.add_argument("--ask-first", action="store_true", help="対照群（依頼者役あり）の指示を「質問してよい」から「作る前に質問する」の一文に替える（一文つきの対照群）")
     parser.add_argument("--contract", default=None, help="契約ファイルの名前（既定 contracts/stage<N>.md。計測 5 は stage1-min.md）")
     args = parser.parse_args()
 
@@ -178,6 +181,8 @@ def main() -> int:
         log(label, "採点済みのため何もしない")
         return 0
     summary["runner"] = "claude -p"
+    if args.ask_first:
+        summary["ask_first"] = True
     if args.continue_session:
         summary["continued_from"] = {"workdir_label": args.workdir_label, "session": args.continue_session}
     if args.arm == "aidlc":
@@ -204,6 +209,9 @@ def main() -> int:
                 prompt = FIRST_PROMPT_AIDLC_Q.format(scope=args.scope, until=AIDLC_UNTIL_REQ if args.until_requirements else AIDLC_UNTIL_END)
             else:
                 prompt = FIRST_PROMPT_ISDD_Q if args.arm == "isdd" else FIRST_PROMPT_CONTROL_Q
+                if args.arm == "control" and args.ask_first:
+                    assert ASK_MAY in prompt
+                    prompt = prompt.replace(ASK_MAY, ASK_FIRST)
                 if args.arm == "isdd" and args.until_requirements:
                     assert ISDD_UNTIL_END in prompt
                     prompt = prompt.replace("要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください", "進めてください").replace(ISDD_UNTIL_END, ISDD_UNTIL_REQ)
