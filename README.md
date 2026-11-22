@@ -230,7 +230,7 @@ SKILL.md の編集は `skills/` 配下で、共通ファイルの編集は `shar
 
 1. 共通ファイルを変えたら `python3 tools/build_skills.py` で各スキルへ複製し、複製もコミットする。
 2. `python3 tools/build_skills.py --check` が「一致」で終わることを確認する（全スキルの `metadata.version` が揃っていることも確かめる）。
-3. `skills/` 配下の各 SKILL.md の frontmatter に `license` フィールドが含まれていることを確認する。
+3. `skills/` 配下の各 SKILL.md の frontmatter に `license` フィールドが含まれ、各スキルの直下に `LICENSE` の複製があることを確認する（複製は `tools/build_skills.py` が作る）。
 4. 公開前に dry-run を実行し、エラーがないことを確認する。
 
 ### dry-run（検証のみ）
@@ -242,7 +242,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v2.3.0
+gh skill publish ./skills --tag v2.3.1
 ```
 
 ---
@@ -294,7 +294,7 @@ bash install.sh
 
 ```bash
 # 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
-gh skill install notfolder/isdd --all --pin v2.3.0 --force
+gh skill install notfolder/isdd --all --pin v2.3.1 --force
 ```
 
 更新後、各プロジェクトで `isdd-setup` を再実行する（`trace_map_checker.py` と `dependency_checker.py` が `--src` にファイルを受け付け、`--exclude` で除外できる版に複製される）。v2.2 系で作った要件定義書は「1-2. 依頼に無く自分で決めた項目」の節が無いので `rq_integrity_checker.py` が「節の欠落」を報告する。第 1 章の末尾に節を足し、依頼文に無く自分で決めた項目を表で書く（無ければ「無し」と書く。節を足すだけなら正本を直接直してよい）。設計書で `DS-MD` を付けるのはチェッカーが走査するコードだけになったので、スクリプトは `DS-OP`、テンプレートや CSS は `DS-IF` に付け直してよい（付け直しは任意）。
@@ -303,7 +303,7 @@ gh skill install notfolder/isdd --all --pin v2.3.0 --force
 
 ```bash
 # 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
-gh skill install notfolder/isdd --all --pin v2.3.0 --force
+gh skill install notfolder/isdd --all --pin v2.3.1 --force
 ```
 
 更新後、各プロジェクトで `isdd-setup` を再実行する（`check.sh` に受け入れ判定が入り、`acceptance_checker.py` と `unittest_junit.py` が複製され、`.gitignore` に `e2e/results/` が足される）。v2.1 系で作った要件定義書は、第 7 章の表に「検証する要件ID」列が無いので `rq_integrity_checker.py` が「受け入れテスト欠落」を報告する。各シナリオの行に、そのシナリオが確かめる `RQ-FT`・`RQ-UI`・`RQ-EX` を書き足す（列を足すだけなら正本を直接直してよい）。E2E の実行コマンド（設計書 8-4）は JUnit XML を `e2e/results/` に出す形にする。
@@ -472,7 +472,21 @@ bash evals/run-all.sh claude isdd-setup
 
 ---
 
+## ライセンス
+
+MIT License です。全文は [LICENSE](LICENSE) にあります。スキル、参照文書、チェッカー、スクリプト、記事のすべてが対象です。
+
+次のものは他者の著作物で、それぞれのライセンスに従います。
+
+- `.agents/skills/mermaid-syntax-skill/`（MIT）
+- `measure/scicalc/vendor/` と題材 sci-calc（awslabs/aidlc-workflows からの複製、MIT-0）
+- `measure/` の結果フォルダに残る計測題材のソース（各フォルダの `LICENSE` や `COPYING`）
+
 ## 変更履歴
+
+### v2.3.1
+
+- ライセンスを CC-BY-4.0 から MIT License に変更。リポジトリ直下に `LICENSE` を置き、各スキルの直下にも複製する。スキルの手順とチェッカーの中身は v2.3.0 と同じ。
 
 ### v2.1.0
 

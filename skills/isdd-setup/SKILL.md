@@ -6,10 +6,10 @@ description: >
   エージェント自身によるフックの設定までを行う。何度実行しても同じ状態になる。
   「isdd をセットアップして」「対応表チェックを導入して」「isdd-setup を実行して」という依頼や、
   他の isdd スキルが「scripts/isdd/check.sh が無い」「scripts/isdd/VERSION がスキルの版と違う」と判断したときに使う。
-license: CC-BY-4.0
+license: MIT
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.3.0"
+  version: "v2.3.1"
 ---
 
 # isdd-setup — 対応表チェック導入スキル

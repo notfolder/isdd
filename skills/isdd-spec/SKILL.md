@@ -8,10 +8,10 @@ description: >
   「要件定義して」「システムを作りたい」「機能を追加したい」「仕様を変えたい」「設計して」「変更設計書を作って」
   「外部連携を確認したい」「change_requirements から設計して」といった依頼で使う。
   既存コードはあるが isdd の文書が無い場合は isdd-reverse-engineering、実装と実装後レビューは isdd-build が扱う。
-license: CC-BY-4.0
+license: MIT
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.3.0"
+  version: "v2.3.1"
 ---
 
 # isdd-spec — インタビュー駆動 仕様スキル

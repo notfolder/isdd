@@ -7,10 +7,10 @@ description: >
   「実装して」「設計書どおりに実装して」「tasks.md を進めて」「対応表を更新して」「実装後レビューをして」
   「実装差分を要件と設計に反映して」「proposals.md を正本に反映して」といった依頼で使う。コードには ID を書かない。
   設計に無い設計要素が要るときは実装を止め、isdd-spec での設計の見直しを待つ。
-license: CC-BY-4.0
+license: MIT
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.3.0"
+  version: "v2.3.1"
 ---
 
 # isdd-build — トレーサブル実装と実装後レビューのスキル

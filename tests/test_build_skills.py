@@ -14,6 +14,7 @@ class BuildSkillsTest(TempDirMixin, unittest.TestCase):
         super().setUp()
         for name in ("shared", "skills", "tools"):
             shutil.copytree(REPO / name, self.tmp / name, ignore=shutil.ignore_patterns("__pycache__", "*-workspace"))
+        shutil.copy2(REPO / "LICENSE", self.tmp / "LICENSE")
 
     def check(self):
         proc = subprocess.run([sys.executable, str(self.tmp / "tools" / "build_skills.py"), "--check"], capture_output=True, text=True)
@@ -56,8 +57,28 @@ class BuildSkillsTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("unused.md", out)
 
+    def test_missing_license_copy_is_detected(self):
+        (self.tmp / "skills" / "isdd-spec" / "LICENSE").unlink()
+        code, out = self.check()
+        self.assertEqual(code, 1, out)
+        self.assertIn("未複製: skills/isdd-spec/LICENSE", out)
+
+    def test_edited_license_copy_is_detected(self):
+        target = self.tmp / "skills" / "isdd-build" / "LICENSE"
+        target.write_text(target.read_text(encoding="utf-8") + "\n追記\n", encoding="utf-8")
+        code, out = self.check()
+        self.assertEqual(code, 1, out)
+        self.assertIn("正本と違う: skills/isdd-build/LICENSE", out)
+
+    def test_missing_root_license_is_detected(self):
+        (self.tmp / "LICENSE").unlink()
+        code, out = self.check()
+        self.assertEqual(code, 1, out)
+        self.assertIn("正本が無い: LICENSE", out)
+
     def test_build_repairs_copies(self):
         (self.tmp / "skills" / "isdd-spec" / "scripts" / "rq_ds_link_checker.py").unlink()
+        (self.tmp / "skills" / "isdd-spec" / "LICENSE").unlink()
         subprocess.run([sys.executable, str(self.tmp / "tools" / "build_skills.py")], check=True, capture_output=True)
         code, out = self.check()
         self.assertEqual(code, 0, out)

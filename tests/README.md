@@ -85,7 +85,7 @@
 | 規則 | 対象 | テスト |
 |---|---|---|
 | docker compose・初期ユーザー・E2E の要否は `completeness.json` の実行形態・認証・外部連携で切り替える | implementation_completeness_checker | `tests/test_implementation_completeness_checker.py` |
-| `skills/` の複製は `shared/` と一致させる。`metadata.version` は全スキルで揃える | tools/build_skills.py | `tests/test_build_skills.py` |
+| `skills/` の複製は `shared/` と一致させる。`metadata.version` は全スキルで揃える。リポジトリ直下の `LICENSE` を各スキルの直下へ複製する | tools/build_skills.py | `tests/test_build_skills.py` |
 
 ## 分かっている限界（テストで守っていないこと）
 

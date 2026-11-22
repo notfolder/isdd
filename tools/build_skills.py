@@ -3,7 +3,8 @@
 build_skills.py
 
 shared/ 配下の共通ファイル（references と scripts）を、shared/manifest.json の一覧どおりに
-各スキルの references/ と scripts/ へ複製する。
+各スキルの references/ と scripts/ へ複製する。リポジトリ直下の LICENSE も各スキルの直下へ複製する
+（gh skill install はスキルのフォルダだけを配るので、許諾文を一緒に届けるため）。
 
 複製した結果は git に含める。gh skill publish はリポジトリの内容をそのまま公開し、
 install.sh も skills/ をそのまま展開するため、複製をコミットしておけば両者の中身が一致する。
@@ -33,6 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SHARED = ROOT / "shared"
 SKILLS = ROOT / "skills"
 KINDS = ("references", "scripts")
+LICENSE = "LICENSE"
 VERSION_RE = re.compile(r'^\s*version:\s*"?([^"\s]+)"?\s*$', re.MULTILINE)
 
 
@@ -62,6 +64,8 @@ def validate(manifest: Dict[str, Dict[str, List[str]]]) -> List[str]:
         for path in sorted((SHARED / kind).iterdir()):
             if path.is_file() and path.name not in used[kind]:
                 errors.append(f"どのスキルにも複製されない正本: shared/{kind}/{path.name}")
+    if not (ROOT / LICENSE).is_file():
+        errors.append(f"正本が無い: {LICENSE}（リポジトリ直下）")
     versions = {}
     for name in skill_dirs:
         match = VERSION_RE.search((SKILLS / name / "SKILL.md").read_text(encoding="utf-8"))
@@ -86,6 +90,11 @@ def diff_skill(name: str, kinds: Dict[str, List[str]]) -> List[str]:
         for fname in sorted(expected & actual):
             if not filecmp.cmp(SHARED / kind / fname, dest / fname, shallow=False):
                 diffs.append(f"正本と違う: skills/{name}/{kind}/{fname}")
+    copied = SKILLS / name / LICENSE
+    if not copied.is_file():
+        diffs.append(f"未複製: skills/{name}/{LICENSE}")
+    elif not filecmp.cmp(ROOT / LICENSE, copied, shallow=False):
+        diffs.append(f"正本と違う: skills/{name}/{LICENSE}")
     return diffs
 
 
@@ -101,6 +110,7 @@ def build_skill(name: str, kinds: Dict[str, List[str]]) -> None:
         dest.mkdir(parents=True)
         for fname in files:
             shutil.copy2(SHARED / kind / fname, dest / fname)
+    shutil.copy2(ROOT / LICENSE, SKILLS / name / LICENSE)
 
 
 def main() -> int:
@@ -127,7 +137,7 @@ def main() -> int:
 
     for name, kinds in manifest.items():
         build_skill(name, kinds)
-    print(f"複製: {len(manifest)} スキルの references/ と scripts/ を shared/ から作り直しました。")
+    print(f"複製: {len(manifest)} スキルの references/・scripts/・LICENSE を正本から作り直しました。")
     return 0
 
 
