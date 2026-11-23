@@ -16,6 +16,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 from agentrun import run_claude_retry  # noqa: E402
+from scoring import collect_votes, parse_json_object, valid_found_vote  # noqa: E402
 
 MATERIAL = Path.home() / "isdd-measure-work" / "docval" / "material"
 WORK = Path.home() / "isdd-measure-work" / "docval" / "work"
@@ -115,7 +116,8 @@ def triage(args):
         return 0
     prompt = TRIAGE_PROMPT + "\n".join(f"- {rid}: {text}" for rid, _, text in REPORTS)
     result, meta = run_reader(label, args.cond, prompt, args.model, "triage.json")
-    result = result or {}
+    unreadable = not isinstance(result, dict)  # 判定のファイルを作れなかった回。「判断できない」と区別して残す
+    result = result if isinstance(result, dict) else {}
     score = {"bug_caught": 0, "spec_right": 0, "wrong": 0, "undecided": 0}
     detail = {}
     for rid, kind, _ in REPORTS:
@@ -129,7 +131,7 @@ def triage(args):
         else:
             score["wrong"] += 1
     OUT.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"label": label, "cond": args.cond, "model": args.model, "run": args.run, "answers": result, "detail": detail, "score": score, **meta},
+    out.write_text(json.dumps({"label": label, "cond": args.cond, "model": args.model, "run": args.run, "answers": result, "detail": detail, "score": score, "result_unreadable": unreadable, **meta},
                               ensure_ascii=False, indent=1), encoding="utf-8")
     print(label, score, meta["wall_sec"], "秒")
     return 0
@@ -142,23 +144,26 @@ def review(args):
         print(label, "済み")
         return 0
     issues, meta = run_reader(label, args.cond, REVIEW_PROMPT, args.model, "issues.json")
+    issues_unreadable = not isinstance(issues, list)  # 指摘のファイルを作れなかった回。「指摘なし」と区別して残す
     issues = issues if isinstance(issues, list) else []
     body = "\n".join(f"{i + 1}. {x.get('what', '')}（{x.get('where', '')}）" for i, x in enumerate(issues) if isinstance(x, dict)) or "（指摘なし）"
     jdir = WORK / "judge"
     jdir.mkdir(parents=True, exist_ok=True)
-    votes = []
-    for _ in range(3):
+
+    def ask():
         data = run_claude_retry(jdir, REVIEW_JUDGE + body, "claude-opus-5-5", "", 15)
-        text = (data.get("texts") or [""])[-1]
-        try:
-            votes.append(json.loads(text[text.index("{"): text.rindex("}") + 1]))
-        except Exception:  # noqa: BLE001
-            votes.append({"found": [], "other": 0})
+        return parse_json_object((data.get("texts") or [""])[-1])
+
+    # 形の壊れた応答を「1 件も見つけていない」として数えず、捨てて聞き直す。3 件そろわなければ結果を書かない
+    votes, rejected = collect_votes(ask, lambda v: valid_found_vote(v, MUTATIONS))
+    if votes is None:
+        print(label, f"未採点: 形の正しい採点が 3 件そろわなかった（捨てた応答 {len(rejected)} 件）。review をやり直す")
+        return 1
     found = sorted(m for m in MUTATIONS if sum(m in (v.get("found") or []) for v in votes) >= 2)
     other = sorted(int(v.get("other", 0) or 0) for v in votes)[1]
     OUT.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"label": label, "cond": args.cond, "model": args.model, "run": args.run, "issues": issues, "found": found, "other": other,
-                               "judge_votes": votes, **meta}, ensure_ascii=False, indent=1), encoding="utf-8")
+                               "judge_votes": votes, "judge_rejected": rejected, "issues_unreadable": issues_unreadable, **meta}, ensure_ascii=False, indent=1), encoding="utf-8")
     print(label, "見つけた", found, "ほか", other, meta["wall_sec"], "秒")
     return 0
 

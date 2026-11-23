@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from scoring import compare_stages, load_score, score_label, stage_fields  # noqa: E402
 
 
 def main() -> int:
@@ -31,19 +33,20 @@ def main() -> int:
             cmd = [sys.executable, str(HERE / "score.py"), "--app", str(app), "--stage", st, "--out", str(out_json)]
             if not snap.exists():
                 cmd.append("--skip-setup")
+            if out_json.exists():
+                out_json.unlink()  # 前の採点の結果を、今回の結果と取り違えない
             subprocess.run(cmd, check=False)
-            sc = json.loads(out_json.read_text(encoding="utf-8"))
+            sc = load_score(out_json)
             info = d["stages"][st]
             info.setdefault("original", {"passed": info.get("passed"), "total": info.get("total"), "tests": info.get("tests")})
-            info.update({"passed": sc["passed"], "total": sc["total"], "tests": sc["tests"], "overbuild": sc.get("overbuild"),
-                         "scored_from": "snapshot" if snap.exists() else "final_state"})
+            info.update({**stage_fields(sc), "scored_from": "snapshot" if snap.exists() else "final_state"})
             prev = d["stages"].get(str(int(st) - 1))
             if prev and prev.get("tests"):
-                info["regressions"] = sorted(t for t, v in prev["tests"].items() if v == "pass" and sc["tests"].get(t) not in (None, "pass"))
+                info.update(compare_stages(prev["tests"], info["tests"]))
             summary_path.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
         d["note"] = args.note
         summary_path.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"[{label}] " + ", ".join(f"stage {st}: {d['stages'][st]['passed']}/{d['stages'][st]['total']}" for st in sorted(d['stages'], key=int)), flush=True)
+        print(f"[{label}] " + ", ".join(f"stage {st}: {score_label(d['stages'][st])}" for st in sorted(d['stages'], key=int)), flush=True)
     return 0
 
 

@@ -11,36 +11,14 @@ import json
 import os
 import subprocess
 import sys
-import tempfile
 import time
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 MEASURE = HERE.parent
 sys.path.insert(0, str(MEASURE))
 from score import count_overbuild  # noqa: E402
-
-
-def run_pytest(python: str, hidden: Path, marks: str, env: dict, timeout_min: int, result: dict) -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        xml = Path(tmp) / "junit.xml"
-        cmd = [python, "-m", "pytest", str(hidden), "-m", marks, "-q", "-p", "no:cacheprovider", f"--junitxml={xml}"]
-        try:
-            proc = subprocess.run(cmd, cwd=hidden, env=env, capture_output=True, text=True, timeout=timeout_min * 60)
-            result["pytest_tail"] = result.get("pytest_tail", "") + (proc.stdout + proc.stderr)[-4000:]
-        except subprocess.TimeoutExpired:
-            result["error"] = (result["error"] or "") + f"\npytest timeout ({timeout_min} min): {hidden.parent.name}/{hidden.name}"
-        if xml.exists():
-            for tc in ET.parse(str(xml)).getroot().iter("testcase"):
-                status = "pass"
-                for child in tc:
-                    if child.tag in ("failure", "error"):
-                        status = "fail"
-                        break
-                    if child.tag == "skipped":
-                        status = "skip"
-                result["tests"][tc.get("name")] = status
+from scoring import finalize, new_result, run_hidden  # noqa: E402
 
 
 def main() -> int:
@@ -53,7 +31,7 @@ def main() -> int:
     parser.add_argument("--timeout-min", type=int, default=40)
     args = parser.parse_args()
     app = Path(args.app).resolve()
-    result = {"stage": args.stage, "app": str(app), "tests": {}, "passed": 0, "total": 0, "setup_ok": None, "error": None}
+    result = new_result(args.stage, app)
     env = dict(os.environ, MEASURE_APP_DIR=str(app), MEASURE_STAGE=str(args.stage))
     started = time.time()
     if not args.skip_setup and (app / "setup.sh").exists():
@@ -67,16 +45,15 @@ def main() -> int:
             result["error"] = "setup.sh timeout"
     if not (app / "run.sh").exists():
         result["error"] = (result["error"] or "") + "\nrun.sh が無い（契約違反）"
-    run_pytest(args.python, MEASURE / "hidden", " or ".join(f"stage{i}" for i in range(1, min(args.stage, 3) + 1)), env, args.timeout_min, result)
+    run_hidden(args.python, MEASURE / "hidden", " or ".join(f"stage{i}" for i in range(1, min(args.stage, 3) + 1)), env, args.timeout_min, result)
     if args.stage >= 4:
-        run_pytest(args.python, HERE / "hidden", " or ".join(f"stage{i}" for i in range(4, args.stage + 1)), env, args.timeout_min, result)
-    result["total"] = len(result["tests"])
-    result["passed"] = sum(1 for v in result["tests"].values() if v == "pass")
+        run_hidden(args.python, HERE / "hidden", " or ".join(f"stage{i}" for i in range(4, args.stage + 1)), env, args.timeout_min, result)
+    finalize(result)
     result["overbuild"] = count_overbuild(app)
     result["duration_sec"] = round(time.time() - started, 1)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"stage {args.stage}: {result['passed']}/{result['total']} passed, overbuild={result['overbuild']}")
+    print(f"stage {args.stage}: {result['passed']}/{result['total']} passed, {result['scoring_status']} {result['unscored_reasons']}, overbuild={result['overbuild']}")
     return 0
 
 

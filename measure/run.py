@@ -18,8 +18,10 @@ results/.score.lock で直列にする（性能のテストが互いの負荷で
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -29,6 +31,8 @@ from datetime import datetime
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from scoring import compare_stages, load_score, score_label, stage_fields  # noqa: E402
 REPO = HERE.parent
 sys.path.insert(0, str(HERE))
 from agentrun import ISDD_SKILLS, RESPONDER_PROMPT, ask_responder, run_claude, run_claude_retry  # noqa: E402
@@ -113,14 +117,27 @@ def write_contract(workdir: Path, stage: int) -> None:
     (workdir / "contract.md").write_text((TASK / "contracts" / f"stage{stage}.md").read_text(encoding="utf-8"), encoding="utf-8")
 
 
+ISDD_DOCS = ("docs/requirements.md", "docs/detail_design.md", "docs/trace_map.md")
+
+
+def doc_digests(workdir: Path) -> dict:
+    """isdd の文書（正本と対応表、.history の変更要件定義書・変更設計書）の中身の要約。段の前後で比べて、その段で文書を更新したかを見る。"""
+    files = [workdir / f for f in ISDD_DOCS] + sorted((workdir / ".history").glob("*/*.md"))
+    return {str(f.relative_to(workdir)): hashlib.sha256(f.read_bytes()).hexdigest() for f in files if f.is_file()}
+
+
 def score_snapshot(label: str, stage: int, snap: Path, out_json: Path, lock_path: Path) -> None:
     with open(lock_path, "w") as lock:
         log(label, f"stage {stage}: 採点の順番待ち")
         fcntl.flock(lock, fcntl.LOCK_EX)
         log(label, f"stage {stage}: 採点を開始")
         started = time.time()
-        subprocess.run([sys.executable, str(TASK / "score.py"), "--app", str(snap), "--stage", str(stage), "--out", str(out_json)],
+        if out_json.exists():
+            out_json.unlink()  # 前の採点の結果を、今回の結果と取り違えない
+        done = subprocess.run([sys.executable, str(TASK / "score.py"), "--app", str(snap), "--stage", str(stage), "--out", str(out_json)],
                        check=False, capture_output=True)
+        if done.returncode != 0 or not out_json.exists():
+            log(label, f"stage {stage}: 採点器が落ちた（終了コード {done.returncode}）: {done.stderr.decode(errors='replace')[-500:]}")
         log(label, f"stage {stage}: 採点を終了（{round(time.time() - started)} 秒）")
         fcntl.flock(lock, fcntl.LOCK_UN)
 
@@ -188,6 +205,10 @@ def main() -> int:
         log(label, "採点済みのため何もしない")
         return 0
     summary["runner"] = "claude -p"
+    summary["conditions"] = {"model": args.model, "responder_model": args.responder_model if args.responder else None, "task": args.task,
+                             "max_rounds": args.max_rounds, "timeout_min": args.timeout_min, "contract": args.contract, "seed": bool(args.seed),
+                             "repo_commit": subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO, capture_output=True, text=True).stdout.strip(),
+                             "isdd_version": (re.search(r'^\s*version:\s*"?([^"\s]+)', (REPO / "skills" / "isdd-spec" / "SKILL.md").read_text(encoding="utf-8"), re.M) or [None, None])[1]}
     if args.ask_first:
         summary["ask_first"] = True
     if args.keep_notes:
@@ -210,6 +231,7 @@ def main() -> int:
                 # 固定回答の前書きは isdd 群向け（承認はすべて与えられたものとする）なので、項目だけを残して前書きを差し替える
                 answers = AIDLC_ANSWERS_HEAD + "\n".join(line for line in answers.splitlines() if line.startswith("- ")) + "\n"
             (workdir / "ANSWERS.md").write_text(answers, encoding="utf-8")
+        docs_before = doc_digests(workdir)
         done_flag = workdir / "STAGE_DONE"
         if done_flag.exists():
             done_flag.unlink()
@@ -285,6 +307,12 @@ def main() -> int:
         isdd_used = any(sk in ISDD_SKILLS for sk in skills_called)
         artifacts = all((workdir / f).exists() for f in ("docs/requirements.md", "docs/detail_design.md", "docs/trace_map.md", "scripts/isdd"))
         valid = ((isdd_used or artifacts) if args.arm == "isdd" else not visible and not isdd_used)
+        docs_after = doc_digests(workdir)
+        docs_updated = sorted(f for f in docs_after if docs_after[f] != docs_before.get(f))
+        # 割り当て・見えたか・呼んだか・文書を更新したか・完了・採点できたかを別々に残す。valid は前からの判定で、
+        # 前の段の文書が残っているだけでも真になるので、この段で手順を実施したかは conduct で見る
+        conduct = {"assigned": args.arm, "isdd_skills_visible": bool(visible), "isdd_skill_invoked": isdd_used, "isdd_docs_updated": docs_updated,
+                   "procedure_evidence": bool(isdd_used or docs_updated), "done": done_flag.exists(), "scored": None}
         aidlc_info = {}
         if args.arm == "aidlc":
             # AI-DLC の記録（段階の状態と承認の数）。isdd のスキルが見えていないことと合わせて有効とする
@@ -296,7 +324,7 @@ def main() -> int:
         stage_info = {"done": done_flag.exists(), "wall_sec": wall, "started": datetime.fromtimestamp(stage_started).isoformat(timespec="seconds"),
                       "responder": bool(args.responder), "questions_rounds": questions_asked,
                       "tool_uses": sum(tool_names.values()), "tool_names": tool_names, "skills_called": skills_called, "isdd_skills_visible": visible,
-                      "valid": valid, **aidlc_info, "isdd_artifacts": artifacts, "validity_note": ("isdd の成果物もスキル呼び出しも無し" if args.arm == "isdd" and not (isdd_used or artifacts) else
+                      "valid": valid, "conduct": conduct, **aidlc_info, "isdd_artifacts": artifacts, "validity_note": ("isdd の成果物もスキル呼び出しも無し" if args.arm == "isdd" and not (isdd_used or artifacts) else
                                                        ("対照群に isdd のスキルが見えていた" if args.arm == "control" and (visible or isdd_used) else "")),
                       **sum_usage(rounds)}
         summary["stages"][str(stage)] = stage_info
@@ -311,14 +339,15 @@ def main() -> int:
     for stage in stages:
         out_json = results_dir / f"stage{stage}.json"
         info = summary["stages"][str(stage)]
-        if out_json.exists():
-            score = json.loads(out_json.read_text(encoding="utf-8"))
-            info.update({"passed": score["passed"], "total": score["total"], "tests": score["tests"], "overbuild": score.get("overbuild"), "score_error": score.get("error")})
+        if not args.until_requirements:
+            score = load_score(out_json)
+            info.update(stage_fields(score))
+            info["conduct"]["scored"] = score["scoring_status"] == "scored"
             prev = summary["stages"].get(str(stage - 1))
             if prev and prev.get("tests"):
-                info["regressions"] = sorted(t for t, v in prev["tests"].items() if v == "pass" and score["tests"].get(t) not in (None, "pass"))
+                info.update(compare_stages(prev["tests"], info["tests"]))
         summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-        log(label, f"stage {stage}: done={info['done']} valid={info.get('valid')} passed={info.get('passed')}/{info.get('total')} regressions={info.get('regressions')} "
+        log(label, f"stage {stage}: done={info['done']} valid={info.get('valid')} passed={score_label(info)} {info.get('unscored_reasons') or ''} regressions={info.get('regressions')} not_run={info.get('not_run_after_pass')} "
                    f"turns={info['turns']} tools={info.get('tool_uses')} skills={info.get('skills_called')} tokens={info['usage']['total_tokens']} wall={info['wall_sec']}s")
     return 0
 

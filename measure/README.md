@@ -42,3 +42,13 @@ python3 measure/score.py --app /path/to/work/isdd-r1 --stage 2 --out measure/res
 - 計測 2（SWE-Dev easy、`swedev/`）: 1 パッケージを 1 作業ディレクトリにし、課題を段として積む。`swedev.py prepare` が Docker イメージから `/app/<pkg>` を取り出し、**正解の複製（build/lib、egg-info、modified_testcases、バイトコード）を消し**、課題で削られた関数を AST で消す。`evaluate` は作業ディレクトリの src をコンテナにマウントして隠しテスト（課題の test_code をコンテナに書く）を回す。
 - 計測 4（WebGen-Bench、`webgen/`）: 3 課題（000010、000026、000088）を新規 → 変更 × 2 の 3 段にした（変更の依頼とケースは `plan.json`）。採点は Haiku ＋ Playwright の採点エージェント（`grader-prompt.md`）で YES / PARTIAL / NO。
 - 計測 3（FeatureBench fast、`featurebench/`）: mlflow の課題 4 件（同じ base commit）を段として積む。`fb.py prepare` がイメージの /testbed を SSD に取り出し（.git と build/ は消す）、マスク patch と F2P テストの削除を当て、コンテナ `fb-<arm>` に /testbed としてマウントする。エージェントは `docker exec` でテストを回す。`evaluate` は test_patch を逆適用して F2P を戻し、最終段だけ P2P（全課題分）も回す（1 ファイル 15 分かかるものがある）。Docker は OrbStack でデータは /Volumes/SSD。
+
+## 採点できなかった結果の扱い（2026-11-23）
+
+- 採点の共通部品は `scoring.py`。題材ごとの `score.py` は、隠しテストを `run_hidden` で回す。新しい題材の採点スクリプトも、`bizrules/score.py` を写してこの部品を使う。
+- 採点結果の `scoring_status` が `unscored` の段は、合格数を点として使わない。理由は `unscored_reasons` にある。`rescore.py` で採点し直す。
+- アプリが起動しない、機能が足りないなどでテストが落ちるのは不合格（`scored`）。pytest が止まった、結果の XML が無い、回すはずのテストが結果に無い、テストの名前が重なった、は未採点。
+- 前の段で合格したテストが今の段の結果に無いときは、退行（`regressions`）ではなく未実行（`not_run_after_pass`）に出る。
+- `run.py` は段ごとに `conduct`（割り当て、スキルが見えたか、呼んだか、その段で文書を更新したか、完了、採点できたか）を残す。`valid` は前の段の文書が残っているだけでも真になるので、その段で手順を実施したかは `conduct` で見る。
+- AI の採点（`docval/`）は、形の壊れた応答を捨てて聞き直し、3 件そろわなければ点を確定しない。
+- 単体テスト: `python3 -m unittest discover -s measure/tests`（モデルもブラウザも動かさない）。

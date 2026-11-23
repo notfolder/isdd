@@ -6,6 +6,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from scoring import score_label  # noqa: E402
 
 
 def main() -> int:
@@ -20,6 +22,7 @@ def main() -> int:
     for label, st, info in rows:
         ob = info.get("overbuild") or {}
         reg = info.get("regressions")
+        nr = f"（未実行 {len(info['not_run_after_pass'])}）" if info.get("not_run_after_pass") else ""
         snap = summary.parent / f"snapshot-stage{st}"
         if label.startswith("isdd"):
             valid = any(sk.startswith("isdd") for sk in info.get("skills_called", [])) or all((snap / f).exists() for f in ("docs/requirements.md", "docs/detail_design.md", "docs/trace_map.md"))
@@ -28,12 +31,15 @@ def main() -> int:
         u = info.get("usage") or {}
         fresh = (u.get("input_tokens", 0) + u.get("output_tokens", 0) + u.get("cache_creation_input_tokens", 0)) if u else info.get("agent_tokens", "―")
         total = u.get("total_tokens", "―") if u else "―"
-        print(f"| {label} | {st} | {'○' if valid else '×'} | {info.get('passed')}/{info.get('total')} | {len(reg) if reg is not None else '―'} | "
+        print(f"| {label} | {st} | {'○' if valid else '×'} | {score_label(info)} | {len(reg) if reg is not None else '―'}{nr} | "
               f"{ob.get('public_functions')} / {ob.get('lines')} | {fresh} | {total} | {info.get('tool_uses', '―')} | {info.get('agent_duration_sec', info.get('wall_sec'))} |")
     print()
     print("## 最終段の落ちたテスト")
     for label, st, info in rows:
         if st == 3:
+            if info.get("scoring_status") == "unscored":
+                print(f"- {label}: 未採点（{'; '.join(info.get('unscored_reasons') or [])}）")
+                continue
             fails = sorted(k.replace('[chromium]', '') for k, v in (info.get('tests') or {}).items() if v != 'pass')
             print(f"- {label}: {', '.join(fails) or '無し'}")
     return 0

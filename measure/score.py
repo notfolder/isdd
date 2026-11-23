@@ -4,7 +4,8 @@
 使用方法:
   python3 measure/score.py --app <アプリのディレクトリ> --stage <1|2|3> --out <結果 JSON> [--python <venv の python>] [--skip-setup]
 
-書くもの: {"stage", "tests": {"test名": "pass|fail|skip"}, "passed", "total", "overbuild": {...}, "duration_sec"}
+書くもの: {"stage", "tests": {"test名": "pass|fail|skip"}, "passed", "total", "overbuild": {...}, "duration_sec"} と、
+採点できたかの項目（scoring_status、unscored_reasons、expected_total、not_run。scoring.py の説明を参照）。
 作りすぎの目安（契約に依存しない数え方）: ソースの公開関数・クラスの数（Python は ast）、HTML テンプレートの数、総行数。
 """
 
@@ -14,12 +15,12 @@ import json
 import os
 import subprocess
 import sys
-import tempfile
 import time
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from scoring import finalize, new_result, run_hidden  # noqa: E402
 EXCLUDE_DIRS = {".venv", "venv", "node_modules", ".git", "__pycache__", "e2e", "tests", "test", ".claude", "docs",
                 ".history", "scripts", "results", "data", "migrations"}
 CODE_EXT = {".py", ".js", ".ts", ".tsx", ".jsx", ".go", ".java", ".rb", ".php"}
@@ -67,7 +68,7 @@ def main() -> int:
     parser.add_argument("--timeout-min", type=int, default=40)
     args = parser.parse_args()
     app = Path(args.app).resolve()
-    result = {"stage": args.stage, "app": str(app), "tests": {}, "passed": 0, "total": 0, "setup_ok": None, "error": None}
+    result = new_result(args.stage, app)
     env = dict(os.environ, MEASURE_APP_DIR=str(app), MEASURE_STAGE=str(args.stage))
     started = time.time()
     if not args.skip_setup and (app / "setup.sh").exists():
@@ -81,34 +82,13 @@ def main() -> int:
             result["error"] = "setup.sh timeout"
     if not (app / "run.sh").exists():
         result["error"] = (result["error"] or "") + "\nrun.sh が無い（契約違反）"
-    marks = " or ".join(f"stage{i}" for i in range(1, args.stage + 1))
-    with tempfile.TemporaryDirectory() as tmp:
-        xml = Path(tmp) / "junit.xml"
-        cmd = [args.python, "-m", "pytest", str(HERE / "hidden"), "-m", marks, "-q", "-p", "no:cacheprovider", f"--junitxml={xml}"]
-        try:
-            proc = subprocess.run(cmd, cwd=HERE / "hidden", env=env, capture_output=True, text=True, timeout=args.timeout_min * 60)
-            result["pytest_tail"] = (proc.stdout + proc.stderr)[-4000:]
-        except subprocess.TimeoutExpired as e:
-            result["error"] = (result["error"] or "") + f"\npytest timeout ({args.timeout_min} min)"
-            result["pytest_tail"] = ((e.stdout or b"").decode(errors="replace") + (e.stderr or b"").decode(errors="replace"))[-4000:]
-        if xml.exists():
-            root = ET.parse(str(xml)).getroot()
-            for tc in root.iter("testcase"):
-                status = "pass"
-                for child in tc:
-                    if child.tag in ("failure", "error"):
-                        status = "fail"
-                        break
-                    if child.tag == "skipped":
-                        status = "skip"
-                result["tests"][tc.get("name")] = status
-    result["total"] = len(result["tests"])
-    result["passed"] = sum(1 for v in result["tests"].values() if v == "pass")
+    run_hidden(args.python, HERE / "hidden", " or ".join(f"stage{i}" for i in range(1, args.stage + 1)), env, args.timeout_min, result)
+    finalize(result)
     result["overbuild"] = count_overbuild(app)
     result["duration_sec"] = round(time.time() - started, 1)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"stage {args.stage}: {result['passed']}/{result['total']} passed, overbuild={result['overbuild']}")
+    print(f"stage {args.stage}: {result['passed']}/{result['total']} passed, {result['scoring_status']} {result['unscored_reasons']}, overbuild={result['overbuild']}")
     return 0
 
 

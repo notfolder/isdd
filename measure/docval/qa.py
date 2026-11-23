@@ -15,6 +15,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 from agentrun import run_claude_retry  # noqa: E402
+from scoring import collect_votes, median_points, parse_json_object, valid_point_vote  # noqa: E402
 
 MATERIAL = Path.home() / "isdd-measure-work" / "docval" / "material"
 WORK = Path.home() / "isdd-measure-work" / "docval" / "work"
@@ -80,24 +81,35 @@ def judge(args):
     if rec.get("scores"):
         print(label, "採点済み")
         return 0
+    ids = [q["id"] for q in QUESTIONS]
+    answers = rec.get("answers")
+    if not isinstance(answers, dict) or not answers:
+        # 答えのファイルを作れなかった回を、全問 0 点として採点しない
+        rec["judge_error"] = "答えが 1 件も無い（答えの生成に失敗）。answer をやり直す"
+        path.write_text(json.dumps(rec, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(label, "未採点:", rec["judge_error"])
+        return 1
+    rec["answers_missing"] = [i for i in ids if i not in answers]  # 答えが欠けた質問。0 点になるので、件数を残す
     body = "\n".join(f"### {q['id']}\n質問: {q['q']}\n正解: {q['a']}\n答え: {rec['answers'].get(q['id'], '（答えなし）')}\n" for q in QUESTIONS)
-    votes = []
     jdir = WORK / "judge"
     jdir.mkdir(parents=True, exist_ok=True)
-    for k in range(3):
+
+    def ask():
         data = run_claude_retry(jdir, JUDGE_PROMPT + body, "claude-opus-5-5", "", 15)
-        text = (data.get("texts") or [""])[-1]
-        try:
-            votes.append(json.loads(text[text.index("{"): text.rindex("}") + 1]))
-        except Exception:  # noqa: BLE001
-            votes.append({})
-    scores = {}
-    for q in QUESTIONS:
-        vs = sorted(int(v.get(q["id"], 0)) for v in votes)
-        scores[q["id"]] = vs[1]  # 3 人の中央の値（多数決）
-    rec["scores"], rec["judge_votes"] = scores, votes
+        return parse_json_object((data.get("texts") or [""])[-1])
+
+    # 形の壊れた応答（全問がそろっていない、点が 0・1・2 でない）は 0 点として数えず、捨てて聞き直す
+    votes, rejected = collect_votes(ask, lambda v: valid_point_vote(v, ids))
+    rec["judge_rejected"] = rejected
+    if votes is None:
+        rec["judge_error"] = f"形の正しい採点が 3 件そろわなかった（捨てた応答 {len(rejected)} 件）。judge をやり直す"
+        path.write_text(json.dumps(rec, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(label, "未採点:", rec["judge_error"])
+        return 1
+    rec.pop("judge_error", None)
+    rec["scores"], rec["judge_votes"] = median_points(votes, ids), votes  # 3 人の中央の値（多数決）
     path.write_text(json.dumps(rec, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(label, "合計", sum(scores.values()), "/", 2 * len(QUESTIONS))
+    print(label, "合計", sum(rec["scores"].values()), "/", 2 * len(QUESTIONS), "答えの欠け", len(rec["answers_missing"]))
     return 0
 
 

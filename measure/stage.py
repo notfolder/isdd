@@ -17,6 +17,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from scoring import compare_stages, load_score, score_label, stage_fields  # noqa: E402
 REPO = HERE.parent
 
 
@@ -78,17 +80,19 @@ def score(args) -> int:
     out_json = results_dir / f"stage{args.stage}.json"
     with open(HERE / "results" / ".score.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
+        if out_json.exists():
+            out_json.unlink()  # 前の採点の結果を、今回の結果と取り違えない
         subprocess.run([sys.executable, str(HERE / "score.py"), "--app", str(snap), "--stage", str(args.stage), "--out", str(out_json)], check=False)
         fcntl.flock(lock, fcntl.LOCK_UN)
     summary_path, summary = _summary(results_dir, args)
-    sc = json.loads(out_json.read_text(encoding="utf-8"))
+    sc = load_score(out_json)
     info = summary["stages"].setdefault(str(args.stage), {})
-    info.update({"passed": sc["passed"], "total": sc["total"], "tests": sc["tests"], "overbuild": sc.get("overbuild"), "score_error": sc.get("error")})
+    info.update(stage_fields(sc))
     prev = summary["stages"].get(str(args.stage - 1))
     if prev and prev.get("tests"):
-        info["regressions"] = sorted(t for t, v in prev["tests"].items() if v == "pass" and sc["tests"].get(t) not in (None, "pass"))
+        info.update(compare_stages(prev["tests"], info["tests"]))
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"[{label}] stage {args.stage}: passed={info.get('passed')}/{info.get('total')} regressions={info.get('regressions')} error={sc.get('error')}")
+    print(f"[{label}] stage {args.stage}: passed={score_label(info)} {info.get('unscored_reasons') or ''} regressions={info.get('regressions')} not_run={info.get('not_run_after_pass')} error={sc.get('error')}")
     return 0
 
 
