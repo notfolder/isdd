@@ -7,6 +7,7 @@
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -39,11 +40,18 @@ def rows(prefix: str, stage: str) -> list:
                     "cost": info.get("cost_usd"), "responder_cost": info.get("responder_cost_usd"), "wall_min": round((info.get("wall_sec") or 0) / 60, 1),
                     "rounds": info.get("rounds"), "questions": info.get("questions_rounds"), "skills": sorted(set(info.get("skills_called") or [])),
                     "procedure": conduct.get("procedure_evidence"), "infra_incomplete": conduct.get("infra_incomplete"),
-                    "leaks": len(conduct.get("leak_hits") or []), "parent_refs": conduct.get("parent_dir_refs"),
+                    "leaks": real_leaks(conduct.get("leak_hits") or [], path.parent.name, (summary.get("conditions") or {}).get("work")), "parent_refs": conduct.get("parent_dir_refs"),
                     "lines": (score.get("overbuild") or {}).get("lines"), "isdd_version": (summary.get("conditions") or {}).get("isdd_version"),
                     "task_sha": ((summary.get("conditions") or {}).get("task_digest") or {}).get("sha256", "")[:10],
                     "tests": score.get("tests") or {}, "unscored_reasons": score.get("unscored_reasons") or []})
     return out
+
+
+def real_leaks(hits: list, label: str, work) -> int:
+    """記録された「触れた」入力を、今の規則で数え直す。2026-11-23 夜までの実行器は、自分のフォルダ名の直後に「;」などが続く入力を
+    ほかの回と数えていた。記録は入力の先頭 300 字なので、数え直しもその範囲で行う。"""
+    sibling = re.compile(re.escape(str(work or "/Users/Shared/isdd-measure-work")) + r"/([A-Za-z0-9_.-]+)")
+    return sum(1 for s in hits if str(HERE.parent) in s or any(m.group(1).rstrip(".") != label for m in sibling.finditer(s)))
 
 
 def main() -> int:

@@ -113,6 +113,10 @@ def seconds_until_reset(text: str) -> int:
     now = datetime.now()
     target = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
     if target <= now:
+        # 回復の時刻を少し過ぎてから届いた上限の知らせは、もう回復している。翌日まで待たない
+        # （2026-11-24 に、2:30 回復の知らせを 2:34 に受けて 24 時間待ちに入った）
+        if (now - target).total_seconds() < 3600:
+            return 120
         target += timedelta(days=1)
     return int((target - now).total_seconds()) + 120
 
@@ -123,7 +127,7 @@ def run_claude_retry(workdir: Path, prompt: str, model: str, session: str, timeo
         data = run_claude(workdir, prompt, model, session, timeout_min, extra_env)
         if data.get("error") == "rate_limit":
             wait = seconds_until_reset(data.get("reset_text", ""))
-            log(f"利用上限に到達。{wait // 60} 分待って再開する（{data.get('reset_text', '')[:80]}）")
+            print(f"利用上限に到達。{wait // 60} 分待って再開する（{data.get('reset_text', '')[:80]}）", flush=True)
             time.sleep(wait)
             continue
         return data

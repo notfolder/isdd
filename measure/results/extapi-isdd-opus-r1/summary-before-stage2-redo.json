@@ -1,0 +1,87 @@
+{
+  "arm": "isdd",
+  "run": 1,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 1821.6,
+      "started": "2026-11-23T22:55:29",
+      "responder": true,
+      "questions_rounds": 9,
+      "responder_cost_usd": 0.4302,
+      "tool_uses": 97,
+      "tool_names": {
+        "Bash": 54,
+        "Skill": 3,
+        "Write": 20,
+        "Read": 4,
+        "Edit": 6,
+        "ToolSearch": 1,
+        "WebSearch": 3,
+        "Agent": 1,
+        "WebFetch": 5
+      },
+      "skills_called": [
+        "isdd-spec",
+        "isdd-build",
+        "isdd-spec"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "conduct": {
+        "assigned": "isdd",
+        "isdd_skills_visible": true,
+        "isdd_skill_invoked": true,
+        "isdd_docs_updated": [
+          ".history/20261123-maruichi-stock-list/tasks.md",
+          "docs/detail_design.md",
+          "docs/requirements.md",
+          "docs/trace_map.md"
+        ],
+        "procedure_evidence": true,
+        "done": true,
+        "scored": null,
+        "infra_incomplete": false,
+        "leak_hits": [],
+        "parent_dir_refs": 1
+      },
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 180,
+        "output_tokens": 163258,
+        "cache_creation_input_tokens": 322712,
+        "cache_read_input_tokens": 17250761,
+        "total_tokens": 17736911
+      },
+      "cost_usd": 33.4007,
+      "turns": 105,
+      "rounds": 10
+    }
+  },
+  "runner": "claude -p",
+  "conditions": {
+    "model": "claude-opus-5-5",
+    "responder_model": "claude-sonnet-5-5",
+    "task": "extapi",
+    "max_rounds": 20,
+    "timeout_min": 45,
+    "contract": null,
+    "seed": false,
+    "task_digest": {
+      "task_files": 28,
+      "sha256": "940deaefa466b0487bcde5d231f148eafab716886bb0d6296a7a62021b146931"
+    },
+    "work": "/Users/Shared/isdd-measure-work",
+    "ancestor_claude_md": [],
+    "claude_cli": "2.1.330 (Claude Code)",
+    "repo_commit": "3f76e9a",
+    "isdd_version": "v2.4.0"
+  }
+}

@@ -63,6 +63,103 @@
       "cost_usd": 33.4007,
       "turns": 105,
       "rounds": 10
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 3454.8,
+      "started": "2026-11-24T03:12:32",
+      "responder": true,
+      "questions_rounds": 4,
+      "responder_cost_usd": 0.1985,
+      "tool_uses": 40,
+      "tool_names": {
+        "Bash": 27,
+        "Skill": 1,
+        "Read": 6,
+        "Write": 5,
+        "Edit": 1
+      },
+      "skills_called": [
+        "isdd-spec"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "conduct": {
+        "assigned": "isdd",
+        "isdd_skills_visible": true,
+        "isdd_skill_invoked": true,
+        "isdd_docs_updated": [
+          ".history/20261124-maruichi-api-v2/change_detail_design.md",
+          ".history/20261124-maruichi-api-v2/change_requirements.md",
+          ".history/20261124-maruichi-api-v2/tasks.md",
+          "docs/detail_design.md",
+          "docs/requirements.md",
+          "docs/trace_map.md"
+        ],
+        "procedure_evidence": true,
+        "done": true,
+        "scored": true,
+        "infra_incomplete": false,
+        "leak_hits": [],
+        "parent_dir_refs": 0
+      },
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 84,
+        "output_tokens": 62228,
+        "cache_creation_input_tokens": 198013,
+        "cache_read_input_tokens": 4926525,
+        "total_tokens": 5186850
+      },
+      "cost_usd": 15.0555,
+      "turns": 46,
+      "rounds": 5,
+      "passed": 24,
+      "total": 24,
+      "tests": {
+        "test_ext_import_small_all_items": "pass",
+        "test_ext_import_two_pages_at_documented_page_size": "pass",
+        "test_ext_import_many_pages_no_missing": "pass",
+        "test_ext_sync_twice_no_duplicates": "pass",
+        "test_ext_name_and_stock_follow_supplier": "pass",
+        "test_ext_removed_item_disappears": "pass",
+        "test_ext_discontinued_with_stock_shown": "pass",
+        "test_ext_discontinued_without_stock_hidden": "pass",
+        "test_ext_discontinued_sold_out_later_disappears": "pass",
+        "test_ext_low_stock_shown_as_zero": "pass",
+        "test_ext_rate_limit_no_early_retry": "pass",
+        "test_ext_token_expiry_across_syncs": "pass",
+        "test_ext_view_does_not_call_supplier": "pass",
+        "test_ext_outage_keeps_previous_items": "pass",
+        "test_ext_outage_status_failed_and_last_success_kept": "pass",
+        "test_ext_recovers_after_outage": "pass",
+        "test_ext_first_sync_failure_shows_empty": "pass",
+        "test_ext_partial_failure_keeps_previous_whole": "pass",
+        "test_ext_price_survives_resync": "pass",
+        "test_ext_price_survives_failed_sync": "pass",
+        "test_ext_data_survives_restart": "pass",
+        "test_ext_v2_stock_is_available_only": "pass",
+        "test_ext_v2_low_stock_and_discontinued_use_available": "pass",
+        "test_ext_v2_last_page_without_cursor": "pass"
+      },
+      "overbuild": {
+        "source_files": 7,
+        "lines": 983,
+        "public_functions": 37,
+        "classes": 13,
+        "templates": 1
+      },
+      "score_error": null,
+      "scoring_status": "scored",
+      "unscored_reasons": [],
+      "expected_total": 24,
+      "not_run": []
     }
   },
   "runner": "claude -p",
@@ -76,12 +173,12 @@
     "seed": false,
     "task_digest": {
       "task_files": 28,
-      "sha256": "940deaefa466b0487bcde5d231f148eafab716886bb0d6296a7a62021b146931"
+      "sha256": "429eb1576cd9edb3ae8827bcf6995d6a1bca6e096488b94a5b66749dd9234b2f"
     },
     "work": "/Users/Shared/isdd-measure-work",
     "ancestor_claude_md": [],
     "claude_cli": "2.1.330 (Claude Code)",
-    "repo_commit": "3f76e9a",
+    "repo_commit": "e51f4b8",
     "isdd_version": "v2.4.0"
   }
 }
