@@ -139,9 +139,10 @@ def task_digest(task: Path) -> dict:
 def leak_hits(tool_inputs: list, workdir: Path) -> list:
     """ツールの入力のうち、隠しテスト・台帳・採点器（リポジトリ）や、ほかの回の作業フォルダを指すもの。1 件でもあれば、その回は比較に使わない。"""
     hits = []
-    sibling = re.compile(re.escape(str(workdir.parent)) + r"/([^/\s\"'\\]+)")
+    # フォルダ名に使う文字だけを取る（「…r91;」のように、自分のフォルダ名のあとに区切りが続く入力を、ほかの回と数えないため。2026-11-23 に直した）
+    sibling = re.compile(re.escape(str(workdir.parent)) + r"/([A-Za-z0-9_.-]+)")
     for s in tool_inputs:
-        if str(REPO) in s or any(m.group(1) != workdir.name for m in sibling.finditer(s)):
+        if str(REPO) in s or any(m.group(1).rstrip(".") != workdir.name for m in sibling.finditer(s)):
             hits.append(s[:300])
     return hits
 

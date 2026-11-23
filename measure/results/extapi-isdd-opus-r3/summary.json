@@ -1,0 +1,227 @@
+{
+  "arm": "isdd",
+  "run": 3,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 1757.1,
+      "started": "2026-11-23T22:13:46",
+      "responder": true,
+      "questions_rounds": 11,
+      "responder_cost_usd": 0.5203,
+      "tool_uses": 87,
+      "tool_names": {
+        "Bash": 49,
+        "Skill": 2,
+        "Write": 15,
+        "Edit": 4,
+        "Read": 3,
+        "ToolSearch": 1,
+        "WebSearch": 4,
+        "Agent": 1,
+        "WebFetch": 6,
+        "Grep": 2
+      },
+      "skills_called": [
+        "isdd-spec",
+        "isdd-build"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "conduct": {
+        "assigned": "isdd",
+        "isdd_skills_visible": true,
+        "isdd_skill_invoked": true,
+        "isdd_docs_updated": [
+          ".history/20261123-maruichi-stock-list/tasks.md",
+          "docs/detail_design.md",
+          "docs/requirements.md",
+          "docs/trace_map.md"
+        ],
+        "procedure_evidence": true,
+        "done": true,
+        "scored": true,
+        "infra_incomplete": false,
+        "leak_hits": [],
+        "parent_dir_refs": 1
+      },
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 164,
+        "output_tokens": 148885,
+        "cache_creation_input_tokens": 294833,
+        "cache_read_input_tokens": 14855162,
+        "total_tokens": 15299044
+      },
+      "cost_usd": 26.5967,
+      "turns": 95,
+      "rounds": 12,
+      "passed": 20,
+      "total": 21,
+      "tests": {
+        "test_ext_import_small_all_items": "pass",
+        "test_ext_import_two_pages_at_documented_page_size": "pass",
+        "test_ext_import_many_pages_no_missing": "pass",
+        "test_ext_sync_twice_no_duplicates": "pass",
+        "test_ext_name_and_stock_follow_supplier": "pass",
+        "test_ext_removed_item_disappears": "pass",
+        "test_ext_discontinued_with_stock_shown": "pass",
+        "test_ext_discontinued_without_stock_hidden": "pass",
+        "test_ext_discontinued_sold_out_later_disappears": "pass",
+        "test_ext_low_stock_shown_as_zero": "fail",
+        "test_ext_rate_limit_no_early_retry": "pass",
+        "test_ext_token_expiry_across_syncs": "pass",
+        "test_ext_view_does_not_call_supplier": "pass",
+        "test_ext_outage_keeps_previous_items": "pass",
+        "test_ext_outage_status_failed_and_last_success_kept": "pass",
+        "test_ext_recovers_after_outage": "pass",
+        "test_ext_first_sync_failure_shows_empty": "pass",
+        "test_ext_partial_failure_keeps_previous_whole": "pass",
+        "test_ext_price_survives_resync": "pass",
+        "test_ext_price_survives_failed_sync": "pass",
+        "test_ext_data_survives_restart": "pass"
+      },
+      "overbuild": {
+        "source_files": 5,
+        "lines": 842,
+        "public_functions": 27,
+        "classes": 9,
+        "templates": 1
+      },
+      "score_error": null,
+      "scoring_status": "scored",
+      "unscored_reasons": [],
+      "expected_total": 21,
+      "not_run": []
+    },
+    "2": {
+      "done": true,
+      "wall_sec": 945.7,
+      "started": "2026-11-23T22:43:04",
+      "responder": true,
+      "questions_rounds": 2,
+      "responder_cost_usd": 0.1028,
+      "tool_uses": 67,
+      "tool_names": {
+        "Bash": 55,
+        "Skill": 2,
+        "Read": 3,
+        "Write": 5,
+        "Edit": 1,
+        "Grep": 1
+      },
+      "skills_called": [
+        "isdd-spec",
+        "isdd-build"
+      ],
+      "isdd_skills_visible": [
+        "isdd-build",
+        "isdd-reverse-engineering",
+        "isdd-setup",
+        "isdd-spec"
+      ],
+      "valid": true,
+      "conduct": {
+        "assigned": "isdd",
+        "isdd_skills_visible": true,
+        "isdd_skill_invoked": true,
+        "isdd_docs_updated": [
+          ".history/20261123-maruichi-api-v2/change_detail_design.md",
+          ".history/20261123-maruichi-api-v2/change_requirements.md",
+          ".history/20261123-maruichi-api-v2/tasks.md",
+          "docs/detail_design.md",
+          "docs/requirements.md",
+          "docs/trace_map.md"
+        ],
+        "procedure_evidence": true,
+        "done": true,
+        "scored": true,
+        "infra_incomplete": false,
+        "leak_hits": [
+          "{\"command\": \"bash setup.sh && D=$(mktemp -d) && set -a && . ./.env && set +a && PORT=18765 DATA_DIR=$D/data bash run.sh >/tmp/isdd-run.log 2>&1 & \\nsleep 2; cd /Users/Shared/isdd-measure-work/extapi-isdd-opus-r3; PID=$(lsof -ti tcp:18765 -sTCP:LISTEN); echo PID=$PID; curl -s -o /dev/null -w \\\"GET / "
+        ],
+        "parent_dir_refs": 3
+      },
+      "isdd_artifacts": true,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 120,
+        "output_tokens": 88708,
+        "cache_creation_input_tokens": 266599,
+        "cache_read_input_tokens": 11101943,
+        "total_tokens": 11457370
+      },
+      "cost_usd": 10.9466,
+      "turns": 72,
+      "rounds": 3,
+      "passed": 22,
+      "total": 24,
+      "tests": {
+        "test_ext_import_small_all_items": "pass",
+        "test_ext_import_two_pages_at_documented_page_size": "pass",
+        "test_ext_import_many_pages_no_missing": "pass",
+        "test_ext_sync_twice_no_duplicates": "pass",
+        "test_ext_name_and_stock_follow_supplier": "pass",
+        "test_ext_removed_item_disappears": "pass",
+        "test_ext_discontinued_with_stock_shown": "pass",
+        "test_ext_discontinued_without_stock_hidden": "pass",
+        "test_ext_discontinued_sold_out_later_disappears": "pass",
+        "test_ext_low_stock_shown_as_zero": "fail",
+        "test_ext_rate_limit_no_early_retry": "pass",
+        "test_ext_token_expiry_across_syncs": "pass",
+        "test_ext_view_does_not_call_supplier": "pass",
+        "test_ext_outage_keeps_previous_items": "pass",
+        "test_ext_outage_status_failed_and_last_success_kept": "pass",
+        "test_ext_recovers_after_outage": "pass",
+        "test_ext_first_sync_failure_shows_empty": "pass",
+        "test_ext_partial_failure_keeps_previous_whole": "pass",
+        "test_ext_price_survives_resync": "pass",
+        "test_ext_price_survives_failed_sync": "pass",
+        "test_ext_data_survives_restart": "pass",
+        "test_ext_v2_stock_is_available_only": "pass",
+        "test_ext_v2_low_stock_and_discontinued_use_available": "fail",
+        "test_ext_v2_last_page_without_cursor": "pass"
+      },
+      "overbuild": {
+        "source_files": 5,
+        "lines": 861,
+        "public_functions": 27,
+        "classes": 9,
+        "templates": 1
+      },
+      "score_error": null,
+      "scoring_status": "scored",
+      "unscored_reasons": [],
+      "expected_total": 24,
+      "not_run": [],
+      "regressions": [],
+      "not_run_after_pass": []
+    }
+  },
+  "runner": "claude -p",
+  "conditions": {
+    "model": "claude-opus-5-5",
+    "responder_model": "claude-sonnet-5-5",
+    "task": "extapi",
+    "max_rounds": 20,
+    "timeout_min": 45,
+    "contract": null,
+    "seed": false,
+    "task_digest": {
+      "task_files": 28,
+      "sha256": "940deaefa466b0487bcde5d231f148eafab716886bb0d6296a7a62021b146931"
+    },
+    "work": "/Users/Shared/isdd-measure-work",
+    "ancestor_claude_md": [],
+    "claude_cli": "2.1.330 (Claude Code)",
+    "repo_commit": "3f76e9a",
+    "isdd_version": "v2.4.0"
+  }
+}
