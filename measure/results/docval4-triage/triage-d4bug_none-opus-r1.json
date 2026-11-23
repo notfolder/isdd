@@ -1,0 +1,115 @@
+{
+ "label": "triage-d4bug_none-opus-r1",
+ "cond": "d4bug_none",
+ "model": "claude-opus-5-5",
+ "run": 1,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "README.md「社員が席から借りる」(71行目)に「申請中も『1 人 2 件まで』に数える」とあり、3 件借りられるのは上限 2 件の意図と違う。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "README.md「管理者を増やす」(51行目)に「あとから管理者になった人も備品は借りられない（借りる社員の選択肢に出ない）」とある。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "README.md の画面の表(34行目)と「貸出と返却の履歴」(62行目)に、履歴は管理者だけが開け「社員とログインしていない人は開けない」とある。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "README.md「社員が席から借りる」(69〜70行目)に「借りる」で備品は「申請中」になり、管理者が承認して初めて貸出になる（申請しただけでは貸出にならない）とある。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "README.md「返却の期限の延長」(76行目)に延長は返却の期限を「7 日延ばせる（期限は貸出日 + 21 日になる）」とあり、14 日延びるのは意図と違う。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "README.md「返却の期限の延長」(77行目)に「延長は 1 回の貸出につき 1 回だけ」とある。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "README.md「退職した社員」(84行目)に「備品を借りている社員は、先に返却してからでないと退職にできない」とある。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "README.md「退職した社員」(82行目)に退職するとアカウントは消えず、一覧の「状態」の列に「無効」と出るとある。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "README.md「貸出状況の CSV 出力」(91〜92行目)に、列は社員番号までで、借りている社員は「社員番号だけを出し、名前は出さない（社外の監査法人に渡すことがあるため）」とある。"
+  },
+  "R10": {
+   "verdict": "判断できない",
+   "basis": "README.md には貸出日として受け付ける範囲の記述が無く、30 日の制限はコード(services.py の LENT_ON_MAX_DAYS_AGO)とテストにしかないため、依頼者の意図を確かめる資料が無い（README が挙げる docs/requirements.md などの文書も作業ディレクトリに無い）。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "README.md「返却の期限」(40〜41行目)に期限は貸出日 + 14 日で、「期限を過ぎた（貸出日から 15 日以上たった）」ときに「期限超過」になるとあり、14 日目ではまだ期限超過にならない。"
+  },
+  "R12": {
+   "verdict": "判断できない",
+   "basis": "README.md には管理番号を大文字にそろえる記述が無く、大文字化はコード(services.py の normalize_equipment_number、forms.py)とテストにしかないため、依頼者の意図を確かめる資料が無い（README が挙げる docs/ 以下の文書も作業ディレクトリに無い）。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "undecided",
+  "R11": "bug",
+  "R12": "undecided"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 4,
+  "wrong": 0,
+  "undecided": 2
+ },
+ "result_unreadable": false,
+ "wall_sec": 37.5,
+ "usage": {
+  "input_tokens": 12,
+  "cache_creation_input_tokens": 32779,
+  "cache_read_input_tokens": 189814,
+  "output_tokens": 2823,
+  "output_tokens_details": {
+   "thinking_tokens": 894
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 32779,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 44800,
+    "cache_creation_input_tokens": 1383,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1383
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.3567028,
+ "tool_uses": 6,
+ "error": null
+}

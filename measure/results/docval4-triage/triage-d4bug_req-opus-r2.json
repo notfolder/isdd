@@ -1,0 +1,115 @@
+{
+ "label": "triage-d4bug_req-opus-r2",
+ "cond": "d4bug_req",
+ "model": "claude-opus-5-5",
+ "run": 2,
+ "answers": {
+  "R1": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-LIMIT-LOANS-PER-EMPLOYEE（と RQ-FT-COUNT-REQUESTS-IN-LOAN-LIMIT）に「1 人の社員が同時に借りられるのは 2 件まで」とあり、3 件目は受け付けないのが依頼者の意図。"
+  },
+  "R2": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-EXCLUDE-STAFF-FROM-BORROWERS に「借りる社員の選択肢には、その時点で役割が社員の利用者だけを出す」（管理者は借りられない）とある。"
+  },
+  "R3": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-RESTRICT-HISTORY-VIEWER に「履歴の画面を開けるのは管理者だけ。社員には自分が借りた分も見せない」とあり、社員は「この操作はできません」で貸出状況に移されるべき。"
+  },
+  "R4": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-RESTRICT-BORROW-REQUEST-OPERATORS と 1-2 の「すぐ貸出にするか、管理者の承認を挟むか」に、「借りる」で申請中になり管理者が承認して初めて貸出になるとある。"
+  },
+  "R5": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-LIMIT-DUE-DATE-EXTENSION と用語集「延長」に、延長は今の返却の期限に 7 日を足す（貸出日 + 21 日）とあり、14 日延びるのは意図と違う。"
+  },
+  "R6": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-LIMIT-DUE-DATE-EXTENSION に「延長は 1 回の貸出につき 1 回だけ」で、延長済みは「延長は 1 回だけです」と出して受け付けないとある。"
+  },
+  "R7": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-PROHIBIT-RETIRING-BORROWER に「備品を 1 件でも借りている社員は退職の処理ができない。先に返却」とあり、通ってしまうのは意図と違う。"
+  },
+  "R8": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 1-2 の「「無効」の表示」と用語集「退職の処理」に、アカウントは消さず一覧の「状態」の列に「無効」と出して無効の行も残すとある。"
+  },
+  "R9": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-CSV-EMPLOYEE-NUMBER-ONLY に「CSV の借りている社員の列には社員番号だけを出し、名前はどの列にも出さない」とある。"
+  },
+  "R10": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-RESTRICT-LENT-ON-RANGE（と 1-2 の「今日から 30 日前まで」の範囲）に、貸出日は今日の 30 日前から今日まで（両端を含む）だけを受け付けるとあり、31 日前は範囲外。"
+  },
+  "R11": {
+   "verdict": "不具合",
+   "basis": "docs/requirements.md 1-2 の「「貸出日から 14 日」の数え方」に依頼の「15 日以上たっても返っていなければ期限超過、14 日目までは貸出中」とあり、用語集「期限超過」も期限の日までは「貸出中」としている。"
+  },
+  "R12": {
+   "verdict": "仕様どおり",
+   "basis": "docs/requirements.md 3-2 の RQ-FT-NORMALIZE-EQUIPMENT-NUMBER に「管理番号は大文字と小文字を区別しない。保存するときは大文字にそろえ、一覧にも大文字で出す」とある。"
+  }
+ },
+ "detail": {
+  "R1": "bug",
+  "R2": "spec",
+  "R3": "bug",
+  "R4": "spec",
+  "R5": "bug",
+  "R6": "spec",
+  "R7": "bug",
+  "R8": "spec",
+  "R9": "bug",
+  "R10": "spec",
+  "R11": "bug",
+  "R12": "spec"
+ },
+ "score": {
+  "bug_caught": 6,
+  "spec_right": 6,
+  "wrong": 0,
+  "undecided": 0
+ },
+ "result_unreadable": false,
+ "wall_sec": 46.5,
+ "usage": {
+  "input_tokens": 16,
+  "cache_creation_input_tokens": 54813,
+  "cache_read_input_tokens": 293215,
+  "output_tokens": 2971,
+  "output_tokens_details": {
+   "thinking_tokens": 480
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 54813,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4,
+    "cache_read_input_tokens": 66479,
+    "cache_creation_input_tokens": 1738,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1738
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard",
+  "fallback_credit": null
+ },
+ "cost_usd": 0.556631,
+ "tool_uses": 7,
+ "error": null
+}

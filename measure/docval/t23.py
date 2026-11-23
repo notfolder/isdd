@@ -15,6 +15,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
+sys.path.insert(0, str(HERE))
 from agentrun import run_claude_retry  # noqa: E402
 from scoring import collect_votes, parse_json_object, valid_found_vote  # noqa: E402
 
@@ -174,6 +175,15 @@ if __name__ == "__main__":
     p.add_argument("--cond", required=True)
     p.add_argument("--model", default="claude-opus-5-5")
     p.add_argument("--run", type=int, default=1)
+    p.add_argument("--outside-home", action="store_true", help="作業フォルダを /Users/Shared の下に置き、利用者の CLAUDE.md を読ませない")
+    p.add_argument("--outdir", default=None, help="結果のフォルダ名（results/ の下。既定 docval）")
     a = p.parse_args()
+    if a.outdir:
+        OUT = HERE.parent / "results" / a.outdir
+    if a.outside_home:
+        # 読み手と採点者をホームの外で起こし、利用者の共通ルール（CLAUDE.md）を読ませない（claude4.py）
+        import claude4
+        run_claude_retry = claude4.run_claude_retry
+        WORK = claude4.WORK_ROOT / "work"
     a.model_short = a.model.split("-")[1]
     sys.exit({"triage": triage, "review": review}[a.cmd](a))

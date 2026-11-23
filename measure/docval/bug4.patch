@@ -1,0 +1,202 @@
+diff -ru code_docs/src/lending/services.py code_docs_bug/src/lending/services.py
+--- a/src/lending/services.py	2026-11-22 21:33:52
++++ a/src/lending/services.py	2026-11-23 01:29:59
+@@ -16,17 +16,17 @@
+ 
+ from .models import Account, BorrowRequest, Equipment, Lending, LendingHistory
+ 
+-MAX_LOANS_PER_EMPLOYEE = 2
++MAX_LOANS_PER_EMPLOYEE = 3
+ LENT_ON_MAX_DAYS_AGO = 30
+ RETURN_PERIOD_DAYS = 14
+-EXTENSION_DAYS = 7
++EXTENSION_DAYS = 14
+ 
+ STATUS_AVAILABLE = "空き"
+ STATUS_LENT = "貸出中"
+ STATUS_OVERDUE = "期限超過"
+ STATUS_REQUESTED = "申請中"
+ 
+-CSV_HEADER = ("管理番号", "備品名", "分類", "状態", "借りている社員の社員番号", "貸出日", "返却の期限")
++CSV_HEADER = ("管理番号", "備品名", "分類", "状態", "借りている社員の社員番号", "借りている社員の名前", "貸出日", "返却の期限")
+ 
+ MSG_NOT_PERMITTED = "この操作はできません"
+ MSG_EQUIPMENT_NOT_FOUND = "備品が見つかりません"
+@@ -35,7 +35,7 @@
+ MSG_DELETE_LENT = "貸出中の備品は削除できません"
+ MSG_DUPLICATE_EMPLOYEE_NUMBER = "この社員番号はすでに登録されています"
+ MSG_DUPLICATE_EQUIPMENT_NUMBER = "この管理番号はすでに登録されています"
+-MSG_LOAN_LIMIT = "この社員はすでに 2 件借りています"
++MSG_LOAN_LIMIT = "この社員はすでに 3 件借りています"
+ MSG_SELECT_BORROWER = "借りる社員を選んでください"
+ MSG_LENT_ON_RANGE = "貸出日は今日から 30 日前までの日付にしてください"
+ MSG_OVERDUE_BORROWER = "この社員は期限を過ぎた備品を返していません"
+@@ -108,7 +108,7 @@
+ 
+ 
+ def check_borrower_limits(borrower, today, field=None, exclude_request_id=None):
+-    """借りる社員について、期限超過の貸出が無いことと、貸出と申請を合わせて 2 件未満であることを確かめる。
++    """借りる社員について、期限超過の貸出が無いことと、貸出と申請を合わせて 3 件未満であることを確かめる。
+ 
+     引数:
+         borrower: 借りる社員の Account
+@@ -116,12 +116,12 @@
+         field: 操作エラーを属させる入力欄の項目名。画面全体のエラーなら None
+         exclude_request_id: 件数に数えない申請の内部番号（承認する申請そのもの）
+     例外:
+-        OperationError: 期限超過の貸出がある（先に確かめる）、貸出と申請が合わせて 2 件以上
++        OperationError: 期限超過の貸出がある（先に確かめる）、貸出と申請が合わせて 3 件以上
+     """
+     overdue_before = today - timedelta(days=RETURN_PERIOD_DAYS)
+     extended_overdue_before = overdue_before - timedelta(days=EXTENSION_DAYS)
+-    overdue = Q(extended=False, lent_on__lt=overdue_before) | Q(
+-        extended=True, lent_on__lt=extended_overdue_before
++    overdue = Q(extended=False, lent_on__lte=overdue_before) | Q(
++        extended=True, lent_on__lte=extended_overdue_before
+     )
+     if Lending.objects.filter(overdue, borrower=borrower).exists():
+         raise OperationError(MSG_OVERDUE_BORROWER, field=field)
+@@ -147,14 +147,14 @@
+ 
+ 
+ def due_date_of(lent_on, extended=False):
+-    """返却の期限（貸出日 + 14 日。延長済みなら、さらに + 7 日）を返す。"""
++    """返却の期限（貸出日 + 14 日。延長済みなら、さらに + 14 日）を返す。"""
+     days = RETURN_PERIOD_DAYS + (EXTENSION_DAYS if extended else 0)
+     return lent_on + timedelta(days=days)
+ 
+ 
+ def is_overdue(lent_on, today, extended=False):
+-    """今日が返却の期限（延長を含む）より後なら真を返す。"""
+-    return today > due_date_of(lent_on, extended)
++    """今日が返却の期限（延長を含む）の日以降なら真を返す。"""
++    return today >= due_date_of(lent_on, extended)
+ 
+ 
+ def register_account(employee_number, name, password):
+@@ -286,7 +286,7 @@
+     """全備品の貸出状況を CSV の文字列にして返す（管理者だけ）。
+ 
+     1 行目は見出し、2 行目以降は備品 1 件が 1 行（管理番号の昇順、絞り込みは無し）。
+-    借りている社員は社員番号だけを出し、名前は出さない。行の終わりは CRLF。
++    借りている社員は社員番号と名前を出す。行の終わりは CRLF。
+ 
+     引数:
+         actor: 操作する利用者の Account（未ログインなら None）
+@@ -310,6 +310,7 @@
+                 row["category"],
+                 row["status"],
+                 row["borrower_employee_number"],
++                row["borrower_name"],
+                 row["lent_on"],
+                 row["due_date"],
+             ]
+@@ -420,7 +421,7 @@
+         登録した Lending
+     例外:
+         OperationError: 管理者でない、備品が無い、貸出中、申請中（画面全体のエラー）、
+-            借りる社員が有効な社員でない・期限超過の貸出を持つ・貸出と申請を合わせて 2 件ある、
++            借りる社員が有効な社員でない・期限超過の貸出を持つ・貸出と申請を合わせて 3 件ある、
+             貸出日が範囲外（入力欄のエラー）
+     """
+     try:
+@@ -467,7 +468,7 @@
+         登録した BorrowRequest
+     例外:
+         OperationError: 社員でない、備品が無い、貸出中、申請中、期限超過の貸出がある、
+-            貸出と申請を合わせて 2 件ある（すべて画面全体のエラー）
++            貸出と申請を合わせて 3 件ある（すべて画面全体のエラー）
+     """
+     if today is None:
+         today = today_jst()
+@@ -496,7 +497,7 @@
+         登録した Lending
+     例外:
+         OperationError: 管理者でない、備品が無い、申請されていない、申請した人が管理者、
+-            期限超過の貸出がある、ほかの貸出と申請を合わせて 2 件ある（すべて画面全体のエラー）
++            期限超過の貸出がある、ほかの貸出と申請を合わせて 3 件ある（すべて画面全体のエラー）
+     """
+     if today is None:
+         today = today_jst()
+@@ -535,7 +536,7 @@
+ 
+ 
+ def extend_due_date(actor, equipment_id, today=None):
+-    """管理者が、貸出中の備品の返却の期限を 7 日延ばす（1 回の貸出につき 1 回、期限超過の前だけ）。
++    """管理者が、貸出中の備品の返却の期限を 14 日延ばす（1 回の貸出につき 1 回、期限超過の前だけ）。
+ 
+     引数:
+         actor: 操作する利用者の Account（未ログインなら None）
+@@ -572,9 +573,10 @@
+         行の辞書のリスト。キーは equipment_number, equipment_name, borrower_name,
+         lent_on（YYYY-MM-DD）, returned_on（YYYY-MM-DD。返っていなければ空文字）
+     例外:
+-        OperationError: 管理者でない
++        OperationError: ログインしていない
+     """
+-    require_staff(actor)
++    if actor is None:
++        raise OperationError(MSG_NOT_PERMITTED)
+     rows = []
+     for history in LendingHistory.objects.select_related("borrower").order_by("-lent_on", "-id"):
+         rows.append(
+@@ -681,7 +683,7 @@
+ def retire_employee(actor, account_id):
+     """社員の退職の処理をする（アカウントを無効にする。行は消さない）。
+ 
+-    その社員の申請は同時にすべて取り消す（備品は空きに戻る）。備品を借りている社員と管理者はできない。
++    その社員の申請は同時にすべて取り消す（備品は空きに戻る）。管理者はできない。
+ 
+     引数:
+         actor: 操作する利用者
+@@ -689,7 +691,7 @@
+     戻り値:
+         無効にした Account
+     例外:
+-        OperationError: 管理者でない、アカウントが無い、すでに無効、管理者、備品を借りている
++        OperationError: 管理者でない、アカウントが無い、すでに無効、管理者
+     """
+     with transaction.atomic():
+         require_staff(actor)
+@@ -698,8 +700,6 @@
+             raise OperationError(MSG_ALREADY_RETIRED)
+         if account.is_staff_role:
+             raise OperationError(MSG_STAFF_CANNOT_RETIRE)
+-        if Lending.objects.filter(borrower=account).exists():
+-            raise OperationError(MSG_BORROWER_CANNOT_RETIRE)
+         BorrowRequest.objects.filter(requester=account).delete()
+         account.is_active = False
+         account.save(update_fields=["is_active"])
+diff -ru code_docs/src/lending/templates/lending/base.html code_docs_bug/src/lending/templates/lending/base.html
+--- a/src/lending/templates/lending/base.html	2026-11-22 16:56:50
++++ a/src/lending/templates/lending/base.html	2026-11-23 01:29:59
+@@ -21,7 +21,7 @@
+   <a href="/">貸出状況</a>
+   {% if current_account %}
+     <span class="current-user">{{ current_account.name }}</span>
+-    {% if current_account.is_staff_role %}<a href="/accounts/">アカウント</a> <a href="/history/">履歴</a>{% endif %}
++    {% if current_account.is_staff_role %}<a href="/accounts/">アカウント</a>{% endif %} <a href="/history/">履歴</a>
+     <form method="post" action="/logout/">{% csrf_token %}<button type="submit">ログアウト</button></form>
+   {% else %}
+     <a href="/login/">ログイン</a>
+diff -ru code_docs/src/lending/views.py code_docs_bug/src/lending/views.py
+--- a/src/lending/views.py	2026-11-22 21:33:52
++++ a/src/lending/views.py	2026-11-23 01:29:59
+@@ -309,7 +309,7 @@
+ 
+ 
+ def account_list(request):
+-    """アカウントの一覧（/accounts/）。管理者だけが開ける。"""
++    """アカウントの一覧（/accounts/）。ログインしていれば開ける。"""
+     account = get_current_account(request)
+     if account is None:
+         return redirect("login")
+@@ -321,7 +321,7 @@
+ 
+ 
+ def lending_history(request):
+-    """貸出と返却の履歴（/history/）。管理者だけが開ける。"""
++    """貸出と返却の履歴（/history/）。ログインしていれば開ける。"""
+     account = get_current_account(request)
+     if account is None:
+         return redirect("login")
