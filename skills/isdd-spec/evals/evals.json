@@ -64,12 +64,12 @@
       "expectations": [
         ".history ディレクトリ配下に change_detail_design.md が生成されること",
         ".history ディレクトリ配下に tasks.md が生成されること",
-        "tasks.md に docs/requirements.md への反映タスクが記載されていること",
-        "tasks.md に docs/detail_design.md への反映タスクが記載されていること",
+        "tasks.md に、実装後レビュー（isdd-build）で docs/requirements.md へ反映するタスクが記載されていること",
+        "tasks.md に、実装後レビュー（isdd-build）で docs/detail_design.md へ反映するタスクが記載されていること",
         "change_detail_design.md に RQ-FT-GET-CURRENT-TIME に対応する DS-* IDが1件以上含まれること",
         "change_detail_design.md に「[追加]」マーカーが含まれること",
         "change_detail_design.md に「[削除]」マーカーが含まれること",
-        "docs/requirements.md と docs/detail_design.md に変更が反映され、[追加][削除] の区分が残っていないこと"
+        "docs/requirements.md と docs/detail_design.md は変更されていないこと（正本への反映は実装後に isdd-build の実装後レビューが行う）"
       ],
       "eval_name": "change-design-hello-world-change-design"
     },

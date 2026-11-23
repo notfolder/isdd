@@ -56,6 +56,11 @@ MAP = """
 """
 
 
+ALL_PASS = [("e2e.test_order", "test_create_order", "pass"),
+            ("e2e.test_order.TestCancel", "test_cancel_order", "pass"),
+            ("e2e.test_perf", "test_response", "pass")]
+
+
 def junit(cases, timestamp="2030-01-01T00:00:00"):
     """pytest 形式の JUnit XML。cases は (classname, name, status) の並び"""
     body = ""
@@ -142,8 +147,8 @@ class AcceptanceCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("要再実行", out)
 
-    # 除外要件（11-1）は対象外。go test（classname がパッケージ）は名前だけで結ぶ。Java はクラス名.メソッド名で結ぶ
-    def test_exclusion_and_other_frameworks(self):
+    # 除外要件（11-1）も判定の対象に残る（設計をまとめても検証は残る）。go test（classname がパッケージ）は名前だけで結ぶ。Java はクラス名.メソッド名で結ぶ
+    def test_exclusion_keeps_verification_and_other_frameworks(self):
         write(self.tmp, "docs/detail_design.md", DESIGN + "| `RQ-UI-ORDER-SCREEN` | 画面は注文の設計で実現済み | `DS-TS-ORDER-E2E` | 2026-01-01 |\n")
         write(self.tmp, "docs/trace_map.md", """
         | DS-ID | 修飾名 | 備考 |
@@ -157,7 +162,89 @@ class AcceptanceCheckerTest(TempDirMixin, unittest.TestCase):
                             ("e2e.test_perf", "test_response", "pass")])
         code, out = self.run_checker("--strict")
         self.assertEqual(code, 0, out)
-        self.assertNotIn("RQ-UI-ORDER-SCREEN", out.split("### 要件ごとの実装済み判定")[1])
+        self.assertRegex(out, r"\| `RQ-UI-ORDER-SCREEN` \|.*\| 実装済み \|")
+
+    # requirement-exclusion.md 5: 除外した要件を確かめるシナリオが無くなっていれば、その要件は未検証（--strict で失敗）。
+    # 11-1 に RQ-TS を書いてシナリオごと除外した文書には警告を出す
+    def test_excluded_requirement_without_scenario_is_unverified(self):
+        write(self.tmp, "docs/requirements.md", REQ.replace("`RQ-FT-CREATE-ORDER`, `RQ-UI-ORDER-SCREEN`", "`RQ-FT-CREATE-ORDER`"))
+        write(self.tmp, "docs/detail_design.md", DESIGN + "| `RQ-UI-ORDER-SCREEN` | 画面は注文の設計で実現済み | `DS-TS-ORDER-E2E` | 2026-01-01 |\n"
+              "| `RQ-TS-VERIFY-SCREEN` | 画面だけを確かめるシナリオ | `DS-TS-ORDER-E2E` | 2026-01-01 |\n")
+        self.write_results(ALL_PASS)
+        code, out = self.run_checker("--strict")
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, r"\| `RQ-UI-ORDER-SCREEN` \|.*\| 未検証 \|")
+        self.assertIn("シナリオは除外できない", out)
+
+    # trace-map-rules.md「受け入れ判定」: 1 つの DS-TS に 2 行あり、片方の結果しか無ければ未実行（1 行の合格でほかの行を隠さない）
+    def test_ds_ts_with_two_rows_needs_both_results(self):
+        write(self.tmp, "docs/trace_map.md", MAP + "| `DS-TS-ORDER-E2E` | `e2e/test_order.py::test_create_order_twice` | |\n")
+        self.write_results(ALL_PASS)
+        code, out = self.run_checker("--strict")
+        self.assertEqual(code, 1, out)
+        self.assertIn("DS-TS-ORDER-E2E: 未実行", out)
+        self.assertRegex(out, r"\| `RQ-FT-CREATE-ORDER` \|.*\| 未検証 \|")
+
+    # 同: 結んだ testcase に skipped が混ざる行は未実行（skip を合格に含めない）
+    def test_pass_and_skip_mixed_is_not_run(self):
+        self.write_results([("e2e.test_order", "test_create_order[a]", "pass"),
+                            ("e2e.test_order", "test_create_order[b]", "skip"),
+                            ("e2e.test_order.TestCancel", "test_cancel_order", "pass"),
+                            ("e2e.test_perf", "test_response", "pass")])
+        code, out = self.run_checker("--strict")
+        self.assertEqual(code, 1, out)
+        self.assertIn("DS-TS-ORDER-E2E: 未実行", out)
+        self.assertIn("skipped の testcase がある行", out)
+        self.assertIn("DS-TS-CANCEL-E2E: 合格", out)
+
+    # 同: 鮮度は testcase を出した XML ごとに見る。古い合格の XML に、無関係な新しい XML を足しても要再実行のまま
+    def test_old_results_stay_stale_when_unrelated_new_xml_is_added(self):
+        write(self.tmp, "e2e/results/e2e.xml", junit(ALL_PASS, timestamp="2000-01-01T00:00:00"))
+        write(self.tmp, "e2e/results/other.xml", junit([("e2e.test_other", "test_unrelated", "pass")], timestamp="2099-01-01T00:00:00"))
+        code, out = self.run_checker("--src", "e2e", "--strict")
+        self.assertEqual(code, 1, out)
+        self.assertIn("DS-TS-ORDER-E2E: 要再実行", out)
+
+    # 同: 同じ testcase が複数の XML にあれば新しいほうを使う（回し直した結果で、古い不合格を上書きする）
+    def test_newer_result_of_same_testcase_wins(self):
+        failed = [(c, n, "fail") for c, n, _ in ALL_PASS]
+        write(self.tmp, "e2e/results/old.xml", junit(failed, timestamp="2029-01-01T00:00:00"))
+        write(self.tmp, "e2e/results/new.xml", junit(ALL_PASS, timestamp="2030-01-01T00:00:00"))
+        code, out = self.run_checker("--strict")
+        self.assertEqual(code, 0, out)
+        self.assertIn("合格 3 / 不合格 0", out)
+
+    # design-chapters.md 8-5: RQ-DT・RQ-OP・RQ-NF も表に出す。テストの経路があれば E2E の結果、8-5 にあれば手動の確認、
+    # どちらも無ければ「検証方法なし」。未確認と検証方法なしは --strict でも失敗にしない（既存の文書を止めない）
+    def test_data_and_operation_requirements_are_listed(self):
+        write(self.tmp, "docs/requirements.md", REQ.rstrip() + "\n" + "\n".join([
+            "| `RQ-TS-VERIFY-RETENTION` | 保持 | 無し | 1 年後に確かめる | 消えている | `RQ-DT-ORDER-RETENTION` | `RQ-BK-X` |",
+            "", "## 4. データ", "",
+            "| RQ-ID | 内容 | 対応業務課題ID |", "|---|---|---|",
+            "| `RQ-DT-ORDER-RETENTION` | 保持期間 | `RQ-BK-X` |",
+            "| `RQ-DT-ORDER-ENTITY` | 注文 | `RQ-BK-X` |",
+            "", "## 6. 運用要件", "",
+            "| RQ-ID | 内容 | 対応業務課題ID |", "|---|---|---|",
+            "| `RQ-OP-BACKUP-DAILY` | バックアップ | `RQ-BK-X` |",
+            "| `RQ-OP-RESTORE-DRILL` | 復旧 | `RQ-BK-X` |", ""]))
+        write(self.tmp, "docs/detail_design.md", DESIGN.replace("## 11. 要件と設計の対応表", """### 8-5. テスト以外で確かめる要件
+
+        | RQ-ID | 確認方法 | 確認結果 | 確認日 |
+        |---|---|---|---|
+        | `RQ-OP-BACKUP-DAILY` | cron の設定を読む | 確認済み | 2026-01-10 |
+        | `RQ-OP-RESTORE-DRILL` | 復旧の演習 | 未確認 | ― |
+
+        ## 11. 要件と設計の対応表""").replace("| `DS-TS-RESPONSE-TIME` | `RQ-NF-RESPONSE-1S` |",
+                                         "| `DS-TS-RESPONSE-TIME` | `RQ-NF-RESPONSE-1S` |\n| `DS-TS-CANCEL-E2E` | `RQ-TS-VERIFY-RETENTION` |"))
+        self.write_results(ALL_PASS)
+        code, out = self.run_checker("--strict")
+        self.assertEqual(code, 0, out)
+        self.assertRegex(out, r"\| `RQ-DT-ORDER-RETENTION` \|.*\| 実装済み \|")
+        self.assertRegex(out, r"\| `RQ-DT-ORDER-ENTITY` \|.*\| 検証方法なし \|")
+        self.assertRegex(out, r"\| `RQ-OP-BACKUP-DAILY` \|.*手動: cron の設定を読む.*\| 確認済み（手動） \|")
+        self.assertRegex(out, r"\| `RQ-OP-RESTORE-DRILL` \|.*\| 未確認（手動） \|")
+        self.assertIn("確認済み（手動） 1 / 未確認（手動） 1 / 検証方法なし 1", out)
+        self.assertIn("実装済み 5 / 不合格 0 / 未検証 0（全 8）", out)
 
     # 進行中の変更: 変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の行は読まない
     def test_active_change_overlay(self):

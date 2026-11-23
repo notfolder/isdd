@@ -72,10 +72,13 @@
 
 | 規則 | チェッカー | テスト |
 |---|---|---|
-| `DS-TS` ごとに合格・不合格・未実行を判定し、要件（`RQ-TS` 経由、`RQ-NF` は第 11 章から直接）ごとに実装済み・不合格・未検証を Markdown の表で出す | acceptance_checker | `test_all_pass_is_implemented`、`test_failure_marks_requirement_and_strict_fails`、`test_missing_results_are_unverified` |
+| `DS-TS` ごとに合格・不合格・未実行を判定し、要件（`RQ-TS` 経由、`RQ-NF`・`RQ-DT`・`RQ-OP` は第 11 章から直接も）ごとに実装済み・不合格・未検証を Markdown の表で出す | acceptance_checker | `test_all_pass_is_implemented`、`test_failure_marks_requirement_and_strict_fails`、`test_missing_results_are_unverified` |
 | テストファイルだけを指す行は、そのファイルの testcase が全部通れば合格 | acceptance_checker | `test_file_level_row_aggregates_file_testcases` |
 | XML がコードより古ければ要再実行。既定は警告だけ、`--strict` で失敗 | acceptance_checker | `test_stale_results_require_rerun`、`test_failure_marks_requirement_and_strict_fails` |
-| 除外要件（11-1）は対象外。go test は名前だけ、JUnit（Java）はクラス名.メソッド名で結ぶ | acceptance_checker | `test_exclusion_and_other_frameworks` |
+| 除外要件（11-1）も判定の対象に残す（設計をまとめても検証は残る）。除外した要件を確かめるシナリオが無ければ未検証、11-1 に `RQ-TS` があれば警告。go test は名前だけ、JUnit（Java）はクラス名.メソッド名で結ぶ | acceptance_checker | `test_exclusion_keeps_verification_and_other_frameworks`、`test_excluded_requirement_without_scenario_is_unverified` |
+| `DS-TS` は対応表の行ごとに判定してからまとめる。結果の無い行が 1 行でもあれば未実行、skipped が混ざる行は未実行 | acceptance_checker | `test_ds_ts_with_two_rows_needs_both_results`、`test_pass_and_skip_mixed_is_not_run` |
+| 鮮度は testcase を出した XML ごとに見る（古い合格に無関係な新しい XML を足しても要再実行）。同じ testcase が複数の XML にあれば新しいほうを使う | acceptance_checker | `test_old_results_stay_stale_when_unrelated_new_xml_is_added`、`test_newer_result_of_same_testcase_wins` |
+| `RQ-NF`・`RQ-DT`・`RQ-OP` も要件ごとの表に出す。テストの経路があれば E2E の結果、設計書 8-5 にあれば「確認済み（手動）」「未確認（手動）」、どちらも無ければ「検証方法なし」。未確認と検証方法なしは `--strict` でも失敗にしない（design-chapters.md 8-5） | acceptance_checker | `test_data_and_operation_requirements_are_listed` |
 | `docs/active_change` があれば変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の行にだけ現れる要件・RQ-TS・DS-TS は判定の対象から外す（[削除] と [追加] の両方に現れる ID は差し替えなので残す） | acceptance_checker | `test_active_change_overlay`、`test_active_change_deletion_drops_requirements` |
 | pytest が無い Python では `unittest_junit.py` が JUnit XML を出す。テストディレクトリが無ければ判定を省く | unittest_junit、acceptance_checker | `test_unittest_junit_runner_output_is_readable`、`test_missing_test_dir_skips_judgement` |
 | `check.sh` は受け入れ判定を `--junit "<E2E>/results/*.xml"` で呼び、`.gitignore` に `<E2E>/results/` を 1 回だけ足す。既定では止めず `--strict` で失敗 | isdd_setup | `test_check_sh_runs_acceptance_checker_and_ignores_results`、`test_check_sh_acceptance_is_warning_unless_strict` |

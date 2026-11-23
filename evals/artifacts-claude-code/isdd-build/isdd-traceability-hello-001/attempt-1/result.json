@@ -2,10 +2,10 @@
   "task_id": "isdd-traceability-hello-001",
   "name": "Hello World 対応表作成",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-1jbenyo9",
-  "session_id": "fd833052-858a-471c-80bd-cd589bee5d58",
-  "started": "2026-11-05T19:57:57",
-  "finished": "2026-11-05T19:59:34",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-8fc0rz69",
+  "session_id": "2e39c220-6002-48a4-8ce9-5849b99e7d0b",
+  "started": "2026-11-23T14:59:04",
+  "finished": "2026-11-23T15:00:18",
   "pass": true,
   "grades": [
     {
@@ -36,13 +36,13 @@
       "name": "trace_map_checker_executed",
       "type": "prompt",
       "pass": true,
-      "detail": "セッション中の bash ツール呼び出しで `bash scripts/isdd/check.sh --strict` が複数回実行された。check.sh は内部で trace_map_checker.py を `docs/detail_design.md`・`docs/trace_map.md`・`src` に対して実行し、対応表チェックの結果（エラー 0 件・警告 0 件）を出力した。条件を満たすため pass は true とした。"
+      "detail": "このセッションで bash ツールにより `scripts/isdd/check.sh` が実行されている。`bash scripts/isdd/check.sh --strict` を、対応表作成後に終了コード 0 で確認した。また `python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src --strict --tests e2e --granularity function` も実行され、終了コード 0 だった。条件は「check.sh または trace_map_checker.py の実行」なので満たす。"
     },
     {
       "name": "trace_map_strict_pass",
       "type": "program",
       "pass": true,
-      "detail": "check.sh --strict が合格:\nHELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutputE2E.test_verify_hello_world_output` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutputE2E.test_verify_hello_world_output` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 3）\n✓ 受け入れ判定に合格しました"
+      "detail": "check.sh --strict が合格:\n2E.test_verify_hello_world_output` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutputE2E.test_verify_hello_world_output` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 4）\n  テスト以外: 確認済み（手動） 0 / 未確認（手動） 0 / 検証方法なし 1（RQ-NF・RQ-DT・RQ-OP。終了コードは変えない。未確認と検証方法なしはユーザーに示す）\n✓ 受け入れ判定に合格しました"
     },
     {
       "name": "rq_ds_link_checker_pass",

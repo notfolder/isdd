@@ -2,10 +2,10 @@
   "task_id": "isdd-post-implementation-review-unmapped-001",
   "name": "Hello World 未マッピング要件検出・ヒアリング確認",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-tllimv65",
-  "session_id": "64200443-3143-4ef8-a0a3-4d9955829319",
-  "started": "2026-11-05T20:06:16",
-  "finished": "2026-11-05T20:07:57",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-6tsuor9p",
+  "session_id": "bbee8074-9899-4836-bdf9-d82d09166602",
+  "started": "2026-11-23T15:01:35",
+  "finished": "2026-11-23T15:03:13",
   "pass": true,
   "grades": [
     {
@@ -24,13 +24,13 @@
       "name": "trace_map_strict_pass",
       "type": "program",
       "pass": true,
-      "detail": "check.sh --strict が合格:\nUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::HelloOutputTest.test_prints_hello_world_and_exits_zero` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::HelloOutputTest.test_prints_hello_world_and_exits_zero` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 3）\n✓ 受け入れ判定に合格しました"
+      "detail": "check.sh --strict が合格:\n2E.test_verify_hello_world_output` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::TestHelloOutputE2E.test_verify_hello_world_output` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 4）\n  テスト以外: 確認済み（手動） 0 / 未確認（手動） 0 / 検証方法なし 1（RQ-NF・RQ-DT・RQ-OP。終了コードは変えない。未確認と検証方法なしはユーザーに示す）\n✓ 受け入れ判定に合格しました"
     },
     {
       "name": "unmapped_table_presented",
       "type": "prompt",
       "pass": true,
-      "detail": "「### 未マッピング一覧」の見出しと、列「実装要素（修飾名）」「対応表の DS-ID」「設計書に DS-ID があるか」「対応する RQ-ID」「要件定義書に RQ-ID があるか」「状態」の 6 列の表が、エージェントの応答に含まれている。前の報告（get_hello_message の要件未定義を示したとき）と、最後の実装後レビューの報告（RQ-FT-GET-HELLO-MESSAGE を追加した後）の両方にあり、どちらも表に該当行がある。該当なしの表は、この条件の必須要件ではない。"
+      "detail": "「未マッピング一覧」の見出し（`### 未マッピング一覧`）と、列名が「実装要素（修飾名）」「対応表の DS-ID」「設計書に DS-ID があるか」「対応する RQ-ID」「要件定義書に RQ-ID があるか」「状態」の 6 列の表が、直近の 2 つの応答に含まれています。段階 2 の完了報告では、`src/hello.py::HelloWorldPrinter.get_hello_message` の行（状態「整合」、RQ-FT-GET-HELLO-MESSAGE 追加後）と「要件なし（作りすぎ）: 0 件」を出しています。段階 1 の報告でも同じ見出しと表（状態「要件未定義」の行）を出しています。"
     }
   ]
 }

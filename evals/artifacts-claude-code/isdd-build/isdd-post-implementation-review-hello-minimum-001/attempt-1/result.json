@@ -2,17 +2,17 @@
   "task_id": "isdd-post-implementation-review-hello-minimum-001",
   "name": "Hello World 実装後整合確認（最小）",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-rjmrkaxr",
-  "session_id": "ded0f356-9801-454b-b948-71f200fe9265",
-  "started": "2026-11-05T20:03:12",
-  "finished": "2026-11-05T20:04:40",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-wiryya6y",
+  "session_id": "eec35e7c-dc82-4b3d-8244-e3a4ef46d868",
+  "started": "2026-11-23T15:00:18",
+  "finished": "2026-11-23T15:01:35",
   "pass": true,
   "grades": [
     {
       "name": "zero_inconsistency_reported",
       "type": "prompt",
       "pass": true,
-      "detail": "最終報告に「未整合ゼロ」という語そのものは無いが、趣旨の完了報告は含まれている。報告には「すべてのチェックが合格しています」とあり、check.sh --strict の結果（エラー 0 件・警告 0 件）、rq_ds_link_checker.py の問題 0 件、受け入れ判定の合格（3 要件すべて実装済み）、未マッピング一覧の「該当なし」（作りすぎ 0 件）、正本を変更していないことを示している。build-review.md が求める「未整合ゼロ」という文言は省いているため、厳密な表現としては不十分な点がある。"
+      "detail": "最終報告に「すべての検査が合格です」と書かれ、続けて check.sh --strict・rq_integrity_checker・rq_ds_link_checker・implementation_completeness_checker がいずれも終了コード 0 だったと示している。未マッピング一覧も「該当なし」で、趣旨として未整合ゼロの完了報告に当たる。ただし「未整合ゼロ」「不整合なし」の文言は文字どおりには無い。また RQ-DT-DB-NOT-REQUIRED は「検証方法なし」として残っており、終了コードには影響しないがそれも報告に出ている。"
     },
     {
       "name": "rq_ds_link_checker_pass",
@@ -24,13 +24,13 @@
       "name": "trace_map_strict_pass",
       "type": "program",
       "pass": true,
-      "detail": "check.sh --strict が合格:\nHELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::HelloOutputE2ETest.test_verify_hello_world_output` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py::HelloOutputE2ETest.test_verify_hello_world_output` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 3）\n✓ 受け入れ判定に合格しました"
+      "detail": "check.sh --strict が合格:\n | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_output.py` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 4）\n  テスト以外: 確認済み（手動） 0 / 未確認（手動） 0 / 検証方法なし 1（RQ-NF・RQ-DT・RQ-OP。終了コードは変えない。未確認と検証方法なしはユーザーに示す）\n✓ 受け入れ判定に合格しました"
     },
     {
       "name": "unmapped_table_presented",
       "type": "prompt",
       "pass": true,
-      "detail": "このセッションの最終報告に「### 未マッピング一覧」の見出しと、列「実装要素（修飾名）」「対応表の DS-ID」「設計書に DS-ID があるか」「対応する RQ-ID」「要件定義書に RQ-ID があるか」「状態」の 6 列の表がある。該当なしの行も含まれている。"
+      "detail": "最終報告（isdd-build の段階 2 の応答）に、Markdown の見出し「### 未マッピング一覧」があり、その直下に「実装要素（修飾名）」「対応表の DS-ID」「設計書に DS-ID があるか」「対応する RQ-ID」「要件定義書に RQ-ID があるか」「状態」の 6 列の表が出ている。該当なしの行（「該当なし」と ―）も含まれ、「要件なし（作りすぎ）: 0 件」も書かれている。"
     }
   ]
 }

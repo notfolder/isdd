@@ -54,7 +54,7 @@ class JudgeRunTest(unittest.TestCase):
     def test_missing_xml_is_unscored(self):
         j = self.judge(["a.py::test_1"], None, returncode=1)
         self.assertTrue(any("XML が無い" in r for r in j["reasons"]))
-        self.assertEqual(j["not_run"], ["test_1"])
+        self.assertEqual(j["not_run"], ["a::test_1"])
 
     def test_timeout_is_unscored(self):
         j = self.judge(["a.py::test_1"], None, returncode=None, timed_out=True)
@@ -67,7 +67,7 @@ class JudgeRunTest(unittest.TestCase):
 
     def test_test_missing_from_results_is_unscored_and_listed(self):
         j = self.judge(["a.py::test_1", "a.py::test_2"], [case("a", "test_1")], returncode=0)
-        self.assertEqual(j["not_run"], ["test_2"])
+        self.assertEqual(j["not_run"], ["a::test_2"])
         self.assertTrue(any("結果が無いテストが 1 件" in r for r in j["reasons"]))
 
     def test_same_name_in_two_files_is_unscored(self):
@@ -80,7 +80,7 @@ class JudgeRunTest(unittest.TestCase):
         # 収集に失敗すると、テストの代わりにモジュール名の error が 1 件だけ出る
         j = self.judge(["a.py::test_1", "a.py::test_2"], [case("", "a", "<error/>")], returncode=2)
         self.assertTrue(any("数えたテストに無い結果" in r for r in j["reasons"]))
-        self.assertEqual(j["not_run"], ["test_1", "test_2"])
+        self.assertEqual(j["not_run"], ["a::test_1", "a::test_2"])
 
     def test_uncounted_expected_is_unscored(self):
         j = self.judge(None, [case("a", "test_1")], returncode=0)
@@ -114,7 +114,7 @@ class MergeTest(unittest.TestCase):
         scoring.merge_run(r, scoring.judge_run(["a.py::t1"], [("a::t1", "t1", "pass")], 0, False), 0, "x/hidden")
         scoring.merge_run(r, scoring.judge_run(["b.py::t2"], None, None, True), None, "y/hidden")
         self.assertEqual(r["scoring_status"], scoring.UNSCORED)
-        self.assertEqual(r["not_run"], ["t2"])
+        self.assertEqual(r["not_run"], ["b::t2"])
 
 
 class LoadScoreTest(unittest.TestCase):
@@ -207,6 +207,26 @@ class VoteTest(unittest.TestCase):
         answers = iter([{"F1": 2, "F2": 2}, {}, {"F1": 0, "F2": 2}, {"F1": 2, "F2": 2}])
         votes, _ = scoring.collect_votes(lambda: next(answers), lambda v: scoring.valid_point_vote(v, self.IDS))
         self.assertEqual(scoring.median_points(votes, self.IDS)["F1"], 2)
+
+
+class CrossFileTest(unittest.TestCase):
+    def test_other_file_same_name_is_not_accepted(self):
+        # a.py の test_1 を回すはずなのに、b.py の test_1 の結果だけがある
+        j = scoring.judge_run(["a.py::test_1"], [("b::test_1", "test_1", "pass")], 0, False)
+        self.assertEqual(j["not_run"], ["a::test_1"])
+        self.assertTrue(j["reasons"])
+
+    def test_class_and_dir_are_normalized(self):
+        self.assertEqual(scoring.collect_key("sub/test_a.py::TestX::test_1[p]"), "sub.test_a.TestX::test_1[p]")
+        j = scoring.judge_run(["sub/test_a.py::TestX::test_1[p]"], [("sub.test_a.TestX::test_1[p]", "test_1[p]", "pass")], 0, False)
+        self.assertEqual(j["reasons"], [])
+
+    def test_legacy_score_is_marked(self):
+        import json, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / "s.json"
+            f.write_text(json.dumps({"tests": {"t": "pass"}, "passed": 1, "total": 1}))
+            self.assertTrue(scoring.load_score(f).get("legacy"))
 
 
 if __name__ == "__main__":

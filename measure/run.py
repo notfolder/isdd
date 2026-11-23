@@ -35,7 +35,7 @@ sys.path.insert(0, str(HERE))
 from scoring import compare_stages, load_score, score_label, stage_fields  # noqa: E402
 REPO = HERE.parent
 sys.path.insert(0, str(HERE))
-from agentrun import ISDD_SKILLS, RESPONDER_PROMPT, ask_responder, run_claude, run_claude_retry  # noqa: E402
+from agentrun import ISDD_SKILLS, RESPONDER_PROMPT, ancestor_rules, ask_responder_ex, run_claude, run_claude_retry  # noqa: E402
 SNAPSHOT_IGNORE = shutil.ignore_patterns(".venv", "venv", "node_modules", "__pycache__", ".git", "data", ".pytest_cache", "results")
 
 FIRST_PROMPT_ISDD = """REQUEST.md の依頼を、isdd-spec と isdd-build のスキル（.claude/skills/ にある）を使って、要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください。
@@ -126,6 +126,26 @@ def doc_digests(workdir: Path) -> dict:
     return {str(f.relative_to(workdir)): hashlib.sha256(f.read_bytes()).hexdigest() for f in files if f.is_file()}
 
 
+def task_digest(task: Path) -> dict:
+    """題材のフォルダ（依頼、契約、台帳、隠しテスト、採点器）と実行器の中身の要約。コミットしていない変更があっても、どの中身で回したかを残す。"""
+    h = hashlib.sha256()
+    files = [f for f in sorted(task.rglob("*")) if f.is_file() and "__pycache__" not in f.parts and "results" not in f.relative_to(task).parts[:1]
+             and f.suffix in (".md", ".py", ".json", ".ini", ".txt", ".sh", ".html", ".csv")] if task != HERE else []
+    for f in files + [HERE / "run.py", HERE / "agentrun.py", HERE / "scoring.py"]:
+        h.update(str(f.name).encode() + b"\0" + f.read_bytes())
+    return {"task_files": len(files), "sha256": h.hexdigest()}
+
+
+def leak_hits(tool_inputs: list, workdir: Path) -> list:
+    """ツールの入力のうち、隠しテスト・台帳・採点器（リポジトリ）や、ほかの回の作業フォルダを指すもの。1 件でもあれば、その回は比較に使わない。"""
+    hits = []
+    sibling = re.compile(re.escape(str(workdir.parent)) + r"/([^/\s\"'\\]+)")
+    for s in tool_inputs:
+        if str(REPO) in s or any(m.group(1) != workdir.name for m in sibling.finditer(s)):
+            hits.append(s[:300])
+    return hits
+
+
 def score_snapshot(label: str, stage: int, snap: Path, out_json: Path, lock_path: Path) -> None:
     with open(lock_path, "w") as lock:
         log(label, f"stage {stage}: 採点の順番待ち")
@@ -174,6 +194,10 @@ def main() -> int:
         TASK = HERE / args.task
     label = args.label or (f"{args.task}-" if args.task else "") + f"{args.arm}-r{args.run}"
     workdir = Path(args.work).resolve() / (args.workdir_label or label)
+    rules = ancestor_rules(workdir)
+    if rules:
+        print(f"作業フォルダの親に CLAUDE.md があるので止める（開発のエージェントに読み込まれる）: {rules}。--work をホームの外（例: /Users/Shared/isdd-measure-work）にする", file=sys.stderr)
+        return 2
     results_dir = HERE / "results" / label
     results_dir.mkdir(parents=True, exist_ok=True)
     lock_path = HERE / "results" / ".score.lock"
@@ -185,6 +209,8 @@ def main() -> int:
         workdir.mkdir(parents=True)
         if args.seed:
             shutil.copytree(args.seed, workdir, dirs_exist_ok=True, ignore=shutil.ignore_patterns(".venv", "__pycache__", ".pytest_cache", "data"))
+        if (TASK / "workdir-files").is_dir():  # 題材が作業フォルダに置く資料（連携先の説明書、接続情報など）
+            shutil.copytree(TASK / "workdir-files", workdir, dirs_exist_ok=True)
         subprocess.run(["git", "init", "-q"], cwd=workdir, check=False)
         if args.arm == "isdd":
             dest = workdir / ".claude" / "skills"
@@ -207,7 +233,8 @@ def main() -> int:
     summary["runner"] = "claude -p"
     summary["conditions"] = {"model": args.model, "responder_model": args.responder_model if args.responder else None, "task": args.task,
                              "max_rounds": args.max_rounds, "timeout_min": args.timeout_min, "contract": args.contract, "seed": bool(args.seed),
-                             "repo_commit": subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO, capture_output=True, text=True).stdout.strip(),
+                             "task_digest": task_digest(TASK), "work": str(workdir.parent), "ancestor_claude_md": rules,
+                             "claude_cli": subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip(), "repo_commit": subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO, capture_output=True, text=True).stdout.strip(),
                              "isdd_version": (re.search(r'^\s*version:\s*"?([^"\s]+)', (REPO / "skills" / "isdd-spec" / "SKILL.md").read_text(encoding="utf-8"), re.M) or [None, None])[1]}
     if args.ask_first:
         summary["ask_first"] = True
@@ -258,12 +285,16 @@ def main() -> int:
                     prompt = prompt.replace("要件定義 → 設計 → 実装 → 実装後レビューまで最後まで進めてください", "進めてください").replace(ISDD_UNTIL_END, ISDD_UNTIL_REQ)
             if args.continue_session:
                 prompt = CONTINUE_AIDLC if args.arm == "aidlc" else CONTINUE_ISDD
+            note = TASK / "contract-note.txt"  # 契約の中身の説明を、題材に合わせて替える（画面の id を決めない題材）
+            if note.exists():
+                prompt = prompt.replace("（起動方法、URL、画面の要素の id とクラス名）", note.read_text(encoding="utf-8").strip())
             ledger_text = Path(args.responder).read_text(encoding="utf-8")
         else:
             template = {"isdd": FIRST_PROMPT_ISDD, "aidlc": FIRST_PROMPT_AIDLC}.get(args.arm, FIRST_PROMPT_CONTROL)
             prompt = template.format(change_note=CHANGE_NOTE if stage > 1 else "", scope=args.scope)
         follow = {"isdd": FOLLOW_UP, "aidlc": FOLLOW_UP_AIDLC}.get(args.arm, FOLLOW_UP_CONTROL)
         questions_asked = 0
+        responder_cost, responder_failed = 0.0, False
         rounds = []
         session = args.continue_session or ""
         log_file = open(results_dir / f"stage{stage}.log", "w", encoding="utf-8")
@@ -273,8 +304,16 @@ def main() -> int:
         for i in range(args.max_rounds):
             if i > 0 and args.responder:
                 last = (rounds[-1].get("texts") or [rounds[-1].get("result") or ""])[-1]
-                answer = ask_responder(ledger_text, last, args.responder_model, workdir)
-                if "?" in last or "？" in last or "教えてください" in last or "どちら" in last:
+                reply = ask_responder_ex(ledger_text, last, args.responder_model, workdir)
+                responder_cost += reply["cost_usd"]
+                answer = reply["text"]
+                if not answer:  # 依頼者役の返事が取れない。「任せます」に置き換えず、基盤の未完了としてこの段を止める
+                    responder_failed = True
+                    log(label, f"stage {stage}: 依頼者役の返事が取れないので止める")
+                    break
+                # 依頼者が中身のある返事をした回を数える（「続けてください」だけの回は数えない）。
+                # 前は開発側の応答に「?」があるかで数えていて、表で聞いた質問を数え落とした（2026-11-23 の試し回しで判明）
+                if answer.strip().rstrip("。") != "続けてください":
                     questions_asked += 1
                 log_file.write(f"\n### 依頼者役の答え {i}\n\n{answer[:4000]}\n")
                 follow = answer
@@ -305,6 +344,8 @@ def main() -> int:
             for k, v in (r.get("tool_names") or {}).items():
                 tool_names[k] = tool_names.get(k, 0) + v
         isdd_used = any(sk in ISDD_SKILLS for sk in skills_called)
+        leaks = leak_hits([s for r in rounds for s in (r.get("tool_inputs") or [])], workdir)
+        parent_refs = sum(1 for r in rounds for s in (r.get("tool_inputs") or []) if "../" in s)
         artifacts = all((workdir / f).exists() for f in ("docs/requirements.md", "docs/detail_design.md", "docs/trace_map.md", "scripts/isdd"))
         valid = ((isdd_used or artifacts) if args.arm == "isdd" else not visible and not isdd_used)
         docs_after = doc_digests(workdir)
@@ -312,7 +353,8 @@ def main() -> int:
         # 割り当て・見えたか・呼んだか・文書を更新したか・完了・採点できたかを別々に残す。valid は前からの判定で、
         # 前の段の文書が残っているだけでも真になるので、この段で手順を実施したかは conduct で見る
         conduct = {"assigned": args.arm, "isdd_skills_visible": bool(visible), "isdd_skill_invoked": isdd_used, "isdd_docs_updated": docs_updated,
-                   "procedure_evidence": bool(isdd_used or docs_updated), "done": done_flag.exists(), "scored": None}
+                   "procedure_evidence": bool(isdd_used or docs_updated), "done": done_flag.exists(), "scored": None,
+                   "infra_incomplete": responder_failed, "leak_hits": leaks, "parent_dir_refs": parent_refs}
         aidlc_info = {}
         if args.arm == "aidlc":
             # AI-DLC の記録（段階の状態と承認の数）。isdd のスキルが見えていないことと合わせて有効とする
@@ -322,7 +364,7 @@ def main() -> int:
                           "aidlc_human_turns": audit.count("HUMAN_TURN"), "aidlc_workflow_completed": "WORKFLOW_COMPLETED" in audit}
             valid = bool(records) and not visible and not isdd_used
         stage_info = {"done": done_flag.exists(), "wall_sec": wall, "started": datetime.fromtimestamp(stage_started).isoformat(timespec="seconds"),
-                      "responder": bool(args.responder), "questions_rounds": questions_asked,
+                      "responder": bool(args.responder), "questions_rounds": questions_asked, "responder_cost_usd": round(responder_cost, 4),
                       "tool_uses": sum(tool_names.values()), "tool_names": tool_names, "skills_called": skills_called, "isdd_skills_visible": visible,
                       "valid": valid, "conduct": conduct, **aidlc_info, "isdd_artifacts": artifacts, "validity_note": ("isdd の成果物もスキル呼び出しも無し" if args.arm == "isdd" and not (isdd_used or artifacts) else
                                                        ("対照群に isdd のスキルが見えていた" if args.arm == "control" and (visible or isdd_used) else "")),

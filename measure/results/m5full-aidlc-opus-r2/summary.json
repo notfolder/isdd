@@ -39,17 +39,17 @@
       "cost_usd": 280.2395,
       "turns": 285,
       "rounds": 15,
-      "passed": 3,
+      "passed": 7,
       "total": 8,
       "tests": {
-        "test_first_account_becomes_staff[chromium]": "fail",
+        "test_first_account_becomes_staff[chromium]": "pass",
         "test_account_registration[chromium]": "pass",
         "test_login_logout[chromium]": "pass",
         "test_session_timeout[chromium]": "pass",
-        "test_employee_cannot_manage_equipment[chromium]": "fail",
-        "test_equipment_create[chromium]": "fail",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
+        "test_equipment_create[chromium]": "pass",
         "test_equipment_update_and_delete_without_lending[chromium]": "fail",
-        "test_lending_status_empty_and_sorted[chromium]": "fail"
+        "test_lending_status_empty_and_sorted[chromium]": "pass"
       },
       "overbuild": {
         "source_files": 10,
@@ -58,7 +58,17 @@
         "classes": 8,
         "templates": 5
       },
-      "score_error": null
+      "score_error": null,
+      "resynced": {
+        "date": "2026-11-23",
+        "from": "stage1.json",
+        "old_passed": 3,
+        "old_total": 8
+      },
+      "scoring_status": "scored",
+      "unscored_reasons": [],
+      "expected_total": null,
+      "not_run": []
     }
   },
   "runner": "claude -p",

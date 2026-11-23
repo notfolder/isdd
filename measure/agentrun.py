@@ -17,6 +17,7 @@ RESPONDER_PROMPT = """あなたはシステムの依頼者です。IT には詳�
 - 承認を求められたら「承認する」と答える。推奨案が示されていれば推奨に従う。
 - 質問が無く、報告や進捗だけなら「続けてください」とだけ答える。
 - 出力は依頼者の返事の文章だけ（前置きや説明は書かない。番号付きの質問には番号で答える）。
+- 隠し台帳に「この題材だけの答え方の規則」があれば、上の規則より優先する。
 
 隠し台帳:
 {ledger}
@@ -25,23 +26,37 @@ RESPONDER_PROMPT = """あなたはシステムの依頼者です。IT には詳�
 {response}"""
 
 
+# 利用者の共通ルール（ホームの CLAUDE.md）を読ませない。作業フォルダがホームの下にあると、--setting-sources project でも
+# ホームが親フォルダとして扱われ、~/CLAUDE.md と ~/.claude/CLAUDE.md が読み込まれる（2026-11-23 に判明。11-22 午後以降の回が該当）
+NO_USER_RULES = json.dumps({"claudeMdExcludes": [str(Path.home() / ".claude" / "CLAUDE.md"), str(Path.home() / "CLAUDE.md")]})
+
+
+def ancestor_rules(workdir: Path) -> list:
+    """作業フォルダの親をたどり、読み込まれてしまう CLAUDE.md を挙げる。1 つでもあれば、その場所で計測を回さない。"""
+    found = []
+    for d in Path(workdir).resolve().parents:
+        found += [str(f) for f in (d / "CLAUDE.md", d / ".claude" / "CLAUDE.md", d / "CLAUDE.local.md") if f.is_file()]
+    return found
+
+
 ISDD_SKILLS = {"isdd-spec", "isdd-build", "isdd-reverse-engineering", "isdd-setup"}
 
 
-def run_claude(workdir: Path, prompt: str, model: str, session: str, timeout_min: int) -> dict:
+def run_claude(workdir: Path, prompt: str, model: str, session: str, timeout_min: int, extra_env: dict = None) -> dict:
     """claude -p を逐次出力（stream-json）で起こし、応答・トークン・ツール呼び出し・見えていたスキルを返す。"""
     cmd = ["claude", "-p", "--model", model, "--output-format", "stream-json", "--verbose", "--setting-sources", "project",
-           "--permission-mode", "acceptEdits", "--allowedTools", ",".join(ALLOWED_TOOLS)]
+           "--settings", NO_USER_RULES, "--permission-mode", "acceptEdits", "--allowedTools", ",".join(ALLOWED_TOOLS)]
     if session:
         cmd += ["--resume", session]
     env = dict(os.environ)
     env.pop("CLAUDECODE", None)  # 入れ子の起動を許す
+    env.update(extra_env or {})
     started = time.time()
     try:
         proc = subprocess.run(cmd, cwd=workdir, capture_output=True, text=True, timeout=timeout_min * 60, env=env, input=prompt)
     except subprocess.TimeoutExpired as e:
         return {"error": f"timeout {timeout_min} min", "raw": ((e.stdout or b"").decode(errors="replace"))[-2000:], "wall_sec": round(time.time() - started, 1)}
-    data = {"tool_uses": 0, "tool_names": {}, "skills_called": [], "skills_visible": None, "texts": []}
+    data = {"tool_uses": 0, "tool_names": {}, "skills_called": [], "skills_visible": None, "texts": [], "tool_inputs": []}
     for line in proc.stdout.splitlines():
         line = line.strip()
         if not line.startswith("{"):
@@ -60,6 +75,7 @@ def run_claude(workdir: Path, prompt: str, model: str, session: str, timeout_min
                     name = c.get("name", "?")
                     data["tool_uses"] += 1
                     data["tool_names"][name] = data["tool_names"].get(name, 0) + 1
+                    data["tool_inputs"].append(json.dumps(c.get("input") or {}, ensure_ascii=False))  # 隠しテストや台帳に触れていないかを後で調べる
                     if name == "Skill":
                         skill = str((c.get("input") or {}).get("skill", ""))
                         data["skills_called"].append(skill)
@@ -101,10 +117,10 @@ def seconds_until_reset(text: str) -> int:
     return int((target - now).total_seconds()) + 120
 
 
-def run_claude_retry(workdir: Path, prompt: str, model: str, session: str, timeout_min: int, log=print) -> dict:
+def run_claude_retry(workdir: Path, prompt: str, model: str, session: str, timeout_min: int, log=print, extra_env: dict = None) -> dict:
     """上限で止まったら回復まで待ってやり直す。"""
     while True:
-        data = run_claude(workdir, prompt, model, session, timeout_min)
+        data = run_claude(workdir, prompt, model, session, timeout_min, extra_env)
         if data.get("error") == "rate_limit":
             wait = seconds_until_reset(data.get("reset_text", ""))
             log(f"利用上限に到達。{wait // 60} 分待って再開する（{data.get('reset_text', '')[:80]}）")
@@ -114,16 +130,26 @@ def run_claude_retry(workdir: Path, prompt: str, model: str, session: str, timeo
 
 
 def ask_responder(ledger: str, response: str, model: str, workdir: Path) -> str:
-    """依頼者役のモデルに、エージェントの応答への返事を作らせる（台帳の範囲だけ）"""
+    """依頼者役のモデルに、エージェントの応答への返事を作らせる（台帳の範囲だけ）。前からの呼び出し用で、失敗すると「任せます」を返す。"""
+    return ask_responder_ex(ledger, response, model, workdir)["text"] or "続けてください。分からないことは任せます。"
+
+
+def ask_responder_ex(ledger: str, response: str, model: str, workdir: Path, tries: int = 3) -> dict:
+    """依頼者役の返事と費用を返す。{"text": 返事（取れなければ空）, "cost_usd": 費用, "failed": 取れなかった回数}。
+
+    返事が取れなかったときに「任せます」に置き換えない（測定の基盤の失敗が、仕様の委任に変わるため）。呼ぶ側が未完了として記録する。
+    """
     env = dict(os.environ)
     env.pop("CLAUDECODE", None)
-    cmd = ["claude", "-p", "--model", model, "--output-format", "json", "--setting-sources", "project", "--permission-mode", "plan", "--allowedTools", ""]
+    cmd = ["claude", "-p", "--model", model, "--output-format", "json", "--setting-sources", "project", "--settings", NO_USER_RULES, "--permission-mode", "plan", "--allowedTools", ""]
+    cost, failed = 0.0, 0
     while True:
         try:
             proc = subprocess.run(cmd, cwd=workdir.parent, capture_output=True, text=True, timeout=300, env=env,
                                   input=RESPONDER_PROMPT.format(ledger=ledger, response=response[-12000:]))
             data = json.loads(proc.stdout.strip() or "{}")
             text = (data.get("result") or "").strip()
+            cost += float(data.get("total_cost_usd") or 0)
         except Exception as e:  # noqa: BLE001
             text = ""
         # 利用上限の表示を依頼者の答えとして渡さない（2026-11-22 に 1 回混入した）。回復まで待ってやり直す
@@ -132,6 +158,11 @@ def ask_responder(ledger: str, response: str, model: str, workdir: Path) -> str:
             print(f"依頼者役が利用上限に到達。{wait // 60} 分待ってやり直す（{text[:80]}）", flush=True)
             time.sleep(wait)
             continue
-        return text or "続けてください。分からないことは任せます。"
+        if not text:
+            failed += 1
+            if failed < tries:
+                time.sleep(20)
+                continue
+        return {"text": text, "cost_usd": round(cost, 4), "failed": failed}
 
 

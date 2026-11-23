@@ -33,6 +33,13 @@ def parse_collect(stdout: str) -> list:
     return [line.strip() for line in stdout.splitlines() if "::" in line and not line.startswith(" ") and " " not in line.split("::")[0]]
 
 
+def collect_key(test_id: str) -> str:
+    """「dir/test_a.py::Class::名前[引数]」を、JUnit の「classname::name」と同じ形（dir.test_a.Class::名前[引数]）に直す。"""
+    parts = test_id.split("::")
+    path = parts[0][:-3] if parts[0].endswith(".py") else parts[0]
+    return ".".join([path.replace("/", ".")] + parts[1:-1]) + "::" + parts[-1]
+
+
 def short_name(test_id: str) -> str:
     """「ファイル::クラス::名前[引数]」から、JUnit の testcase の name に当たる「名前[引数]」を取り出す。"""
     return test_id.split("::")[-1]
@@ -81,8 +88,9 @@ def judge_run(expected_ids, cases, returncode, timed_out: bool, where: str = "")
     if expected_ids is None:
         reasons.append(f"回すはずのテストを数えられなかった{tag}")
     else:
-        want = Counter(short_name(t) for t in expected_ids)
-        got = Counter(name for _, name, _ in cases)
+        # ファイルとクラスを含む識別子で照らす（別のファイルの同じ名前のテストを取り違えないため）
+        want = Counter(collect_key(t) for t in expected_ids)
+        got = Counter(test_id for test_id, _, _ in cases)
         not_run = sorted((want - got).elements())
         extra = sorted((got - want).elements())
         if not expected_ids:
@@ -165,7 +173,8 @@ def load_score(out_json) -> dict:
         return {"tests": {}, "passed": None, "total": None, "scoring_status": UNSCORED, "unscored_reasons": ["採点結果のファイルを読めない"], "not_run": []}
     if "scoring_status" not in score:  # この部品を使う前の採点器が書いた結果
         reasons = [] if score.get("tests") else ["テストの結果が 0 件"]
-        score.update({"scoring_status": UNSCORED if reasons else SCORED, "unscored_reasons": reasons, "not_run": []})
+        # legacy: 期待件数との照合をしていない結果。点は使えるが、回すはずのテストがそろっていたかは確かめられていない
+        score.update({"scoring_status": UNSCORED if reasons else SCORED, "unscored_reasons": reasons, "not_run": [], "legacy": True})
     return score
 
 

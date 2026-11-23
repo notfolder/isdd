@@ -5,7 +5,7 @@ Acceptance Checker Script（受け入れ判定）
 目的:
   「要件が実装されたか」を E2E テストの結果で判定する。対応表は「テストがあるか」までしか見ないので、
   JUnit XML の結果を読んで、設計書 8-2 の DS-TS ごとに合格・不合格・未実行・要再実行を判定し、
-  要件（RQ-FT・RQ-UI・RQ-EX と、検証対象の RQ-NF）ごとの実装済み判定の表を Markdown で出す。
+  要件（RQ-FT・RQ-UI・RQ-EX・RQ-NF・RQ-DT・RQ-OP）ごとの実装済み判定の表を Markdown で出す。
 
 使用方法:
   python3 acceptance_checker.py <requirements.md> <detail_design.md> <trace_map.md>
@@ -14,7 +14,9 @@ Acceptance Checker Script（受け入れ判定）
 
 読むもの:
   - 要件定義書 第 7 章: 「検証する要件ID」列（RQ-TS → 検証する RQ-*）
-  - 詳細設計書 第 11 章: DS-TS → RQ-TS（または RQ-NF へ直接）。11-1 の除外要件は対象外
+  - 詳細設計書 第 11 章: DS-TS → RQ-TS（または RQ-NF・RQ-DT・RQ-OP へ直接）。11-1 の除外要件も判定の対象
+    （設計をまとめても、要件を確かめる義務は残る）
+  - 詳細設計書 8-5「テスト以外で確かめる要件」: RQ-NF・RQ-DT・RQ-OP の手動の確認（確認方法・確認結果・確認日）
   - 対応表: DS-TS の行の修飾名（e2e/test_x.py::test_y、または e2e/test_x.py）
   - JUnit XML: testcase の classname・name・結果。testsuite の timestamp
   - --active-change があれば、そのディレクトリの change_requirements.md と change_detail_design.md の
@@ -29,13 +31,18 @@ Acceptance Checker Script（受け入れ判定）
   - テストファイルだけを指す行は、そのファイルの testcase 全部が通れば合格
 
 判定:
-  DS-TS: 合格 / 不合格（failure か error が 1 件以上）/ 未実行（結べる testcase が無い、または skipped だけ）/
-         要再実行（XML の timestamp が --src・--tests の最新の更新時刻より古い）
+  対応表の DS-TS の行（テスト関数かテストファイル）ごとに判定してから、DS-TS にまとめる。
+  行:    不合格（failure か error が 1 件以上）/ 未実行（結べる testcase が無い、または skipped が 1 件以上）/
+         要再実行（その testcase を出した XML の timestamp が --src・--tests の最新の更新時刻より古い）/ 合格
+  DS-TS: 1 行でも不合格なら不合格、次に 1 行でも未実行なら未実行、次に 1 行でも要再実行なら要再実行、全行が合格なら合格
+  同じ testcase が複数の XML にあれば、timestamp が新しいほうだけを使う（古い結果に別の実行の結果を足しても、古い結果は古いまま）
   要件:  実装済み（関係する DS-TS が全部合格）/ 不合格（1 件以上不合格）/ 未検証（DS-TS が無い、または実行されていない）
+         RQ-NF・RQ-DT・RQ-OP は、テストの経路が無ければ 8-5 の表で「確認済み（手動）」「未確認（手動）」、
+         8-5 にも無ければ「検証方法なし」（表に出すが、--strict でも失敗にしない）
 
 終了コード:
   既定では 0（警告だけ）。--strict では、不合格・未実行・要再実行の DS-TS か、未検証・不合格の要件が
-  1 件でもあれば 1。
+  1 件でもあれば 1。「未確認（手動）」「検証方法なし」は表と件数に出すだけで、終了コードを変えない。
 """
 
 import glob
@@ -55,6 +62,9 @@ VERIFY_COLUMN_PATTERN = re.compile(r'検証する要件\s*ID')
 MAPPING_HEADING = '要件と設計の対応表'
 EXCLUSION_HEADING = '除外要件'
 TESTED_CATEGORIES = ('RQ-FT-', 'RQ-UI-', 'RQ-EX-')
+OPTIONAL_CATEGORIES = ('RQ-NF-', 'RQ-DT-', 'RQ-OP-')  # テストか手動の確認で確かめる。確かめ方が無くても失敗にはしない
+MANUAL_HEADING = 'テスト以外で確かめる'
+MANUAL_DONE = '確認済み'
 QUALIFIED_RE = re.compile(r'`?([^`|]+?)`?\s*$')
 
 
@@ -73,6 +83,11 @@ def _split_cells(line: str) -> List[str]:
 
 def _is_separator(cells: List[str]) -> bool:
     return all(set(c) <= set('-: ') for c in cells)
+
+
+def _cell(cells: List[str], cols: Dict[str, int], key: str) -> str:
+    i = cols.get(key)
+    return cells[i].strip() if i is not None and i < len(cells) else ''
 
 
 def _active_lines(path: Path) -> List[str]:
@@ -105,6 +120,7 @@ class Requirements:
     def __init__(self):
         self.ts_verifies: Dict[str, Set[str]] = defaultdict(set)  # RQ-TS → RQ-*
         self.tested: Set[str] = set()  # RQ-FT・RQ-UI・RQ-EX の全 ID
+        self.optional: Set[str] = set()  # RQ-NF・RQ-DT・RQ-OP の全 ID
         self.has_verify_column = False
 
     def read(self, path: Path):
@@ -116,6 +132,8 @@ class Requirements:
             for i in _ids(RQ_PATTERN, line):
                 if i.startswith(TESTED_CATEGORIES):
                     self.tested.add(i)
+                elif i.startswith(OPTIONAL_CATEGORIES):
+                    self.optional.add(i)
             stripped = line.strip()
             if not stripped.startswith('|'):
                 verify_col = None
@@ -137,6 +155,7 @@ class Requirements:
     def drop(self, ids: Set[str]):
         """進行中の変更で削除する要件・RQ-TS を判定の対象から外す"""
         self.tested -= ids
+        self.optional -= ids
         for ts in ids:
             self.ts_verifies.pop(ts, None)
         for ts in self.ts_verifies:
@@ -144,12 +163,13 @@ class Requirements:
 
 
 class Design:
-    """詳細設計書 第 11 章（DS-TS → RQ）と 11-1（除外要件）"""
+    """詳細設計書 第 11 章（DS-TS → RQ）、11-1（除外要件）、8-5（テスト以外で確かめる要件）"""
 
     def __init__(self):
         self.ts_to_rq: Dict[str, Set[str]] = defaultdict(set)  # DS-TS → RQ-TS / RQ-NF など
         self.excluded: Set[str] = set()
         self.all_ds_ts: Set[str] = set()
+        self.manual: Dict[str, Tuple[str, bool]] = {}  # RQ-* → (確認方法, 確認済みか)
 
     def read(self, path: Path):
         if not path.exists():
@@ -157,13 +177,25 @@ class Design:
         lines = _active_lines(path)
         in_mapping = False
         in_exclusion = False
+        in_manual = False
+        manual_cols: Optional[Dict[str, int]] = None
         for line in lines:
             heading = re.match(r'^\s*#+\s*(.+)$', line)
             if heading:
                 title = heading.group(1)
                 in_exclusion = EXCLUSION_HEADING in title
                 in_mapping = (MAPPING_HEADING in title) and not in_exclusion
+                in_manual = MANUAL_HEADING in title
+                manual_cols = None
                 continue
+            if in_manual and line.strip().startswith('|'):
+                cells = _split_cells(line)
+                if manual_cols is None:
+                    manual_cols = {key: i for i, c in enumerate(cells) for key in ('確認方法', '確認結果', '確認日') if key in c}
+                elif not _is_separator(cells):
+                    done = MANUAL_DONE in _cell(cells, manual_cols, '確認結果') and _cell(cells, manual_cols, '確認日') not in ('', '―', '-', '—')
+                    for r in _ids(RQ_PATTERN, line):
+                        self.manual[r] = (_cell(cells, manual_cols, '確認方法'), done)
             ds_ids = [d for d in _ids(DS_PATTERN, line) if d.startswith('DS-TS-')]
             self.all_ds_ts.update(ds_ids)
             if in_exclusion:
@@ -181,6 +213,8 @@ class Design:
             self.ts_to_rq.pop(ds, None)
         for ds in self.ts_to_rq:
             self.ts_to_rq[ds] -= rq_ids
+        for r in rq_ids:
+            self.manual.pop(r, None)
 
 
 class TraceMap:
@@ -208,9 +242,10 @@ class TraceMap:
 
 
 class TestCase:
-    __slots__ = ('classname', 'name', 'file', 'status', 'base_name', 'class_simple', 'module_path')
+    __slots__ = ('classname', 'name', 'file', 'status', 'base_name', 'class_simple', 'module_path', 'stamp')
 
-    def __init__(self, classname: str, name: str, file_attr: str, status: str):
+    def __init__(self, classname: str, name: str, file_attr: str, status: str, stamp: Optional[datetime] = None):
+        self.stamp = stamp  # この testcase を出した XML の時刻
         self.classname = classname
         self.name = name
         self.file = file_attr.replace('\\', '/') if file_attr else ''
@@ -248,9 +283,9 @@ class TestCase:
         return bool(self.file) or bool(self.module_path)
 
 
-def read_junit(paths: List[Path]) -> Tuple[List[TestCase], Optional[datetime]]:
-    cases: List[TestCase] = []
-    newest: Optional[datetime] = None
+def read_junit(paths: List[Path]) -> List[TestCase]:
+    """testcase を読む。同じ testcase（classname・name・file が同じ）が複数の XML にあれば、時刻の新しいほうだけを残す"""
+    latest: Dict[Tuple[str, str, str], TestCase] = {}
     for path in paths:
         try:
             tree = ET.parse(str(path))
@@ -266,8 +301,6 @@ def read_junit(paths: List[Path]) -> Tuple[List[TestCase], Optional[datetime]]:
                 stamp = _parse_timestamp(ts) or stamp
         if stamp is None:
             stamp = datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc)
-        if newest is None or stamp > newest:
-            newest = stamp
         for tc in root.iter('testcase'):
             status = 'pass'
             for child in tc:
@@ -277,8 +310,12 @@ def read_junit(paths: List[Path]) -> Tuple[List[TestCase], Optional[datetime]]:
                     break
                 if tag == 'skipped':
                     status = 'skip'
-            cases.append(TestCase(tc.get('classname', '') or '', tc.get('name', '') or '', tc.get('file', '') or '', status))
-    return cases, newest
+            case = TestCase(tc.get('classname', '') or '', tc.get('name', '') or '', tc.get('file', '') or '', status, stamp)
+            key = (case.classname, case.name, case.file)
+            old = latest.get(key)
+            if old is None or old.stamp is None or stamp >= old.stamp:
+                latest[key] = case
+    return list(latest.values())
 
 
 def _parse_timestamp(text: str) -> Optional[datetime]:
@@ -415,14 +452,15 @@ def main() -> int:
     xml_paths: List[Path] = []
     for pat in junit_patterns:
         xml_paths.extend(Path(p) for p in sorted(glob.glob(pat, recursive=True)))
-    cases, newest_result = read_junit(xml_paths)
+    cases = read_junit(xml_paths)
     print(f"結果ファイル: {len(xml_paths)} 件、testcase: {len(cases)} 件")
 
     stale = False
     code_newest = newest_mtime([Path(d) for d in src_dirs + test_dirs])
-    # timestamp を秒で丸める実行系があるので、2 秒の猶予を置く
-    if newest_result and code_newest and (code_newest - newest_result).total_seconds() > 2:
-        stale = True
+
+    def is_stale(c: TestCase) -> bool:
+        # timestamp を秒で丸める実行系があるので、2 秒の猶予を置く
+        return bool(c.stamp and code_newest and (code_newest - c.stamp).total_seconds() > 2)
 
     if req.tested and not req.has_verify_column:
         warnings.append("要件定義書 第 7 章の表に「検証する要件ID」列が無い（要件ごとの判定ができない）")
@@ -430,24 +468,32 @@ def main() -> int:
     # DS-TS ごとの判定
     ts_result: Dict[str, str] = {}
     ts_tests: Dict[str, List[str]] = defaultdict(list)
+    skipped_rows: List[str] = []
     for ds in sorted(design.all_ds_ts):
         rows = tmap.ts_rows.get(ds, [])
         if not rows:
             ts_result[ds] = '未実行'
             continue
-        matched: List[TestCase] = []
+        # 行（テスト関数かテストファイル）ごとに判定してからまとめる。1 行の合格で、ほかの行の未実行を隠さない
+        row_results: List[str] = []
         for q in rows:
             found = match_cases(q, cases)
-            matched.extend(found)
             ts_tests[ds].append(q)
-        if not matched or all(c.status == 'skip' for c in matched):
-            ts_result[ds] = '未実行'
-        elif any(c.status == 'fail' for c in matched):
-            ts_result[ds] = '不合格'
-        elif stale:
-            ts_result[ds] = '要再実行'
-        else:
-            ts_result[ds] = '合格'
+            if any(c.status == 'fail' for c in found):
+                row_results.append('不合格')
+            elif not found or any(c.status == 'skip' for c in found):
+                row_results.append('未実行')
+                if found:
+                    skipped_rows.append(q)
+            elif any(is_stale(c) for c in found):
+                row_results.append('要再実行')
+                stale = True
+            else:
+                row_results.append('合格')
+        for verdict in ('不合格', '未実行', '要再実行', '合格'):
+            if verdict in row_results:
+                ts_result[ds] = verdict
+                break
 
     print("\nDS-TS ごとの判定")
     print("-" * 50)
@@ -461,6 +507,11 @@ def main() -> int:
         warnings.append("JUnit XML が 1 つも無い（8-4 の実行コマンドで E2E を回して e2e/results/ に結果を出す）")
     if stale:
         warnings.append("結果ファイルがコードより古い（E2E を回し直す）")
+    if skipped_rows:
+        warnings.append("skipped の testcase がある行は未実行として扱う（skip を外して実行する）: " + ', '.join(sorted(set(skipped_rows))))
+    excluded_ts = sorted(r for r in design.excluded if r.startswith('RQ-TS-'))
+    if excluded_ts:
+        warnings.append("11-1 の除外要件にテスト用利用シナリオがある（シナリオは除外できない。吸収先の設計を確かめる DS-TS に結び直す）: " + ', '.join(excluded_ts))
 
     # 要件ごとの判定（RQ-TS → DS-TS、RQ-NF → DS-TS 直接）
     rq_to_ts: Dict[str, Set[str]] = defaultdict(set)  # RQ-* → RQ-TS
@@ -471,9 +522,9 @@ def main() -> int:
     for ds, rqs in design.ts_to_rq.items():
         for r in rqs:
             rqts_to_ds[r].add(ds)
-    targets = set(req.tested) | {r for r in rq_to_ts if r.startswith('RQ-NF-')} \
-        | {r for r in rqts_to_ds if r.startswith('RQ-NF-')}
-    targets -= design.excluded
+    # 11-1 の除外要件も対象に残す（設計を吸収先にまとめても、要件を確かめる義務は残る）
+    targets = set(req.tested) | set(req.optional) | {r for r in rq_to_ts if r.startswith(OPTIONAL_CATEGORIES)} \
+        | {r for r in rqts_to_ds if r.startswith(OPTIONAL_CATEGORIES)} | {r for r in design.manual if r.startswith(OPTIONAL_CATEGORIES)}
 
     rows_out: List[Tuple[str, str, str, str, str]] = []
     rq_result: Dict[str, str] = {}
@@ -482,9 +533,18 @@ def main() -> int:
         ds_list: Set[str] = set()
         for ts in ts_list:
             ds_list |= rqts_to_ds.get(ts, set())
-        ds_list |= rqts_to_ds.get(rq, set())  # RQ-NF → DS-TS 直接
+        ds_list |= rqts_to_ds.get(rq, set())  # RQ-NF・RQ-DT・RQ-OP → DS-TS 直接
         results = [ts_result.get(d, '未実行') for d in sorted(ds_list)]
-        if not results or all(r == '未実行' for r in results):
+        manual_note = ''
+        if not ts_list and not ds_list and rq.startswith(OPTIONAL_CATEGORIES):
+            # テストの経路が無い RQ-NF・RQ-DT・RQ-OP は、8-5 の手動の確認を見る。それも無ければ「検証方法なし」として表に残す
+            if rq in design.manual:
+                method, done = design.manual[rq]
+                verdict = '確認済み（手動）' if done else '未確認（手動）'
+                manual_note = f"手動: {method}" if method else '手動'
+            else:
+                verdict = '検証方法なし'
+        elif not results or all(r == '未実行' for r in results):
             verdict = '未検証'
         elif any(r == '不合格' for r in results):
             verdict = '不合格'
@@ -498,7 +558,7 @@ def main() -> int:
             tests.extend(ts_tests.get(d, []))
         rows_out.append((rq, ', '.join(f'`{t}`' for t in ts_list) or '―',
                          ', '.join(f'`{d}`' for d in sorted(ds_list)) or '―',
-                         ', '.join(f'`{t}`' for t in tests) or '―', verdict))
+                         ', '.join(f'`{t}`' for t in tests) or manual_note or '―', verdict))
 
     print("\n### 要件ごとの実装済み判定\n")
     print("| RQ-ID | RQ-TS | DS-TS | テスト | 結果 |")
@@ -517,6 +577,9 @@ def main() -> int:
     print("-" * 50)
     print(f"  DS-TS: 合格 {counts['合格']} / 不合格 {counts['不合格']} / 未実行 {counts['未実行']} / 要再実行 {counts['要再実行']}（全 {len(ts_result)}）")
     print(f"  要件: 実装済み {rq_counts['実装済み']} / 不合格 {rq_counts['不合格']} / 未検証 {rq_counts['未検証']}（全 {len(rq_result)}）")
+    if rq_counts['確認済み（手動）'] or rq_counts['未確認（手動）'] or rq_counts['検証方法なし']:
+        print(f"  テスト以外: 確認済み（手動） {rq_counts['確認済み（手動）']} / 未確認（手動） {rq_counts['未確認（手動）']} / 検証方法なし {rq_counts['検証方法なし']}"
+              "（RQ-NF・RQ-DT・RQ-OP。終了コードは変えない。未確認と検証方法なしはユーザーに示す）")
     for w in warnings:
         print(f"  警告: {w}")
 

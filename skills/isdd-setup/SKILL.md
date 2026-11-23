@@ -9,7 +9,7 @@ description: >
 license: MIT
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
-  version: "v2.3.1"
+  version: "v2.4.0"
 ---
 
 # isdd-setup — 対応表チェック導入スキル

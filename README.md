@@ -242,7 +242,7 @@ gh skill publish ./skills --dry-run
 ### 本番公開
 
 ```bash
-gh skill publish ./skills --tag v2.3.1
+gh skill publish ./skills --tag v2.4.0
 ```
 
 ---
@@ -290,11 +290,24 @@ bash install.sh
 - `.claude/skills` から `../.agents/skills` へのシンボリックリンクを作る（Claude Code 向け）。
 - コピーした `.agents/skills/isdd-*/` と `.claude/` は `.gitignore` で追跡しない。`.agents/skills/mermaid-syntax-skill/` は、このリポジトリで文書の mermaid 図を書くときのために外部（re2zero/deepin-skills）から入れたスキルで、isdd としては配布しない。
 
+### v2.3 系から更新する
+
+```bash
+# 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
+gh skill install notfolder/isdd --all --pin v2.4.0 --force
+```
+
+更新後、各プロジェクトで `isdd-setup` を再実行する（`acceptance_checker.py` が新しい判定に複製される）。受け入れ判定が厳しくなったので、`bash scripts/isdd/check.sh --strict` を回し直す。
+
+- 1 つの `DS-TS` に対応表の行が複数あるとき、結果の無い行や skipped のある行が 1 つでもあれば「未実行」になる。skip を外して E2E を回し直すか、実行しないテストの行を対応表から外す。
+- 設計書 11-1 の除外要件も「要件ごとの実装済み判定」の対象になった。除外した要件を確かめるシナリオを 11-1 に書いて外していた場合は、11-1 からその `RQ-TS` の行を消し、第 11 章で吸収先の設計を確かめる `DS-TS` に対応させる（行を移すだけなら正本を直接直してよい）。
+- 判定の表に `RQ-NF`・`RQ-DT`・`RQ-OP` が全部出る。確かめ方の無いものは「検証方法なし」と出るが、`--strict` は失敗にしない。設計書 8-5「テスト以外で確かめる要件」の表を足すと、手動の確認を記録できる（足すかどうかは任意）。
+
 ### v2.2 系から更新する
 
 ```bash
 # 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
-gh skill install notfolder/isdd --all --pin v2.3.1 --force
+gh skill install notfolder/isdd --all --pin v2.4.0 --force
 ```
 
 更新後、各プロジェクトで `isdd-setup` を再実行する（`trace_map_checker.py` と `dependency_checker.py` が `--src` にファイルを受け付け、`--exclude` で除外できる版に複製される）。v2.2 系で作った要件定義書は「1-2. 依頼に無く自分で決めた項目」の節が無いので `rq_integrity_checker.py` が「節の欠落」を報告する。第 1 章の末尾に節を足し、依頼文に無く自分で決めた項目を表で書く（無ければ「無し」と書く。節を足すだけなら正本を直接直してよい）。設計書で `DS-MD` を付けるのはチェッカーが走査するコードだけになったので、スクリプトは `DS-OP`、テンプレートや CSS は `DS-IF` に付け直してよい（付け直しは任意）。
@@ -303,7 +316,7 @@ gh skill install notfolder/isdd --all --pin v2.3.1 --force
 
 ```bash
 # 全スキルを入れ直す（--agent と --scope は最初に導入したときと同じ値にする）
-gh skill install notfolder/isdd --all --pin v2.3.1 --force
+gh skill install notfolder/isdd --all --pin v2.4.0 --force
 ```
 
 更新後、各プロジェクトで `isdd-setup` を再実行する（`check.sh` に受け入れ判定が入り、`acceptance_checker.py` と `unittest_junit.py` が複製され、`.gitignore` に `e2e/results/` が足される）。v2.1 系で作った要件定義書は、第 7 章の表に「検証する要件ID」列が無いので `rq_integrity_checker.py` が「受け入れテスト欠落」を報告する。各シナリオの行に、そのシナリオが確かめる `RQ-FT`・`RQ-UI`・`RQ-EX` を書き足す（列を足すだけなら正本を直接直してよい）。E2E の実行コマンド（設計書 8-4）は JUnit XML を `e2e/results/` に出す形にする。
@@ -483,6 +496,27 @@ MIT License です。全文は [LICENSE](LICENSE) にあります。スキル、
 - `measure/` の結果フォルダに残る計測題材のソース（各フォルダの `LICENSE` や `COPYING`）
 
 ## 変更履歴
+
+### v2.4.0
+
+#### 更新時の注意
+
+- 「v2.3 系から更新する」の手順で入れ直し、`isdd-setup` を再実行する。受け入れ判定が厳しくなったので、これまで合格していたプロジェクトが「未実行」「未検証」になることがある。
+
+#### 受け入れ判定の誤合格を直した
+
+- **`DS-TS` を対応表の行ごとに判定する。** これまでは 1 つの `DS-TS` に結んだ行をまとめて「合格が 1 件以上、失敗なし」で合格にしていたので、結果の無いテストやスキップしたテストがあっても合格になった。行ごとに判定し、1 行でも結果が無いか skipped があれば「未実行」にする。
+- **鮮度を結果ごとに見る。** これまでは全 XML のうち最新の時刻 1 つで判定していたので、古い合格の XML に無関係な新しい XML を足すと合格になった。testcase を出した XML の時刻で判定し、同じ testcase が複数の XML にあれば新しいほうを使う。
+
+#### 検証の対象を広げた
+
+- **除外要件（設計書 11-1）も受け入れ判定の対象に残す。** 「他の要件の設計で実現済み」として設計から外しても、要件を確かめる義務は残る。除外した要件を確かめるシナリオは除外せず、吸収先の設計を確かめる `DS-TS` に対応させる（`requirement-exclusion.md` の 5）。
+- **データ・運用・非機能の要件（`RQ-DT`・`RQ-OP`・`RQ-NF`）を「要件ごとの実装済み判定」に全部出す。** E2E で確かめるものは第 7 章の「検証する要件ID」か第 11 章で `DS-TS` に対応させ、自動テストで確かめられないもの（復旧の演習、本番の設定など）は設計書の新しい節「8-5. テスト以外で確かめる要件」に確認方法・確認結果・確認日を書く。表には「確認済み（手動）」「未確認（手動）」「検証方法なし」と出る。未確認と検証方法なしは `--strict` を失敗にせず、実装後レビューがユーザーに示す。
+
+#### 規則の食い違いを直した
+
+- `build-implement.md`: 外部連携のモックの実装は対応表に載せず、E2E のテスト関数は `DS-TS` の行で結ぶ、と書き分けた（「モックとテストは対応表に載せない」が対応表の規則と食い違っていた）。
+- `skills/isdd-spec/evals/evals.json` の 4 番: 変更設計の段階では正本を変えない、に統一した。
 
 ### v2.3.1
 

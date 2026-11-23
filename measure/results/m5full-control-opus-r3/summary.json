@@ -28,14 +28,14 @@
       "cost_usd": 1.5247,
       "turns": 20,
       "rounds": 2,
-      "passed": 5,
+      "passed": 7,
       "total": 8,
       "tests": {
-        "test_first_account_becomes_staff[chromium]": "fail",
+        "test_first_account_becomes_staff[chromium]": "pass",
         "test_account_registration[chromium]": "pass",
         "test_login_logout[chromium]": "pass",
         "test_session_timeout[chromium]": "pass",
-        "test_employee_cannot_manage_equipment[chromium]": "fail",
+        "test_employee_cannot_manage_equipment[chromium]": "pass",
         "test_equipment_create[chromium]": "pass",
         "test_equipment_update_and_delete_without_lending[chromium]": "pass",
         "test_lending_status_empty_and_sorted[chromium]": "fail"
@@ -47,7 +47,17 @@
         "classes": 6,
         "templates": 6
       },
-      "score_error": null
+      "score_error": null,
+      "resynced": {
+        "date": "2026-11-23",
+        "from": "stage1.json",
+        "old_passed": 5,
+        "old_total": 8
+      },
+      "scoring_status": "scored",
+      "unscored_reasons": [],
+      "expected_total": null,
+      "not_run": []
     }
   },
   "runner": "claude -p"
