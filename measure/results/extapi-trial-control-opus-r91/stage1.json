@@ -1,0 +1,71 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/extapi-trial-control-opus-r91/snapshot-stage1",
+  "tests": {
+    "test_ext_import_small_all_items": "pass",
+    "test_ext_import_two_pages_at_documented_page_size": "pass",
+    "test_ext_import_many_pages_no_missing": "pass",
+    "test_ext_sync_twice_no_duplicates": "pass",
+    "test_ext_name_and_stock_follow_supplier": "pass",
+    "test_ext_removed_item_disappears": "pass",
+    "test_ext_discontinued_hidden": "pass",
+    "test_ext_discontinued_later_disappears": "pass",
+    "test_ext_rate_limit_no_early_retry": "pass",
+    "test_ext_token_expiry_across_syncs": "pass",
+    "test_ext_view_does_not_call_supplier": "pass",
+    "test_ext_outage_keeps_previous_items": "pass",
+    "test_ext_outage_status_failed_and_last_success_kept": "pass",
+    "test_ext_recovers_after_outage": "pass",
+    "test_ext_first_sync_failure_shows_empty": "pass",
+    "test_ext_partial_failure_keeps_previous_whole": "pass",
+    "test_ext_price_survives_resync": "pass",
+    "test_ext_price_survives_failed_sync": "pass",
+    "test_ext_data_survives_restart": "pass"
+  },
+  "passed": 19,
+  "total": 19,
+  "setup_ok": true,
+  "error": null,
+  "scoring_status": "scored",
+  "unscored_reasons": [],
+  "expected_total": 19,
+  "not_run": [],
+  "test_ids": {
+    "extapi/hidden/test_ext_import::test_ext_import_small_all_items": "pass",
+    "extapi/hidden/test_ext_import::test_ext_import_two_pages_at_documented_page_size": "pass",
+    "extapi/hidden/test_ext_import::test_ext_import_many_pages_no_missing": "pass",
+    "extapi/hidden/test_ext_import::test_ext_sync_twice_no_duplicates": "pass",
+    "extapi/hidden/test_ext_import::test_ext_name_and_stock_follow_supplier": "pass",
+    "extapi/hidden/test_ext_import::test_ext_removed_item_disappears": "pass",
+    "extapi/hidden/test_ext_import::test_ext_discontinued_hidden": "pass",
+    "extapi/hidden/test_ext_import::test_ext_discontinued_later_disappears": "pass",
+    "extapi/hidden/test_ext_limits::test_ext_rate_limit_no_early_retry": "pass",
+    "extapi/hidden/test_ext_limits::test_ext_token_expiry_across_syncs": "pass",
+    "extapi/hidden/test_ext_limits::test_ext_view_does_not_call_supplier": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_outage_keeps_previous_items": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_outage_status_failed_and_last_success_kept": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_recovers_after_outage": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_first_sync_failure_shows_empty": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_partial_failure_keeps_previous_whole": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_price_survives_resync": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_price_survives_failed_sync": "pass",
+    "extapi/hidden/test_ext_outage::test_ext_data_survives_restart": "pass"
+  },
+  "pytest_runs": [
+    {
+      "where": "extapi/hidden",
+      "returncode": 0,
+      "expected": 19,
+      "results": 19
+    }
+  ],
+  "pytest_tail": "...................                                                      [100%]\n19 passed, 2 deselected in 305.30s (0:05:05)\n",
+  "overbuild": {
+    "source_files": 1,
+    "lines": 331,
+    "public_functions": 17,
+    "classes": 3,
+    "templates": 1
+  },
+  "duration_sec": 305.6
+}
