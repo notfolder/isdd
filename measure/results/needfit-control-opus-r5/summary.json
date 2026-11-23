@@ -1,0 +1,105 @@
+{
+  "arm": "control",
+  "run": 5,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 156.7,
+      "started": "2026-11-23T15:10:29",
+      "responder": true,
+      "questions_rounds": 0,
+      "responder_cost_usd": 0.0,
+      "tool_uses": 7,
+      "tool_names": {
+        "Bash": 5,
+        "Write": 2
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "conduct": {
+        "assigned": "control",
+        "isdd_skills_visible": false,
+        "isdd_skill_invoked": false,
+        "isdd_docs_updated": [],
+        "procedure_evidence": false,
+        "done": true,
+        "scored": true,
+        "infra_incomplete": false,
+        "leak_hits": [
+          "{\"command\": \"cd /Users/Shared/isdd-measure-work/needfit-control-opus-r5; cat REQUEST.md; echo ----; cat contract.md; ls -la\"}",
+          "{\"command\": \"cd /Users/Shared/isdd-measure-work/needfit-control-opus-r5; cat /tmp/inv_srv.log | tail -3; P=$(python3 -c 'import socket;s=socket.socket();s.bind((\\\"\\\",0));print(s.getsockname()[1])'); echo port $P\\nD=$(mktemp -d); PORT=$P DATA_DIR=$D/dd bash run.sh > $D/log 2>&1 &\\nPID=$!; sleep 1\\nB=",
+          "{\"command\": \"cd /Users/Shared/isdd-measure-work/needfit-control-opus-r5; cat > STAGE_DONE <<'EOF'\\n在庫管理アプリ 完了の要約\\n- 構成: Python 3.12 標準ライブラリのみ（app.py + index.html、SQLite を DATA_DIR/inventory.sqlite3 に保存）。setup.sh は導入なし、run.sh で PORT（既定 8000）待ち受け。\\n- 品目の登録・修正・削除、入庫・出庫（在庫超の出庫は 400 で在庫不変）、一覧（品目コード昇順、reo"
+        ],
+        "parent_dir_refs": 0
+      },
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 16,
+        "output_tokens": 17955,
+        "cache_creation_input_tokens": 41123,
+        "cache_read_input_tokens": 258823,
+        "total_tokens": 317917
+      },
+      "cost_usd": 0.7399,
+      "turns": 8,
+      "rounds": 1,
+      "passed": 11,
+      "total": 19,
+      "tests": {
+        "test_base_root_returns_200": "pass",
+        "test_base_register_and_list": "pass",
+        "test_base_duplicate_code_is_409": "pass",
+        "test_base_negative_number_is_400": "pass",
+        "test_base_update": "pass",
+        "test_base_update_missing_is_404": "pass",
+        "test_base_delete": "pass",
+        "test_base_receive_adds_stock": "pass",
+        "test_base_issue_subtracts_stock": "pass",
+        "test_base_issue_more_than_stock_is_400": "pass",
+        "test_need_scenario_line_does_not_stop": "fail",
+        "test_need_fast_item_is_flagged_above_10": "fail",
+        "test_need_slow_item_is_not_flagged_at_8": "fail",
+        "test_need_margin_of_3_days": "fail",
+        "test_need_boundary": "fail",
+        "test_need_on_order_is_counted": "fail",
+        "test_need_unused_item_is_not_flagged": "fail",
+        "test_need_flag_follows_issue_and_receive": "fail",
+        "test_keep_issue_history_with_person": "pass"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 383,
+        "public_functions": 33,
+        "classes": 2,
+        "templates": 1
+      },
+      "score_error": null,
+      "scoring_status": "scored",
+      "unscored_reasons": [],
+      "expected_total": 20,
+      "not_run": []
+    }
+  },
+  "runner": "claude -p",
+  "conditions": {
+    "model": "claude-opus-5-5",
+    "responder_model": "claude-sonnet-5-5",
+    "task": "needfit",
+    "max_rounds": 20,
+    "timeout_min": 45,
+    "contract": null,
+    "seed": false,
+    "task_digest": {
+      "task_files": 12,
+      "sha256": "a098438141d55d0ac57a1a53abe52cdc7db9783b99c3e2c2a17228c9b8be3b9a"
+    },
+    "work": "/Users/Shared/isdd-measure-work",
+    "ancestor_claude_md": [],
+    "claude_cli": "2.1.330 (Claude Code)",
+    "repo_commit": "169a927",
+    "isdd_version": "v2.4.0"
+  }
+}

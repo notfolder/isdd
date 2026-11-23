@@ -1,0 +1,93 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/needfit-ask-opus-r5/snapshot-stage1",
+  "tests": {
+    "test_base_root_returns_200": "pass",
+    "test_base_register_and_list": "pass",
+    "test_base_duplicate_code_is_409": "pass",
+    "test_base_negative_number_is_400": "pass",
+    "test_base_update": "pass",
+    "test_base_update_missing_is_404": "pass",
+    "test_base_delete": "pass",
+    "test_base_receive_adds_stock": "pass",
+    "test_base_issue_subtracts_stock": "pass",
+    "test_base_issue_more_than_stock_is_400": "pass",
+    "test_need_scenario_line_does_not_stop": "pass",
+    "test_need_fast_item_is_flagged_above_10": "pass",
+    "test_need_slow_item_is_not_flagged_at_8": "pass",
+    "test_need_margin_of_3_days": "pass",
+    "test_need_boundary": "pass",
+    "test_need_on_order_is_counted": "pass",
+    "test_need_unused_item_is_not_flagged": "fail",
+    "test_need_flag_follows_issue_and_receive": "pass",
+    "test_keep_issue_history_with_person": "pass"
+  },
+  "passed": 18,
+  "total": 19,
+  "setup_ok": true,
+  "error": null,
+  "scoring_status": "scored",
+  "unscored_reasons": [],
+  "expected_total": 20,
+  "not_run": [],
+  "test_ids": {
+    "needfit/hidden/test_needfit::test_base_root_returns_200": "pass",
+    "needfit/hidden/test_needfit::test_base_register_and_list": "pass",
+    "needfit/hidden/test_needfit::test_base_duplicate_code_is_409": "pass",
+    "needfit/hidden/test_needfit::test_base_negative_number_is_400": "pass",
+    "needfit/hidden/test_needfit::test_base_update": "pass",
+    "needfit/hidden/test_needfit::test_base_update_missing_is_404": "pass",
+    "needfit/hidden/test_needfit::test_base_delete": "pass",
+    "needfit/hidden/test_needfit::test_base_receive_adds_stock": "pass",
+    "needfit/hidden/test_needfit::test_base_issue_subtracts_stock": "pass",
+    "needfit/hidden/test_needfit::test_base_issue_more_than_stock_is_400": "pass",
+    "needfit/hidden/test_needfit::test_need_scenario_line_does_not_stop": "pass",
+    "needfit/hidden/test_needfit::test_need_fast_item_is_flagged_above_10": "pass",
+    "needfit/hidden/test_needfit::test_need_slow_item_is_not_flagged_at_8": "pass",
+    "needfit/hidden/test_needfit::test_need_margin_of_3_days": "pass",
+    "needfit/hidden/test_needfit::test_need_boundary": "pass",
+    "needfit/hidden/test_needfit::test_need_on_order_is_counted": "pass",
+    "needfit/hidden/test_needfit::test_need_unused_item_is_not_flagged": "fail",
+    "needfit/hidden/test_needfit::test_need_flag_follows_issue_and_receive": "pass",
+    "needfit/hidden/test_needfit::test_keep_issue_history_with_person": "pass",
+    "needfit/hidden/test_needfit::test_probe_unneeded_features": "pass"
+  },
+  "pytest_runs": [
+    {
+      "where": "needfit/hidden",
+      "returncode": 1,
+      "expected": 20,
+      "results": 20
+    }
+  ],
+  "pytest_tail": "................F...                                                     [100%]\n=================================== FAILURES ===================================\n_____________________ test_need_unused_item_is_not_flagged _____________________\n\napi = <conftest.Api object at 0x108d8e720>\n\n    def test_need_unused_item_is_not_flagged(api):\n        api.add(\"OLD-1\", stock=0, daily_usage=0, lead_days=7)\n>       assert api.reorder(\"OLD-1\") is False\nE       AssertionError: assert True is False\nE        +  where True = reorder('OLD-1')\nE        +    where reorder = <conftest.Api object at 0x108d8e720>.reorder\n\ntest_needfit.py:136: AssertionError\n=========================== short test summary info ============================\nFAILED test_needfit.py::test_need_unused_item_is_not_flagged - AssertionError...\n1 failed, 19 passed in 5.67s\n",
+  "categories": {
+    "base": {
+      "passed": 10,
+      "total": 10
+    },
+    "need": {
+      "passed": 7,
+      "total": 8
+    },
+    "keep": {
+      "passed": 1,
+      "total": 1
+    }
+  },
+  "scenario": true,
+  "unneeded": {
+    "supplier_monthly": false,
+    "items_csv": false,
+    "photo": false,
+    "count": 0
+  },
+  "overbuild": {
+    "source_files": 1,
+    "lines": 240,
+    "public_functions": 18,
+    "classes": 1,
+    "templates": 1
+  },
+  "duration_sec": 6.0
+}

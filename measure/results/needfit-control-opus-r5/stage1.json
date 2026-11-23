@@ -1,0 +1,93 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/needfit-control-opus-r5/snapshot-stage1",
+  "tests": {
+    "test_base_root_returns_200": "pass",
+    "test_base_register_and_list": "pass",
+    "test_base_duplicate_code_is_409": "pass",
+    "test_base_negative_number_is_400": "pass",
+    "test_base_update": "pass",
+    "test_base_update_missing_is_404": "pass",
+    "test_base_delete": "pass",
+    "test_base_receive_adds_stock": "pass",
+    "test_base_issue_subtracts_stock": "pass",
+    "test_base_issue_more_than_stock_is_400": "pass",
+    "test_need_scenario_line_does_not_stop": "fail",
+    "test_need_fast_item_is_flagged_above_10": "fail",
+    "test_need_slow_item_is_not_flagged_at_8": "fail",
+    "test_need_margin_of_3_days": "fail",
+    "test_need_boundary": "fail",
+    "test_need_on_order_is_counted": "fail",
+    "test_need_unused_item_is_not_flagged": "fail",
+    "test_need_flag_follows_issue_and_receive": "fail",
+    "test_keep_issue_history_with_person": "pass"
+  },
+  "passed": 11,
+  "total": 19,
+  "setup_ok": true,
+  "error": null,
+  "scoring_status": "scored",
+  "unscored_reasons": [],
+  "expected_total": 20,
+  "not_run": [],
+  "test_ids": {
+    "needfit/hidden/test_needfit::test_base_root_returns_200": "pass",
+    "needfit/hidden/test_needfit::test_base_register_and_list": "pass",
+    "needfit/hidden/test_needfit::test_base_duplicate_code_is_409": "pass",
+    "needfit/hidden/test_needfit::test_base_negative_number_is_400": "pass",
+    "needfit/hidden/test_needfit::test_base_update": "pass",
+    "needfit/hidden/test_needfit::test_base_update_missing_is_404": "pass",
+    "needfit/hidden/test_needfit::test_base_delete": "pass",
+    "needfit/hidden/test_needfit::test_base_receive_adds_stock": "pass",
+    "needfit/hidden/test_needfit::test_base_issue_subtracts_stock": "pass",
+    "needfit/hidden/test_needfit::test_base_issue_more_than_stock_is_400": "pass",
+    "needfit/hidden/test_needfit::test_need_scenario_line_does_not_stop": "fail",
+    "needfit/hidden/test_needfit::test_need_fast_item_is_flagged_above_10": "fail",
+    "needfit/hidden/test_needfit::test_need_slow_item_is_not_flagged_at_8": "fail",
+    "needfit/hidden/test_needfit::test_need_margin_of_3_days": "fail",
+    "needfit/hidden/test_needfit::test_need_boundary": "fail",
+    "needfit/hidden/test_needfit::test_need_on_order_is_counted": "fail",
+    "needfit/hidden/test_needfit::test_need_unused_item_is_not_flagged": "fail",
+    "needfit/hidden/test_needfit::test_need_flag_follows_issue_and_receive": "fail",
+    "needfit/hidden/test_needfit::test_keep_issue_history_with_person": "pass",
+    "needfit/hidden/test_needfit::test_probe_unneeded_features": "pass"
+  },
+  "pytest_runs": [
+    {
+      "where": "needfit/hidden",
+      "returncode": 1,
+      "expected": 20,
+      "results": 20
+    }
+  ],
+  "pytest_tail": "d_slow_item_is_not_flagged_at_8(api):\n        api.add(\"KAEBA-01\", stock=8, daily_usage=1, lead_days=2)\n>       assert api.reorder(\"KAEBA-01\") is False\nE       AssertionError: assert True is False\nE        +  where True = reorder('KAEBA-01')\nE        +    where reorder = <conftest.Api object at 0x107b3a360>.reorder\n\ntest_needfit.py:110: AssertionError\n__________________________ test_need_margin_of_3_days __________________________\n\napi = <conftest.Api object at 0x107b3a990>\n\n    def test_need_margin_of_3_days(api):\n        \"\"\"基準は 10 ×（5 ＋ 3）＝ 80。60 個は届くまでの分（50）より多いが、3 日分の余裕を入れると足りない。\"\"\"\n        api.add(\"P-60\", stock=60, daily_usage=10, lead_days=5)\n>       assert api.reorder(\"P-60\") is True\nE       AssertionError: assert False is True\nE        +  where False = reorder('P-60')\nE        +    where reorder = <conftest.Api object at 0x107b3a990>.reorder\n\ntest_needfit.py:116: AssertionError\n______________________________ test_need_boundary ______________________________\n\napi = <conftest.Api object at 0x107b3b290>\n\n    def test_need_boundary(api):\n        api.add(\"P-80\", stock=80, daily_usage=10, lead_days=5)\n        api.add(\"P-81\", stock=81, daily_usage=10, lead_days=5)\n>       assert api.reorder(\"P-80\") is True\nE       AssertionError: assert False is True\nE        +  where False = reorder('P-80')\nE        +    where reorder = <conftest.Api object at 0x107b3b290>.reorder\n\ntest_needfit.py:122: AssertionError\n________________________ test_need_on_order_is_counted _________________________\n\napi = <conftest.Api object at 0x107b3bef0>\n\n    def test_need_on_order_is_counted(api):\n        \"\"\"注文済みで届くのを待っている品目に印が付いたままだと、二重に注文してしまう。\"\"\"\n        api.add(\"P-WAIT\", stock=30, daily_usage=10, lead_days=5, on_order=100)   # 30 ＋ 100 ＝ 130 > 80\n        api.add(\"P-SHORT\", stock=30, daily_usage=10, lead_days=5, on_order=50)   # 30 ＋ 50 ＝ 80 ≦ 80\n        assert api.reorder(\"P-WAIT\") is False\n>       assert api.reorder(\"P-SHORT\") is True\nE       AssertionError: assert False is True\nE        +  where False = reorder('P-SHORT')\nE        +    where reorder = <conftest.Api object at 0x107b3bef0>.reorder\n\ntest_needfit.py:131: AssertionError\n_____________________ test_need_unused_item_is_not_flagged _____________________\n\napi = <conftest.Api object at 0x107b39e20>\n\n    def test_need_unused_item_is_not_flagged(api):\n        api.add(\"OLD-1\", stock=0, daily_usage=0, lead_days=7)\n>       assert api.reorder(\"OLD-1\") is False\nE       AssertionError: assert True is False\nE        +  where True = reorder('OLD-1')\nE        +    where reorder = <conftest.Api object at 0x107b39e20>.reorder\n\ntest_needfit.py:136: AssertionError\n___________________ test_need_flag_follows_issue_and_receive ___________________\n\napi = <conftest.Api object at 0x107b3b0b0>\n\n    def test_need_flag_follows_issue_and_receive(api):\n        api.add(\"P-81\", stock=81, daily_usage=10, lead_days=5)\n        assert api.reorder(\"P-81\") is False\n        api.json(\"POST\", \"/api/items/P-81/issue\", {\"quantity\": 1, \"person\": \"佐藤\"})\n>       assert api.reorder(\"P-81\") is True\nE       AssertionError: assert False is True\nE        +  where False = reorder('P-81')\nE        +    where reorder = <conftest.Api object at 0x107b3b0b0>.reorder\n\ntest_needfit.py:143: AssertionError\n=========================== short test summary info ============================\nFAILED test_needfit.py::test_need_scenario_line_does_not_stop - AssertionErro...\nFAILED test_needfit.py::test_need_fast_item_is_flagged_above_10 - AssertionEr...\nFAILED test_needfit.py::test_need_slow_item_is_not_flagged_at_8 - AssertionEr...\nFAILED test_needfit.py::test_need_margin_of_3_days - AssertionError: assert F...\nFAILED test_needfit.py::test_need_boundary - AssertionError: assert False is ...\nFAILED test_needfit.py::test_need_on_order_is_counted - AssertionError: asser...\nFAILED test_needfit.py::test_need_unused_item_is_not_flagged - AssertionError...\nFAILED test_needfit.py::test_need_flag_follows_issue_and_receive - AssertionE...\n8 failed, 12 passed in 4.59s\n",
+  "categories": {
+    "base": {
+      "passed": 10,
+      "total": 10
+    },
+    "need": {
+      "passed": 0,
+      "total": 8
+    },
+    "keep": {
+      "passed": 1,
+      "total": 1
+    }
+  },
+  "scenario": false,
+  "unneeded": {
+    "supplier_monthly": true,
+    "items_csv": true,
+    "photo": true,
+    "count": 3
+  },
+  "overbuild": {
+    "source_files": 1,
+    "lines": 383,
+    "public_functions": 33,
+    "classes": 2,
+    "templates": 1
+  },
+  "duration_sec": 4.8
+}
