@@ -18,6 +18,7 @@
 | 変更設計書の [削除] 行は読まない。正本には区分を書かない（正本の「[削除]」の文字は内容） | rq_ds_link_checker、trace_map_checker | `test_deleted_lines_are_ignored_in_change_documents`、`test_canonical_line_with_literal_deleted_word_is_kept` |
 | 変更設計書が既存の要件を参照しても、`--base` の正本にあれば未定義参照にしない | rq_ds_link_checker | `test_base_requirements_resolve_existing_references` |
 | `docs/active_change` が無ければ正本だけで判定する。指す先に変更設計書が無ければエラー | trace_map_checker | `test_absent_pointer_checks_canonical_only`、`test_active_change_pointer_to_missing_design_is_error` |
+| 不具合修正で設計を変えない場合は、変更のディレクトリに `bug_report.md` だけがある。変更設計書が無くてもエラーにせず、正本だけで判定する（spec-bugfix.md） | trace_map_checker、acceptance_checker | `test_bug_report_without_change_design_checks_canonical_only`、`test_bug_report_only_change_uses_canonical` |
 | 要件の意味が変わる場合は旧 ID を `deprecated`（[削除]）にし、新 ID を [追加] する | rq_integrity_checker | `test_change_document_skips_bz_check`（区分の検出） |
 
 ## 要件定義書の章立て（requirements-chapters.md、hearing-rules.md「依頼文に無い決め事」）
@@ -67,6 +68,7 @@
 | `RQ-FT`・`RQ-UI`・`RQ-EX` は第 7 章のいずれかのシナリオ（`RQ-TS`）の「検証する要件ID」に現れる。`RQ-NF`・`RQ-DT`・`RQ-OP` には求めない | rq_integrity_checker | `test_feature_without_scenario_fails`、`test_missing_verify_column_is_reported`、`test_non_feature_categories_do_not_need_scenario` |
 | 「検証する要件ID」列の ID は `RQ-BK` との対応に数えない。正本でこの列にだけ現れる ID は未定義の参照 | rq_integrity_checker | `test_verify_column_does_not_count_as_bk_mapping` |
 | 変更要件定義書では [追加] の `RQ-FT`・`RQ-UI`・`RQ-EX` にだけ `RQ-TS` を求める。列だけの差し替えは同じ `RQ-TS` を [削除]・[追加] の 2 行で書く。[削除] の行は数えない | rq_integrity_checker | `test_change_document_requires_scenario_for_added_features_only`、`test_change_document_does_not_require_bz` |
+| 不具合の記録（見出し「不具合の記録」）は既存の要件 ID を引用するだけの文書。`RQ-BZ`・1-2 の節・受け入れテストの網羅を求めず、`RQ-BK` との対応は求める。`--base` があれば、引用した ID が正本に無いとエラー。[追加] の行があればエラー（spec-bugfix.md） | rq_integrity_checker | `test_bug_report_citing_existing_requirement_passes`、`test_bug_report_without_base_still_passes`、`test_bug_report_citing_unknown_requirement_fails`、`test_bug_report_with_added_row_fails`、`test_bug_report_without_bk_fails` |
 
 ## 受け入れ判定（trace-map-rules.md「受け入れ判定」、design-chapters.md 8-4、requirement-exclusion.md）
 

@@ -32,6 +32,12 @@ isdd-spec の設計の段階が作る `tasks.md` のルール。isdd-build は�
    - `docs/active_change` の 1 行目が、この tasks.md のある変更のディレクトリを指していることを確認する。正本（`docs/requirements.md`・`docs/detail_design.md`）には変更を反映しない。反映は実装後に `isdd-build` の実装後レビューが行う
    - 完了条件: `bash scripts/isdd/check.sh` の出力に「進行中の変更」の行があり、`rq_ds_link_checker.py [変更のディレクトリ]/change_requirements.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md`（isdd-build に同梱）が合格すること。登録が無ければ実装を始めず `isdd-spec` に戻る
 
+不具合修正（変更のディレクトリに `bug_report.md` がある。spec-bugfix.md）では、0-2 の完了条件の整合チェックを次に読み替える。原因が設計のとき: `rq_ds_link_checker.py [変更のディレクトリ]/bug_report.md [変更のディレクトリ]/change_detail_design.md --base docs/requirements.md` が合格。原因がコードのとき: 変更設計書が無いので、このチェックは行わない。続けて次を含める。
+
+0-3. **再現するテストのタスク**
+   - `bug_report.md` の「再現するテスト」の表のテストを E2E に書き、直す前に実行して落ちることを確かめる。対応表の、表に書いてある `DS-TS` の行にテスト関数を足す
+   - 完了条件: 直す前の実行でそのテストが失敗し、失敗の内容が `bug_report.md` の現象と一致すること
+
 ### 実装完了確認の必須固定タスク
 
 次のタスクを tasks.md の末尾に置く。条件付きのタスクは、条件に当たらない場合も「対象外（理由）」と書いて残す（確認漏れと区別するため）。

@@ -32,6 +32,7 @@ Trace Map Checker Script
 進行中の変更（変更フロー）:
   --active-change に渡したファイル（既定の運用では docs/active_change）があれば、その 1 行目を
   変更のディレクトリ（.history/[YYYYMMDD]-[タスク名]）とみなし、そこにある change_detail_design.md を
+  （変更設計書が無く bug_report.md だけがあるのは、設計を変えない不具合修正。正本だけで判定する）
   正本の詳細設計書に重ねて判定する。有効な設計 ID は「正本 ＋ 変更設計書の ID − 変更設計書で削除する ID」。
   削除する ID は「[削除] の行にだけ現れる ID」（要件との対応だけを差し替える要素は、第 11 章で同じ ID が
   [削除] と [追加] の両方の行に現れるので、削除とみなさない。[追加] と [削除] が同じ行にある行は警告にする）。
@@ -379,6 +380,9 @@ def parse_change_design(change_path: Path) -> Tuple[DesignIds, Set[str]]:
     return design, on_deleted - on_active
 
 
+BUG_REPORT_NAME = 'bug_report.md'  # 不具合修正の記録（isdd-spec が書く。spec-bugfix.md）
+
+
 def resolve_active_change(pointer: Optional[Path]) -> Optional[Path]:
     """ポインタファイルの 1 行目（変更のディレクトリ）から change_detail_design.md のパスを返す。ポインタが無ければ None"""
     if pointer is None or not pointer.exists():
@@ -561,6 +565,8 @@ class TraceMapChecker:
     def report(self, strict: bool) -> int:
         print("Trace Map Checker\n" + "=" * 50)
         print(f"詳細設計書: {self.design}")
+        if getattr(self, 'bug_note', None):
+            print(self.bug_note)
         if self.active_change is not None:
             deleted = self.summary['deleted_ids'] if hasattr(self, 'summary') else 0
             print(f"進行中の変更: {self.active_change}（正本に重ねて判定。削除する設計 ID {deleted} 件）")
@@ -648,8 +654,15 @@ def main() -> None:
         print(USAGE)
         sys.exit(2)
     root = Path.cwd().resolve()
+    change_design = resolve_active_change(pointer)
+    bug_note = None
+    if change_design is not None and not change_design.exists() and (change_design.parent / BUG_REPORT_NAME).exists():
+        # 不具合修正で、設計を変えない（コードだけを直す）場合。変更設計書は無く、正本だけで判定する
+        bug_note = f"進行中の変更: {change_design.parent / BUG_REPORT_NAME}（不具合修正。変更設計書が無いので正本だけで判定）"
+        change_design = None
     checker = TraceMapChecker(Path(args[0]), Path(args[1]), [Path(a) for a in args[2:]], root,
-                              resolve_active_change(pointer), test_dirs, granularity, excludes)
+                              change_design, test_dirs, granularity, excludes)
+    checker.bug_note = bug_note
     checker.run()
     sys.exit(checker.report(strict))
 

@@ -10,6 +10,7 @@ Copilot CLI ではなく Claude Code なので、結果は参考値として扱�
 使い方:
   python3 evals/run-claude-code.py <スキル名>... [--task <場面名か ID のグロブ>]... [--model claude-haiku-5-5]
                                    [--attempts 2] [--out evals/artifacts-claude-code]
+                                   [--judge-model claude-opus-5-5 [--judge-task <グロブ>]...]
                                    [--permission-mode acceptEdits] [--allowed-tools 'Bash Edit Write ...']
 
   例: python3 evals/run-claude-code.py isdd-build --task 'Hello World 未マッピング*'
@@ -176,7 +177,7 @@ def prepare_workspace(eval_dir: Path, task: dict, skill_name: str) -> Path:
     return workspace
 
 
-def run_task(eval_dir: Path, skill_name: str, task: dict, model: str, attempt_dir: Path,
+def run_task(eval_dir: Path, skill_name: str, task: dict, model: str, attempt_dir: Path, judge_model: str,
              default_timeout: int) -> dict:
     inputs = task.get("inputs", {})
     timeout = int(task.get("timeout_seconds", default_timeout))
@@ -210,7 +211,7 @@ def run_task(eval_dir: Path, skill_name: str, task: dict, model: str, attempt_di
             ok, detail = grade_program(cfg, workspace, last_response)
         elif gtype == "prompt":
             if session_id:
-                ok, detail = grade_prompt(cfg, workspace, session_id, model)
+                ok, detail = grade_prompt(cfg, workspace, session_id, judge_model)
             else:
                 ok, detail = False, "セッションが無い"
         else:
@@ -218,7 +219,7 @@ def run_task(eval_dir: Path, skill_name: str, task: dict, model: str, attempt_di
         log(f"  採点 {g.get('name')}: {'PASS' if ok else 'FAIL'}  {detail.splitlines()[0][:120] if detail else ''}")
         grades.append({"name": g.get("name"), "type": gtype, "pass": ok, "detail": detail})
     result = {
-        "task_id": task.get("id"), "name": task.get("name"), "model": model, "workspace": str(workspace),
+        "task_id": task.get("id"), "name": task.get("name"), "model": model, "judge_model": judge_model, "workspace": str(workspace),
         "session_id": session_id, "started": started.isoformat(timespec="seconds"),
         "finished": dt.datetime.now().isoformat(timespec="seconds"),
         "pass": all(g["pass"] for g in grades) and bool(grades) and not transcript[-1].get("is_error"),
@@ -243,6 +244,9 @@ def main() -> int:
     ap.add_argument("skills", nargs="+")
     ap.add_argument("--task", action="append", default=[], help="場面名か ID のグロブ（複数可）")
     ap.add_argument("--model", default=DEFAULT_MODEL)
+    ap.add_argument("--judge-model", default="", help="prompt の採点に使うモデル。省くと生成と同じモデル。生成は --model のまま")
+    ap.add_argument("--judge-task", action="append", default=[],
+                    help="--judge-model を使う場面名か ID のグロブ（複数可）。省くと全場面")
     ap.add_argument("--attempts", type=int, default=2)
     ap.add_argument("--out", default=str(EVALS / "artifacts-claude-code"))
     ap.add_argument("--permission-mode", default="acceptEdits")
@@ -274,8 +278,12 @@ def main() -> int:
             outcome: list[str] = []
             for attempt in range(1, args.attempts + 1):
                 attempt_dir = Path(args.out) / skill_name / str(task.get("id")) / f"attempt-{attempt}"
-                log(f"attempt {attempt}: {args.model}")
-                result = run_task(eval_dir, skill_name, task, args.model, attempt_dir, default_timeout)
+                judge = args.model
+                if args.judge_model and (not args.judge_task or any(
+                        fnmatch.fnmatch(task.get("name", ""), g) or fnmatch.fnmatch(task.get("id", ""), g) for g in args.judge_task)):
+                    judge = args.judge_model
+                log(f"attempt {attempt}: {args.model}" + (f"（採点: {judge}）" if judge != args.model else ""))
+                result = run_task(eval_dir, skill_name, task, args.model, attempt_dir, judge, default_timeout)
                 outcome.append("PASS" if result["pass"] else "FAIL")
                 if result["pass"]:
                     break

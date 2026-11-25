@@ -284,6 +284,17 @@ class AcceptanceCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertIn("進行中の変更", out)
         self.assertRegex(out, r"\| `RQ-FT-REFUND-ORDER` \|.*\| 実装済み \|")
 
+    # 不具合修正で文書を変えない場合は bug_report.md だけがある。正本だけで判定する（spec-bugfix.md）
+    def test_bug_report_only_change_uses_canonical(self):
+        write(self.tmp, "docs/active_change", ".history/20260601-fix-total\n")
+        write(self.tmp, ".history/20260601-fix-total/bug_report.md", "# 不具合の記録\n")
+        self.write_results([("e2e.test_order", "test_create_order", "pass"),
+                            ("e2e.test_order.TestCancel", "test_cancel_order", "pass"),
+                            ("e2e.test_perf", "test_response", "pass")])
+        code, out = self.run_checker("--active-change", "docs/active_change", "--strict")
+        self.assertEqual(code, 0, out)
+        self.assertIn("不具合修正", out)
+
     # 進行中の変更で [削除] にした要件・RQ-TS・DS-TS は判定の対象から外す（消す要件にテストを求めない）
     def test_active_change_deletion_drops_requirements(self):
         write(self.tmp, "docs/active_change", ".history/20260101-drop-cancel\n")

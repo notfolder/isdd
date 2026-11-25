@@ -1,0 +1,116 @@
+id: "isdd-bugfix-code-error-001"
+name: "不具合修正の切り分け（既存の要件が満たされていない。原因はコード）"
+description: "依頼が不具合の報告で、起きるはずだった動きを定めた既存の要件があるとき、新しい要件を足さず、既存の要件 ID を引用した不具合の記録（bug_report.md）と tasks.md を作り、変更要件定義書を作らず、正本とコードを書き換えないかを検証する。"
+tags:
+  - "isdd"
+  - "bugfix"
+  - "change-flow"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+    不具合の報告です。python3 src/hello.py を実行すると、"Hello, World!" のあとに空行が 1 行余分に出ます。出力は "Hello, World!" の 1 行だけのはずです。直したいです。外部連携はありません。
+  follow_up_prompts:
+    - |
+      その切り分けで合っています。要件は変えずに直してください。
+      これ以上の情報はありません。今すぐ不具合修正の文書を作成し、チェッカーを実行してください。承認はまだしません。
+    - |
+      これ以上の情報はありません。
+      まだ文書を作っていなければ、今すぐ作成してチェッカーを実行してください。作ってあれば、何もせずに承認待ちだと答えてください。
+  context:
+    task_type: "isdd-bugfix-code-error-001"
+    fixture: "fixtures/bugfix"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-bugfix.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "bug_report_cites_existing_requirement"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/bug_report.md' --re '不具合の記録' --re 'RQ-(FT-PRINT-HELLO-WORLD|UI-HELLO-STDOUT-OUTPUT)' --re 'RQ-BK-SHARED-VERIFICATION-SCRIPT' --re '再現するテスト' --re 'DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT' --not-re '\\[追加\\]'"
+  - name: "bug_report_checker_pass"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" checker rq_integrity_checker.py '.history/*/bug_report.md' --base docs/requirements.md"
+  - name: "no_change_requirements"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/**/change_requirements.md' --min-files 0 --not-re '.'"
+  - name: "no_change_design_for_code_error"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/**/change_detail_design.md' --min-files 0 --not-re '.'"
+  - name: "tasks_created"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/tasks.md' --re '再現'"
+  - name: "active_change_registered"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match docs/active_change --re '^\\.history/[^/]+/?$'"
+  - name: "canonical_requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/requirements.md evals/isdd-spec/fixtures/bugfix/docs/requirements.md"
+  - name: "canonical_design_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/detail_design.md evals/isdd-spec/fixtures/bugfix/docs/detail_design.md"
+  - name: "code_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged src/hello.py evals/isdd-spec/fixtures/bugfix/src/hello.py"
+  - name: "triaged_as_unmet_existing_requirement"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。次の両方を満たしていますか。合否はこの 2 つだけで決めてください。
+        1. エージェントは、最初の依頼への応答で、起きるはずだった動き（"Hello, World!" を 1 行だけ表示する）を定めた既存の要件を要件定義書から探し、その要件 ID を挙げて、「既存の要件が満たされていない不具合で、要件は変えずに直す」という切り分けをユーザーに示した
+        2. エージェントは、この不具合のために新しい要件 ID を作らず、業務の問題・業務課題・見込み経営効果を聞き直さなかった
+        両方を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

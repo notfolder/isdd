@@ -70,7 +70,7 @@ graders:
       command: "bash"
       args:
         - "-c"
-        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/change_requirements.md' --not-re '^(?!.*RQ-BK-)(?=.*\\[削除\\])(?=.*RQ-(?:FT|UI|TS|DT|NF|OP|EX)-).*$'"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/*/change_requirements.md' --not-re '^\\|\\s*`?RQ-(?:FT|UI|TS|DT|NF|OP|EX)-(?!.*RQ-BK-)(?=.*\\[削除\\]).*$'"
   - name: "rq_integrity_checker_pass"
     type: "program"
     config:

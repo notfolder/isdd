@@ -175,5 +175,49 @@ class RqIntegrityCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(code, 0, out)
 
 
+BUG_REPORT = """
+# 不具合の記録
+
+| 現象 | 再現の手順 | 満たされていない既存の要件 | 対応業務課題ID（RQ-BK-*） | 原因のある場所 |
+|---|---|---|---|---|
+| 出力の末尾に改行が 2 つ出る | 引数なしで実行する | `RQ-FT-PRINT-HELLO` | `RQ-BK-SHARED-CHECK-SCRIPT` | コード |
+"""
+
+
+class BugReportTest(TempDirMixin, unittest.TestCase):
+    """不具合の記録（bug_report.md）。spec-bugfix.md の規則"""
+
+    def check(self, report: str, base: bool = True):
+        write(self.tmp, "docs/requirements.md", GOOD)
+        write(self.tmp, ".history/20260601-fix-newline/bug_report.md", report)
+        args = [".history/20260601-fix-newline/bug_report.md"] + (["--base", "docs/requirements.md"] if base else [])
+        return run_script("rq_integrity_checker.py", args, cwd=self.tmp)
+
+    def test_bug_report_citing_existing_requirement_passes(self):
+        code, out = self.check(BUG_REPORT)
+        self.assertEqual(code, 0, out)
+        self.assertIn("不具合の記録", out)
+
+    def test_bug_report_without_base_still_passes(self):
+        code, out = self.check(BUG_REPORT, base=False)
+        self.assertEqual(code, 0, out)
+
+    def test_bug_report_citing_unknown_requirement_fails(self):
+        code, out = self.check(BUG_REPORT.replace("RQ-FT-PRINT-HELLO", "RQ-FT-FIX-NEWLINE"))
+        self.assertEqual(code, 1, out)
+        self.assertIn("正本に無い要件 ID", out)
+        self.assertIn("RQ-FT-FIX-NEWLINE", out)
+
+    def test_bug_report_with_added_row_fails(self):
+        extra = "\n| RQ-ID | 機能名 | 対応業務課題ID | 区分 |\n|---|---|---|---|\n| `RQ-FT-PRINT-HELLO` | 出力 | `RQ-BK-SHARED-CHECK-SCRIPT` | [追加] |\n"
+        code, out = self.check(BUG_REPORT + extra)
+        self.assertEqual(code, 1, out)
+        self.assertIn("[追加] の行があります", out)
+
+    def test_bug_report_without_bk_fails(self):
+        code, out = self.check(BUG_REPORT.replace("`RQ-BK-SHARED-CHECK-SCRIPT`", "―"))
+        self.assertEqual(code, 1, out)
+
+
 if __name__ == "__main__":
     unittest.main()

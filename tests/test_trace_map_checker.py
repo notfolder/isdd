@@ -140,6 +140,17 @@ class TraceMapCheckerTest(TempDirMixin, unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("change_detail_design.md", out)
 
+    def test_bug_report_without_change_design_checks_canonical_only(self):
+        """不具合修正で設計を変えない場合は、変更設計書が無く bug_report.md だけがある（spec-bugfix.md）"""
+        write(self.tmp, ".history/20260601-fix-newline/bug_report.md", "# 不具合の記録\n")
+        write(self.tmp, "docs/active_change", ".history/20260601-fix-newline/\n")
+        write(self.tmp, "docs/trace_map.md", MAP)
+        args = ["docs/detail_design.md", "docs/trace_map.md", "src", "--strict", "--active-change", "docs/active_change"]
+        code, out = run_script("trace_map_checker.py", args, cwd=self.tmp)
+        self.assertEqual(code, 0, out)
+        self.assertIn("進行中の変更", out)
+        self.assertIn("不具合修正", out)
+
     def test_absent_pointer_checks_canonical_only(self):
         write(self.tmp, "docs/trace_map.md", MAP)
         args = ["docs/detail_design.md", "docs/trace_map.md", "src", "--strict", "--active-change", "docs/active_change"]

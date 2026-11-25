@@ -1,0 +1,77 @@
+id: "isdd-bugfix-missing-requirement-001"
+name: "不具合修正の切り分け（定めた要件が無い。要件の追加として進める）"
+description: "依頼が不具合の報告でも、起きるはずだった動きを定めた要件が正本に無いときは、不具合修正（要件を変えない直し）にせず、要件の欠けとして通常の変更フローで進めるかを検証する。"
+tags:
+  - "isdd"
+  - "bugfix"
+  - "change-flow"
+inputs:
+  prompt: |
+    isdd-specを実行してください。
+    不具合の報告です。python3 src/hello.py Taro のように名前を渡しても、出力が "Hello, World!" のままです。"Hello, Taro!" と出るはずだと思っています。直したいです。外部連携はありません。
+  follow_up_prompts:
+    - |
+      これ以上の情報はまだありません。isdd の規則どおりに進めてください。
+  context:
+    task_type: "isdd-bugfix-missing-requirement-001"
+    fixture: "fixtures/bugfix"
+  files:
+    - path: .agents/skills/isdd-spec/SKILL.md
+    - path: .agents/skills/isdd-spec/references/design-chapters.md
+    - path: .agents/skills/isdd-spec/references/design-completeness.md
+    - path: .agents/skills/isdd-spec/references/design-tasks-rules.md
+    - path: .agents/skills/isdd-spec/references/document-rules.md
+    - path: .agents/skills/isdd-spec/references/external-credentials.md
+    - path: .agents/skills/isdd-spec/references/hearing-rules.md
+    - path: .agents/skills/isdd-spec/references/id-definitions.md
+    - path: .agents/skills/isdd-spec/references/requirement-exclusion.md
+    - path: .agents/skills/isdd-spec/references/requirements-chapters.md
+    - path: .agents/skills/isdd-spec/references/spec-bugfix.md
+    - path: .agents/skills/isdd-spec/references/spec-design.md
+    - path: .agents/skills/isdd-spec/references/spec-external.md
+    - path: .agents/skills/isdd-spec/references/spec-requirements.md
+    - path: .agents/skills/isdd-spec/references/subagent-delegation.md
+    - path: .agents/skills/isdd-spec/references/trace-map-rules.md
+    - path: .agents/skills/isdd-spec/scripts/rq_ds_link_checker.py
+    - path: .agents/skills/isdd-spec/scripts/rq_integrity_checker.py
+expected:
+  outcomes:
+    - type: "task_completed"
+graders:
+  - name: "no_bug_report"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" match '.history/**/bug_report.md' --min-files 0 --not-re '.'"
+  - name: "canonical_requirements_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/requirements.md evals/isdd-spec/fixtures/bugfix/docs/requirements.md"
+  - name: "canonical_design_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged docs/detail_design.md evals/isdd-spec/fixtures/bugfix/docs/detail_design.md"
+  - name: "code_unchanged"
+    type: "program"
+    config:
+      command: "bash"
+      args:
+        - "-c"
+        - "python3 \"$ISDD_REPO_ROOT/evals/_graders/isdd_grade.py\" unchanged src/hello.py evals/isdd-spec/fixtures/bugfix/src/hello.py"
+  - name: "triaged_as_missing_requirement"
+    type: "prompt"
+    config:
+      continue_session: true
+      prompt: |
+        このセッションの会話全体を確認してください。次の両方を満たしていますか。合否はこの 2 つだけで決めてください。
+        1. エージェントは、名前を受け取って挨拶を変える動きを定めた要件が既存の要件定義書に無いこと（今の動きは既存の要件どおりであること）をユーザーに伝えた
+        2. エージェントは、これを「要件を変えずに直す不具合修正」として進めず、要件の追加または変更として通常の変更フロー（業務の問題や業務課題の確認から始める流れ）で進めた、または進めると伝えた
+        両方を満たす場合は set_waza_grade_pass を、満たさない場合は set_waza_grade_fail を呼び出してください。

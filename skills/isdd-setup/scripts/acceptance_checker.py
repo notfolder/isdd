@@ -443,7 +443,10 @@ def main() -> int:
                 design.read(cdes)
                 deleted_ds = {d for d in _deleted_ids(cdes, DS_PATTERN) if d.startswith('DS-TS-')}
                 design.drop(deleted_ds, deleted_rq)
-            print(f"進行中の変更: {change_dir}（変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の ID を外して判定）")
+            if not creq.exists() and not cdes.exists() and (change_dir / 'bug_report.md').exists():
+                print(f"進行中の変更: {change_dir}（不具合修正。変更する文書が無いので正本だけで判定）")
+            else:
+                print(f"進行中の変更: {change_dir}（変更要件定義書・変更設計書の [追加] の行を重ね、[削除] の ID を外して判定）")
 
     if test_dirs and not any(Path(d).exists() for d in test_dirs):
         print(f"テストディレクトリ（{', '.join(test_dirs)}）が無いので受け入れ判定を省く（E2E の有無は implementation_completeness_checker.py が確かめる）")

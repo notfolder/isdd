@@ -17,8 +17,16 @@ RQ Integrity Checker Script
   受け入れテストの網羅は、[追加] の行で定義した RQ-FT・RQ-UI・RQ-EX にだけ求める（既存の要件は正本で確かめる）。
   [削除] の行のシナリオは網羅に数えない。
 
+不具合の記録（bug_report.md）の扱い:
+  「不具合の記録」の見出しを持つ文書は、不具合修正の記録とみなす（spec-bugfix.md）。要件を足さず、
+  満たされていない既存の要件 ID を引用するだけの文書なので、RQ-BZ の存在確認、「1-2. 依頼に無く自分で決めた項目」の節、
+  受け入れテストの網羅は求めない。引用した要件に RQ-BK との対応があること（同じ行に書く）は求める。
+  --base <正本の要件定義書> を付けると、引用した要件 ID と RQ-BK が正本にあることを確かめる
+  （正本に無い ID は、既存の要件が満たされていない不具合ではなく、要件の追加になるため）。
+  [追加] の行を書いた不具合の記録はエラーにする（要件を足すなら変更要件定義書に書く）。
+
 使用方法:
-  python3 rq_integrity_checker.py <requirements.md | change_requirements.md>
+  python3 rq_integrity_checker.py <requirements.md | change_requirements.md | bug_report.md> [--base <requirements.md>]
 
 出力:
   - フォーマット違反一覧: 不正なRQ-* IDフォーマット
@@ -36,6 +44,9 @@ from typing import Set, Dict, List, Tuple
 
 # RQ-* IDにマッチする正規表現
 RQ_PATTERN = re.compile(r'\bRQ(?:-[A-Z0-9][A-Z0-9_]*)+')
+
+# 不具合修正の記録（bug_report.md）の見出し
+BUG_REPORT_HEADING = re.compile(r'^\s*#{1,4}\s+.*不具合の記録')
 
 # ヘッダー列ラベルを除外（例: RQ-ID, RQ-BK-ID）
 HEADER_LABEL_PATTERN = re.compile(r'^(?:RQ)(?:-[A-Z0-9]+)+-ID$')
@@ -89,6 +100,8 @@ class RQIntegrityChecker:
         self.issues: List[str] = []
         self.content_lines: List[str] = []
         self.is_change_doc: bool = False  # [追加] / [削除] の区分を含む変更要件定義書か
+        self.is_bug_report: bool = False  # 「不具合の記録」の見出しを持つ不具合修正の記録か
+        self.base_file = None  # --base: 正本の要件定義書（不具合の記録が引用する ID の確認に使う）
         self.ts_verifies: Dict[str, Set[str]] = defaultdict(set)  # RQ-TS → 検証する要件ID
         self.line_verify_ids: Dict[int, Set[str]] = {}  # 行番号 → その行の「検証する要件ID」列の ID
         self.has_verify_column: bool = False
@@ -199,8 +212,35 @@ class RQIntegrityChecker:
                         self.bk_to_reqs[bk].add(req)
                         self.req_to_bks[req].add(bk)
 
+    def check_bug_report(self):
+        """不具合の記録: 要件を足していないこと、引用した要件 ID が正本にあること（--base があるとき）"""
+        if any('[追加]' in line for line in self.content_lines):
+            self.issues.append(
+                "✗ 不具合の記録に [追加] の行があります（不具合の記録は既存の要件を引用するだけ。"
+                "要件やシナリオを足すなら、通常の変更フローで変更要件定義書に書く。spec-bugfix.md）"
+            )
+        cited = {i for i in self.unique_ids if not _is_context_id(i)}
+        if not cited:
+            self.issues.append("✗ 不具合の記録に、満たされていない既存の要件 ID（RQ-FT など）がありません")
+        if self.base_file is None:
+            return
+        try:
+            base_ids = set(self._extract_ids_from_text(self.base_file.read_text(encoding='utf-8')))
+        except OSError as e:
+            self.issues.append(f"エラー: --base の正本が読めません: {e}")
+            return
+        unknown = self.unique_ids - base_ids
+        if unknown:
+            self.issues.append(
+                f"✗ 正本に無い要件 ID: 不具合の記録が引用する以下の ID は {self.base_file} にありません ({len(unknown)} 件)。"
+                "既存の要件が満たされていない不具合ではなく、要件の追加か誤りなので、通常の変更フローで扱う:\n"
+                + "".join(f"  - {i}\n" for i in sorted(unknown))
+            )
+
     def check_decided_items_section(self):
         """「1-2. 依頼に無く自分で決めた項目」の節があるか（requirements-chapters.md の規則。無い決め事は「無し」と書く）"""
+        if self.is_bug_report:
+            return
         pattern = re.compile(r'^\s*#{2,4}\s+.*依頼に無く.*決めた項目')
         if not any(pattern.match(line) for line in self.content_lines):
             self.issues.append(
@@ -319,8 +359,11 @@ class RQIntegrityChecker:
 
         total = len(self.unique_ids)
         by_cat = {cat: len(ids) for cat, ids in self.ids_by_category.items()}
-        self.is_change_doc = any('[追加]' in line or '[削除]' in line for line in self.content_lines)
-        if self.is_change_doc:
+        self.is_bug_report = any(BUG_REPORT_HEADING.match(line) for line in self.content_lines)
+        self.is_change_doc = self.is_bug_report or any('[追加]' in line or '[削除]' in line for line in self.content_lines)
+        if self.is_bug_report:
+            print("文書種別: 不具合の記録（「不具合の記録」の見出しを検出）。既存の要件を引用するだけなので、RQ-BZ・1-2 の節・受け入れテストの網羅は求めない")
+        elif self.is_change_doc:
             print("文書種別: 変更要件定義書（[追加] / [削除] を検出）。RQ-BZ の存在確認は省く")
         print(f"検出: RQ-* ID 総数: {total}")
         for cat in sorted(VALID_CATEGORIES):
@@ -330,6 +373,8 @@ class RQIntegrityChecker:
         print()
 
         self.check_format()
+        if self.is_bug_report:
+            self.check_bug_report()
         self.check_decided_items_section()
         self.check_required_categories()
         self.check_bk_mapping()
@@ -369,6 +414,9 @@ def main():
 
     rq_file = Path(sys.argv[1])
     checker = RQIntegrityChecker(rq_file)
+    rest = sys.argv[2:]
+    if '--base' in rest and rest.index('--base') + 1 < len(rest):
+        checker.base_file = Path(rest[rest.index('--base') + 1])
 
     if not checker.run():
         for issue in checker.issues:

@@ -5,6 +5,7 @@
       "references": [
         "spec-requirements.md",
         "spec-external.md",
+        "spec-bugfix.md",
         "spec-design.md",
         "hearing-rules.md",
         "requirements-chapters.md",
