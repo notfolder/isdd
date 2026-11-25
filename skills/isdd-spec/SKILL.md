@@ -1,14 +1,14 @@
 ---
 name: isdd-spec
 description: >
-  ユーザーへのインタビューで、業務課題に結びついた最小の要件と、要件をすべて満たす最小の詳細設計を作る（isdd の仕様スキル）。
-  新規開発は docs/requirements.md と docs/detail_design.md を、要件定義書があるプロジェクトの変更は
-  .history/[YYYYMMDD]-[タスク名]/ の変更要件定義書・変更設計書を作り、外部連携があれば実際に接続して要件と突き合わせる。
-  最後に tasks.md を作り、ユーザーの承認を得て isdd-build に渡す。
+  ユーザーへのインタビューで、業務課題に結びついた最小の要件と、要件をすべて満たす最小の詳細設計を作る。
+  新規開発は docs/requirements.md と docs/detail_design.md を、要件定義書がある場合の変更は
+  .history/ の変更要件定義書・変更設計書を作り、外部連携があれば実際に接続して要件と突き合わせる。
+  最後に tasks.md を作り、承認を得て isdd-build に渡す。
   「要件定義して」「システムを作りたい」「機能を追加したい」「仕様を変えたい」「設計して」「変更設計書を作って」
-  「外部連携を確認したい」「change_requirements から設計して」「バグを直したい」「不具合を直して」といった依頼で使う。
-  不具合の依頼は、既存の要件が満たされていないのか、要件が欠けているのかを切り分け、前者は要件を変えずに設計かコードの直しとして記録する。
-  既存コードはあるが isdd の文書が無い場合は isdd-reverse-engineering、実装と実装後レビューは isdd-build が扱う。
+  「外部連携を確認したい」「change_requirements から設計して」「バグを直したい」といった依頼で使う。
+  不具合は、既存の要件が満たされていなければ要件を変えずに記録する。
+  isdd の文書が無い既存コードは isdd-reverse-engineering、実装と実装後レビューは isdd-build が扱う。
 license: MIT
 compatibility: Requires Python 3.9 or later (standard library only; tested on 3.9 to 3.15) and bash
 metadata:
