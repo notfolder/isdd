@@ -1,0 +1,61 @@
+{
+  "task_id": "isdd-bugfix-code-implement-001",
+  "name": "不具合修正の実装と実装後レビュー（原因はコード。要件と設計は変えない）",
+  "model": "claude-haiku-5-5",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-ast4bydg",
+  "session_id": "0f61e5e7-0ce9-441c-8a53-82a940df3a2e",
+  "started": "2026-11-25T13:06:38",
+  "finished": "2026-11-25T13:08:08",
+  "pass": true,
+  "grades": [
+    {
+      "name": "code_fixed",
+      "type": "program",
+      "pass": true,
+      "detail": "exit=0"
+    },
+    {
+      "name": "code_has_no_ids",
+      "type": "program",
+      "pass": true,
+      "detail": "src/*.py: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "reproduction_test_linked_to_existing_ds_ts",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/trace_map.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "strict_check_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "check.sh --strict が合格:\n`RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_e2e.py::HelloE2ETest.test_prints_hello`, `e2e/test_hello_e2e.py::HelloE2ETest.test_prints_exactly_one_line` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 3 / 不合格 0 / 未検証 0（全 4）\n  テスト以外: 確認済み（手動） 0 / 未確認（手動） 0 / 検証方法なし 1（RQ-NF・RQ-DT・RQ-OP。終了コードは変えない。未確認と検証方法なしはユーザーに示す）\n✓ 受け入れ判定に合格しました"
+    },
+    {
+      "name": "active_change_removed",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/active_change は無い"
+    },
+    {
+      "name": "canonical_requirements_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/requirements.md は変わっていない"
+    },
+    {
+      "name": "canonical_design_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md は変わっていない"
+    },
+    {
+      "name": "bug_report_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/20260601-fix-blank-line/bug_report.md は変わっていない"
+    }
+  ]
+}

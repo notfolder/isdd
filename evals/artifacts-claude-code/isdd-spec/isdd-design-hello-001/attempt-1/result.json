@@ -2,10 +2,11 @@
   "task_id": "isdd-design-hello-001",
   "name": "Hello World 詳細設計",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-huozw8ur",
-  "session_id": "6e11e557-791b-4e21-817e-f10a40eb90f9",
-  "started": "2026-11-23T15:04:10",
-  "finished": "2026-11-23T15:06:59",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-j0cij1b1",
+  "session_id": "ebed2638-06d9-497e-8233-4852e9b8be4e",
+  "started": "2026-11-25T13:22:05",
+  "finished": "2026-11-25T13:24:54",
   "pass": true,
   "grades": [
     {
@@ -36,7 +37,7 @@
       "name": "rq_ds_link_checker_pass",
       "type": "program",
       "pass": true,
-      "detail": "rq_ds_link_checker.py が合格:\nRQ-DS Link Checker\n==================================================\n検出: RQ-* ID 数: 9 (コンテキストID除外後: 7)\n検出: DS-* ID 数: 9\nマッピング: RQ-DS 対応数: 10\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - DS-* 総数: 9\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-HELLO-MESSAGE\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-MODULE\n  RQ-FT-PRINT-HELLO-WORLD → DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE\n  RQ-NF-RESPONSE-UNDER-1S → DS-TS-RESPONSE-UNDER-1S\n  RQ-OP-EXIT-CODE-RESULT → DS-OP-EXIT-CODE-RESULT, DS-TS-EXIT-CODE-ZERO-ON-SUCCESS\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-VERIFY-HELLO-WORLD-OUTPUT\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-IF-HELLO-STDOUT-OUTPUT"
+      "detail": "rq_ds_link_checker.py が合格:\n検出: DS-* ID 数: 12\nマッピング: RQ-DS 対応数: 16\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - DS-* 総数: 12\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-HELLO-MESSAGE-CONSTANT\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-WORLD, DS-SC-HELLO-MESSAGE-CONSTANT\n  RQ-FT-PRINT-HELLO-WORLD → DS-FN-MAIN, DS-FN-PRINT-HELLO-WORLD, DS-IF-CLI-COMMAND, DS-MD-HELLO-WORLD, DS-OP-RUN-COMMAND\n  RQ-NF-RESPONSE-UNDER-1S → DS-TS-RESPONSE-UNDER-1S\n  RQ-OP-EXIT-CODE-RESULT → DS-FN-MAIN, DS-OP-EXIT-CODE-RESULT, DS-TS-EXIT-CODE-ON-FAILURE\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-VERIFY-HELLO-WORLD-OUTPUT\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-FN-PRINT-HELLO-WORLD, DS-IF-STDOUT-OUTPUT"
     },
     {
       "name": "requirements_still_valid",
@@ -78,7 +79,7 @@
       "name": "rq_ds_checker_executed",
       "type": "prompt",
       "pass": true,
-      "detail": "このセッションの Bash ツール呼び出しで、rq_ds_link_checker.py が実行されている。(1) `python3 -I .claude/skills/isdd-spec/scripts/rq_ds_link_checker.py --help` が使用方法を出力した。(2) `docs/requirements.md` と `.history/20261123-hello-world-output/detail_design.md` を渡した実行が終了コード 0 で合格した。(3) `docs/requirements.md` と `docs/detail_design.md` を渡した実行が終了コード 0 で合格した。(4) tasks.md 作成後の再実行も終了コード 0 だった。条件は満たすため pass は true。なお、この環境に set_waza_grade_pass ツールは無いため、答えは JSON 形式で返した。"
+      "detail": "セッションの Bash 呼び出し履歴に、rq_ds_link_checker.py の実行が複数回あります。最初は `python3 -I .claude/skills/isdd-spec/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` で、exit=0、欠落 0 件、不整合 0 件でした。その後も設計書の修正後に同じコマンドで再実行し、最終確認でも `rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を実行して合格を確かめています。よって「実行されていた」に当たり、条件を満たします。"
     },
     {
       "name": "short_design_ids",

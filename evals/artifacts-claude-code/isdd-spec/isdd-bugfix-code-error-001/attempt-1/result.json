@@ -1,0 +1,73 @@
+{
+  "task_id": "isdd-bugfix-code-error-001",
+  "name": "不具合修正の切り分け（既存の要件が満たされていない。原因はコード）",
+  "model": "claude-haiku-5-5",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-c9h30utx",
+  "session_id": "f0f07c0e-c2c3-4c2d-85d6-b413a36adfec",
+  "started": "2026-11-25T13:06:38",
+  "finished": "2026-11-25T13:07:44",
+  "pass": true,
+  "grades": [
+    {
+      "name": "bug_report_cites_existing_requirement",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/*/bug_report.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "bug_report_checker_pass",
+      "type": "program",
+      "pass": true,
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n文書種別: 不具合の記録（「不具合の記録」の見出しを検出）。既存の要件を引用するだけなので、RQ-BZ・1-2 の節・受け入れテストの網羅は求めない\n検出: RQ-* ID 総数: 3\n  - RQ-BK-*: 1件\n  - RQ-FT-*: 1件\n  - RQ-UI-*: 1件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 3\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 2件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 0 本）"
+    },
+    {
+      "name": "no_change_requirements",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/**/change_requirements.md: すべての条件を満たす（0 ファイル）"
+    },
+    {
+      "name": "no_change_design_for_code_error",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/**/change_detail_design.md: すべての条件を満たす（0 ファイル）"
+    },
+    {
+      "name": "tasks_created",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/*/tasks.md: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "active_change_registered",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/active_change: すべての条件を満たす（1 ファイル）"
+    },
+    {
+      "name": "canonical_requirements_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/requirements.md は変わっていない"
+    },
+    {
+      "name": "canonical_design_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md は変わっていない"
+    },
+    {
+      "name": "code_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "src/hello.py は変わっていない"
+    },
+    {
+      "name": "triaged_as_unmet_existing_requirement",
+      "type": "prompt",
+      "pass": true,
+      "detail": "条件1: 最初の依頼への応答で、エージェントは docs/requirements.md を読み、起きるはずだった動き（標準出力に固定文字列を 1 行）を定める既存の要件 RQ-UI-HELLO-STDOUT-OUTPUT と RQ-FT-PRINT-HELLO-WORLD を ID で挙げた。そのうえで、既存の要件が満たされていない不具合であり、原因はコード（print(message + \"\\n\")）で、要件は変えずに直すという切り分けを示した。条件2: bug_report.md は既存の RQ-BK-SHARED-VERIFICATION-SCRIPT と既存の RQ-* ID だけを引用し、新しい要件 ID は作っていない。業務の問題・業務課題・見込み経営効果はユーザーに聞き直していない。"
+    }
+  ]
+}

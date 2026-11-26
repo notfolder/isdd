@@ -2,10 +2,11 @@
   "task_id": "isdd-external-precheck-crm-001",
   "name": "外部連携の接続テスト（CRM の SQLite）",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-um7u07fq",
-  "session_id": "31a599c9-3cdf-49b0-9aef-25e6f14e5454",
-  "started": "2026-11-05T19:35:23",
-  "finished": "2026-11-05T19:37:28",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-sa96rrp4",
+  "session_id": "69dbdeb5-3a44-4c58-a363-0ed9cb238494",
+  "started": "2026-11-25T13:24:54",
+  "finished": "2026-11-25T13:27:24",
   "pass": true,
   "grades": [
     {
@@ -24,13 +25,13 @@
       "name": "gitignore_checked",
       "type": "prompt",
       "pass": true,
-      "detail": "このセッションでエージェントは、作業の初期に .gitignore に .env が無いことを確認しました（`grep -n 'env' .gitignore` で該当行なし）。その後の外部連携の質問の補足と、接続テスト後の報告の両方で、.gitignore への .env 行の追加をユーザーに依頼しています。.gitignore を編集したのは、セッション全体を通じてエージェント自身ではありません。実行したのは読み取り専用の確認、一時ディレクトリの作成と削除、external/crm 配下の文書作成だけです。よって、ユーザーへ依頼したという条件を満たします。依頼への返答はまだ届いていないため、追加が完了したとは報告されていない点は残っています。"
+      "detail": "このセッションでエージェントは、.gitignore に .env が入っていないことに気づき、ユーザーへ追加してよいかを尋ねた。自分では追加していない。根拠: (1) 開始ゲート後の外部連携の接続前確認で、.gitignore は「__pycache__/ と *.pyc のみ」であり .env が無いと確認した。(2) 「接続情報について」の案内で、.gitignore に .env を追加してよいか確認すると明記した。(3) 次の「未回答」一覧に「.gitignore に .env を追加するか（推奨は追加）」を入れた。(4) セッション中の書き込みは external/crm/.env.example と external/crm/docs/research.md の作成だけで、.gitignore は一度も変更していない。ユーザーの回答は得ておらず、追加はまだ行われていない。"
     },
     {
       "name": "real_connection_tested",
       "type": "prompt",
       "pass": true,
-      "detail": "ツール呼び出し履歴に、Python の sqlite3 で file:...?mode=ro の読み取り専用接続を行うコマンドが 2 回あります。1 回目はスキーマと件数を、2 回目は接続の再確認を行い、どちらもテーブル一覧（customers、orders）を出力しています。推測ではなく実行結果に基づいて判定しています。"
+      "detail": "確かめた。セッション内で、python3 の sqlite3 モジュールを使って CRM_DB_PATH の SQLite ファイルへ読み取り専用（mode=ro）で接続し、テーブル一覧を取得している。1 回目はスキーマ探索スクリプトで接続と sqlite_master の走査を行い、テーブル customers と orders を確認した。2026-11-25 13:26 JST の再実行でも「connect: ok (read-only)」と「tables: customers, orders」を得た。接続情報の値は表示していない。この判定は推測ではなく、実行結果に基づく。"
     },
     {
       "name": "env_example_has_names_only",
@@ -42,7 +43,7 @@
       "name": "external_hearing_after_business",
       "type": "prompt",
       "pass": true,
-      "detail": "1: 外部連携の詳細（基本情報、接続・認証、オペレーション、制限、データ構造、技術）は、段階 1 の業務の問題・業務課題（RQ-BZ / RQ-BK）を確定した後に聞いている。開始ゲートで聞いた「外部連携の有無」は存在の確認だけで、詳細ではない。2: 外部連携の詳細は番号付き 1〜8 として 1 回の応答にまとめて出し、答えの無い項目を聞き直していない。その後の要件の質問も番号付きでまとめている。両方を満たす。"
+      "detail": "1. 外部連携の詳細（接続・認証・オペレーション・制限・データ構造・技術・候補）は、業務の問題と業務課題（RQ-BZ / RQ-BK）を確定した後の応答で初めて聞いている。2. その問いは番号付き 1〜7 の 1 回の応答にまとめて出され、ユーザーは 1 往復で答えた。答えの無かった項目は、次の応答で聞き直した分だけ。"
     }
   ]
 }

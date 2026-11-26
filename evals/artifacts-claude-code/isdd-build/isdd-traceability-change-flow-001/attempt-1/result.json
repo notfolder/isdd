@@ -2,10 +2,11 @@
   "task_id": "isdd-traceability-change-flow-001",
   "name": "進行中の変更を正本に重ねて実装する",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-0brylki8",
-  "session_id": "3bdb5515-8b8c-4d80-9e5d-985d608ea932",
-  "started": "2026-11-05T20:31:22",
-  "finished": "2026-11-05T20:32:38",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-f48nf97e",
+  "session_id": "8821a579-b625-4579-8c45-97a1030555f3",
+  "started": "2026-11-25T13:08:08",
+  "finished": "2026-11-25T13:09:24",
   "pass": true,
   "grades": [
     {

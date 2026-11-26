@@ -2,10 +2,11 @@
   "task_id": "isdd-change-req-gate-external-001",
   "name": "開始ゲート（外部連携あり）",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-ue374kol",
-  "session_id": "bdb8918c-f15b-4a05-a512-dcd4d0f4a585",
-  "started": "2026-11-05T19:26:11",
-  "finished": "2026-11-05T19:26:44",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-b1wjlb4s",
+  "session_id": "5935a8c9-f83d-43fe-8f8d-138831a33461",
+  "started": "2026-11-25T13:15:32",
+  "finished": "2026-11-25T13:16:04",
   "pass": true,
   "grades": [
     {
@@ -18,7 +19,7 @@
       "name": "routes_to_isdd_external_precheck",
       "type": "prompt",
       "pass": true,
-      "detail": "変更フローの判定は正しく示されています。既存の docs/requirements.md と docs/detail_design.md があるため変更フローとし、docs/active_change が空で別の変更が進行中でないことも確認しています。外部連携「あり」の回答後、最初に出した質問は「一言で言うと今回どのような変更ですか」で、業務の問題と業務課題を確定する段階1の入口です。機能・画面などの個別要件は聞いておらず、連携先の名前や接続・認証の詳細も「業務課題が決まってから」と先送りしています。"
+      "detail": "変更フローの判定は正しい。既存の docs/requirements.md と docs/detail_design.md があり、今回の変更は .history/ に書くと示した。外部連携ありの回答の後は、機能・画面などの個別要件を聞かず、段階 1 の最初の問い（今回どのような変更か）に戻った。外部連携の接続・認証の詳細は一切聞いていない。業務課題の確定は未着手だが、順序はその前提を満たしている。ただし開始ゲートの番号付き問い（外部連携の有無など）を出さず、ユーザーの「選択肢A」の返答を取り違えた点は減点対象になり得る。"
     }
   ]
 }

@@ -2,10 +2,11 @@
   "task_id": "isdd-change-design-exclusion-001",
   "name": "除外要件を変更設計書に記録する",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-pxh0ig35",
-  "session_id": "e23c762b-8afb-45bb-8b1e-29b327ac08d1",
-  "started": "2026-11-23T14:59:04",
-  "finished": "2026-11-23T15:01:44",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-v_3b9bb3",
+  "session_id": "553dfb2f-dc6d-43d6-9bee-e9d3e9decbd3",
+  "started": "2026-11-25T13:08:26",
+  "finished": "2026-11-25T13:12:35",
   "pass": true,
   "grades": [
     {
@@ -24,7 +25,7 @@
       "name": "change_docs_rq_ds_link_pass",
       "type": "program",
       "pass": true,
-      "detail": "rq_ds_link_checker.py が合格:\n-ERROR\nマッピング: RQ-DS 対応数: 11\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 11\n  - DS-* 総数: 10\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-NO-PERSISTENCE-DT-DB-NOT-REQUIRED\n  RQ-FT-BUILD-TIMESTAMPED-MESSAGE → DS-CL-TIMESTAMPED-PRINTER, DS-FN-BUILD-TIMESTAMPED-MESSAGE\n  RQ-FT-GET-CURRENT-TIME → DS-FN-GET-CURRENT-TIME\n  RQ-FT-PRINT-TIMESTAMPED-OUTPUT → DS-CL-TIMESTAMPED-PRINTER, DS-FN-PRINT-TIMESTAMPED-OUTPUT, DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD, DS-OP-CLI-RUN-FT-PRINT-HELLO-WORLD\n  RQ-FT-TIME-FORMAT-RULE → DS-FN-FORMAT-TIME\n  RQ-TS-VERIFY-TIMESTAMPED-OUTPUT → DS-TS-TIMESTAMPED-OUTPUT-E2E\n  RQ-UI-TIMESTAMPED-STDOUT-OUTPUT → DS-IF-CLI-ENTRY-UI-TIMESTAMPED-STDOUT-OUTPUT"
+      "detail": "rq_ds_link_checker.py が合格:\n------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 11\n  - DS-* 総数: 10\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-TIMESTAMPED-MESSAGE\n  RQ-FT-BUILD-TIMESTAMPED-MESSAGE → DS-CL-TIMESTAMPED-HELLO-PRINTER, DS-FN-BUILD-TIMESTAMPED-MESSAGE\n  RQ-FT-GET-CURRENT-TIME → DS-FN-GET-CURRENT-TIME\n  RQ-FT-PRINT-TIMESTAMPED-OUTPUT → DS-CL-TIMESTAMPED-HELLO-PRINTER, DS-FN-PRINT-TIMESTAMPED-OUTPUT, DS-MD-HELLO-MODULE-FT-PRINT-HELLO-WORLD, DS-OP-CLI-RUN-FT-PRINT-HELLO-WORLD\n  RQ-FT-TIME-FORMAT-RULE → DS-FN-GET-CURRENT-TIME\n  RQ-NF-EXIT-CODE-ON-ERROR → DS-TS-EXIT-CODE-ON-ERROR-E2E\n  RQ-TS-VERIFY-TIMESTAMPED-OUTPUT → DS-TS-TIMESTAMPED-OUTPUT-E2E\n  RQ-UI-TIMESTAMPED-STDOUT-OUTPUT → DS-IF-CLI-TIMESTAMPED-OUTPUT"
     },
     {
       "name": "active_change_registered",

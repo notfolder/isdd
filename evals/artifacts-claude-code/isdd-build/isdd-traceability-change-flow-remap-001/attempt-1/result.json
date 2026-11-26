@@ -2,10 +2,11 @@
   "task_id": "isdd-traceability-change-flow-remap-001",
   "name": "対応の差し替えとファイルの分割を含む変更を正本に重ねて実装する",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-ao6of51t",
-  "session_id": "b211e033-12be-4b1a-9754-7f524de59aa6",
-  "started": "2026-11-05T20:32:38",
-  "finished": "2026-11-05T20:33:57",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-0zmx0mby",
+  "session_id": "397f8c7e-7382-4253-aeb7-f250f8d0ac65",
+  "started": "2026-11-25T13:09:24",
+  "finished": "2026-11-25T13:10:49",
   "pass": true,
   "grades": [
     {
@@ -36,7 +37,7 @@
       "name": "trace_map_strict_pass_with_active_change",
       "type": "program",
       "pass": true,
-      "detail": "check.sh --strict が合格:\n `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_e2e.py::HelloE2ETest.test_prints_hello` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_e2e.py::HelloE2ETest.test_prints_hello` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 4 / 不合格 0 / 未検証 0（全 4）\n✓ 受け入れ判定に合格しました"
+      "detail": "check.sh --strict が合格:\n `e2e/test_hello_e2e.py::HelloE2ETest.test_prints_hello` | 実装済み |\n| `RQ-UI-HELLO-STDOUT-OUTPUT` | `RQ-TS-VERIFY-HELLO-WORLD-OUTPUT` | `DS-TS-HELLO-OUTPUT-E2E-TS-VERIFY-HELLO-WORLD-OUTPUT` | `e2e/test_hello_e2e.py::HelloE2ETest.test_prints_hello` | 実装済み |\n\n結果レポート\n--------------------------------------------------\n  DS-TS: 合格 1 / 不合格 0 / 未実行 0 / 要再実行 0（全 1）\n  要件: 実装済み 4 / 不合格 0 / 未検証 0（全 5）\n  テスト以外: 確認済み（手動） 0 / 未確認（手動） 0 / 検証方法なし 1（RQ-NF・RQ-DT・RQ-OP。終了コードは変えない。未確認と検証方法なしはユーザーに示す）\n✓ 受け入れ判定に合格しました"
     },
     {
       "name": "active_change_kept",

@@ -2,10 +2,11 @@
   "task_id": "isdd-requirements-decided-items-001",
   "name": "依頼に無い決め事の見える化（聞けるものは聞き、決めたものは 1-2 の表に残す）",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-xz_yoh1j",
-  "session_id": "dd30ccd3-343a-44a1-85d3-4128c641696f",
-  "started": "2026-11-05T20:49:09",
-  "finished": "2026-11-05T20:52:12",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-ngo0zcnz",
+  "session_id": "90c091d8-8986-4b10-b71a-11ffa872252e",
+  "started": "2026-11-25T13:28:28",
+  "finished": "2026-11-25T13:32:07",
   "pass": true,
   "grades": [
     {
@@ -24,13 +25,13 @@
       "name": "rq_integrity_checker_pass",
       "type": "program",
       "pass": true,
-      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 22\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-DT-*: 2件\n  - RQ-FT-*: 8件\n  - RQ-NF-*: 2件\n  - RQ-TS-*: 5件\n  - RQ-UI-*: 3件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 22\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 20件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 5 本）"
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 20\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-DT-*: 1件\n  - RQ-FT-*: 7件\n  - RQ-TS-*: 8件\n  - RQ-UI-*: 2件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 20\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 18件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 8 本）"
     },
     {
       "name": "undecided_behaviours_asked_before_deciding",
       "type": "prompt",
       "pass": true,
-      "detail": "条件1: 「最小で決めてよい」と言われる前の応答で、入力ファイルが無い（C1）、空（C2）、空行（C3）の各振る舞いを、案ア/イの表と「推奨」付きで問いとして出していた。条件2: 最小で決めてよいと言われた後は止まらず docs/requirements.md を作成し、1-2 の表に 15 項目すべてを内容・根拠・承認（未確認）の列付きで書いた。チェッカーは合格。最終報告では同じ 15 行の表を示していた。"
+      "detail": "条件1: 「書いていないことは最小で決めてよい」より前に、入力ファイルが無い（問1: A 終了コード 1 で止まる / B 何も出さず終了、推奨 A）、空（問2: A 正常終了 / B 非 0 で終了、推奨 A）、空行（問3: A 飛ばす / B エラーで止まる、推奨 A）を、選択肢の表と推奨付きで聞いている。決めずに問いとして挙げたので満たす。条件2: 「最小で決めてよい」の後は止まらず docs/requirements.md を作成してチェッカーを実行し、「1-2. 依頼に無く自分で決めた項目」の表（項目・決めた内容・根拠・承認の 4 列、承認は全行「未確認」）を書いた。承認を求める報告でも同じ 4 列の表を、20 行すべて示した。条件2も満たす。\n表に無い決め事: 2 件（例: 入力エラー時に宛名の文を一部だけ出さない（docs/requirements.md 3-2 RQ-FT-REPORT-INPUT-ERROR）、出力は読み込みが正常に終わったときだけ出す（3-1 RQ-UI-GREETING-OUTPUT。ただし 3 章の利用者フロー図は 1 行ずつ出す流れで、この記述と矛盾する））"
     }
   ]
 }

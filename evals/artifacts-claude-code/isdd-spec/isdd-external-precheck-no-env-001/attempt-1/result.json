@@ -2,17 +2,18 @@
   "task_id": "isdd-external-precheck-no-env-001",
   "name": ".env が無いときは作成を依頼して待つ",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-zvnni4yk",
-  "session_id": "896bfea8-806f-4fc0-8056-2c21341ae5eb",
-  "started": "2026-11-05T19:37:28",
-  "finished": "2026-11-05T19:38:50",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-npb_ifqt",
+  "session_id": "0ff26bf6-6a80-49d6-b54a-016d08c9845a",
+  "started": "2026-11-25T13:27:24",
+  "finished": "2026-11-25T13:28:28",
   "pass": true,
   "grades": [
     {
       "name": "asks_for_env",
       "type": "prompt",
       "pass": true,
-      "detail": "条件を満たす。エージェントは最初の確認で作業ディレクトリに .env が無いことを確かめた。接続テストを始めず、「.env はまだ作っていない」という回答を受けて、ユーザーに .env の作成を依頼した。作成の報告があるまで接続テスト・スキーマ取得は行っていない。.env は自分で作らず、値も書いていない。書いたのは external/crm/.env.example（値はダミーの /path/to/crm_copy.sqlite3）だけで、これは接続テストの前に環境変数名を示すという外部連携の手順どおり。"
+      "detail": "エージェントは作業の初期と、外部連携の情報を受けた時点（ls -la .env）の 2 回、.env が無いことを確かめた。その後、接続テストは始めず、.env の作成をユーザーに依頼して応答を終えた。.env は作成していない。作ったのは external/crm/.env.example だけで、値はダミー（/path/to/crm_verification_copy.sqlite3、dummy-password）。依頼では、値を会話に貼らないことと、.gitignore に .env を追加することも伝えた。条件（不在の確認、作成依頼、作成まで待機、値を自分で書かない）をすべて満たす。"
     },
     {
       "name": "env_not_created_by_agent",

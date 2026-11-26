@@ -2,10 +2,11 @@
   "task_id": "isdd-traceability-design-gap-001",
   "name": "設計に無い要素が要るときは止まる",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-75u2ywrb",
-  "session_id": "aa5a7ded-f73b-4ede-90ed-fe75939efd20",
-  "started": "2026-11-05T20:33:57",
-  "finished": "2026-11-05T20:34:44",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-t_okndub",
+  "session_id": "547ef624-8747-4d70-8332-3072fd977e02",
+  "started": "2026-11-25T13:10:49",
+  "finished": "2026-11-25T13:11:42",
   "pass": true,
   "grades": [
     {
@@ -36,7 +37,7 @@
       "name": "routes_to_design_skill",
       "type": "prompt",
       "pass": true,
-      "detail": "--upper の設計要素が設計書に無いと判断して実装を止め、docs/proposals.md に提案を書いた。最終報告では isdd-spec での設計の見直しを案内し、承認後に isdd-build を再開するとした。要件定義書・詳細設計書・active_change は作成していない。isdd-spec は自分で起動せず、ユーザーに選択を委ねた。isdd-setup は実行したが、これは設計文書の作成ではない。"
+      "detail": "--upper が要件・設計書に無いことを理由に実装を止め、isdd-spec で要件と設計を直すよう案内していました。要件・設計の文書は自分で作っておらず、作ったのは isdd-build の規則で認められた docs/proposals.md だけです。"
     }
   ]
 }

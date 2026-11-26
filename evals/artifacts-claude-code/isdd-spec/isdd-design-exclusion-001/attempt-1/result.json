@@ -2,10 +2,11 @@
   "task_id": "isdd-design-exclusion-001",
   "name": "除外要件の記録",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-z76bvz4k",
-  "session_id": "49ab650b-0adb-4025-bec4-58581e7fe927",
-  "started": "2026-11-23T15:01:44",
-  "finished": "2026-11-23T15:04:10",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-d5k0ayly",
+  "session_id": "f78007f4-fba0-4fcd-b1b3-83fda4f527a5",
+  "started": "2026-11-25T13:18:05",
+  "finished": "2026-11-25T13:21:13",
   "pass": true,
   "grades": [
     {
@@ -24,7 +25,7 @@
       "name": "rq_ds_link_checker_pass",
       "type": "program",
       "pass": true,
-      "detail": "rq_ds_link_checker.py が合格:\nr\n==================================================\n検出: RQ-* ID 数: 8 (コンテキストID除外後: 6)\n検出: DS-* ID 数: 8\n除外: 設計書の「除外要件」節にある RQ-* 2 件は対応を求めない: RQ-NF-SINGLE-LINE-OUTPUT, RQ-TS-VERIFY-HELLO-WORLD-OUTPUT\nマッピング: RQ-DS 対応数: 10\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 8\n  - DS-* 総数: 8\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-HELLO-MESSAGE-CONSTANT\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-MODULE, DS-TS-UNIT-HELLO-MODULE\n  RQ-FT-PRINT-HELLO-WORLD → DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE, DS-OP-RUN-COMMAND, DS-TS-UNIT-HELLO-MODULE\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-VERIFY-HELLO-WORLD-OUTPUT\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-IF-HELLO-CLI"
+      "detail": "rq_ds_link_checker.py が合格:\n-DS Link Checker\n==================================================\n検出: RQ-* ID 数: 8 (コンテキストID除外後: 6)\n検出: DS-* ID 数: 7\n除外: 設計書の「除外要件」節にある RQ-* 1 件は対応を求めない: RQ-NF-SINGLE-LINE-OUTPUT\nマッピング: RQ-DS 対応数: 11\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 8\n  - DS-* 総数: 7\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-DT-DB-NOT-REQUIRED → DS-SC-HELLO-MESSAGE-CONSTANT\n  RQ-FT-GET-HELLO-MESSAGE → DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-WORLD-SCRIPT\n  RQ-FT-PRINT-HELLO-WORLD → DS-FN-MAIN, DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-WORLD-SCRIPT\n  RQ-TS-VERIFY-HELLO-WORLD-OUTPUT → DS-TS-VERIFY-HELLO-WORLD-OUTPUT\n  RQ-UI-HELLO-STDOUT-OUTPUT → DS-FN-MAIN, DS-FN-PRINT-HELLO-WORLD, DS-IF-HELLO-CLI, DS-MD-HELLO-WORLD-SCRIPT"
     }
   ]
 }

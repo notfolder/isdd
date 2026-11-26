@@ -1,0 +1,43 @@
+{
+  "task_id": "isdd-bugfix-missing-requirement-001",
+  "name": "不具合修正の切り分け（定めた要件が無い。要件の追加として進める）",
+  "model": "claude-haiku-5-5",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-spec-pon1v8x0",
+  "session_id": "3cbb3fba-048b-49c5-b204-b2b8a5c343fb",
+  "started": "2026-11-25T13:07:44",
+  "finished": "2026-11-25T13:08:26",
+  "pass": true,
+  "grades": [
+    {
+      "name": "no_bug_report",
+      "type": "program",
+      "pass": true,
+      "detail": ".history/**/bug_report.md: すべての条件を満たす（0 ファイル）"
+    },
+    {
+      "name": "canonical_requirements_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/requirements.md は変わっていない"
+    },
+    {
+      "name": "canonical_design_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "docs/detail_design.md は変わっていない"
+    },
+    {
+      "name": "code_unchanged",
+      "type": "program",
+      "pass": true,
+      "detail": "src/hello.py は変わっていない"
+    },
+    {
+      "name": "triaged_as_missing_requirement",
+      "type": "prompt",
+      "pass": true,
+      "detail": "1: 最初の応答で、3 章の「引数・設定ファイル・標準入力は受け付けない」「スクリプトを引数なしで実行する」を根拠に、名前を渡しても無視されるのは既存の要件どおりだと伝えている。名前で挨拶を変える要件は既存の要件定義書に無いと読める。2: 「不具合ではなく要件の変更に当たる」と判断し、要件の誤りとして通常の変更フローで進めると案内した。その後、業務の問題と業務課題（対象業務、あるべき姿、現状）の確認に進んでいる。"
+    }
+  ]
+}

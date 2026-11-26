@@ -2,10 +2,11 @@
   "task_id": "isdd-traceability-hello-001",
   "name": "Hello World 対応表作成",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-8fc0rz69",
-  "session_id": "2e39c220-6002-48a4-8ce9-5849b99e7d0b",
-  "started": "2026-11-23T14:59:04",
-  "finished": "2026-11-23T15:00:18",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-build-rnq2ilpe",
+  "session_id": "ce9a321b-2c82-4e42-80e3-0b21ad02b5b1",
+  "started": "2026-11-25T13:11:42",
+  "finished": "2026-11-25T13:13:22",
   "pass": true,
   "grades": [
     {
@@ -36,7 +37,7 @@
       "name": "trace_map_checker_executed",
       "type": "prompt",
       "pass": true,
-      "detail": "このセッションで bash ツールにより `scripts/isdd/check.sh` が実行されている。`bash scripts/isdd/check.sh --strict` を、対応表作成後に終了コード 0 で確認した。また `python3 scripts/isdd/trace_map_checker.py docs/detail_design.md docs/trace_map.md src --strict --tests e2e --granularity function` も実行され、終了コード 0 だった。条件は「check.sh または trace_map_checker.py の実行」なので満たす。"
+      "detail": "このセッションの bash ツール呼び出しで `bash scripts/isdd/check.sh` が実行されている。確認できたのは `bash scripts/isdd/check.sh`（isdd-setup 導入直後のチェック）、`bash scripts/isdd/check.sh --strict`（対応表作成後の検証）、`bash scripts/isdd/check.sh --strict`（再実行）、`bash scripts/isdd/check.sh`（フック動作の確認）など。どの呼び出しも終了コードと出力を確認している。`trace_map_checker.py` を直接呼んだ呼び出しは無いが、条件は「check.sh または trace_map_checker.py のいずれか」の実行なので、check.sh の実行で満たす。"
     },
     {
       "name": "trace_map_strict_pass",

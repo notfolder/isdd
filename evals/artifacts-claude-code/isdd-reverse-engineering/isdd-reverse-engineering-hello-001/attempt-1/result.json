@@ -2,10 +2,11 @@
   "task_id": "isdd-reverse-engineering-hello-001",
   "name": "Hello World リバースエンジニアリング",
   "model": "claude-haiku-5-5",
-  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-reverse-engineering-7nj0c10_",
-  "session_id": "32f9c90a-1731-4e50-8245-d9bc19a08a49",
-  "started": "2026-11-05T20:09:27",
-  "finished": "2026-11-05T20:13:07",
+  "judge_model": "claude-haiku-5-5",
+  "workspace": "/var/folders/g8/xt5r0cbn6cn0gsv8kwdnljt00000gn/T/cc-isdd-reverse-engineering-wonw8vky",
+  "session_id": "685039eb-f979-4d41-9b35-dc4662838a50",
+  "started": "2026-11-25T13:06:38",
+  "finished": "2026-11-25T13:09:36",
   "pass": true,
   "grades": [
     {
@@ -30,7 +31,7 @@
       "name": "rq_ds_checker_executed",
       "type": "prompt",
       "pass": true,
-      "detail": "セッション内で bash ツールにより rq_ds_link_checker.py が実行されている。docs/requirements.md と docs/detail_design.md を引数に `python3 .claude/skills/isdd-reverse-engineering/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を実行し、欠落 0 件・不整合 0 件で終了コード 0 を得た。その後の再確認でも同じコマンドを再実行している。"
+      "detail": "セッションの Bash ツール呼び出しで、rq_ds_link_checker.py の実行が確認できる。`python3 .claude/skills/isdd-reverse-engineering/scripts/rq_ds_link_checker.py docs/requirements.md docs/detail_design.md` を 2 回実行した。1 回目は要件・設計の作成直後（exit=0、欠落 0 件・不整合 0 件）、2 回目は docs/requirements.md と docs/detail_design.md を再確認したとき（末尾の出力を確認）。いずれもコマンドとして呼ばれており、条件を満たす。この評価のためにファイルの書き換えやコマンドの実行は行っていない。"
     },
     {
       "name": "trace_map_created",
@@ -66,13 +67,13 @@
       "name": "rq_integrity_checker_pass",
       "type": "program",
       "pass": true,
-      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 9\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-FT-*: 4件\n  - RQ-TS-*: 2件\n  - RQ-UI-*: 1件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 7件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 2 本）"
+      "detail": "rq_integrity_checker.py が合格:\nRQ Integrity Checker\n==================================================\n検出: RQ-* ID 総数: 8\n  - RQ-BK-*: 1件\n  - RQ-BZ-*: 1件\n  - RQ-FT-*: 3件\n  - RQ-TS-*: 2件\n  - RQ-UI-*: 1件\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 8\n  - RQ-BK-*: 1件\n  - 非BK/BZ要件: 6件\n  - BKマッピング欠落: 0件\n  - 孤立BK: 0件\n  - フォーマット違反: 0件\n  - 受け入れテスト欠落: 0件（シナリオ 2 本）"
     },
     {
       "name": "rq_ds_link_checker_pass",
       "type": "program",
       "pass": true,
-      "detail": "rq_ds_link_checker.py が合格:\nID 数: 7\nマッピング: RQ-DS 対応数: 16\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 9\n  - DS-* 総数: 7\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-FT-FIXED-HELLO-MESSAGE → DS-CL-HELLO-WORLD-PRINTER, DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-MODULE\n  RQ-FT-GET-HELLO-MESSAGE → DS-CL-HELLO-WORLD-PRINTER, DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-MODULE\n  RQ-FT-PRINT-HELLO-WORLD → DS-CL-HELLO-WORLD-PRINTER, DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE\n  RQ-FT-PROPAGATE-EXCEPTION → DS-FN-PRINT-HELLO-WORLD, DS-IF-CLI-ENTRY, DS-MD-HELLO-MODULE\n  RQ-TS-FAIL-ON-EXCEPTION → DS-TS-FAIL-ON-EXCEPTION-E2E\n  RQ-TS-RUN-HELLO-WORLD-SCRIPT → DS-TS-HELLO-WORLD-OUTPUT-E2E\n  RQ-UI-HELLO-WORLD-STDOUT → DS-IF-CLI-ENTRY, DS-MD-HELLO-MODULE"
+      "detail": "rq_ds_link_checker.py が合格:\nChecker\n==================================================\n検出: RQ-* ID 数: 8 (コンテキストID除外後: 6)\n検出: DS-* ID 数: 7\nマッピング: RQ-DS 対応数: 13\n\n\n結果レポート\n--------------------------------------------------\n✓ 全てのチェックに合格しました\n  - RQ-* 総数: 8\n  - DS-* 総数: 7\n  - 欠落: 0件\n  - 不整合: 0件\n\n対応マッピング (有効なもの)\n--------------------------------------------------\n  RQ-FT-GET-HELLO-MESSAGE → DS-CL-HELLO-WORLD-PRINTER, DS-FN-GET-HELLO-MESSAGE, DS-MD-HELLO-MODULE\n  RQ-FT-PRINT-HELLO-WORLD → DS-CL-HELLO-WORLD-PRINTER, DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE\n  RQ-FT-PROPAGATE-EXCEPTION → DS-CL-HELLO-WORLD-PRINTER, DS-FN-PRINT-HELLO-WORLD, DS-MD-HELLO-MODULE\n  RQ-TS-VERIFY-ERROR-EXIT → DS-TS-ERROR-PROPAGATION-E2E\n  RQ-TS-VERIFY-HELLO-OUTPUT → DS-TS-HELLO-OUTPUT-E2E\n  RQ-UI-CLI-HELLO-OUTPUT → DS-IF-CLI-HELLO, DS-MD-HELLO-MODULE"
     },
     {
       "name": "trace_map_strict_pass",
