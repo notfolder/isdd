@@ -1,0 +1,95 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/workways-trial-control/snapshot-stage1",
+  "tests": {
+    "test_base_root_returns_200": "pass",
+    "test_base_register_and_list_cars": "pass",
+    "test_base_duplicate_car_is_409": "pass",
+    "test_base_reserve_and_list": "pass",
+    "test_base_overlap_on_same_car_is_409": "pass",
+    "test_base_other_car_and_other_time_are_accepted": "pass",
+    "test_base_list_is_sorted": "pass",
+    "test_base_cancel": "pass",
+    "test_base_cancel_missing_is_404": "pass",
+    "test_base_invalid_reservation_is_400": "pass",
+    "test_way_gap": "fail",
+    "test_way_horizon": "fail",
+    "test_way_limit": "fail",
+    "test_way_hours": "fail",
+    "test_way_double": "fail",
+    "test_edge_gap_exactly_30_minutes": "fail",
+    "test_edge_gap_is_per_car": "fail",
+    "test_edge_horizon_14_and_15_days": "fail",
+    "test_edge_hours_exactly_8_and_19": "fail",
+    "test_edge_double_touching_times_are_accepted": "fail"
+  },
+  "passed": 10,
+  "total": 20,
+  "setup_ok": true,
+  "error": null,
+  "scoring_status": "scored",
+  "unscored_reasons": [],
+  "expected_total": 20,
+  "not_run": [],
+  "test_ids": {
+    "workways/hidden/test_workways::test_base_root_returns_200": "pass",
+    "workways/hidden/test_workways::test_base_register_and_list_cars": "pass",
+    "workways/hidden/test_workways::test_base_duplicate_car_is_409": "pass",
+    "workways/hidden/test_workways::test_base_reserve_and_list": "pass",
+    "workways/hidden/test_workways::test_base_overlap_on_same_car_is_409": "pass",
+    "workways/hidden/test_workways::test_base_other_car_and_other_time_are_accepted": "pass",
+    "workways/hidden/test_workways::test_base_list_is_sorted": "pass",
+    "workways/hidden/test_workways::test_base_cancel": "pass",
+    "workways/hidden/test_workways::test_base_cancel_missing_is_404": "pass",
+    "workways/hidden/test_workways::test_base_invalid_reservation_is_400": "pass",
+    "workways/hidden/test_workways::test_way_gap": "fail",
+    "workways/hidden/test_workways::test_way_horizon": "fail",
+    "workways/hidden/test_workways::test_way_limit": "fail",
+    "workways/hidden/test_workways::test_way_hours": "fail",
+    "workways/hidden/test_workways::test_way_double": "fail",
+    "workways/hidden/test_workways::test_edge_gap_exactly_30_minutes": "fail",
+    "workways/hidden/test_workways::test_edge_gap_is_per_car": "fail",
+    "workways/hidden/test_workways::test_edge_horizon_14_and_15_days": "fail",
+    "workways/hidden/test_workways::test_edge_hours_exactly_8_and_19": "fail",
+    "workways/hidden/test_workways::test_edge_double_touching_times_are_accepted": "fail"
+  },
+  "pytest_runs": [
+    {
+      "where": "workways/hidden",
+      "returncode": 1,
+      "expected": 20,
+      "results": 20
+    }
+  ],
+  "pytest_tail": "'2', '2026-12-01', '11:00', '13:00', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x109bad430>.accepted\nE        +    and   '2026-12-01' = d(5)\n\ntest_workways.py:158: AssertionError\n_______________________ test_edge_gap_exactly_30_minutes _______________________\n\napi = <conftest.Api object at 0x109badc40>\n\n    def test_edge_gap_exactly_30_minutes(api):\n        api.car(\"1\")\n        assert api.accepted(\"1\", d(3), \"11:00\", \"12:00\", \"佐藤\")\n>       assert not api.accepted(\"1\", d(3), \"12:29\", \"13:30\", \"鈴木\")\nE       AssertionError: assert not True\nE        +  where True = accepted('1', '2026-11-29', '12:29', '13:30', '鈴木')\nE        +    where accepted = <conftest.Api object at 0x109badc40>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:168: AssertionError\n___________________________ test_edge_gap_is_per_car ___________________________\n\napi = <conftest.Api object at 0x109baf380>\n\n    def test_edge_gap_is_per_car(api):\n        api.car(\"1\")\n        api.car(\"2\")\n        assert api.accepted(\"1\", d(3), \"11:00\", \"12:00\", \"佐藤\")\n>       assert not api.accepted(\"1\", d(3), \"12:00\", \"13:00\", \"鈴木\")\nE       AssertionError: assert not True\nE        +  where True = accepted('1', '2026-11-29', '12:00', '13:00', '鈴木')\nE        +    where accepted = <conftest.Api object at 0x109baf380>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:178: AssertionError\n_______________________ test_edge_horizon_14_and_15_days _______________________\n\napi = <conftest.Api object at 0x109be2210>\n\n    def test_edge_horizon_14_and_15_days(api):\n        api.car(\"1\")\n>       assert not api.accepted(\"1\", d(15), \"10:00\", \"12:00\", \"佐藤\")\nE       AssertionError: assert not True\nE        +  where True = accepted('1', '2026-12-11', '10:00', '12:00', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x109be2210>.accepted\nE        +    and   '2026-12-11' = d(15)\n\ntest_workways.py:184: AssertionError\n_______________________ test_edge_hours_exactly_8_and_19 _______________________\n\napi = <conftest.Api object at 0x109bad4f0>\n\n    def test_edge_hours_exactly_8_and_19(api):\n        api.car(\"1\")\n        api.car(\"2\")\n>       assert not api.accepted(\"1\", d(3), \"07:59\", \"09:00\", \"佐藤\")\nE       AssertionError: assert not True\nE        +  where True = accepted('1', '2026-11-29', '07:59', '09:00', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x109bad4f0>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:191: AssertionError\n_________________ test_edge_double_touching_times_are_accepted _________________\n\napi = <conftest.Api object at 0x109badd00>\n\n    def test_edge_double_touching_times_are_accepted(api):\n        api.car(\"1\")\n        api.car(\"2\")\n        assert api.accepted(\"1\", d(5), \"10:00\", \"12:00\", \"佐藤\")\n>       assert not api.accepted(\"2\", d(5), \"11:59\", \"13:00\", \"佐藤\")\nE       AssertionError: assert not True\nE        +  where True = accepted('2', '2026-12-01', '11:59', '13:00', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x109badd00>.accepted\nE        +    and   '2026-12-01' = d(5)\n\ntest_workways.py:201: AssertionError\n=========================== short test summary info ============================\nFAILED test_workways.py::test_way_gap - AssertionError: 前の予約の終了と同じ...\nFAILED test_workways.py::test_way_horizon - AssertionError: 20 日後の予約が入...\nFAILED test_workways.py::test_way_limit - AssertionError: 同じ人の 3 件目の予...\nFAILED test_workways.py::test_way_hours - AssertionError: 8:00 より前の予約が...\nFAILED test_workways.py::test_way_double - AssertionError: 同じ人が重なる時間...\nFAILED test_workways.py::test_edge_gap_exactly_30_minutes - AssertionError: a...\nFAILED test_workways.py::test_edge_gap_is_per_car - AssertionError: assert no...\nFAILED test_workways.py::test_edge_horizon_14_and_15_days - AssertionError: a...\nFAILED test_workways.py::test_edge_hours_exactly_8_and_19 - AssertionError: a...\nFAILED test_workways.py::test_edge_double_touching_times_are_accepted - Asser...\n10 failed, 10 passed in 4.76s\n",
+  "categories": {
+    "base": {
+      "passed": 10,
+      "total": 10
+    },
+    "way": {
+      "passed": 0,
+      "total": 5
+    },
+    "edge": {
+      "passed": 0,
+      "total": 5
+    }
+  },
+  "ways": {
+    "gap": false,
+    "horizon": false,
+    "limit": false,
+    "hours": false,
+    "double": false
+  },
+  "ways_count": 0,
+  "overbuild": {
+    "source_files": 1,
+    "lines": 244,
+    "public_functions": 19,
+    "classes": 2,
+    "templates": 1
+  },
+  "duration_sec": 5.0
+}

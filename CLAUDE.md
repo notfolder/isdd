@@ -5,7 +5,7 @@
 
 ## 場所
 
-- 残作業: `.history/BACKLOG.md`（完了は `BACKLOG-archive.md`、案は `IDEAS.md`）。最新の引き継ぎ: `.history/2026-11-23-0735-isddの価値の計測と文書の評価/summary.md`
+- 残作業: `.history/BACKLOG.md`（完了は `BACKLOG-archive.md`、案は `IDEAS.md`）。最新の引き継ぎ: `.history/2026-11-28-1139-v2.4.0公開と題材workways/summary.md`
 - 評価の結果を人が読むまとめ: `measure/results/SUMMARY.md`。`REPORT.md` は作業の記録（途中の誤りも残る）。
 - 2026-10-19〜24 の作業（PR #5 のマージ、v2.0.0 の出し直し、README の更新手順）は引き継ぎ記録が無い。経緯は `.history/BACKLOG-archive.md` とコミット履歴にある。
 
@@ -44,6 +44,7 @@
 
 - **チェッカーに中身のずれの検出を期待しない。** 対応表と依存の規則は「次の作業者への宣言」と「作りすぎの検出」のため、中身が合っているかは受け入れテスト（`acceptance_checker.py` が読む E2E の結果）でしか分からない（2026-11-04、v2.2.0）。
 - **チェッカーのテストは文書の規則から書く。`shared/references/` の規則を足したり変えたりしたら、`tests/README.md` の対応表に行を足してテストを書く**（2026-11-03。規則だけ変えてチェッカーの読み方を確かめなかった見逃しがあったため）。
+- **`SKILL.md` の description は 1024 バイト以内にする（`gh skill publish` はバイト数で数える）。公開の予行（`gh skill publish --dry-run`）は、説明文を変えた直後に回す。**
 - **ライセンスは MIT。リポジトリ直下の `LICENSE` が正本で、各スキルの直下へは `tools/build_skills.py` が複製する。**
 - **CI は持たない。チェッカーは標準ライブラリだけで Python 3.9 以上に対応させ、変更したら `bash tools/test_pythons.sh` で手元の複数の版の単体テストを通す**（2026-11-03）。
 - **共通ファイルの正本は `shared/`。`skills/<スキル>/references/` と `scripts/` は `python3 tools/build_skills.py` が作る複製なので手で編集しない。複製もコミットする**（2026-10-18）。`gh skill publish` と `install.sh` が同じ中身を配るため。

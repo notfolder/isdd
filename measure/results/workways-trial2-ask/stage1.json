@@ -1,0 +1,115 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/workways-trial2-ask/snapshot-stage1",
+  "tests": {
+    "test_base_root_returns_200": "pass",
+    "test_base_register_and_list_cars": "pass",
+    "test_base_duplicate_car_is_409": "pass",
+    "test_base_reserve_and_list": "pass",
+    "test_base_overlap_on_same_car_is_409": "pass",
+    "test_base_other_car_and_other_time_are_accepted": "pass",
+    "test_base_list_is_sorted": "pass",
+    "test_base_cancel": "pass",
+    "test_base_cancel_missing_is_404": "pass",
+    "test_base_invalid_reservation_is_400": "pass",
+    "test_way_share": "fail",
+    "test_way_short": "fail",
+    "test_way_long": "fail",
+    "test_way_limit": "fail",
+    "test_way_once": "pass",
+    "test_common_gap": "pass",
+    "test_common_hours": "pass",
+    "test_common_horizon": "pass",
+    "test_edge_share_same_car_and_touching_times": "fail",
+    "test_edge_short_exactly_1_hour": "fail",
+    "test_edge_long_exactly_4_hours": "fail",
+    "test_edge_once_is_per_person_and_day": "pass",
+    "test_edge_gap_exactly_30_minutes": "pass",
+    "test_edge_horizon_14_and_15_days": "pass",
+    "test_edge_hours_exactly_8_and_19": "pass"
+  },
+  "passed": 18,
+  "total": 25,
+  "setup_ok": true,
+  "error": null,
+  "scoring_status": "scored",
+  "unscored_reasons": [],
+  "expected_total": 25,
+  "not_run": [],
+  "test_ids": {
+    "workways/hidden/test_workways::test_base_root_returns_200": "pass",
+    "workways/hidden/test_workways::test_base_register_and_list_cars": "pass",
+    "workways/hidden/test_workways::test_base_duplicate_car_is_409": "pass",
+    "workways/hidden/test_workways::test_base_reserve_and_list": "pass",
+    "workways/hidden/test_workways::test_base_overlap_on_same_car_is_409": "pass",
+    "workways/hidden/test_workways::test_base_other_car_and_other_time_are_accepted": "pass",
+    "workways/hidden/test_workways::test_base_list_is_sorted": "pass",
+    "workways/hidden/test_workways::test_base_cancel": "pass",
+    "workways/hidden/test_workways::test_base_cancel_missing_is_404": "pass",
+    "workways/hidden/test_workways::test_base_invalid_reservation_is_400": "pass",
+    "workways/hidden/test_workways::test_way_share": "fail",
+    "workways/hidden/test_workways::test_way_short": "fail",
+    "workways/hidden/test_workways::test_way_long": "fail",
+    "workways/hidden/test_workways::test_way_limit": "fail",
+    "workways/hidden/test_workways::test_way_once": "pass",
+    "workways/hidden/test_workways::test_common_gap": "pass",
+    "workways/hidden/test_workways::test_common_hours": "pass",
+    "workways/hidden/test_workways::test_common_horizon": "pass",
+    "workways/hidden/test_workways::test_edge_share_same_car_and_touching_times": "fail",
+    "workways/hidden/test_workways::test_edge_short_exactly_1_hour": "fail",
+    "workways/hidden/test_workways::test_edge_long_exactly_4_hours": "fail",
+    "workways/hidden/test_workways::test_edge_once_is_per_person_and_day": "pass",
+    "workways/hidden/test_workways::test_edge_gap_exactly_30_minutes": "pass",
+    "workways/hidden/test_workways::test_edge_horizon_14_and_15_days": "pass",
+    "workways/hidden/test_workways::test_edge_hours_exactly_8_and_19": "pass"
+  },
+  "pytest_runs": [
+    {
+      "where": "workways/hidden",
+      "returncode": 1,
+      "expected": 25,
+      "results": 25
+    }
+  ],
+  "pytest_tail": ", d(3), \"10:00\", \"10:20\", \"佐藤\"), \"20 分の予約が入った\"\nE       AssertionError: 20 分の予約が入った\nE       assert not True\nE        +  where True = accepted('1', '2026-11-29', '10:00', '10:20', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x10b9db320>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:132: AssertionError\n________________________________ test_way_long _________________________________\n\napi = <conftest.Api object at 0x10b9dbc20>\n\n    def test_way_long(api):\n        \"\"\"W3: 4 時間より長い予約は入れられない。\"\"\"\n        api.car(\"1\")\n>       assert not api.accepted(\"1\", d(3), \"09:00\", \"17:00\", \"佐藤\"), \"8 時間の予約が入った\"\nE       AssertionError: 8 時間の予約が入った\nE       assert not True\nE        +  where True = accepted('1', '2026-11-29', '09:00', '17:00', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x10b9dbc20>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:140: AssertionError\n________________________________ test_way_limit ________________________________\n\napi = <conftest.Api object at 0x10b9db770>\n\n    def test_way_limit(api):\n        \"\"\"W4: 1 人が同時に持てる予約は 2 件まで。\"\"\"\n        api.car(\"1\")\n        assert api.accepted(\"1\", d(2), \"10:00\", \"12:00\", \"佐藤\")\n        assert api.accepted(\"1\", d(3), \"10:00\", \"12:00\", \"佐藤\")\n>       assert not api.accepted(\"1\", d(4), \"10:00\", \"12:00\", \"佐藤\"), \"同じ人の 3 件目の予約が入った\"\nE       AssertionError: 同じ人の 3 件目の予約が入った\nE       assert not True\nE        +  where True = accepted('1', '2026-11-30', '10:00', '12:00', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x10b9db770>.accepted\nE        +    and   '2026-11-30' = d(4)\n\ntest_workways.py:150: AssertionError\n_________________ test_edge_share_same_car_and_touching_times __________________\n\napi = <conftest.Api object at 0x10b9dbaa0>\n\n    def test_edge_share_same_car_and_touching_times(api):\n        api.car(\"1\")\n        api.car(\"2\")\n        assert api.accepted(\"1\", d(3), \"10:00\", \"12:00\", \"佐藤\", \"山田商会\")\n>       assert not api.accepted(\"2\", d(3), \"11:00\", \"13:00\", \"鈴木\", \"山田商会\")\nE       AssertionError: assert not True\nE        +  where True = accepted('2', '2026-11-29', '11:00', '13:00', '鈴木', '山田商会')\nE        +    where accepted = <conftest.Api object at 0x10b9dbaa0>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:204: AssertionError\n________________________ test_edge_short_exactly_1_hour ________________________\n\napi = <conftest.Api object at 0x10ba1de50>\n\n    def test_edge_short_exactly_1_hour(api):\n        api.car(\"1\")\n>       assert not api.accepted(\"1\", d(3), \"10:00\", \"10:59\", \"佐藤\")\nE       AssertionError: assert not True\nE        +  where True = accepted('1', '2026-11-29', '10:00', '10:59', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x10ba1de50>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:210: AssertionError\n________________________ test_edge_long_exactly_4_hours ________________________\n\napi = <conftest.Api object at 0x10ba1e270>\n\n    def test_edge_long_exactly_4_hours(api):\n        api.car(\"1\")\n>       assert not api.accepted(\"1\", d(3), \"09:00\", \"13:01\", \"佐藤\")\nE       AssertionError: assert not True\nE        +  where True = accepted('1', '2026-11-29', '09:00', '13:01', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x10ba1e270>.accepted\nE        +    and   '2026-11-29' = d(3)\n\ntest_workways.py:216: AssertionError\n=========================== short test summary info ============================\nFAILED test_workways.py::test_way_share - AssertionError: 重なる時間に同じ行...\nFAILED test_workways.py::test_way_short - AssertionError: 20 分の予約が入った\nFAILED test_workways.py::test_way_long - AssertionError: 8 時間の予約が入った\nFAILED test_workways.py::test_way_limit - AssertionError: 同じ人の 3 件目の予...\nFAILED test_workways.py::test_edge_share_same_car_and_touching_times - Assert...\nFAILED test_workways.py::test_edge_short_exactly_1_hour - AssertionError: ass...\nFAILED test_workways.py::test_edge_long_exactly_4_hours - AssertionError: ass...\n7 failed, 18 passed in 5.94s\n",
+  "categories": {
+    "base": {
+      "passed": 10,
+      "total": 10
+    },
+    "way": {
+      "passed": 1,
+      "total": 5
+    },
+    "common": {
+      "passed": 3,
+      "total": 3
+    },
+    "edge": {
+      "passed": 4,
+      "total": 7
+    }
+  },
+  "ways": {
+    "share": false,
+    "short": false,
+    "long": false,
+    "limit": false,
+    "once": true
+  },
+  "ways_count": 1,
+  "common": {
+    "gap": true,
+    "hours": true,
+    "horizon": true
+  },
+  "common_count": 3,
+  "overbuild": {
+    "source_files": 1,
+    "lines": 258,
+    "public_functions": 20,
+    "classes": 2,
+    "templates": 1
+  },
+  "duration_sec": 6.2
+}

@@ -1,0 +1,95 @@
+{
+  "stage": 1,
+  "app": "/Users/notfolder/Documents/isdd/measure/results/workways-trial-ask/snapshot-stage1",
+  "tests": {
+    "test_base_root_returns_200": "pass",
+    "test_base_register_and_list_cars": "pass",
+    "test_base_duplicate_car_is_409": "pass",
+    "test_base_reserve_and_list": "pass",
+    "test_base_overlap_on_same_car_is_409": "pass",
+    "test_base_other_car_and_other_time_are_accepted": "pass",
+    "test_base_list_is_sorted": "pass",
+    "test_base_cancel": "pass",
+    "test_base_cancel_missing_is_404": "pass",
+    "test_base_invalid_reservation_is_400": "pass",
+    "test_way_gap": "pass",
+    "test_way_horizon": "pass",
+    "test_way_limit": "fail",
+    "test_way_hours": "pass",
+    "test_way_double": "pass",
+    "test_edge_gap_exactly_30_minutes": "pass",
+    "test_edge_gap_is_per_car": "pass",
+    "test_edge_horizon_14_and_15_days": "pass",
+    "test_edge_hours_exactly_8_and_19": "pass",
+    "test_edge_double_touching_times_are_accepted": "pass"
+  },
+  "passed": 19,
+  "total": 20,
+  "setup_ok": true,
+  "error": null,
+  "scoring_status": "scored",
+  "unscored_reasons": [],
+  "expected_total": 20,
+  "not_run": [],
+  "test_ids": {
+    "workways/hidden/test_workways::test_base_root_returns_200": "pass",
+    "workways/hidden/test_workways::test_base_register_and_list_cars": "pass",
+    "workways/hidden/test_workways::test_base_duplicate_car_is_409": "pass",
+    "workways/hidden/test_workways::test_base_reserve_and_list": "pass",
+    "workways/hidden/test_workways::test_base_overlap_on_same_car_is_409": "pass",
+    "workways/hidden/test_workways::test_base_other_car_and_other_time_are_accepted": "pass",
+    "workways/hidden/test_workways::test_base_list_is_sorted": "pass",
+    "workways/hidden/test_workways::test_base_cancel": "pass",
+    "workways/hidden/test_workways::test_base_cancel_missing_is_404": "pass",
+    "workways/hidden/test_workways::test_base_invalid_reservation_is_400": "pass",
+    "workways/hidden/test_workways::test_way_gap": "pass",
+    "workways/hidden/test_workways::test_way_horizon": "pass",
+    "workways/hidden/test_workways::test_way_limit": "fail",
+    "workways/hidden/test_workways::test_way_hours": "pass",
+    "workways/hidden/test_workways::test_way_double": "pass",
+    "workways/hidden/test_workways::test_edge_gap_exactly_30_minutes": "pass",
+    "workways/hidden/test_workways::test_edge_gap_is_per_car": "pass",
+    "workways/hidden/test_workways::test_edge_horizon_14_and_15_days": "pass",
+    "workways/hidden/test_workways::test_edge_hours_exactly_8_and_19": "pass",
+    "workways/hidden/test_workways::test_edge_double_touching_times_are_accepted": "pass"
+  },
+  "pytest_runs": [
+    {
+      "where": "workways/hidden",
+      "returncode": 1,
+      "expected": 20,
+      "results": 20
+    }
+  ],
+  "pytest_tail": "............F.......                                                     [100%]\n=================================== FAILURES ===================================\n________________________________ test_way_limit ________________________________\n\napi = <conftest.Api object at 0x106e28d70>\n\n    def test_way_limit(api):\n        \"\"\"W3: 1 人が同時に持てる予約は 2 件まで。\"\"\"\n        api.car(\"1\")\n        assert api.accepted(\"1\", d(2), \"10:00\", \"12:00\", \"佐藤\")\n        assert api.accepted(\"1\", d(3), \"10:00\", \"12:00\", \"佐藤\")\n>       assert not api.accepted(\"1\", d(4), \"10:00\", \"12:00\", \"佐藤\"), \"同じ人の 3 件目の予約が入った\"\nE       AssertionError: 同じ人の 3 件目の予約が入った\nE       assert not True\nE        +  where True = accepted('1', '2026-11-30', '10:00', '12:00', '佐藤')\nE        +    where accepted = <conftest.Api object at 0x106e28d70>.accepted\nE        +    and   '2026-11-30' = d(4)\n\ntest_workways.py:136: AssertionError\n=========================== short test summary info ============================\nFAILED test_workways.py::test_way_limit - AssertionError: 同じ人の 3 件目の予...\n1 failed, 19 passed in 4.75s\n",
+  "categories": {
+    "base": {
+      "passed": 10,
+      "total": 10
+    },
+    "way": {
+      "passed": 4,
+      "total": 5
+    },
+    "edge": {
+      "passed": 5,
+      "total": 5
+    }
+  },
+  "ways": {
+    "gap": true,
+    "horizon": true,
+    "limit": false,
+    "hours": true,
+    "double": true
+  },
+  "ways_count": 4,
+  "overbuild": {
+    "source_files": 1,
+    "lines": 252,
+    "public_functions": 19,
+    "classes": 2,
+    "templates": 1
+  },
+  "duration_sec": 5.0
+}

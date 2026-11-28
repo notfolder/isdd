@@ -1,0 +1,107 @@
+{
+  "arm": "control",
+  "run": 1,
+  "model": "claude-opus-5-5",
+  "stages": {
+    "1": {
+      "done": true,
+      "wall_sec": 101.3,
+      "started": "2026-11-26T13:48:30",
+      "responder": true,
+      "questions_rounds": 0,
+      "responder_cost_usd": 0.0,
+      "tool_uses": 7,
+      "tool_names": {
+        "Bash": 4,
+        "Write": 3
+      },
+      "skills_called": [],
+      "isdd_skills_visible": [],
+      "valid": true,
+      "conduct": {
+        "assigned": "control",
+        "isdd_skills_visible": false,
+        "isdd_skill_invoked": false,
+        "isdd_docs_updated": [],
+        "procedure_evidence": false,
+        "done": true,
+        "scored": true,
+        "infra_incomplete": false,
+        "leak_hits": [],
+        "parent_dir_refs": 0
+      },
+      "isdd_artifacts": false,
+      "validity_note": "",
+      "usage": {
+        "input_tokens": 16,
+        "output_tokens": 10657,
+        "cache_creation_input_tokens": 26082,
+        "cache_read_input_tokens": 227183,
+        "total_tokens": 263938
+      },
+      "cost_usd": 0.4673,
+      "turns": 8,
+      "rounds": 1,
+      "passed": 10,
+      "total": 25,
+      "tests": {
+        "test_base_root_returns_200": "pass",
+        "test_base_register_and_list_cars": "pass",
+        "test_base_duplicate_car_is_409": "pass",
+        "test_base_reserve_and_list": "pass",
+        "test_base_overlap_on_same_car_is_409": "pass",
+        "test_base_other_car_and_other_time_are_accepted": "pass",
+        "test_base_list_is_sorted": "pass",
+        "test_base_cancel": "pass",
+        "test_base_cancel_missing_is_404": "pass",
+        "test_base_invalid_reservation_is_400": "pass",
+        "test_way_share": "fail",
+        "test_way_short": "fail",
+        "test_way_long": "fail",
+        "test_way_limit": "fail",
+        "test_way_once": "fail",
+        "test_common_gap": "fail",
+        "test_common_hours": "fail",
+        "test_common_horizon": "fail",
+        "test_edge_share_same_car_and_touching_times": "fail",
+        "test_edge_short_exactly_1_hour": "fail",
+        "test_edge_long_exactly_4_hours": "fail",
+        "test_edge_once_is_per_person_and_day": "fail",
+        "test_edge_gap_exactly_30_minutes": "fail",
+        "test_edge_horizon_14_and_15_days": "fail",
+        "test_edge_hours_exactly_8_and_19": "fail"
+      },
+      "overbuild": {
+        "source_files": 1,
+        "lines": 241,
+        "public_functions": 19,
+        "classes": 2,
+        "templates": 1
+      },
+      "score_error": null,
+      "scoring_status": "scored",
+      "unscored_reasons": [],
+      "expected_total": 25,
+      "not_run": []
+    }
+  },
+  "runner": "claude -p",
+  "conditions": {
+    "model": "claude-opus-5-5",
+    "responder_model": "claude-sonnet-5-5",
+    "task": "workways",
+    "max_rounds": 20,
+    "timeout_min": 45,
+    "contract": null,
+    "seed": false,
+    "task_digest": {
+      "task_files": 10,
+      "sha256": "04a275b335e8f8de31e226cbaf6a2fac96b86b7a7e9e268e4570686ac666b6bb"
+    },
+    "work": "/Users/Shared/isdd-measure-work",
+    "ancestor_claude_md": [],
+    "claude_cli": "2.1.330 (Claude Code)",
+    "repo_commit": "0c1af80",
+    "isdd_version": "v2.4.0"
+  }
+}
